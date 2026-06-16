@@ -1,0 +1,69 @@
+Upgrade 06 — Lead Page + Google Sheet Verification
+
+Scope:
+- Improved the diagnostic lead form reliability and Google Sheet verification workflow.
+- Kept the public visual design unchanged.
+- Added a safe debug/test mode for manual Google Sheet verification.
+
+Files changed/added:
+- reserver-diagnostic/index.html
+- assets/lead-page/reserver-diagnostic.js
+- assets/lead-page/lead-page-upgrade-06.js
+- assets/lead-page/lead-page-upgrade-06.css
+- merci/index.html
+- UPGRADE_06_LEAD_PAGE_GOOGLE_SHEET_REPORT.txt
+
+Lead form endpoint:
+- The current Google Apps Script Web App endpoint is configured and ends with /exec.
+- Endpoint used: https://script.google.com/macros/s/AKfycbw83pfpcjAKSgY3wLAzU9QJufvHwdK-Aj-ohZUZsyB8PnRBt_qJrNWYb8WwpJftOqeJ/exec
+
+Normal visitor behavior:
+- The lead page design remains the same.
+- The existing form still submits to Google Apps Script / Google Sheets.
+- Successful submissions still redirect to /merci/.
+
+Payload improvements:
+The lead payload now includes additional useful fields for CRM/Google Sheet organization:
+- leadId
+- submittedAt
+- formVersion
+- fullName
+- phone
+- phoneRaw
+- email
+- businessSector
+- preferredContact
+- source
+- status
+- priority
+- consent
+- UTM fields
+- fbclid / gclid / adClickId
+- referrer
+- landingPageUrl
+- pagePath
+- language
+- timezone
+- screenSize
+- userAgent
+
+Manual Google Sheet verification:
+1. Deploy the website.
+2. Open:
+   https://www.elboubakry.com/reserver-diagnostic/?lead_debug=1
+3. A debug panel appears at the bottom of the page.
+4. Click “Send TEST LEAD to Google Sheet”.
+5. Open the Google Sheet and search for:
+   TEST LEAD - Elboubakry Website
+6. Delete the test row after verification.
+
+Important limitation:
+- The code can send a test lead request, but only the Google Sheet can confirm that the row was received.
+- Because browser no-cors requests to Google Apps Script return opaque responses, the front end cannot read the final Sheet response directly.
+
+If the test lead does not appear:
+- Check the Apps Script deployment permissions: Execute as Me, access Anyone.
+- Confirm the Web App URL ends with /exec.
+- Check Apps Script executions/logs.
+- Check Cloudflare CSP console errors.
+- Ensure the sheet script supports POST data and appends rows correctly.

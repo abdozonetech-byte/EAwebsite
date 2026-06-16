@@ -1,0 +1,64 @@
+UPGRADE 07 — FINAL TRACKING & ANALYTICS REPORT
+
+Scope
+- Added a stronger privacy-first analytics foundation without changing the UI.
+- Kept GA4 disabled until the real Measurement ID replaces G-XXXXXXXXXX.
+- Added conversion and engagement tracking for homepage, insights, articles, lead page, WhatsApp, email, social links, internal links, scroll depth, and form interactions.
+
+Files updated
+- assets/js/analytics.js
+- assets/lead-page/lead-page-upgrade-06.js
+- assets/data/tracking-plan.json
+- assets/data/ai-overview.json
+- llms.txt
+- _headers
+- HTML pages: added non-visual tracking metadata/resource hints where missing.
+
+Main events now available
+- page_view
+- diagnostic_cta_click
+- lead_submit_attempt
+- lead_request_sent
+- lead_request_completed
+- lead_request_error
+- lead_test_sent
+- lead_test_error
+- form_start
+- whatsapp_click
+- email_click
+- social_click
+- insight_article_click
+- internal_link_click
+- scroll_depth
+- article_read_start
+- article_engaged_read
+- tracking_debug_test
+
+Attribution tracking
+- Stores UTM parameters and click IDs locally for 90 days:
+  utm_source, utm_medium, utm_campaign, utm_content, utm_term, gclid, fbclid, msclkid, ttclid.
+- Captures first touch, last touch, referrer, landing page, and a session ID.
+- Upgrade 06 test lead payload now includes attribution/session JSON when available.
+
+How to activate GA4
+1. Open assets/js/analytics.js.
+2. Replace:
+   GA4_MEASUREMENT_ID: 'G-XXXXXXXXXX'
+   with your real GA4 ID, for example:
+   GA4_MEASUREMENT_ID: 'G-ABC123DEF4'
+3. Keep COOKIE_STORAGE false for a privacy-first cookieless setup, or set true only if you add a proper cookie/privacy notice.
+4. Deploy and check GA4 Realtime.
+
+Testing
+- Open: /?ea_debug_tracking=1
+  A debug panel appears. Click “Send test event” and check browser console.
+- Open: /reserver-diagnostic/?lead_debug=1
+  Send TEST LEAD and verify it reaches Google Sheet.
+- Open: /assets/data/tracking-plan.json
+  Confirm the tracking plan is public.
+- Click diagnostic CTA, WhatsApp, article cards, and footer links. Console should show [EA Tracking] events in debug mode.
+
+Notes
+- No visual redesign was made.
+- No fake data, fake conversions, fake testimonials, or fake results were added.
+- GA4 external script is not loaded until a real GA4 Measurement ID is configured.

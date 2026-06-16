@@ -1,0 +1,111 @@
+/* Upgrade 06 — Lead Page verification debug panel. Public UI stays unchanged unless ?lead_debug=1 is added. */
+.ea-lead-debug-panel {
+  width: min(100% - 32px, 920px);
+  margin: 0 auto 32px;
+  color: #08112f;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.ea-lead-debug-card {
+  border: 1px dashed rgba(37, 99, 235, .42);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 18px 54px rgba(15, 54, 130, .10);
+  padding: 22px;
+}
+
+.ea-lead-debug-eyebrow {
+  margin: 0 0 8px;
+  color: #0b55ff;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ea-lead-debug-card h2 {
+  margin: 0;
+  color: #08112f;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.ea-lead-debug-card p {
+  max-width: 760px;
+  margin: 10px 0 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.7;
+}
+
+.ea-lead-debug-card code {
+  border: 1px solid rgba(37, 99, 235, .14);
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #0b55ff;
+  padding: 2px 6px;
+  font-weight: 900;
+}
+
+.ea-lead-debug-card dl {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.ea-lead-debug-card dl > div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid rgba(37, 99, 235, .12);
+  border-radius: 16px;
+  background: #f8fbff;
+  padding: 12px;
+}
+
+.ea-lead-debug-card dt {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.ea-lead-debug-card dd {
+  margin: 0;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.ea-lead-debug-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: #0b55ff;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 950;
+  padding: 0 18px;
+  box-shadow: 0 16px 34px rgba(11, 85, 255, .24);
+}
+
+.ea-lead-debug-button:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+
+.ea-lead-debug-panel.is-success .ea-lead-debug-status {
+  color: #047857;
+}
+
+.ea-lead-debug-panel.is-error .ea-lead-debug-status {
+  color: #b91c1c;
+}
+
+.ea-lead-debug-note {
+  font-size: 14px;
+}

@@ -5,10 +5,19 @@ Site:
 Portfolio professionnel — stratégie digitale, publicité en ligne, landing pages, SEO, analytics, automatisation et génération de leads.
 
 Location:
-Maroc
+Maroc — signal local Casablanca
 
 Website:
-https://elboubakry.com/
+https://www.elboubakry.com/
 
 Language:
 fr-MA
+
+AI-readable summary:
+https://www.elboubakry.com/llms.txt
+
+Structured AI overview:
+https://www.elboubakry.com/assets/data/ai-overview.json
+
+Main diagnostic page:
+https://www.elboubakry.com/reserver-diagnostic/

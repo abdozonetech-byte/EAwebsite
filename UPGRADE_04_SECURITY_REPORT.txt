@@ -1,0 +1,46 @@
+Upgrade 04 — Security Hardening Report
+
+Scope:
+- Static website: www.elboubakry.com
+- Cloudflare Pages deployment
+- No visual/UI changes were made.
+
+What was improved:
+1. Hardened Cloudflare Pages _headers
+   - Added HSTS for HTTPS enforcement.
+   - Added Content-Security-Policy compatible with the current site, Google Apps Script lead form, Google Analytics/GTM, Google Fonts, WhatsApp, LinkedIn and local assets.
+   - Added X-Frame-Options: DENY.
+   - Added X-Content-Type-Options: nosniff.
+   - Added Referrer-Policy: strict-origin-when-cross-origin.
+   - Added Permissions-Policy to disable unnecessary browser APIs.
+   - Added Cross-Origin-Opener-Policy: same-origin-allow-popups.
+   - Added Cross-Origin-Resource-Policy: same-origin.
+   - Added X-Permitted-Cross-Domain-Policies: none.
+   - Added Origin-Agent-Cluster: ?1.
+
+2. Safer caching rules
+   - Static assets keep long immutable cache.
+   - HTML and public text/XML discovery files revalidate.
+   - Diagnostic and thank-you pages use no-store to avoid caching submitted-form flows.
+
+3. Safer redirects
+   - Redirects root domain and pages.dev preview URL to the canonical https://www.elboubakry.com host.
+   - Added trailing-slash redirects for /reserver-diagnostic and /merci.
+
+4. Responsible disclosure
+   - Added /.well-known/security.txt with security contact and canonical URL.
+
+5. Link security
+   - Verified and normalized target="_blank" links with rel="noopener noreferrer".
+   - Added referrer meta tag to public HTML pages for consistent local/browser behavior.
+
+Important tests after deployment:
+- Open https://www.elboubakry.com/.well-known/security.txt
+- Open https://www.elboubakry.com/robots.txt
+- Open https://www.elboubakry.com/sitemap.xml
+- Submit one TEST lead on /reserver-diagnostic/ and verify it still reaches Google Sheet.
+- Check browser console for CSP violations.
+- If any CSP violation appears, add only the required domain to _headers and redeploy.
+
+Known safety note:
+- The CSP intentionally keeps 'unsafe-inline' because this static site uses inline JSON-LD and inline styles. Removing it would require a deeper refactor with nonce/hash-based CSP.

@@ -1,237 +1,356 @@
-/* Elboubakry analytics foundation.
- * TODO: Replace G-XXXXXXXXXX with the real GA4 Measurement ID from Google Analytics.
- * TODO: Add a privacy/cookie notice before production launch if required by the final deployment/legal context.
+/* Upgrade 07 — Final Tracking & Analytics
+ * Privacy-first analytics foundation for Elboubakry static website.
+ *
+ * Setup needed after deployment:
+ * 1) Replace GA4_MEASUREMENT_ID below with the real GA4 ID, for example G-XXXXXXXXXX.
+ * 2) Keep values empty for tools you do not use yet. No external analytics script loads while IDs are placeholders.
+ * 3) Test with /?ea_debug_tracking=1 and browser console.
  */
 (function () {
   'use strict';
 
-  var GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-  var IMPORTANT_INTERNAL_PATHS = [
-    '/#footer-contact',
-    '/reserver-diagnostic/',
-    '/about-elboubakry-abdessamad.html',
-    '/insights/',
-    '/insights/strategie-marketing-digital-maroc.html',
-    '/insights/publicite-digitale-maroc-meta-google-tiktok.html',
-    '/insights/landing-page-generation-leads-maroc.html',
-    '/insights/seo-content-strategy-maroc.html',
-    '/insights/analytics-tracking-marketing-maroc.html',
-    '/insights/automatisation-marketing-maroc.html',
-    '/insights/consultant-marketing-digital-maroc.html',
-    '/insights/consultant-marketing-digital-casablanca.html'
-  ];
-  var SERVICE_PAGES = {
-    'strategie-marketing-digital-maroc': 'strategie_marketing_digital',
-    'publicite-digitale-maroc-meta-google-tiktok': 'publicite_digitale',
-    'landing-page-generation-leads-maroc': 'landing_page_generation_leads',
-    'seo-content-strategy-maroc': 'seo_content_strategy',
-    'analytics-tracking-marketing-maroc': 'analytics_tracking',
-    'automatisation-marketing-maroc': 'automatisation_marketing',
-    'consultant-marketing-digital-maroc': 'consultant_marketing_digital_maroc',
-    'consultant-marketing-digital-casablanca': 'consultant_marketing_digital_casablanca'
-  };
-  var scrollDepthSent = {};
+  var CONFIG = Object.assign({
+    GA4_MEASUREMENT_ID: 'G-XXXXXXXXXX',
+    ENABLE_DEBUG: false,
+    COOKIE_STORAGE: false,
+    TRACK_SCROLL_DEPTHS: [25, 50, 75, 90],
+    TRACK_ARTICLE_READ_SECONDS: 45,
+    ATTRIBUTION_TTL_DAYS: 90,
+    SITE_NAME: 'Elboubakry',
+    PRIMARY_CONVERSION_PATH: '/reserver-diagnostic/'
+  }, window.EA_TRACKING_CONFIG || {});
 
-  function isPlaceholderMeasurementId() {
-    return GA_MEASUREMENT_ID === 'G-XXXXXXXXXX';
+  var searchParams = new URLSearchParams(window.location.search);
+  var debugMode = CONFIG.ENABLE_DEBUG || searchParams.has('ea_debug_tracking') || searchParams.has('debug_tracking');
+  var GA4_PATTERN = /^G-[A-Z0-9]{6,}$/;
+  var isRealGa4Id = GA4_PATTERN.test(CONFIG.GA4_MEASUREMENT_ID) && CONFIG.GA4_MEASUREMENT_ID !== 'G-XXXXXXXXXX';
+  var scrollDepthSent = Object.create(null);
+  var articleTimers = { started: false, completed: false };
+  var formStarted = Object.create(null);
+  var STORAGE_KEY = 'EA_ATTRIBUTION_V1';
+  var SESSION_KEY = 'EA_SESSION_V1';
+  var ORIGINAL_FETCH = window.fetch;
+
+  function log() {
+    if (!debugMode || !window.console) return;
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift('[EA Tracking]');
+    console.info.apply(console, args);
   }
 
-  function loadGoogleTag() {
-    if (window.__elboubakryAnalyticsLoaded) return;
-    window.__elboubakryAnalyticsLoaded = true;
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function () {
-      window.dataLayer.push(arguments);
-    };
-    window.gtag('js', new Date());
-    window.gtag('config', GA_MEASUREMENT_ID, {
-      anonymize_ip: true,
-      send_page_view: true
-    });
-    window.__elboubakryAnalyticsMeasurementId = GA_MEASUREMENT_ID;
-    if (isPlaceholderMeasurementId()) return;
-    var tagScript = document.createElement('script');
-    tagScript.async = true;
-    tagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_MEASUREMENT_ID);
-    document.head.appendChild(tagScript);
+  function nowIso() {
+    return new Date().toISOString();
   }
 
-  function cleanText(value) {
-    return (value || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+  function safeJsonParse(value) {
+    try { return JSON.parse(value); } catch (error) { return null; }
+  }
+
+  function storageGet(key) {
+    try { return window.localStorage.getItem(key); } catch (error) { return null; }
+  }
+
+  function storageSet(key, value) {
+    try { window.localStorage.setItem(key, value); } catch (error) {}
+  }
+
+  function sessionGet(key) {
+    try { return window.sessionStorage.getItem(key); } catch (error) { return null; }
+  }
+
+  function sessionSet(key, value) {
+    try { window.sessionStorage.setItem(key, value); } catch (error) {}
+  }
+
+  function cleanText(value, limit) {
+    return (value || '').replace(/\s+/g, ' ').trim().slice(0, limit || 140);
+  }
+
+  function cleanPath(path) {
+    return (path || window.location.pathname || '/').replace(/\/index\.html$/, '/');
   }
 
   function pagePath() {
-    return window.location.pathname + window.location.hash;
+    return cleanPath(window.location.pathname) + window.location.search + window.location.hash;
   }
 
   function pageUrl(href) {
-    try {
-      return new URL(href, window.location.href);
-    } catch (error) {
-      return null;
-    }
+    try { return new URL(href || window.location.href, window.location.href); } catch (error) { return null; }
   }
 
-  function slugFromPath() {
-    var file = window.location.pathname.split('/').pop() || '';
-    return file.replace(/\.html$/, '');
+  function pageType() {
+    var path = cleanPath(window.location.pathname);
+    if (path === '/' || path === '') return 'homepage';
+    if (path === '/insights/') return 'insights_hub';
+    if (/^\/insights\/[^/]+\.html$/.test(path)) return 'insight_article';
+    if (path === '/reserver-diagnostic/') return 'lead_page';
+    if (path === '/merci/') return 'thank_you';
+    if (/about-elboubakry-abdessamad\.html$/.test(path)) return 'about';
+    return 'page';
   }
 
   function pageTitle() {
-    var heading = document.querySelector('h1');
-    return cleanText(heading ? heading.textContent : document.title);
+    var h1 = document.querySelector('h1');
+    return cleanText(h1 ? h1.textContent : document.title, 160);
+  }
+
+  function slugFromPath(pathname) {
+    var parts = cleanPath(pathname || window.location.pathname).split('/').filter(Boolean);
+    var last = parts.pop() || 'home';
+    return last.replace(/\.html$/, '') || 'home';
+  }
+
+  function getSession() {
+    var stored = safeJsonParse(sessionGet(SESSION_KEY));
+    if (stored && stored.session_id) return stored;
+    var created = {
+      session_id: 'EA-S-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8),
+      started_at: nowIso(),
+      landing_page: window.location.href,
+      referrer: document.referrer || ''
+    };
+    sessionSet(SESSION_KEY, JSON.stringify(created));
+    return created;
+  }
+
+  function buildAttribution() {
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'msclkid', 'ttclid'];
+    var current = {};
+    keys.forEach(function (key) {
+      var value = searchParams.get(key);
+      if (value) current[key] = value.slice(0, 180);
+    });
+
+    var existing = safeJsonParse(storageGet(STORAGE_KEY)) || {};
+    var hasCurrent = Object.keys(current).length > 0;
+    var ageLimitMs = (CONFIG.ATTRIBUTION_TTL_DAYS || 90) * 24 * 60 * 60 * 1000;
+    var existingAgeMs = existing.updated_at ? Date.now() - new Date(existing.updated_at).getTime() : Infinity;
+
+    if (hasCurrent || !existing.first_touch || existingAgeMs > ageLimitMs) {
+      var next = Object.assign({}, existing, current, {
+        last_touch_url: window.location.href,
+        last_referrer: document.referrer || existing.last_referrer || '',
+        updated_at: nowIso()
+      });
+      if (!next.first_touch) next.first_touch = window.location.href;
+      if (!next.first_referrer) next.first_referrer = document.referrer || '';
+      if (!next.created_at) next.created_at = nowIso();
+      storageSet(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    }
+    return existing;
+  }
+
+  var session = getSession();
+  var attribution = buildAttribution();
+
+  function baseParams(extra) {
+    return Object.assign({
+      page_title: pageTitle(),
+      page_path: pagePath(),
+      page_location: window.location.href,
+      page_type: pageType(),
+      session_id: session.session_id,
+      traffic_source: attribution.utm_source || '',
+      traffic_medium: attribution.utm_medium || '',
+      traffic_campaign: attribution.utm_campaign || '',
+      referrer: document.referrer || '',
+      transport_type: 'beacon'
+    }, extra || {});
+  }
+
+  function setupDataLayer() {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  }
+
+  function loadGa4() {
+    setupDataLayer();
+    window.gtag('consent', 'default', {
+      ad_storage: 'denied',
+      analytics_storage: CONFIG.COOKIE_STORAGE ? 'granted' : 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 500
+    });
+    window.gtag('js', new Date());
+
+    if (!isRealGa4Id) {
+      log('GA4 placeholder detected. External Google Analytics script was not loaded.', CONFIG.GA4_MEASUREMENT_ID);
+      return;
+    }
+
+    window.gtag('config', CONFIG.GA4_MEASUREMENT_ID, {
+      send_page_view: false,
+      anonymize_ip: true,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+      cookie_flags: 'SameSite=Lax;Secure',
+      client_storage: CONFIG.COOKIE_STORAGE ? 'cookie' : 'none'
+    });
+
+    if (!document.querySelector('script[data-ea-ga4]')) {
+      var tagScript = document.createElement('script');
+      tagScript.async = true;
+      tagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(CONFIG.GA4_MEASUREMENT_ID);
+      tagScript.setAttribute('data-ea-ga4', 'true');
+      document.head.appendChild(tagScript);
+    }
+  }
+
+  function trackEvent(eventName, parameters) {
+    var params = baseParams(parameters || {});
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params);
+    }
+    window.dispatchEvent(new CustomEvent('ea:tracking-event', {
+      detail: { event: eventName, parameters: params }
+    }));
+    log(eventName, params);
+  }
+
+  function trackPageView() {
+    trackEvent('page_view', {
+      page_referrer: document.referrer || '',
+      content_group: pageType(),
+      article_slug: pageType() === 'insight_article' ? slugFromPath() : undefined
+    });
   }
 
   function locationFromElement(element) {
-    if (element.dataset.trackLocation) return element.dataset.trackLocation;
-    if (element.closest('.rs-banner-one')) return 'hero';
-    if (element.closest('#footer-contact')) return 'footer_contact';
-    if (element.closest('#homecontact')) return 'homepage_contact';
-    if (element.closest('.ea-article-hero')) return 'article_hero';
-    if (element.closest('.ea-article-cta')) return 'article_cta';
-    if (element.closest('.ea-insights-cta')) return 'insights_cta';
-    if (element.closest('.ea-article-side-card')) return 'sidebar';
-    if (element.closest('.offcanvas-area')) return 'mobile_menu';
-    if (element.closest('.ea-footer, footer')) return 'footer';
-    if (element.closest('header')) return 'header';
+    if (!element) return 'content';
+    if (element.dataset && element.dataset.trackLocation) return element.dataset.trackLocation;
+    if (element.closest('.rs-banner-one, .hero, [data-section="hero"]')) return 'hero';
+    if (element.closest('header, .header-area, .main-menu')) return 'header';
+    if (element.closest('.offcanvas-area, .mobile-menu')) return 'mobile_menu';
+    if (element.closest('#portfolio, .ea-portfolio, .portfolio')) return 'portfolio';
+    if (element.closest('#services, .services')) return 'services';
+    if (element.closest('#systems, .systems, .ea-system')) return 'systems';
+    if (element.closest('.ea-insights, .ea-insights-grid, .insights')) return 'insights';
+    if (element.closest('.ea-article-cta, .article-cta')) return 'article_cta';
+    if (element.closest('#footer-contact, footer, .ea-footer')) return 'footer';
+    if (element.closest('form')) return 'form';
     return 'content';
   }
 
   function ctaTypeFromHref(href) {
-    if (/linkedin\.com/i.test(href)) return 'linkedin';
     if (/wa\.me|whatsapp/i.test(href)) return 'whatsapp';
     if (/^mailto:/i.test(href)) return 'email';
+    if (/linkedin\.com/i.test(href)) return 'linkedin';
+    if (/instagram\.com/i.test(href)) return 'instagram';
     if (/reserver-diagnostic/i.test(href)) return 'diagnostic';
-    if (/homecontact/i.test(href)) return 'consultation';
+    if (/insights/i.test(href)) return 'insights';
+    if (/^#|\/#/.test(href)) return 'anchor';
     return 'internal';
   }
 
-  function isImportantInternalLink(link) {
-    var href = link.getAttribute('href') || '';
-    if (!href || /^(mailto:|tel:|sms:)/i.test(href)) {
-      return false;
-    }
+  function handleClick(event) {
+    var target = event.target.closest('a, button, [role="button"], [data-track-event]');
+    if (!target) return;
+    var href = target.getAttribute('href') || '';
+    var text = cleanText(target.dataset.trackLabel || target.textContent || target.getAttribute('aria-label') || href, 120);
+    var location = locationFromElement(target);
+    var explicitEvent = target.dataset.trackEvent;
     var url = pageUrl(href);
-    if (!url) return false;
-    if (url.origin !== window.location.origin) {
-      return false;
-    }
-    var target = url.pathname + url.hash;
-    return IMPORTANT_INTERNAL_PATHS.some(function (path) {
-      return target === path || target.endsWith(path);
-    }) || /\/insights\/.+\.html$/.test(url.pathname);
-  }
+    var type = ctaTypeFromHref(href);
 
-  function trackEvent(eventName, parameters) {
-    if (typeof window.gtag !== 'function') return;
-    window.gtag('event', eventName, Object.assign({
-      page_path: pagePath(),
-      transport_type: 'beacon'
-    }, parameters || {}));
-  }
-
-  function trackScopedCta(link, text, href) {
-    var slug = slugFromPath();
-    var ctaType = ctaTypeFromHref(href);
-    if (SERVICE_PAGES[slug]) {
-      trackEvent('service_cta_click', {
-        service_slug: SERVICE_PAGES[slug],
-        service_name: pageTitle(),
-        cta_type: ctaType,
-        button_text: text
-      });
+    if (explicitEvent) {
+      trackEvent(explicitEvent, { location: location, button_text: text, cta_type: type, target_url: href });
       return;
     }
-    if (/\/light\/insights\//.test(window.location.pathname)) {
-      trackEvent('article_cta_click', {
-        article_slug: slug,
-        article_title: pageTitle(),
-        cta_type: ctaType,
-        button_text: text
-      });
+
+    if (type === 'diagnostic') {
+      trackEvent('diagnostic_cta_click', { location: location, button_text: text, target_url: url ? url.pathname : href });
+    } else if (type === 'whatsapp') {
+      trackEvent('whatsapp_click', { location: location, button_text: text, target_url: href });
+    } else if (type === 'email') {
+      trackEvent('email_click', { location: location, button_text: text });
+    } else if (type === 'linkedin' || type === 'instagram') {
+      trackEvent('social_click', { location: location, social_network: type, button_text: text, target_url: href });
+    } else if (url && url.origin === window.location.origin) {
+      if (/^\/insights\/[^/]+\.html$/.test(url.pathname)) {
+        trackEvent('insight_article_click', {
+          location: location,
+          article_slug: slugFromPath(url.pathname),
+          link_text: text,
+          target_page: url.pathname
+        });
+      } else {
+        trackEvent('internal_link_click', { location: location, link_text: text, target_page: url.pathname + url.hash });
+      }
     }
   }
 
-  function isConsultationLink(href, text, explicitEvent) {
-    return explicitEvent === 'consultation_click' || /homecontact/i.test(href) || /consultation|diagnostic|contact|discut/i.test(text);
+  function formName(form) {
+    return form.getAttribute('name') || form.id || form.dataset.formName || (pageType() === 'lead_page' ? 'diagnostic_form' : 'form');
   }
 
-  function isDiagnosticPageLink(href, explicitEvent) {
-    return explicitEvent === 'diagnostic_cta_click' || /reserver-diagnostic/i.test(href);
+  function handleFormInteraction(event) {
+    var field = event.target;
+    var form = field && field.closest ? field.closest('form') : null;
+    if (!form) return;
+    var name = formName(form);
+    if (formStarted[name]) return;
+    formStarted[name] = true;
+    trackEvent('form_start', { form_name: name, location: locationFromElement(form) });
   }
 
-  function trackedEventForLink(link, href) {
-    var explicitEvent = link.dataset.trackEvent;
-    if (explicitEvent) return explicitEvent;
-    if (/wa\.me|whatsapp/i.test(href)) return 'whatsapp_click';
-    if (/linkedin\.com/i.test(href)) return 'linkedin_click';
-    if (/^mailto:/i.test(href)) return 'email_click';
-    return '';
-  }
-
-  function targetPage(link) {
-    var href = link.getAttribute('href') || '';
-    var url = pageUrl(href);
-    if (!url) return href;
-    return url.pathname + url.hash;
-  }
-
-  function handleTrackedClick(event) {
-    var link = event.target.closest('a, button, [data-track-event]');
-    if (!link) return;
-    var explicitEvent = link.dataset.trackEvent;
-    var href = link.getAttribute('href') || '';
-    var text = cleanText(link.dataset.trackLabel || link.textContent || link.getAttribute('aria-label') || href);
-    var location = locationFromElement(link);
-    var trackedEvent = trackedEventForLink(link, href);
-
-    if (trackedEvent) {
-      trackEvent(trackedEvent, {
-        location: location,
-        button_text: text || trackedEvent
-      });
-      trackScopedCta(link, text, href);
-    } else if (isDiagnosticPageLink(href, explicitEvent)) {
-      trackEvent('diagnostic_cta_click', {
-        location: location,
-        button_text: text || 'diagnostic'
-      });
-      trackScopedCta(link, text, href);
-    } else if (isConsultationLink(href, text, explicitEvent)) {
-      trackEvent('consultation_click', {
-        location: location,
-        button_text: text || 'consultation'
-      });
-      trackScopedCta(link, text, href);
-    }
-
-    if (isImportantInternalLink(link)) {
-      trackEvent('internal_link_click', {
-        target_page: targetPage(link),
-        location: location,
-        link_text: text || targetPage(link)
-      });
-    }
-  }
-
-  function hasRequiredContactMethod(form) {
-    if (!form.hasAttribute('data-custom-validation')) return true;
-    var phoneField = form.querySelector('[name="phone"]');
-    var emailField = form.querySelector('[name="email"]');
-    var hasPhone = phoneField && cleanText(phoneField.value).length > 0;
-    var hasEmail = emailField && cleanText(emailField.value).length > 0;
-    return hasPhone || hasEmail;
-  }
-
-  function handleFormSubmit(event) {
+  function handleSubmit(event) {
     var form = event.target;
     if (!form || form.tagName !== 'FORM') return;
-    if (form.hasAttribute('data-defer-submit-tracking')) return;
-    if (typeof form.checkValidity === 'function' && !form.checkValidity()) return;
-    if (!hasRequiredContactMethod(form)) return;
-    trackEvent(form.hasAttribute('data-whatsapp-lead') ? 'consultation_whatsapp_submit' : 'contact_form_submit', {
-      form_name: form.getAttribute('name') || form.id || 'contact_form',
-      location: locationFromElement(form)
+    var name = formName(form);
+    trackEvent('lead_submit_attempt', {
+      form_name: name,
+      location: locationFromElement(form),
+      valid_at_submit: typeof form.checkValidity === 'function' ? form.checkValidity() : undefined
+    });
+  }
+
+  function hookFetchForLeadEndpoint() {
+    if (typeof ORIGINAL_FETCH !== 'function' || window.__eaFetchHooked) return;
+    window.__eaFetchHooked = true;
+    window.fetch = function () {
+      var args = Array.prototype.slice.call(arguments);
+      var target = args[0];
+      var url = typeof target === 'string' ? target : (target && target.url ? target.url : '');
+      var isLeadEndpoint = /https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(url || '');
+      if (isLeadEndpoint) {
+        trackEvent('lead_request_sent', {
+          form_name: 'diagnostic_form',
+          endpoint_type: 'google_apps_script',
+          location: 'lead_page'
+        });
+      }
+      return ORIGINAL_FETCH.apply(this, args).then(function (response) {
+        if (isLeadEndpoint) {
+          trackEvent('lead_request_completed', {
+            form_name: 'diagnostic_form',
+            endpoint_type: 'google_apps_script',
+            location: 'lead_page',
+            request_status: response && response.ok === false ? 'not_ok' : 'sent'
+          });
+        }
+        return response;
+      }).catch(function (error) {
+        if (isLeadEndpoint) {
+          trackEvent('lead_request_error', {
+            form_name: 'diagnostic_form',
+            endpoint_type: 'google_apps_script',
+            location: 'lead_page',
+            error_name: error && error.name ? error.name : 'error'
+          });
+        }
+        throw error;
+      });
+    };
+  }
+
+  function handleCustomLeadEvents() {
+    window.addEventListener('ea:lead-test-sent', function (event) {
+      trackEvent('lead_test_sent', Object.assign({ form_name: 'diagnostic_test_panel' }, event.detail || {}));
+    });
+    window.addEventListener('ea:lead-test-error', function (event) {
+      trackEvent('lead_test_error', Object.assign({ form_name: 'diagnostic_test_panel' }, event.detail || {}));
     });
   }
 
@@ -239,19 +358,76 @@
     var doc = document.documentElement;
     var scrollable = Math.max(doc.scrollHeight - window.innerHeight, 1);
     var percent = Math.round((window.scrollY / scrollable) * 100);
-    [50, 90].forEach(function (threshold) {
+    (CONFIG.TRACK_SCROLL_DEPTHS || [25, 50, 75, 90]).forEach(function (threshold) {
       if (percent >= threshold && !scrollDepthSent[threshold]) {
         scrollDepthSent[threshold] = true;
-        trackEvent('scroll_depth', {
-          percent: threshold
-        });
+        trackEvent('scroll_depth', { percent_scrolled: threshold });
       }
     });
   }
 
-  loadGoogleTag();
-  window.trackEvent = trackEvent;
-  document.addEventListener('click', handleTrackedClick, true);
-  document.addEventListener('submit', handleFormSubmit, true);
-  window.addEventListener('scroll', handleScrollDepth, { passive: true });
-})();
+  function setupArticleEngagement() {
+    if (pageType() !== 'insight_article') return;
+    if (!articleTimers.started) {
+      articleTimers.started = true;
+      trackEvent('article_read_start', { article_slug: slugFromPath(), article_title: pageTitle() });
+    }
+    window.setTimeout(function () {
+      if (!articleTimers.completed) {
+        articleTimers.completed = true;
+        trackEvent('article_engaged_read', {
+          article_slug: slugFromPath(),
+          article_title: pageTitle(),
+          seconds: CONFIG.TRACK_ARTICLE_READ_SECONDS || 45
+        });
+      }
+    }, (CONFIG.TRACK_ARTICLE_READ_SECONDS || 45) * 1000);
+  }
+
+  function setupDebugPanel() {
+    if (!debugMode || document.querySelector('.ea-tracking-debug')) return;
+    var panel = document.createElement('div');
+    panel.className = 'ea-tracking-debug';
+    panel.style.cssText = 'position:fixed;z-index:99999;right:12px;bottom:12px;max-width:340px;padding:12px 14px;border:1px solid rgba(37,99,235,.25);border-radius:16px;background:#fff;box-shadow:0 18px 50px rgba(15,23,42,.14);font:12px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;color:#0f172a';
+    panel.innerHTML = '<strong style="display:block;margin-bottom:6px;color:#0b55ff">EA Tracking Debug</strong>' +
+      '<div>GA4: ' + (isRealGa4Id ? 'Configured' : 'Placeholder / not loaded') + '</div>' +
+      '<div>Page type: ' + pageType() + '</div>' +
+      '<div>Session: ' + session.session_id + '</div>' +
+      '<button type="button" style="margin-top:8px;border:0;border-radius:999px;background:#0b55ff;color:#fff;padding:7px 10px;font-weight:800;cursor:pointer">Send test event</button>';
+    panel.querySelector('button').addEventListener('click', function () {
+      trackEvent('tracking_debug_test', { location: 'debug_panel' });
+    });
+    document.body.appendChild(panel);
+  }
+
+  function init() {
+    loadGa4();
+    hookFetchForLeadEndpoint();
+    handleCustomLeadEvents();
+    window.EA_ANALYTICS = Object.freeze({
+      version: 'upgrade-07-final-tracking',
+      trackEvent: trackEvent,
+      getAttribution: function () { return Object.assign({}, attribution); },
+      getSession: function () { return Object.assign({}, session); },
+      config: Object.assign({}, CONFIG),
+      ga4Configured: isRealGa4Id
+    });
+
+    document.addEventListener('click', handleClick, true);
+    document.addEventListener('focusin', handleFormInteraction, true);
+    document.addEventListener('input', handleFormInteraction, true);
+    document.addEventListener('submit', handleSubmit, true);
+    window.addEventListener('scroll', handleScrollDepth, { passive: true });
+
+    trackPageView();
+    setupArticleEngagement();
+    setupDebugPanel();
+    log('Initialized', window.EA_ANALYTICS);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+}());

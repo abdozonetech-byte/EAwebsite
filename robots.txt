@@ -14,6 +14,14 @@ User-agent: ChatGPT-User
 Allow: /
 
 User-agent: GPTBot
-Disallow: /
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
 
 Sitemap: https://www.elboubakry.com/sitemap.xml
+
+# AI-readable website summary: https://www.elboubakry.com/llms.txt
