@@ -21,23 +21,37 @@
     var open = isOpen();
     body.classList.toggle('ea-menu-locked', open);
     if (toggleButton) toggleButton.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (menu) menu.setAttribute('aria-hidden', open ? 'false' : 'true');
   }
 
   if (toggleButton) {
     toggleButton.setAttribute('aria-controls', 'mobile-menu');
     toggleButton.setAttribute('aria-expanded', 'false');
   }
-  menu.setAttribute('aria-hidden', 'true');
+  function openMenu(event) {
+    if (event) event.preventDefault();
+    menu.classList.add('info-open');
+    if (overlay) overlay.classList.add('overlay-open');
+    syncState();
+  }
+
+  function closeMenu(event) {
+    if (event) event.preventDefault();
+    menu.classList.remove('info-open');
+    if (overlay) overlay.classList.remove('overlay-open');
+    syncState();
+  }
 
   var observer = new MutationObserver(syncState);
   observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
 
+  if (toggle) toggle.addEventListener('click', openMenu);
+  if (toggleButton && toggleButton !== toggle) toggleButton.addEventListener('click', openMenu);
+  if (closeButton) closeButton.addEventListener('click', closeMenu);
+  if (overlay) overlay.addEventListener('click', closeMenu);
+
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && isOpen()) {
-      menu.classList.remove('info-open');
-      if (overlay) overlay.classList.remove('overlay-open');
-      syncState();
+      closeMenu();
       if (toggleButton && typeof toggleButton.focus === 'function') toggleButton.focus();
     }
   });
@@ -45,9 +59,7 @@
   document.addEventListener('click', function (event) {
     var link = event.target.closest ? event.target.closest('.offcanvas-area a') : null;
     if (!link) return;
-    menu.classList.remove('info-open');
-    if (overlay) overlay.classList.remove('overlay-open');
-    syncState();
+    closeMenu();
   });
 
   syncState();
