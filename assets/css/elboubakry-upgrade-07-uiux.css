@@ -435,23 +435,23 @@ a, button { -webkit-tap-highlight-color: transparent; }
   background: #fff !important;
 }
 
-/* Footer */
+/* Footer — keep the original light premium identity, not a blue/dark block */
 .ea-footer-v11 {
   margin-top: 0 !important;
-  background:
-    radial-gradient(circle at 14% 0%, rgba(83,109,254,.14), transparent 34%),
-    #07122f !important;
+  background: linear-gradient(180deg, #f8faff 0%, #eef3ff 100%) !important;
+  border-top: 1px solid rgba(64,95,255,.12) !important;
+  color: #111827 !important;
 }
 .ea-footer-trust-row,
 .ea-footer-block,
 .ea-footer-bottom-inner {
-  border-color: rgba(255,255,255,.12) !important;
+  border-color: rgba(64,95,255,.12) !important;
 }
 .ea-footer-cta,
 .ea-footer-lead-btn {
   border-radius: 999px !important;
 }
-.ea-footer-block a:hover { color: #ffffff !important; }
+.ea-footer-block a:hover { color: var(--rs-theme-primary) !important; }
 
 /* Offcanvas */
 .offcanvas-content {

@@ -7,17 +7,13 @@
   const count = document.querySelector("[data-insights-count]");
   let activeFilter = "Tous";
 
-  const filterMap = {
-    "Tous": () => true,
-    "Stratégie Marketing": (article) => article.category === "Stratégie Marketing",
-    "Publicité Digitale": (article) => article.category === "Publicité Digitale",
-    "Génération de Leads": (article) => article.category === "Génération de Leads",
-    "Landing Pages": (article) => article.category === "Landing Pages",
-    "SEO & Contenu": (article) => article.category === "SEO & Contenu",
-    "Analytics & Tracking": (article) => article.category === "Analytics & Tracking",
-    "Automatisation": (article) => article.category === "Automatisation",
-    "Marketing Local Maroc": (article) => article.category === "Marketing Local Maroc"
-  };
+  function uniqueCategories() {
+    return Array.from(new Set(articles.map((article) => article.category).filter(Boolean)));
+  }
+
+  function getVisibleArticles() {
+    return activeFilter === "Tous" ? articles : articles.filter((article) => article.category === activeFilter);
+  }
 
   const iconMap = {
     "Stratégie Marketing": "ri-route-line",
@@ -27,7 +23,10 @@
     "SEO & Contenu": "ri-search-2-line",
     "Analytics & Tracking": "ri-bar-chart-box-line",
     "Automatisation": "ri-loop-left-line",
-    "Marketing Local Maroc": "ri-map-pin-line"
+    "Marketing Local Maroc": "ri-map-pin-line",
+    "IA & Productivité": "ri-sparkling-2-line",
+    "Méthode & Confiance": "ri-shield-check-line",
+    "Vidéo & Contenu": "ri-movie-2-line"
   };
 
   function escapeHtml(value) {
@@ -41,7 +40,7 @@
 
   function renderFilters() {
     if (!filters) return;
-    filters.innerHTML = Object.keys(filterMap).map((label) => (
+    filters.innerHTML = ["Tous", ...uniqueCategories()].map((label) => (
       `<button class="ea-insight-filter${label === activeFilter ? " is-active" : ""}" type="button" data-filter="${escapeHtml(label)}" aria-pressed="${label === activeFilter}">
         ${escapeHtml(label)}
       </button>`
@@ -49,13 +48,15 @@
   }
 
   function articleUrl(article) {
-    return `insights/${encodeURIComponent(article.slug || article.id)}.html`;
+    const slug = encodeURIComponent(article.slug || article.id);
+    const path = window.location.pathname.replace(/\/+$/, "/");
+    const inInsightsDirectory = /\/insights\/$/.test(path);
+    return inInsightsDirectory ? `${slug}.html` : `insights/${slug}.html`;
   }
 
   function renderArticles() {
     if (!grid) return;
-    const matcher = filterMap[activeFilter] || filterMap.Tous;
-    const visible = articles.filter(matcher);
+    const visible = getVisibleArticles();
 
     grid.innerHTML = visible.map((article, index) => {
       const icon = iconMap[article.category] || "ri-article-line";
