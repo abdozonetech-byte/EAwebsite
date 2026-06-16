@@ -49,9 +49,7 @@
 
   function articleUrl(article) {
     const slug = encodeURIComponent(article.slug || article.id);
-    const path = window.location.pathname.replace(/\/+$/, "/");
-    const inInsightsDirectory = /\/insights\/$/.test(path) || /\/insights\/index\.html$/.test(window.location.pathname);
-    return inInsightsDirectory ? `${slug}.html` : `insights/${slug}.html`;
+    return `/insights/${slug}.html`;
   }
 
   function renderArticles() {
