@@ -1,0 +1,109 @@
+/* Update 01 — diagnostic page UI/UX polish without redesign */
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#root :where(a, button, input, [role="combobox"], [tabindex]):focus-visible {
+  outline: 3px solid rgba(37, 99, 235, .24);
+  outline-offset: 3px;
+}
+
+#root header a[href="/"],
+#root footer a[href="/"] {
+  min-height: 44px;
+}
+
+#root label {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+#root input,
+#root button[role="combobox"] {
+  min-height: 52px;
+  border-radius: 18px !important;
+}
+
+#root input:focus,
+#root button[role="combobox"]:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, .16), 0 14px 34px rgba(15, 54, 130, .08) !important;
+}
+
+#root button[type="submit"] {
+  min-height: 56px;
+  border-radius: 18px !important;
+  box-shadow: 0 20px 48px rgba(37, 99, 235, .26) !important;
+}
+
+#root form {
+  gap: 12px;
+}
+
+#root form p[aria-live],
+#root [id$="-error"] {
+  overflow-wrap: anywhere;
+}
+
+#root footer nav a,
+#root footer a {
+  min-height: 36px;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  #root header,
+  #root main,
+  #root footer {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  #root header {
+    gap: 10px;
+  }
+
+  #root header > a:first-child span small {
+    display: none;
+  }
+
+  #root h1 {
+    font-size: clamp(2.15rem, 10vw, 3rem) !important;
+    line-height: 1.08 !important;
+    text-wrap: balance;
+  }
+
+  #root p {
+    line-height: 1.72;
+    text-wrap: pretty;
+  }
+
+  #root form {
+    width: 100%;
+  }
+
+  #root button[type="submit"] {
+    white-space: normal;
+    text-align: center;
+  }
+
+  #root footer {
+    padding-bottom: 28px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  #root header,
+  #root main,
+  #root footer {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #root header a[href="/"] strong {
+    font-size: 17px;
+  }
+}
