@@ -198,7 +198,6 @@ button.bar-icon {
 
 .ea-growth-chip,
 .ea-growth-metric,
-.ea-system-card,
 .ea-growth-values,
 .ea-funnel-card,
 .ea-funnel-cta {
@@ -207,7 +206,6 @@ button.bar-icon {
   box-shadow: 0 8px 24px rgba(40, 70, 150, .04);
 }
 
-.ea-system-card,
 .ea-funnel-card,
 .ea-growth-values,
 .ea-funnel-cta {
@@ -308,24 +306,12 @@ button.bar-icon {
 .ea-mini-line span:nth-child(4) { height: 68%; opacity: .72; }
 .ea-mini-line span:nth-child(5) { height: 100%; opacity: 1; }
 
-.ea-system-card {
-  position: absolute;
-  z-index: 4;
-  width: 245px;
-  min-height: 146px;
-  padding: 18px;
-  border-radius: 20px;
-  transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
-}
-
-.ea-system-card:hover,
 .ea-funnel-card:hover {
   transform: translateY(-5px);
   border-color: rgba(80, 110, 255, .26);
   box-shadow: 0 14px 32px rgba(40, 70, 150, .07);
 }
 
-.ea-card-index,
 .ea-funnel-card > span {
   display: inline-flex;
   align-items: center;
@@ -339,22 +325,6 @@ button.bar-icon {
   font-weight: 900;
 }
 
-.ea-system-card > i {
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  background: #f0f5ff;
-  color: #0b55ff;
-  font-size: 25px;
-}
-
-.ea-system-card h3,
 .ea-funnel-card h3 {
   margin: 14px 0 8px;
   color: #101a36;
@@ -362,102 +332,11 @@ button.bar-icon {
   line-height: 1.2;
 }
 
-.ea-system-card p,
 .ea-funnel-card p {
   margin: 0;
   color: rgba(16, 26, 54, .76);
   font-size: 13px;
   line-height: 1.55;
-}
-
-.ea-card-audit { left: 0; top: 190px; }
-.ea-card-strategy { left: 50%; top: 0; transform: translateX(-50%); }
-.ea-card-strategy:hover { transform: translateX(-50%) translateY(-5px); }
-.ea-card-assets { right: 0; top: 150px; }
-.ea-card-campaigns { right: 22px; bottom: 118px; }
-.ea-card-data { left: 50%; bottom: 0; transform: translateX(-50%); }
-.ea-card-data:hover { transform: translateX(-50%) translateY(-5px); }
-.ea-card-leads { left: 16px; bottom: 132px; }
-
-.ea-system-card ul {
-  display: grid;
-  gap: 6px;
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-  color: rgba(16, 26, 54, .78);
-  font-size: 11px;
-}
-
-.ea-system-card ul li::after {
-  content: "✓";
-  float: right;
-  color: #16a45f;
-  font-weight: 900;
-}
-
-.ea-card-pills,
-.ea-data-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.ea-card-pills span,
-.ea-data-row strong {
-  padding: 8px 6px;
-  border-radius: 12px;
-  background: #f3f6ff;
-  color: #101a36;
-  font-size: 10px;
-  text-align: center;
-}
-
-.ea-content-grid,
-.ea-bars,
-.ea-lead-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.ea-content-grid span {
-  height: 34px;
-  border-radius: 9px;
-  background: linear-gradient(180deg, #dbe8ff, #c8ddff);
-}
-
-.ea-content-grid span:nth-child(2),
-.ea-content-grid span:nth-child(4) {
-  background: linear-gradient(180deg, #d8f2f5, #c6e8ed);
-}
-
-.ea-bars {
-  align-items: end;
-  height: 48px;
-}
-
-.ea-bars span {
-  height: 35%;
-  border-radius: 999px 999px 0 0;
-  background: #0b55ff;
-  opacity: .36;
-}
-
-.ea-bars span:nth-child(2) { height: 54%; opacity: .55; }
-.ea-bars span:nth-child(3) { height: 72%; opacity: .75; }
-.ea-bars span:nth-child(4) { height: 100%; opacity: 1; }
-
-.ea-lead-list {
-  grid-template-columns: 1fr;
-}
-
-.ea-lead-list span {
-  height: 20px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #eaf0ff, #fff);
 }
 
 .ea-growth-values {
@@ -1719,8 +1598,7 @@ body.ea-funnel-lightbox-open {
     display: none;
   }
 
-  .ea-growth-center,
-  .ea-system-card {
+  .ea-growth-center {
     position: relative;
     left: auto;
     right: auto;
@@ -1735,11 +1613,6 @@ body.ea-funnel-lightbox-open {
     margin: 20px auto 26px;
   }
 
-  .ea-card-strategy:hover,
-  .ea-card-data:hover {
-    transform: translateY(-5px);
-  }
-
   .ea-growth-stage {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1750,9 +1623,6 @@ body.ea-funnel-lightbox-open {
     grid-column: 1 / -1;
   }
 
-  .ea-system-card {
-    width: auto;
-  }
 }
 
 @media (max-width: 767px) {
@@ -1810,7 +1680,6 @@ body.ea-funnel-lightbox-open {
     bottom: 78px;
   }
 
-  .ea-system-card,
   .ea-funnel-card {
     min-height: 0;
   }
@@ -1939,71 +1808,6 @@ body.ea-funnel-lightbox-open {
     bottom: 154px;
   }
 
-  .ea-system-card {
-    width: 238px;
-    min-height: 172px;
-    padding: 18px;
-    border-radius: 20px;
-  }
-
-  .ea-system-card h3 {
-    margin-top: 16px;
-    font-size: 17px;
-  }
-
-  .ea-system-card p {
-    font-size: 13.5px;
-    line-height: 1.55;
-  }
-
-  .ea-system-card > i {
-    width: 50px;
-    height: 50px;
-    font-size: 27px;
-  }
-
-  .ea-card-audit {
-    left: 0;
-    top: 170px;
-  }
-
-  .ea-card-strategy {
-    left: 50%;
-    top: 22px;
-  }
-
-  .ea-card-assets {
-    right: 0;
-    top: 170px;
-  }
-
-  .ea-card-leads {
-    left: 0;
-    bottom: 65px;
-  }
-
-  .ea-card-campaigns {
-    right: 0;
-    bottom: 65px;
-  }
-
-  .ea-card-data {
-    left: 50%;
-    bottom: 18px;
-  }
-
-  .ea-content-grid span {
-    height: 40px;
-  }
-
-  .ea-bars {
-    height: 58px;
-  }
-
-  .ea-lead-list span {
-    height: 24px;
-  }
-
   .ea-funnel-layout {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -2100,12 +1904,10 @@ body.ea-funnel-lightbox-open {
 }
 
 @media (max-width: 991px) {
-  .ea-system-card h3,
   .ea-funnel-card h3 {
     font-size: 17px;
   }
 
-  .ea-system-card p,
   .ea-funnel-card p {
     font-size: 14px;
   }
@@ -2128,12 +1930,6 @@ body.ea-funnel-lightbox-open {
   .ea-growth-center {
     order: 0;
     margin-bottom: 14px;
-  }
-
-  .ea-system-card {
-    width: 100%;
-    min-height: 0;
-    padding: 20px;
   }
 
   .ea-growth-values {
@@ -2194,8 +1990,7 @@ body.ea-funnel-lightbox-open {
     opacity: .8;
   }
 
-  .ea-growth-center,
-  .ea-system-card {
+  .ea-growth-center {
     position: relative;
     left: auto;
     right: auto;
@@ -2246,54 +2041,6 @@ body.ea-funnel-lightbox-open {
   .ea-growth-chip-mail {
     left: 4px;
     top: 178px;
-  }
-
-  .ea-system-card {
-    width: 100%;
-    min-height: 176px;
-    padding: 18px;
-    align-self: stretch;
-    z-index: 4;
-  }
-
-  .ea-card-audit { grid-area: audit; }
-  .ea-card-strategy { grid-area: strategy; }
-  .ea-card-assets { grid-area: assets; }
-  .ea-card-campaigns { grid-area: campaigns; }
-  .ea-card-data { grid-area: data; }
-  .ea-card-leads { grid-area: leads; }
-
-  .ea-card-strategy:hover,
-  .ea-card-data:hover,
-  .ea-system-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .ea-system-card h3 {
-    font-size: 16px;
-    min-height: 38px;
-  }
-
-  .ea-system-card p {
-    font-size: 13.5px;
-    line-height: 1.55;
-  }
-
-  .ea-system-card > i {
-    width: 50px;
-    height: 50px;
-  }
-
-  .ea-content-grid span {
-    height: 40px;
-  }
-
-  .ea-bars {
-    height: 62px;
-  }
-
-  .ea-lead-list span {
-    height: 24px;
   }
 
   .ea-growth-values {
@@ -2432,7 +2179,6 @@ body.ea-funnel-lightbox-open {
   max-width: 520px;
 }
 
-.ea-system-card,
 .ea-funnel-card,
 .ea-growth-values,
 .ea-funnel-cta {
@@ -2440,35 +2186,16 @@ body.ea-funnel-lightbox-open {
   box-shadow: 0 8px 24px rgba(40, 70, 150, .04);
 }
 
-.ea-system-card h3,
 .ea-funnel-card h3 {
   color: #071739;
   letter-spacing: 0;
   text-transform: none;
 }
 
-.ea-system-card p,
 .ea-funnel-card p {
   color: #31405f;
   font-weight: 500;
 }
-
-.ea-signal-mini {
-  display: grid;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.ea-signal-mini span {
-  display: block;
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(11, 85, 255, .16), rgba(11, 85, 255, .05));
-}
-
-.ea-signal-mini span:nth-child(1) { width: 76%; }
-.ea-signal-mini span:nth-child(2) { width: 58%; }
-.ea-signal-mini span:nth-child(3) { width: 88%; }
 
 .ea-growth-values > div:not(.ea-growth-objective) span {
   display: none;
@@ -2583,31 +2310,6 @@ body.ea-funnel-lightbox-open {
     height: 92px;
   }
 
-  .ea-system-card {
-    min-height: 100%;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .ea-system-card > i {
-    width: 54px;
-    height: 54px;
-    margin-bottom: 16px;
-  }
-
-  .ea-system-card h3 {
-    min-height: 0;
-    margin-bottom: 9px;
-    font-size: 18px;
-  }
-
-  .ea-system-card p {
-    min-height: 44px;
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-
   .ea-growth-values {
     gap: 16px;
     padding: 22px;
@@ -2667,15 +2369,6 @@ body.ea-funnel-lightbox-open {
     min-height: 690px;
   }
 
-  .ea-system-card {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .ea-system-card h3 {
-    min-height: 0;
-  }
-
   .ea-funnel-card {
     min-height: 320px;
   }
@@ -2686,7 +2379,6 @@ body.ea-funnel-lightbox-open {
     gap: 18px;
   }
 
-  .ea-system-card h3,
   .ea-funnel-card h3 {
     min-height: 0;
   }
@@ -2710,20 +2402,13 @@ body.ea-funnel-lightbox-open {
     margin-bottom: 4px;
   }
 
-  .ea-system-card,
   .ea-funnel-card {
     padding: 20px;
   }
 
-  .ea-system-card p,
   .ea-funnel-card p {
     min-height: 0;
     font-size: 14px;
-  }
-
-  .ea-system-card > i {
-    width: 48px;
-    height: 48px;
   }
 
   .ea-growth-values > div:not(.ea-growth-objective) {
@@ -2742,7 +2427,6 @@ body.ea-funnel-lightbox-open {
   z-index: 1;
 }
 
-.ea-system-card,
 .ea-funnel-card,
 .ea-growth-values,
 .ea-funnel-cta {
@@ -2763,14 +2447,12 @@ body.ea-funnel-lightbox-open {
   opacity: 1;
 }
 
-.ea-system-card h3,
 .ea-funnel-card h3,
 .ea-growth-values strong,
 .ea-funnel-cta h3 {
   color: #09183a;
 }
 
-.ea-system-card p,
 .ea-funnel-card p,
 .ea-growth-copy p,
 .ea-funnel-copy p,
@@ -2779,7 +2461,6 @@ body.ea-funnel-lightbox-open {
 }
 
 .ea-growth-values i,
-.ea-system-card > i,
 .ea-funnel-card > span {
   color: #0b55ff;
   background: #f3f7ff;
@@ -2793,24 +2474,6 @@ body.ea-funnel-lightbox-open {
 
   .ea-growth-stage {
     grid-template-rows: 178px 310px 210px;
-  }
-
-  .ea-system-card h3 {
-    margin-top: 0;
-  }
-
-  .ea-system-card p {
-    min-height: 0;
-    margin-bottom: 16px;
-  }
-
-  .ea-system-card .ea-card-pills,
-  .ea-system-card .ea-content-grid,
-  .ea-system-card .ea-bars,
-  .ea-system-card .ea-data-row,
-  .ea-system-card .ea-lead-list,
-  .ea-system-card .ea-signal-mini {
-    margin-top: auto;
   }
 
   .ea-funnel-card {
