@@ -1,0 +1,22 @@
+Upgrade 16 — Hero Focus Pill Balance
+
+Scope:
+- Desktop/tablet hero layout only.
+- Keeps the current UI identity, colors, typography and animations.
+- Does not modify SEO, security, analytics, lead form, Insights, footer or mobile menu logic.
+
+Changes:
+- Rebalanced the hero Focus/skills white pill so it no longer overlaps the portrait area.
+- Added controlled spacing between the white pill and the portrait.
+- Increased the rotating skill text size while keeping it centered inside the pill.
+- Added special sizing for longer labels like “Publicité & tracking” and “Automatisation marketing” so they remain readable without breaking the layout.
+- Kept “Focus” aligned and visually stronger.
+- Adjusted portrait/badge stacking so the hero feels cleaner and more organized on desktop.
+
+Testing checklist:
+- Homepage desktop 1440/1600px.
+- Homepage laptop 1200px.
+- Tablet/mobile responsive fallback.
+- No horizontal overflow.
+- Hero pill does not cover portrait.
+- Skill text remains centered and readable.

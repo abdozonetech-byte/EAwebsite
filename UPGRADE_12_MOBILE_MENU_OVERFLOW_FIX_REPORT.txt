@@ -1,0 +1,30 @@
+Upgrade 12 — Mobile Menu Overflow Fix Report
+Date: 2026-06-16T19:32:10.457272+00:00
+
+Scope:
+- Fixed mobile navbar / hamburger button clipping.
+- Fixed offcanvas menu drawer width and horizontal overflow.
+- Fixed diagnostic CTA overflow inside mobile menu.
+- Improved text wrapping for À propos, nav links and contact links inside mobile menu.
+- Added body scroll lock while menu is open.
+- Added aria-expanded / aria-hidden synchronization and Escape key close helper.
+
+Files added:
+- assets/css/elboubakry-upgrade-12-mobile-menu-fix.css
+- assets/js/elboubakry-upgrade-12-mobile-menu-fix.js
+
+HTML pages updated with the new CSS/JS: 34
+
+Testing targets:
+- 360px width
+- 375px iPhone width
+- 390px iPhone width
+- 430px width
+
+Expected result:
+- Hamburger button fully visible.
+- Mobile drawer fully contained inside viewport.
+- No horizontal scrolling.
+- CTA button fits inside the drawer.
+- Menu text wraps line by line.
+- Desktop navbar and global UI remain unchanged.

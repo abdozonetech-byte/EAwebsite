@@ -1,0 +1,103 @@
+/*
+  Upgrade 15 — Mobile Menu Background Cleanup
+  Scope: mobile offcanvas menu only.
+  Goal: remove the heavy white drawer feeling and keep the menu directly on the soft site background.
+  Desktop UI, SEO, lead logic, tracking, security and page sections are unchanged.
+*/
+
+@media (max-width: 1199.98px) {
+  .offcanvas-area {
+    background-color: #f5f8ff !important;
+    background-image:
+      radial-gradient(circle at 14% 8%, rgba(86, 113, 255, 0.12), transparent 30%),
+      radial-gradient(circle at 100% 18%, rgba(86, 113, 255, 0.10), transparent 28%),
+      linear-gradient(rgba(76, 111, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(76, 111, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(180deg, #f8faff 0%, #eef4ff 100%) !important;
+    background-size: auto, auto, 58px 58px, 58px 58px, auto !important;
+    box-shadow: -18px 0 46px rgba(8, 16, 44, 0.10) !important;
+    border-inline-start: 1px solid rgba(75, 105, 255, 0.10) !important;
+  }
+
+  .offcanvas-wrapper,
+  .offcanvas-content,
+  .offcanvas-top,
+  .offcanvas-about,
+  .offcanvas-diagnostic-cta,
+  .mobile-menu,
+  .rs-offcanvas-menu,
+  .mean-container,
+  .mean-container .mean-nav,
+  .offcanvas-contact,
+  .offcanvas-social {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-top {
+    border-bottom: 1px solid rgba(19, 35, 75, 0.08) !important;
+  }
+
+  .offcanvas-title-meta {
+    color: #061432 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .offcanvas-about p {
+    color: rgba(47, 58, 85, 0.78) !important;
+    max-width: 100% !important;
+  }
+
+  .offcanvas-diagnostic-cta .rs-btn {
+    box-shadow: 0 18px 34px rgba(79, 111, 255, 0.22) !important;
+  }
+
+  .mean-container .mean-nav ul li {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(19, 35, 75, 0.075) !important;
+  }
+
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span {
+    background: transparent !important;
+    color: #061432 !important;
+    border-top: 0 !important;
+  }
+
+  .mean-container .mean-nav ul li a:hover,
+  .mean-container .mean-nav ul li span:hover,
+  .mean-container .mean-nav ul li a.active,
+  .offcanvas-area .mean-container .mean-nav ul li.active > a {
+    color: #5874ff !important;
+  }
+
+  .offcanvas-contact ul li {
+    background: transparent !important;
+  }
+
+  .offcanvas-contact-icon {
+    background: rgba(255, 255, 255, 0.52) !important;
+    border-color: rgba(88, 116, 255, 0.16) !important;
+    box-shadow: 0 12px 26px rgba(25, 40, 80, 0.06) !important;
+  }
+
+  .offcanvas-contact-text a {
+    color: rgba(47, 58, 85, 0.78) !important;
+  }
+
+  .offcanvas-contact-text a:hover {
+    color: #5874ff !important;
+  }
+
+  .offcanvas-overlay.overlay-open {
+    background-color: rgba(8, 14, 30, 0.56) !important;
+    backdrop-filter: blur(7px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .offcanvas-area {
+    width: calc(100vw - 22px) !important;
+    max-width: calc(100vw - 22px) !important;
+  }
+}

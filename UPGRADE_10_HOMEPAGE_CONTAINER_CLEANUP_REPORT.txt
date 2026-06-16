@@ -1,0 +1,42 @@
+Upgrade 10 — Homepage Container Cleanup
+
+Scope:
+- Homepage only.
+- No redesign.
+- No changes to SEO, security headers, analytics, lead form, insights, or article pages.
+
+What changed:
+1. Hero image area
+- Removed the heavy white portrait card styling.
+- Kept the portrait directly on the page background.
+- Preserved the 5+ experience badge and made it cleaner.
+- Kept the current hero text, buttons, social icons, and layout.
+
+2. Marketing systems carousel
+- Removed the large white wrapper/container around the mockup carousel.
+- Kept all mockup cards and images.
+- Kept cards directly on the section background with lighter premium shadows.
+
+3. FAQ section
+- Removed the heavy FAQ shell/container.
+- Kept the FAQ content and accordion behavior.
+- Organized desktop layout as left title + right questions directly on background.
+- Kept mobile layout stacked and clean.
+
+Files changed:
+- index.html
+- assets/css/elboubakry-home-container-cleanup.css
+
+Local test:
+- cd ~/Mywebsite
+- python3 -m http.server 5500
+- http://localhost:5500/
+
+Recommended post-deploy check:
+- Homepage desktop
+- Homepage mobile
+- Hero image area
+- Marketing systems carousel
+- FAQ section
+- No horizontal overflow
+- No broken images
