@@ -29,7 +29,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Guide sur la génération de leads qualifiés au Maroc : offre, landing page, formulaire, WhatsApp, suivi commercial et mesure de performance.",
     "readingTime": "4 min",
     "keywords": [
-      "Comment générer des leads qualifiés au Maroc "
+      "Leads qualifiés au Maroc"
     ]
   },
   {
@@ -95,7 +95,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Découvrez comment Elboubakry Abdessamad accompagne les entreprises à Casablanca et au Maroc en stratégie digitale, publicité en ligne, landing pages, SEO, analytics et génération de leads.",
     "readingTime": "4 min",
     "keywords": [
-      "Consultant marketing digital à Casablanca"
+      "Marketing digital Casablanca"
     ]
   },
   {
@@ -106,7 +106,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Les bons KPI relient les actions marketing à la qualité des opportunités et aux résultats. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Mesurer les bons KPI pour éviter les fausses "
+      "KPI marketing utiles"
     ]
   },
   {
@@ -117,7 +117,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Sans mesure claire, une campagne peut sembler bonne tout en créant de mauvaises décisions. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Pourquoi le tracking change la qualité de vos"
+      "Tracking marketing"
     ]
   },
   {
@@ -128,7 +128,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "L’IA aide surtout à organiser l’information, comparer des options et préparer de meilleures décisions. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Comment l’IA peut aider une petite entreprise"
+      "IA pour PME"
     ]
   },
   {
@@ -139,7 +139,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Les clients ne cherchent pas seulement une offre, ils cherchent une preuve qu’ils peuvent avancer. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Pourquoi la confiance est devenue un levier m"
+      "Confiance marketing"
     ]
   },
   {
@@ -150,7 +150,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Des usages simples pour analyser l’audience, préparer les contenus et améliorer le suivi. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Utiliser l’IA pour mieux organiser votre stra"
+      "IA et stratégie marketing"
     ]
   },
   {
@@ -161,7 +161,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "La conversion dépend de la clarté de l’offre, des preuves et du chemin vers l’action. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Créer une landing page qui convertit les visi"
+      "Landing page conversion"
     ]
   },
   {
@@ -172,7 +172,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Le parcours client montre où le prospect hésite, compare, décide ou abandonne. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Comprendre le parcours client avant d’investi"
+      "Parcours client"
     ]
   },
   {
@@ -183,7 +183,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Clarifier votre positionnement, vos preuves et vos canaux pour attirer plus d’opportunités. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Construire une présence digitale professionne"
+      "Présence digitale crédible"
     ]
   },
   {
@@ -205,7 +205,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Les éléments essentiels : offre claire, formulaire simple, WhatsApp, suivi et qualification. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Construire un système de génération de leads "
+      "Système de génération de leads"
     ]
   },
   {
@@ -216,7 +216,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Les pertes viennent souvent d’un mauvais message, d’une audience trop large ou d’un suivi faible. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Les erreurs qui font perdre le budget publici"
+      "Budget Meta Ads"
     ]
   },
   {
@@ -227,7 +227,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Comment relier ciblage, message, landing page et suivi commercial pour éviter de gaspiller le budget. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Structurer une campagne Meta Ads qui génère d"
+      "Meta Ads leads qualifiés"
     ]
   },
   {
@@ -238,7 +238,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "WhatsApp peut devenir un vrai canal commercial si les conversations sont structurées. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Transformer les conversations WhatsApp en dem"
+      "WhatsApp et leads"
     ]
   },
   {
@@ -282,7 +282,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Comment connecter contenu, publicité, data et optimisation pour créer un vrai système. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Passer de la visibilité digitale à une croiss"
+      "Croissance mesurable"
     ]
   },
   {
@@ -304,7 +304,7 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "excerpt": "Un calendrier éditorial utile relie les contenus aux objections, preuves et décisions clients. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
     "readingTime": "5 min",
     "keywords": [
-      "Créer un calendrier de contenu qui soutient v"
+      "Calendrier de contenu"
     ]
   },
   {
