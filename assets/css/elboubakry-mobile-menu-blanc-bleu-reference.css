@@ -1,55 +1,53 @@
-/* Upgrade 06 — Mobile Menu Blanc & Bleu Final
+/* Upgrade 07 — Full Screen Mobile Menu Blanc & Bleu
    Scope: mobile offcanvas only. Desktop, SEO, tracking, hero, sections untouched. */
 @media (max-width: 768px) {
   :root {
     --ea-menu-blue: #2f63ff;
     --ea-menu-blue-2: #4d75ff;
     --ea-menu-blue-soft: #eef4ff;
+    --ea-menu-blue-soft-2: #f7faff;
     --ea-menu-navy: #071832;
-    --ea-menu-muted: #65728b;
+    --ea-menu-muted: #66738f;
     --ea-menu-line: rgba(47, 99, 255, 0.12);
   }
 
   .offcanvas-area,
   .offcanvas-area.info-open {
-    top: 0 !important;
-    right: 0 !important;
-    left: auto !important;
-    bottom: auto !important;
-    width: min(390px, 90vw) !important;
-    max-width: 390px !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
     height: 100dvh !important;
     min-height: 100dvh !important;
-    background:
-      radial-gradient(circle at 92% 4%, rgba(47, 99, 255, 0.14), transparent 32%),
-      radial-gradient(circle at 18% 100%, rgba(47, 99, 255, 0.09), transparent 34%),
-      linear-gradient(180deg, #ffffff 0%, #fbfdff 52%, #f2f6ff 100%) !important;
-    border: 1px solid rgba(47, 99, 255, 0.08) !important;
-    border-right: 0 !important;
-    border-radius: 32px 0 0 32px !important;
-    box-shadow: -26px 0 70px rgba(7, 24, 50, 0.20) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
     overflow: hidden !important;
+    background:
+      radial-gradient(circle at 90% 8%, rgba(47, 99, 255, 0.16), transparent 30%),
+      radial-gradient(circle at 8% 98%, rgba(47, 99, 255, 0.10), transparent 36%),
+      linear-gradient(180deg, #ffffff 0%, #fbfdff 52%, #eef4ff 100%) !important;
+    box-shadow: none !important;
     opacity: 0 !important;
     pointer-events: none !important;
-    transform: translate3d(104%, 0, 0) !important;
-    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease !important;
+    transform: translate3d(0, 14px, 0) scale(0.985) !important;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease !important;
     z-index: 99999 !important;
   }
 
   .offcanvas-area.info-open {
     opacity: 1 !important;
     pointer-events: auto !important;
-    transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
   }
 
   .offcanvas-area::before {
     content: "" !important;
     position: absolute !important;
-    left: -22% !important;
-    right: -18% !important;
-    bottom: -12% !important;
-    height: 30% !important;
-    background: rgba(47, 99, 255, 0.055) !important;
+    left: -22vw !important;
+    right: -22vw !important;
+    bottom: -18vh !important;
+    height: 34vh !important;
+    background: rgba(47, 99, 255, 0.065) !important;
     border-radius: 50% 50% 0 0 !important;
     pointer-events: none !important;
     z-index: 0 !important;
@@ -59,7 +57,7 @@
     content: "" !important;
     position: absolute !important;
     inset: 0 !important;
-    background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,255,255,.62) 42%, rgba(238,244,255,.42)) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .76) 42%, rgba(238, 244, 255, .56)) !important;
     pointer-events: none !important;
     z-index: 0 !important;
   }
@@ -83,7 +81,7 @@
     z-index: 2 !important;
     width: 100% !important;
     height: 100% !important;
-    padding: clamp(22px, 5.8vw, 30px) 22px 18px !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 24px) 24px calc(env(safe-area-inset-bottom, 0px) + 20px) !important;
   }
 
   .offcanvas-content {
@@ -93,19 +91,15 @@
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    scrollbar-width: none !important;
+    overflow: hidden !important;
     overscroll-behavior: contain !important;
   }
 
-  .offcanvas-content::-webkit-scrollbar {
-    display: none !important;
-  }
-
   .offcanvas-about,
-  .offcanvas-about * {
+  .offcanvas-about *,
+  .offcanvas-content::after {
     display: none !important;
+    content: none !important;
   }
 
   .offcanvas-top {
@@ -128,10 +122,10 @@
 
   .offcanvas-logo a.ea-premium-logo {
     color: var(--ea-menu-navy) !important;
-    font-size: clamp(25px, 7vw, 31px) !important;
+    font-size: clamp(28px, 8vw, 34px) !important;
     font-weight: 950 !important;
     line-height: 0.95 !important;
-    letter-spacing: -1.25px !important;
+    letter-spacing: -1.35px !important;
     text-decoration: none !important;
   }
 
@@ -145,10 +139,10 @@
     flex: 0 0 50px !important;
     display: grid !important;
     place-items: center !important;
-    border: 1px solid rgba(47, 99, 255, .10) !important;
+    border: 1px solid rgba(47, 99, 255, .12) !important;
     border-radius: 18px !important;
     background: rgba(255, 255, 255, .92) !important;
-    box-shadow: 0 16px 38px rgba(11, 32, 82, .09) !important;
+    box-shadow: 0 14px 32px rgba(11, 32, 82, .10) !important;
     -webkit-backdrop-filter: blur(10px) !important;
     backdrop-filter: blur(10px) !important;
   }
@@ -171,21 +165,17 @@
     top: 50% !important;
     left: 50% !important;
     width: 24px !important;
-    height: 2.4px !important;
+    height: 2.5px !important;
     border-radius: 999px !important;
     background: var(--ea-menu-blue) !important;
     transform-origin: center !important;
     margin: 0 !important;
+    opacity: 1 !important;
   }
 
   .offcanvas-close-icon .line--1,
-  .offcanvas-close-icon .line--2,
-  .offcanvas-close-icon .line--3 {
-    transform: translate(-50%, -50%) rotate(45deg) !important;
-  }
-
   .offcanvas-close-icon .line--2 {
-    opacity: 0 !important;
+    transform: translate(-50%, -50%) rotate(45deg) !important;
   }
 
   .offcanvas-close-icon .line--3 {
@@ -194,28 +184,30 @@
 
   .offcanvas-diagnostic-cta {
     width: 100% !important;
-    margin: 0 0 22px !important;
+    margin: 0 0 18px !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn {
-    width: 100% !important;
-    min-height: 54px !important;
-    padding: 14px 16px !important;
-    display: flex !important;
+    width: min(100%, 330px) !important;
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 9px !important;
+    gap: 8px !important;
     border: 0 !important;
     border-radius: 17px !important;
     background: linear-gradient(135deg, #245dff 0%, #4b75ff 100%) !important;
     color: #ffffff !important;
-    font-size: clamp(13.5px, 3.6vw, 15px) !important;
+    font-size: clamp(13px, 3.55vw, 14.5px) !important;
     font-weight: 850 !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.15px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.12px !important;
     text-align: center !important;
     white-space: nowrap !important;
-    box-shadow: 0 16px 34px rgba(47, 99, 255, .25) !important;
+    box-shadow: 0 14px 30px rgba(47, 99, 255, .22) !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn .icon-box {
@@ -224,18 +216,34 @@
     margin: 0 !important;
     flex: 0 0 auto !important;
     color: inherit !important;
+    font-size: 16px !important;
+  }
+
+  .mobile-menu {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    align-items: stretch !important;
   }
 
   .rs-offcanvas-menu {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .mean-container,
+  .mean-container .mean-nav,
+  .mean-container .mean-nav > ul {
+    width: 100% !important;
   }
 
   .mean-container .mean-nav ul li {
     width: 100% !important;
     float: none !important;
-    margin: 0 0 5px !important;
+    margin: 0 0 6px !important;
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
@@ -245,18 +253,18 @@
   .mean-container .mean-nav ul li span {
     position: relative !important;
     width: 100% !important;
-    min-height: 52px !important;
+    min-height: 50px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 14px !important;
-    padding: 11px 14px !important;
+    gap: 13px !important;
+    padding: 10px 13px !important;
     border: 0 !important;
     border-radius: 16px !important;
     color: var(--ea-menu-navy) !important;
     background: transparent !important;
     font-size: clamp(15px, 4vw, 17px) !important;
     font-weight: 900 !important;
-    line-height: 1.2 !important;
+    line-height: 1.18 !important;
     letter-spacing: -0.2px !important;
     text-decoration: none !important;
     transition: background .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease !important;
@@ -284,22 +292,18 @@
 
   .mean-container .mean-nav ul li a:hover,
   .mean-container .mean-nav ul li a:focus-visible,
-  .mean-container .mean-nav ul li a.active {
+  .mean-container .mean-nav ul li a.active,
+  .mean-container .mean-nav > ul:not(:has(a.active)) > li:first-child > a {
     color: var(--ea-menu-blue) !important;
-    background: rgba(47, 99, 255, .070) !important;
+    background: rgba(47, 99, 255, .080) !important;
     box-shadow: inset 0 0 0 1px rgba(47, 99, 255, .055) !important;
     transform: translateX(1px) !important;
   }
 
-  .mean-container .mean-nav > ul:not(:has(a.active)) > li:first-child > a {
-    color: var(--ea-menu-blue) !important;
-    background: rgba(47, 99, 255, .070) !important;
-    box-shadow: inset 0 0 0 1px rgba(47, 99, 255, .055) !important;
-  }
-
   .offcanvas-contact {
-    margin: auto 0 0 !important;
-    padding: 18px 0 0 !important;
+    flex: 0 0 auto !important;
+    margin: 16px 0 0 !important;
+    padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -312,10 +316,10 @@
   .offcanvas-contact::before {
     content: "Restons connectés" !important;
     display: block !important;
-    margin: 0 0 11px !important;
+    margin: 0 0 10px !important;
     color: var(--ea-menu-muted) !important;
     font-size: 13px !important;
-    font-weight: 800 !important;
+    font-weight: 850 !important;
     line-height: 1.1 !important;
   }
 
@@ -339,10 +343,14 @@
     padding: 0 !important;
     border: 1px solid rgba(47, 99, 255, .10) !important;
     border-radius: 16px !important;
-    background: rgba(255, 255, 255, .80) !important;
+    background: rgba(255, 255, 255, .84) !important;
     box-shadow: 0 10px 24px rgba(11, 32, 82, .07) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     backdrop-filter: blur(8px) !important;
+  }
+
+  .offcanvas-contact li:nth-child(n+3) {
+    display: none !important;
   }
 
   .offcanvas-contact-icon {
@@ -379,22 +387,8 @@
     line-height: 0 !important;
   }
 
-  .offcanvas-content::after {
-    content: "E.  Elboubakry." !important;
-    display: flex !important;
-    align-items: center !important;
-    min-height: 48px !important;
-    margin: 18px 0 0 !important;
-    padding: 0 0 1px 58px !important;
-    color: var(--ea-menu-navy) !important;
-    font-size: 15px !important;
-    font-weight: 900 !important;
-    letter-spacing: -0.25px !important;
-    background: radial-gradient(circle at 22px 24px, #315eff 0 21px, transparent 22px) no-repeat, transparent !important;
-  }
-
   .offcanvas-overlay {
-    background: rgba(7, 18, 40, .26) !important;
+    background: rgba(7, 18, 40, .30) !important;
     -webkit-backdrop-filter: blur(7px) !important;
     backdrop-filter: blur(7px) !important;
     transition: opacity .22s ease !important;
@@ -410,42 +404,87 @@
 }
 
 @media (max-width: 380px) {
-  .offcanvas-area,
-  .offcanvas-area.info-open {
-    width: min(374px, 91vw) !important;
-    border-radius: 28px 0 0 28px !important;
-  }
-
   .offcanvas-wrapper {
-    padding-left: 18px !important;
-    padding-right: 18px !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px calc(env(safe-area-inset-bottom, 0px) + 18px) !important;
   }
 
   .offcanvas-logo a.ea-premium-logo {
-    font-size: 26px !important;
+    font-size: 28px !important;
   }
 
   .offcanvas-close {
-    width: 47px !important;
-    height: 47px !important;
-    flex-basis: 47px !important;
+    width: 46px !important;
+    height: 46px !important;
+    flex-basis: 46px !important;
+  }
+
+  .offcanvas-diagnostic-cta {
+    margin-bottom: 14px !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn {
+    min-height: 46px !important;
     font-size: 13px !important;
-    min-height: 51px !important;
+  }
+
+  .mean-container .mean-nav ul li {
+    margin-bottom: 4px !important;
   }
 
   .mean-container .mean-nav ul li a,
   .mean-container .mean-nav ul li span {
-    min-height: 50px !important;
+    min-height: 47px !important;
     font-size: 15px !important;
-    padding: 10px 12px !important;
+    padding: 9px 12px !important;
+  }
+
+  .offcanvas-contact {
+    margin-top: 12px !important;
   }
 
   .offcanvas-contact li {
     width: 44px !important;
     height: 44px !important;
     flex-basis: 44px !important;
+  }
+}
+
+@media (max-height: 650px) and (max-width: 768px) {
+  .offcanvas-wrapper {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 14px) !important;
+  }
+
+  .offcanvas-top {
+    margin-bottom: 12px !important;
+  }
+
+  .offcanvas-diagnostic-cta {
+    margin-bottom: 12px !important;
+  }
+
+  .offcanvas-diagnostic-cta .rs-btn {
+    min-height: 44px !important;
+  }
+
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span {
+    min-height: 44px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .offcanvas-contact {
+    margin-top: 10px !important;
+  }
+
+  .offcanvas-contact::before {
+    margin-bottom: 8px !important;
+  }
+
+  .offcanvas-contact li {
+    width: 42px !important;
+    height: 42px !important;
+    flex-basis: 42px !important;
   }
 }

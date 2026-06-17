@@ -1,0 +1,16 @@
+/* Upgrade 08 - mobile hero focus word visibility
+   Scope: mobile hero animated role only. Does not affect desktop, menu, sections, SEO, or tracking. */
+@media (max-width: 768px) {
+  .rs-banner-one .ea-hero-role-line .rs-title-slide,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide .cd-words-wrapper,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b.is-visible {
+    color: #2563ff !important;
+    text-shadow: none !important;
+    -webkit-text-fill-color: #2563ff !important;
+  }
+
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b.is-visible {
+    opacity: 1 !important;
+  }
+}
