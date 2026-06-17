@@ -76,7 +76,7 @@
 <link href="/assets/css/elboubakry-final-ending.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/elboubakry-final-polish-pass.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/elboubakry-growth-system.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
-<link href="/assets/css/elboubakry-upgrade-07-uiux.css?v=20260617-menu-pro" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-menu-blanc-bleu-reference.css?v=menu-fullscreen-white-blue-20260617" media="(max-width: 768px)" rel="stylesheet"/><link href="/assets/css/elboubakry-desktop-performance-safe.css?v=20260617-menu-clean" media="(min-width: 769px)" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-hero-focus-blue.css?v=focus-blue-20260617" media="(max-width: 768px)" rel="stylesheet"/>
+<link href="/assets/css/elboubakry-upgrade-07-uiux.css?v=20260617-menu-pro" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-menu-blanc-bleu-reference.css?v=menu-fullscreen-white-blue-20260617" media="(max-width: 768px)" rel="stylesheet"/><link href="/assets/css/elboubakry-desktop-performance-safe.css?v=20260617-menu-clean" media="(min-width: 769px)" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-hero-focus-blue.css?v=focus-blue-20260617" media="(max-width: 768px)" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-performance-ultra.css?v=mobile-perf-09" media="(max-width: 768px)" rel="stylesheet"/>
 <meta content="fr-MA" name="language"/>
 <meta content="MA-CAS" name="geo.region"/>
 <meta content="Casablanca, Maroc" name="geo.placename"/>
@@ -686,32 +686,55 @@
 </div>
 <!-- Backtotop end -->
 <!-- JS here -->
-<script defer src="/assets/js/vendor/jquery-3.7.1.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/waypoints.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/vendor/bootstrap.bundle.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/meanmenu.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/swiper.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/wow.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/vendor/magnific-popup.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/vendor/isotope.pkgd.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/vendor/imagesloaded.pkgd.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/nice-select.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/jarallax.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/vendor/ajax-form.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/easypie.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/headding-title.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/lenis.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/gsap.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/rs-anim-int.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/rs-scroll-trigger.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/rs-splitText.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/jquery.lettering.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/plugins/parallax-effect.min.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/vendor/purecounter.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/main.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/elboubakry-mobile-motion.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/elboubakry-funnel-lightbox.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/elboubakry-mockup-carousel.js?v=20260617-menu-clean"></script>
-<script defer src="/assets/js/elboubakry-preloader-safe.js?v=20260617-menu-clean"></script>
+<script>
+(function(){
+  var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+  var desktopScripts = [
+    '/assets/js/vendor/jquery-3.7.1.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/waypoints.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/bootstrap.bundle.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/meanmenu.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/swiper.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/wow.js?v=20260617-menu-clean',
+    '/assets/js/vendor/magnific-popup.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/isotope.pkgd.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/imagesloaded.pkgd.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/nice-select.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/jarallax.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/ajax-form.js?v=20260617-menu-clean',
+    '/assets/js/plugins/easypie.js?v=20260617-menu-clean',
+    '/assets/js/plugins/headding-title.js?v=20260617-menu-clean',
+    '/assets/js/plugins/lenis.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/gsap.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/rs-anim-int.js?v=20260617-menu-clean',
+    '/assets/js/plugins/rs-scroll-trigger.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/rs-splitText.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/jquery.lettering.js?v=20260617-menu-clean',
+    '/assets/js/plugins/parallax-effect.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/purecounter.js?v=20260617-menu-clean',
+    '/assets/js/main.js?v=20260617-menu-clean',
+    '/assets/js/elboubakry-mobile-motion.js?v=20260617-menu-clean',
+    '/assets/js/elboubakry-funnel-lightbox.js?v=20260617-menu-clean',
+    '/assets/js/elboubakry-mockup-carousel.js?v=20260617-menu-clean',
+    '/assets/js/elboubakry-preloader-safe.js?v=20260617-menu-clean'
+  ];
+  function load(src, done){
+    var script = document.createElement('script');
+    script.src = src;
+    script.async = false;
+    script.onload = script.onerror = function(){ if(done) done(); };
+    document.body.appendChild(script);
+  }
+  function loadSequential(list, index){
+    if(index >= list.length) return;
+    load(list[index], function(){ loadSequential(list, index + 1); });
+  }
+  if (isMobile) {
+    load('/assets/js/elboubakry-mobile-core-optimized.js?v=mobile-core-09');
+  } else {
+    loadSequential(desktopScripts, 0);
+  }
+})();
+</script>
 </body>
 </html>

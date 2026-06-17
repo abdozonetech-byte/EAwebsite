@@ -1,0 +1,62 @@
+/* Upgrade 09 — Mobile performance only
+   Keeps visual UI unchanged while reducing mobile rendering cost. */
+@media (max-width: 768px) {
+  html.ea-mobile-optimized #pre-load,
+  html.ea-mobile-optimized .pre-loader,
+  html.ea-mobile-optimized #rs-mouse,
+  html.ea-mobile-optimized #cursor-ball {
+    display: none !important;
+  }
+
+  body.ea-menu-open {
+    overflow: hidden !important;
+    touch-action: none;
+  }
+
+  #homemarketingsystem,
+  #homeservices,
+  #homeportfolio,
+  #homefaq,
+  .ea-home-footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+  }
+
+  #homeportfolio {
+    contain-intrinsic-size: 680px;
+  }
+
+  #homefaq,
+  .ea-home-footer {
+    contain-intrinsic-size: 760px;
+  }
+
+  .rs-banner-one .wow,
+  .rs-banner-one [data-wow-delay],
+  .rs-banner-one [data-wow-duration] {
+    visibility: visible !important;
+    animation-delay: 0s !important;
+    animation-duration: .001s !important;
+  }
+
+  .rs-banner-bg,
+  .ea-hero-portrait-card,
+  .ea-hero-portrait-photo,
+  .ea-hero-portrait-photo picture,
+  .ea-hero-portrait-photo img {
+    contain: layout paint;
+  }
+
+  .ea-hero-portrait-photo img {
+    transform: translateZ(0);
+    will-change: auto;
+  }
+
+  .elb-carousel-rail:not(.is-dragging) {
+    will-change: auto !important;
+  }
+
+  .ea-mobile-motion:not(.ea-mobile-inview) {
+    animation: none !important;
+  }
+}
