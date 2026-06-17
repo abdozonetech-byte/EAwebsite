@@ -1,9 +1,10 @@
-/* Upgrade 05 — Mobile Menu Blanc & Bleu Reference
-   Scope: mobile offcanvas only. Does not touch desktop layout. */
+/* Upgrade 06 — Mobile Menu Blanc & Bleu Final
+   Scope: mobile offcanvas only. Desktop, SEO, tracking, hero, sections untouched. */
 @media (max-width: 768px) {
   :root {
     --ea-menu-blue: #2f63ff;
-    --ea-menu-blue-2: #4f78ff;
+    --ea-menu-blue-2: #4d75ff;
+    --ea-menu-blue-soft: #eef4ff;
     --ea-menu-navy: #071832;
     --ea-menu-muted: #65728b;
     --ea-menu-line: rgba(47, 99, 255, 0.12);
@@ -15,24 +16,23 @@
     right: 0 !important;
     left: auto !important;
     bottom: auto !important;
-    width: min(392px, 88vw) !important;
-    max-width: 392px !important;
+    width: min(390px, 90vw) !important;
+    max-width: 390px !important;
     height: 100dvh !important;
     min-height: 100dvh !important;
     background:
-      radial-gradient(circle at 92% 4%, rgba(47, 99, 255, 0.16), transparent 32%),
-      radial-gradient(circle at 10% 88%, rgba(47, 99, 255, 0.10), transparent 30%),
-      linear-gradient(180deg, #ffffff 0%, #fbfdff 54%, #eef4ff 100%) !important;
-    border: 0 !important;
-    border-radius: 34px 0 0 34px !important;
-    box-shadow: -28px 0 72px rgba(7, 24, 50, 0.22) !important;
+      radial-gradient(circle at 92% 4%, rgba(47, 99, 255, 0.14), transparent 32%),
+      radial-gradient(circle at 18% 100%, rgba(47, 99, 255, 0.09), transparent 34%),
+      linear-gradient(180deg, #ffffff 0%, #fbfdff 52%, #f2f6ff 100%) !important;
+    border: 1px solid rgba(47, 99, 255, 0.08) !important;
+    border-right: 0 !important;
+    border-radius: 32px 0 0 32px !important;
+    box-shadow: -26px 0 70px rgba(7, 24, 50, 0.20) !important;
     overflow: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
     transform: translate3d(104%, 0, 0) !important;
-    transition:
-      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.22s ease !important;
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease !important;
     z-index: 99999 !important;
   }
 
@@ -45,10 +45,10 @@
   .offcanvas-area::before {
     content: "" !important;
     position: absolute !important;
-    left: -18% !important;
+    left: -22% !important;
     right: -18% !important;
-    bottom: -11% !important;
-    height: 31% !important;
+    bottom: -12% !important;
+    height: 30% !important;
     background: rgba(47, 99, 255, 0.055) !important;
     border-radius: 50% 50% 0 0 !important;
     pointer-events: none !important;
@@ -59,7 +59,7 @@
     content: "" !important;
     position: absolute !important;
     inset: 0 !important;
-    background: linear-gradient(135deg, rgba(255,255,255,.86), rgba(255,255,255,.44) 38%, rgba(238,244,255,.36)) !important;
+    background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,255,255,.62) 42%, rgba(238,244,255,.42)) !important;
     pointer-events: none !important;
     z-index: 0 !important;
   }
@@ -83,7 +83,7 @@
     z-index: 2 !important;
     width: 100% !important;
     height: 100% !important;
-    padding: clamp(24px, 6.2vw, 34px) 24px 20px !important;
+    padding: clamp(22px, 5.8vw, 30px) 22px 18px !important;
   }
 
   .offcanvas-content {
@@ -112,9 +112,9 @@
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 16px !important;
+    gap: 14px !important;
     width: 100% !important;
-    margin: 0 0 24px !important;
+    margin: 0 0 18px !important;
     padding: 0 !important;
     border: 0 !important;
   }
@@ -128,10 +128,10 @@
 
   .offcanvas-logo a.ea-premium-logo {
     color: var(--ea-menu-navy) !important;
-    font-size: clamp(25px, 7.5vw, 34px) !important;
+    font-size: clamp(25px, 7vw, 31px) !important;
     font-weight: 950 !important;
     line-height: 0.95 !important;
-    letter-spacing: -1.35px !important;
+    letter-spacing: -1.25px !important;
     text-decoration: none !important;
   }
 
@@ -140,30 +140,29 @@
   }
 
   .offcanvas-close {
-    width: 52px !important;
-    height: 52px !important;
-    flex: 0 0 52px !important;
+    width: 50px !important;
+    height: 50px !important;
+    flex: 0 0 50px !important;
     display: grid !important;
     place-items: center !important;
-    border: 1px solid rgba(47, 99, 255, .12) !important;
+    border: 1px solid rgba(47, 99, 255, .10) !important;
     border-radius: 18px !important;
-    background: rgba(255, 255, 255, .86) !important;
-    box-shadow: 0 18px 42px rgba(11, 32, 82, .11) !important;
+    background: rgba(255, 255, 255, .92) !important;
+    box-shadow: 0 16px 38px rgba(11, 32, 82, .09) !important;
     -webkit-backdrop-filter: blur(10px) !important;
     backdrop-filter: blur(10px) !important;
   }
 
   .offcanvas-close-icon {
     position: relative !important;
-    width: 26px !important;
-    height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
     display: block !important;
     color: var(--ea-menu-blue) !important;
   }
 
-  .offcanvas-close-icon .offcanvas-m-lines {
-    position: absolute !important;
-    inset: 0 !important;
+  .offcanvas-close-icon .offcanvas-m-lines,
+  .offcanvas-close-icon .offcanvas-m-line {
     display: block !important;
   }
 
@@ -171,8 +170,8 @@
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
-    width: 25px !important;
-    height: 2.5px !important;
+    width: 24px !important;
+    height: 2.4px !important;
     border-radius: 999px !important;
     background: var(--ea-menu-blue) !important;
     transform-origin: center !important;
@@ -195,28 +194,28 @@
 
   .offcanvas-diagnostic-cta {
     width: 100% !important;
-    margin: 0 0 28px !important;
+    margin: 0 0 22px !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn {
     width: 100% !important;
-    min-height: 56px !important;
-    padding: 15px 18px !important;
+    min-height: 54px !important;
+    padding: 14px 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 10px !important;
+    gap: 9px !important;
     border: 0 !important;
     border-radius: 17px !important;
     background: linear-gradient(135deg, #245dff 0%, #4b75ff 100%) !important;
     color: #ffffff !important;
-    font-size: clamp(14px, 3.8vw, 16px) !important;
+    font-size: clamp(13.5px, 3.6vw, 15px) !important;
     font-weight: 850 !important;
     line-height: 1.15 !important;
-    letter-spacing: -0.2px !important;
+    letter-spacing: -0.15px !important;
     text-align: center !important;
     white-space: nowrap !important;
-    box-shadow: 0 18px 42px rgba(47, 99, 255, .28) !important;
+    box-shadow: 0 16px 34px rgba(47, 99, 255, .25) !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn .icon-box {
@@ -236,7 +235,7 @@
   .mean-container .mean-nav ul li {
     width: 100% !important;
     float: none !important;
-    margin: 0 0 8px !important;
+    margin: 0 0 5px !important;
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
@@ -246,33 +245,33 @@
   .mean-container .mean-nav ul li span {
     position: relative !important;
     width: 100% !important;
-    min-height: 56px !important;
+    min-height: 52px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 16px !important;
-    padding: 13px 17px !important;
+    gap: 14px !important;
+    padding: 11px 14px !important;
     border: 0 !important;
-    border-radius: 18px !important;
+    border-radius: 16px !important;
     color: var(--ea-menu-navy) !important;
     background: transparent !important;
-    font-size: clamp(15px, 4.2vw, 18px) !important;
+    font-size: clamp(15px, 4vw, 17px) !important;
     font-weight: 900 !important;
     line-height: 1.2 !important;
     letter-spacing: -0.2px !important;
     text-decoration: none !important;
-    transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease !important;
+    transition: background .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease !important;
   }
 
   .mean-container .mean-nav ul li a::before {
-    width: 26px !important;
-    height: 26px !important;
-    flex: 0 0 26px !important;
+    width: 24px !important;
+    height: 24px !important;
+    flex: 0 0 24px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     color: var(--ea-menu-blue) !important;
     font-family: "remixicon" !important;
-    font-size: 25px !important;
+    font-size: 23px !important;
     font-weight: 400 !important;
     line-height: 1 !important;
   }
@@ -285,17 +284,22 @@
 
   .mean-container .mean-nav ul li a:hover,
   .mean-container .mean-nav ul li a:focus-visible,
-  .mean-container .mean-nav ul li a.active,
-  .mean-container .mean-nav > ul > li:first-child > a {
+  .mean-container .mean-nav ul li a.active {
     color: var(--ea-menu-blue) !important;
-    background: rgba(47, 99, 255, .075) !important;
+    background: rgba(47, 99, 255, .070) !important;
     box-shadow: inset 0 0 0 1px rgba(47, 99, 255, .055) !important;
-    transform: translateX(2px) !important;
+    transform: translateX(1px) !important;
+  }
+
+  .mean-container .mean-nav > ul:not(:has(a.active)) > li:first-child > a {
+    color: var(--ea-menu-blue) !important;
+    background: rgba(47, 99, 255, .070) !important;
+    box-shadow: inset 0 0 0 1px rgba(47, 99, 255, .055) !important;
   }
 
   .offcanvas-contact {
     margin: auto 0 0 !important;
-    padding: 28px 0 0 !important;
+    padding: 18px 0 0 !important;
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -308,9 +312,9 @@
   .offcanvas-contact::before {
     content: "Restons connectés" !important;
     display: block !important;
-    margin: 0 0 13px !important;
+    margin: 0 0 11px !important;
     color: var(--ea-menu-muted) !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     font-weight: 800 !important;
     line-height: 1.1 !important;
   }
@@ -318,7 +322,7 @@
   .offcanvas-contact ul {
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 10px !important;
     margin: 0 !important;
     padding: 0 !important;
     list-style: none !important;
@@ -326,17 +330,17 @@
 
   .offcanvas-contact li {
     position: relative !important;
-    width: 50px !important;
-    height: 50px !important;
-    flex: 0 0 50px !important;
+    width: 46px !important;
+    height: 46px !important;
+    flex: 0 0 46px !important;
     display: grid !important;
     place-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
-    border: 1px solid rgba(47, 99, 255, .11) !important;
-    border-radius: 18px !important;
-    background: rgba(255, 255, 255, .78) !important;
-    box-shadow: 0 12px 30px rgba(11, 32, 82, .08) !important;
+    border: 1px solid rgba(47, 99, 255, .10) !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, .80) !important;
+    box-shadow: 0 10px 24px rgba(11, 32, 82, .07) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     backdrop-filter: blur(8px) !important;
   }
@@ -351,7 +355,7 @@
 
   .offcanvas-contact-icon i {
     color: var(--ea-menu-blue) !important;
-    font-size: 23px !important;
+    font-size: 21px !important;
     line-height: 1 !important;
   }
 
@@ -379,20 +383,18 @@
     content: "E.  Elboubakry." !important;
     display: flex !important;
     align-items: center !important;
-    min-height: 54px !important;
-    margin: 25px 0 0 !important;
-    padding: 0 0 2px 66px !important;
+    min-height: 48px !important;
+    margin: 18px 0 0 !important;
+    padding: 0 0 1px 58px !important;
     color: var(--ea-menu-navy) !important;
-    font-size: 16px !important;
+    font-size: 15px !important;
     font-weight: 900 !important;
     letter-spacing: -0.25px !important;
-    background:
-      radial-gradient(circle at 24px 26px, #315eff 0 24px, transparent 25px) no-repeat,
-      transparent !important;
+    background: radial-gradient(circle at 22px 24px, #315eff 0 21px, transparent 22px) no-repeat, transparent !important;
   }
 
   .offcanvas-overlay {
-    background: rgba(7, 18, 40, .30) !important;
+    background: rgba(7, 18, 40, .26) !important;
     -webkit-backdrop-filter: blur(7px) !important;
     backdrop-filter: blur(7px) !important;
     transition: opacity .22s ease !important;
@@ -410,7 +412,7 @@
 @media (max-width: 380px) {
   .offcanvas-area,
   .offcanvas-area.info-open {
-    width: min(374px, 89vw) !important;
+    width: min(374px, 91vw) !important;
     border-radius: 28px 0 0 28px !important;
   }
 
@@ -420,24 +422,30 @@
   }
 
   .offcanvas-logo a.ea-premium-logo {
-    font-size: 27px !important;
+    font-size: 26px !important;
+  }
+
+  .offcanvas-close {
+    width: 47px !important;
+    height: 47px !important;
+    flex-basis: 47px !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn {
     font-size: 13px !important;
-    min-height: 52px !important;
+    min-height: 51px !important;
   }
 
   .mean-container .mean-nav ul li a,
   .mean-container .mean-nav ul li span {
-    min-height: 52px !important;
+    min-height: 50px !important;
     font-size: 15px !important;
-    padding: 11px 13px !important;
+    padding: 10px 12px !important;
   }
 
   .offcanvas-contact li {
-    width: 46px !important;
-    height: 46px !important;
-    flex-basis: 46px !important;
+    width: 44px !important;
+    height: 44px !important;
+    flex-basis: 44px !important;
   }
 }
