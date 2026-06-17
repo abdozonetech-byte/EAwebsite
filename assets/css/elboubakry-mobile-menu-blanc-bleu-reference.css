@@ -1,0 +1,443 @@
+/* Upgrade 05 — Mobile Menu Blanc & Bleu Reference
+   Scope: mobile offcanvas only. Does not touch desktop layout. */
+@media (max-width: 768px) {
+  :root {
+    --ea-menu-blue: #2f63ff;
+    --ea-menu-blue-2: #4f78ff;
+    --ea-menu-navy: #071832;
+    --ea-menu-muted: #65728b;
+    --ea-menu-line: rgba(47, 99, 255, 0.12);
+  }
+
+  .offcanvas-area,
+  .offcanvas-area.info-open {
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: min(392px, 88vw) !important;
+    max-width: 392px !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    background:
+      radial-gradient(circle at 92% 4%, rgba(47, 99, 255, 0.16), transparent 32%),
+      radial-gradient(circle at 10% 88%, rgba(47, 99, 255, 0.10), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #fbfdff 54%, #eef4ff 100%) !important;
+    border: 0 !important;
+    border-radius: 34px 0 0 34px !important;
+    box-shadow: -28px 0 72px rgba(7, 24, 50, 0.22) !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translate3d(104%, 0, 0) !important;
+    transition:
+      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.22s ease !important;
+    z-index: 99999 !important;
+  }
+
+  .offcanvas-area.info-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .offcanvas-area::before {
+    content: "" !important;
+    position: absolute !important;
+    left: -18% !important;
+    right: -18% !important;
+    bottom: -11% !important;
+    height: 31% !important;
+    background: rgba(47, 99, 255, 0.055) !important;
+    border-radius: 50% 50% 0 0 !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+
+  .offcanvas-area::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(135deg, rgba(255,255,255,.86), rgba(255,255,255,.44) 38%, rgba(238,244,255,.36)) !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+
+  .offcanvas-wrapper,
+  .offcanvas-content,
+  .mobile-menu,
+  .rs-offcanvas-menu,
+  .mean-container,
+  .mean-container .mean-bar,
+  .mean-container .mean-nav,
+  .mean-container .mean-nav > ul,
+  .mean-container .mean-nav ul {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-wrapper {
+    position: relative !important;
+    z-index: 2 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: clamp(24px, 6.2vw, 34px) 24px 20px !important;
+  }
+
+  .offcanvas-content {
+    position: relative !important;
+    z-index: 2 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: none !important;
+    overscroll-behavior: contain !important;
+  }
+
+  .offcanvas-content::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .offcanvas-about,
+  .offcanvas-about * {
+    display: none !important;
+  }
+
+  .offcanvas-top {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin: 0 0 24px !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+
+  .offcanvas-logo,
+  .offcanvas-logo a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-width: 0 !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo {
+    color: var(--ea-menu-navy) !important;
+    font-size: clamp(25px, 7.5vw, 34px) !important;
+    font-weight: 950 !important;
+    line-height: 0.95 !important;
+    letter-spacing: -1.35px !important;
+    text-decoration: none !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo span {
+    color: var(--ea-menu-blue) !important;
+  }
+
+  .offcanvas-close {
+    width: 52px !important;
+    height: 52px !important;
+    flex: 0 0 52px !important;
+    display: grid !important;
+    place-items: center !important;
+    border: 1px solid rgba(47, 99, 255, .12) !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, .86) !important;
+    box-shadow: 0 18px 42px rgba(11, 32, 82, .11) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  .offcanvas-close-icon {
+    position: relative !important;
+    width: 26px !important;
+    height: 26px !important;
+    display: block !important;
+    color: var(--ea-menu-blue) !important;
+  }
+
+  .offcanvas-close-icon .offcanvas-m-lines {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+  }
+
+  .offcanvas-close-icon .offcanvas-m-line {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 25px !important;
+    height: 2.5px !important;
+    border-radius: 999px !important;
+    background: var(--ea-menu-blue) !important;
+    transform-origin: center !important;
+    margin: 0 !important;
+  }
+
+  .offcanvas-close-icon .line--1,
+  .offcanvas-close-icon .line--2,
+  .offcanvas-close-icon .line--3 {
+    transform: translate(-50%, -50%) rotate(45deg) !important;
+  }
+
+  .offcanvas-close-icon .line--2 {
+    opacity: 0 !important;
+  }
+
+  .offcanvas-close-icon .line--3 {
+    transform: translate(-50%, -50%) rotate(-45deg) !important;
+  }
+
+  .offcanvas-diagnostic-cta {
+    width: 100% !important;
+    margin: 0 0 28px !important;
+  }
+
+  .offcanvas-diagnostic-cta .rs-btn {
+    width: 100% !important;
+    min-height: 56px !important;
+    padding: 15px 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    border: 0 !important;
+    border-radius: 17px !important;
+    background: linear-gradient(135deg, #245dff 0%, #4b75ff 100%) !important;
+    color: #ffffff !important;
+    font-size: clamp(14px, 3.8vw, 16px) !important;
+    font-weight: 850 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.2px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-shadow: 0 18px 42px rgba(47, 99, 255, .28) !important;
+  }
+
+  .offcanvas-diagnostic-cta .rs-btn .icon-box {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+    color: inherit !important;
+  }
+
+  .rs-offcanvas-menu {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .mean-container .mean-nav ul li {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 56px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    padding: 13px 17px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    color: var(--ea-menu-navy) !important;
+    background: transparent !important;
+    font-size: clamp(15px, 4.2vw, 18px) !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.2px !important;
+    text-decoration: none !important;
+    transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease !important;
+  }
+
+  .mean-container .mean-nav ul li a::before {
+    width: 26px !important;
+    height: 26px !important;
+    flex: 0 0 26px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--ea-menu-blue) !important;
+    font-family: "remixicon" !important;
+    font-size: 25px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+  }
+
+  .mean-container .mean-nav ul li:nth-child(1) a::before { content: "\ee2b" !important; }
+  .mean-container .mean-nav ul li:nth-child(2) a::before { content: "\eaf5" !important; }
+  .mean-container .mean-nav ul li:nth-child(3) a::before { content: "\f181" !important; }
+  .mean-container .mean-nav ul li:nth-child(4) a::before { content: "\ea96" !important; }
+  .mean-container .mean-nav ul li:nth-child(5) a::before { content: "\eef6" !important; }
+
+  .mean-container .mean-nav ul li a:hover,
+  .mean-container .mean-nav ul li a:focus-visible,
+  .mean-container .mean-nav ul li a.active,
+  .mean-container .mean-nav > ul > li:first-child > a {
+    color: var(--ea-menu-blue) !important;
+    background: rgba(47, 99, 255, .075) !important;
+    box-shadow: inset 0 0 0 1px rgba(47, 99, 255, .055) !important;
+    transform: translateX(2px) !important;
+  }
+
+  .offcanvas-contact {
+    margin: auto 0 0 !important;
+    padding: 28px 0 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-contact .offcanvas-title-meta {
+    display: none !important;
+  }
+
+  .offcanvas-contact::before {
+    content: "Restons connectés" !important;
+    display: block !important;
+    margin: 0 0 13px !important;
+    color: var(--ea-menu-muted) !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+  }
+
+  .offcanvas-contact ul {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+
+  .offcanvas-contact li {
+    position: relative !important;
+    width: 50px !important;
+    height: 50px !important;
+    flex: 0 0 50px !important;
+    display: grid !important;
+    place-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid rgba(47, 99, 255, .11) !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, .78) !important;
+    box-shadow: 0 12px 30px rgba(11, 32, 82, .08) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .offcanvas-contact-icon {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .offcanvas-contact-icon i {
+    color: var(--ea-menu-blue) !important;
+    font-size: 23px !important;
+    line-height: 1 !important;
+  }
+
+  .offcanvas-contact li:first-child .offcanvas-contact-icon i {
+    color: #22c55e !important;
+  }
+
+  .offcanvas-contact-text {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .offcanvas-contact-text a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+  }
+
+  .offcanvas-content::after {
+    content: "E.  Elboubakry." !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 54px !important;
+    margin: 25px 0 0 !important;
+    padding: 0 0 2px 66px !important;
+    color: var(--ea-menu-navy) !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.25px !important;
+    background:
+      radial-gradient(circle at 24px 26px, #315eff 0 24px, transparent 25px) no-repeat,
+      transparent !important;
+  }
+
+  .offcanvas-overlay {
+    background: rgba(7, 18, 40, .30) !important;
+    -webkit-backdrop-filter: blur(7px) !important;
+    backdrop-filter: blur(7px) !important;
+    transition: opacity .22s ease !important;
+  }
+
+  .offcanvas-overlay-white {
+    display: none !important;
+  }
+
+  body:has(.offcanvas-area.info-open) {
+    overflow: hidden !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .offcanvas-area,
+  .offcanvas-area.info-open {
+    width: min(374px, 89vw) !important;
+    border-radius: 28px 0 0 28px !important;
+  }
+
+  .offcanvas-wrapper {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo {
+    font-size: 27px !important;
+  }
+
+  .offcanvas-diagnostic-cta .rs-btn {
+    font-size: 13px !important;
+    min-height: 52px !important;
+  }
+
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span {
+    min-height: 52px !important;
+    font-size: 15px !important;
+    padding: 11px 13px !important;
+  }
+
+  .offcanvas-contact li {
+    width: 46px !important;
+    height: 46px !important;
+    flex-basis: 46px !important;
+  }
+}

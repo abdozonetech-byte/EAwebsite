@@ -17,35 +17,66 @@
   }
 }
 </style>
+<script>
+(function(){
+  var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile) document.documentElement.classList.add('ea-mobile-optimized');
+  window.eaLoadDeferredMobileCSS = function(){
+    if (!isMobile || window.eaDeferredMobileCSSLoaded) return;
+    window.eaDeferredMobileCSSLoaded = true;
+    var links = document.querySelectorAll('link[data-mobile-defer-css]');
+    links.forEach(function(original){
+      var href = original.getAttribute('href');
+      if (!href || document.querySelector('link[data-mobile-loaded-css="' + href.replace(/"/g, '\"') + '"]')) return;
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      link.media = 'all';
+      link.setAttribute('data-mobile-loaded-css', href);
+      document.head.appendChild(link);
+    });
+  };
+  if (isMobile) {
+    var run = function(){
+      var load = window.eaLoadDeferredMobileCSS;
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(load, {timeout: 1600});
+      } else {
+        setTimeout(load, 900);
+      }
+    };
+    if (document.readyState === 'complete') run();
+    else window.addEventListener('load', run, {once:true});
+  }
+})();
+</script>
 <link href="/assets/images/logo-e-blue.png" rel="icon" sizes="76x76" type="image/png"/>
 <link href="/assets/images/logo-e-blue.png" rel="shortcut icon" type="image/png"/>
 <link href="/assets/images/logo-e-blue.png" rel="apple-touch-icon"/>
-<link href="/assets/images/site.webmanifest" rel="manifest"/><link as="image" fetchpriority="high" href="/assets/images/elboubakry-growth-portrait-mobile.webp" imagesizes="(max-width: 768px) 78vw" imagesrcset="/assets/images/elboubakry-growth-portrait-mobile.webp 640w" media="(max-width: 768px)" rel="preload" type="image/webp"/><link as="image" href="/assets/images/elboubakry-growth-portrait-desktop.webp" imagesizes="(min-width: 769px) 42vw" imagesrcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" media="(min-width: 769px)" rel="preload" type="image/webp"/>
+<link href="/assets/images/site.webmanifest" rel="manifest"/><link as="image" fetchpriority="high" href="/assets/images/elboubakry-growth-portrait-mobile-480.webp" imagesizes="(max-width: 768px) 72vw" imagesrcset="/assets/images/elboubakry-growth-portrait-mobile-480.webp 480w, /assets/images/elboubakry-growth-portrait-mobile.webp 640w" media="(max-width: 768px)" rel="preload" type="image/webp"/><link as="image" href="/assets/images/elboubakry-growth-portrait-desktop.webp" imagesizes="(min-width: 769px) 42vw" imagesrcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" media="(min-width: 769px)" rel="preload" type="image/webp"/>
 <!-- CSS here -->
 <link href="/assets/css/vendor/bootstrap.min.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/vendor/animate.min.css?v=upgrade3-mobile90" media="(min-width: 769px)" rel="stylesheet"/>
-<link href="/assets/css/plugins/swiper.min.css?v=upgrade3-mobile90" media="(min-width: 769px)" rel="stylesheet"/>
-<link href="/assets/css/plugins/nice-select.css?v=upgrade3-mobile90" media="(min-width: 769px)" rel="stylesheet"/>
-<link href="/assets/css/vendor/magnific-popup.css?v=upgrade3-mobile90" media="(min-width: 769px)" rel="stylesheet"/>
+<link href="/assets/css/vendor/animate.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/plugins/swiper.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/plugins/nice-select.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/vendor/magnific-popup.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/vendor/spacing.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/vendor/remixicon.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/main.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/abdessamad-polish.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/elboubakry-hero-official-fix.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/elboubakry-icons-polish.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-contact-leads.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-conversion-cleanup.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-portfolio-showcase.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-roadmap-system.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-footer-premium.css?v=20260617-menu-clean" rel="stylesheet"/>
+<link href="/assets/css/elboubakry-contact-leads.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-conversion-cleanup.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-portfolio-showcase.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-roadmap-system.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-footer-premium.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/elboubakry-mobile-final-qa.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean" media="(max-width: 768px)" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-final-ending.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-final-polish-pass.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-growth-system.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-upgrade-07-uiux.css?v=20260617-menu-pro" rel="stylesheet"/><link href="/assets/css/elboubakry-desktop-performance-safe.css?v=20260617-menu-clean" media="(min-width: 769px)" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-mobile-menu-premium.css?v=upgrade2-menu-premium-20260617" media="(max-width: 768px)" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-mobile-ui-performance-90.css?v=upgrade3-mobile90-20260617" media="(max-width: 768px)" rel="stylesheet"/>
+<link href="/assets/css/elboubakry-final-ending.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-final-polish-pass.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-growth-system.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-upgrade-07-uiux.css?v=20260617-menu-pro" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-menu-blanc-bleu-reference.css?v=menu-ref-20260617" media="(max-width: 768px)" rel="stylesheet"/><link href="/assets/css/elboubakry-desktop-performance-safe.css?v=20260617-menu-clean" media="(min-width: 769px)" rel="stylesheet"/>
 <meta content="fr-MA" name="language"/>
 <meta content="MA-CAS" name="geo.region"/>
 <meta content="Casablanca, Maroc" name="geo.placename"/>
@@ -342,7 +373,7 @@
 <div class="rs-banner-bg bg-white" data-background="assets/images/bg/banner-bg-01.png">
 </div>
 <div class="rs-banner-shape-three prallax-parent">
-<img alt="" aria-hidden="true" data-depth="1.3" decoding="async" fetchpriority="low" loading="lazy" src="/assets/images/shape/ring-shape.png"/>
+<img alt="" aria-hidden="true" data-depth="1.3" decoding="async" src="/assets/images/shape/ring-shape.png"/>
 </div>
 <div class="container">
 <div class="row align-items-center g-5">
@@ -358,7 +389,7 @@
 </div>
 </div>
 <div class="rs-banner-shape">
-<img alt="" aria-hidden="true" decoding="async" fetchpriority="low" loading="lazy" src="/assets/images/shape/triangle-shape.png"/>
+<img alt="" aria-hidden="true" decoding="async" src="/assets/images/shape/triangle-shape.png"/>
 </div>
 <div class="rs-theme-social wow fadeInUp" data-wow-delay=".9s" data-wow-duration="1.3s">
 <a aria-label="LinkedIn professionnel" href="https://www.linkedin.com/in/elboubakry-abdessamad-a77360192/" rel="noopener noreferrer" target="_blank"><i aria-hidden="true" class="ri-linkedin-line"></i></a>
@@ -372,7 +403,7 @@
 <div class="rs-banner-thumb">
 <div aria-label="Abdessamad Elboubakry, 5 ans d'expérience" class="ea-hero-portrait-card">
 <div class="ea-hero-portrait-photo">
-<picture><source media="(max-width: 768px)" sizes="78vw" srcset="/assets/images/elboubakry-growth-portrait-mobile.webp 640w" type="image/webp"/><source media="(min-width: 769px)" sizes="42vw" srcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" type="image/webp"/><img alt="Abdessamad Elboubakry consultant marketing digital au Maroc" decoding="async" fetchpriority="high" height="1402" loading="eager" src="/assets/images/elboubakry-growth-portrait.png" width="1122"/></picture>
+<picture><source media="(max-width: 768px)" sizes="72vw" srcset="/assets/images/elboubakry-growth-portrait-mobile-480.webp 480w, /assets/images/elboubakry-growth-portrait-mobile.webp 640w" type="image/webp"/><source media="(min-width: 769px)" sizes="42vw" srcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" type="image/webp"/><img alt="Abdessamad Elboubakry consultant marketing digital au Maroc" decoding="async" fetchpriority="high" height="1402" loading="eager" src="/assets/images/elboubakry-growth-portrait.png" width="1122"/></picture>
 </div>
 <div class="ea-hero-portrait-badge">
 <strong>5+</strong>
@@ -400,7 +431,7 @@
 <div aria-hidden="true" class="ea-core-orbit"></div>
 <div class="ea-core-person">
 <div class="ea-core-photo">
-<picture><source media="(max-width: 768px)" sizes="72vw" srcset="/assets/images/elboubakry-growth-portrait-mobile.webp 640w" type="image/webp"/><source media="(min-width: 769px)" sizes="34vw" srcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" type="image/webp"/><img alt="Abdessamad Elboubakry pilotant un système de croissance digitale" decoding="async" height="1402" fetchpriority="low" loading="lazy" src="/assets/images/elboubakry-growth-portrait.png" width="1122"/></picture>
+<picture><source media="(max-width: 768px)" sizes="70vw" srcset="/assets/images/elboubakry-growth-portrait-mobile-480.webp 480w, /assets/images/elboubakry-growth-portrait-mobile.webp 640w" type="image/webp"/><source media="(min-width: 769px)" sizes="34vw" srcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" type="image/webp"/><img fetchpriority="low" alt="Abdessamad Elboubakry pilotant un système de croissance digitale" decoding="async" height="1402" loading="lazy" src="/assets/images/elboubakry-growth-portrait.png" width="1122"/></picture>
 </div>
 <div class="ea-core-badge"><strong>Abdessamad</strong><span>Système de croissance</span></div>
 </div>
@@ -470,7 +501,7 @@
 <div aria-label="Processus projet vers des demandes qualifiées" class="ea-funnel-story">
 <figure class="ea-funnel-visual ea-funnel-before wow fadeInUp" data-wow-delay=".05s" data-wow-duration=".8s">
 <button aria-label="Voir l’image Avant" class="ea-funnel-image-trigger" data-funnel-lightbox-index="0" type="button">
-<picture><source media="(max-width: 768px)" srcset="/assets/images/section3-before-visual-story-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/section3-before-visual-story-desktop.webp" type="image/webp"/><img alt="Avant, projet à structurer" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/section3-before-visual-story.png" width="1536"/></picture>
+<picture><source media="(max-width: 768px)" srcset="/assets/images/section3-before-visual-story-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/section3-before-visual-story-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Avant, projet à structurer" decoding="async" height="1024" loading="lazy" src="/assets/images/section3-before-visual-story.png" width="1536"/></picture>
 </button>
 <figcaption>
 <span>AVANT</span>
@@ -492,7 +523,7 @@
 </div>
 <figure class="ea-funnel-visual ea-funnel-after wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".8s">
 <button aria-label="Voir l’image Après" class="ea-funnel-image-trigger" data-funnel-lightbox-index="1" type="button">
-<picture><source media="(max-width: 768px)" srcset="/assets/images/section3-after-visual-story-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/section3-after-visual-story-desktop.webp" type="image/webp"/><img alt="Après, projet organisé avec demandes qualifiées" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/section3-after-visual-story.png" width="1536"/></picture>
+<picture><source media="(max-width: 768px)" srcset="/assets/images/section3-after-visual-story-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/section3-after-visual-story-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Après, projet organisé avec demandes qualifiées" decoding="async" height="1024" loading="lazy" src="/assets/images/section3-after-visual-story.png" width="1536"/></picture>
 </button>
 <figcaption>
 <span>APRÈS</span>
@@ -510,7 +541,7 @@
 <div class="row justify-content-center">
 <div class="col-xl-9 col-lg-10">
 <div class="rs-section-title-wrapper section-title-space text-center">
-<span class="rs-section-subtitle"><img alt="" aria-hidden="true" decoding="async" fetchpriority="low" loading="lazy" src="/assets/images/shape/small-arrow.png"/> SYSTÈMES MARKETING</span>
+<span class="rs-section-subtitle"><img fetchpriority="low" alt="" aria-hidden="true" decoding="async" loading="lazy" src="/assets/images/shape/small-arrow.png"/> SYSTÈMES MARKETING</span>
 <h2 class="rs-section-title">Des systèmes marketing sans références publiques</h2>
 <p class="rs-section-description">Une sélection de mockups et d’exemples anonymisés pour présenter la méthode, les supports et les systèmes possibles sans afficher de références privées, logos, résultats ou projets réels.</p>
 </div>
@@ -519,24 +550,24 @@
 <div aria-label="Carrousel de visuels des services" class="elb-carousel-shell wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1s">
 <div aria-label="Galerie horizontale de visuels de services" class="elb-carousel-rail" tabindex="0">
 <div class="elb-mockup-track">
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du pack réseaux sociaux" class="elb-mockup-open" data-mockup-index="0" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/01_social_media_pack-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/01_social_media_pack-desktop.webp" type="image/webp"/><img alt="Visuel du pack réseaux sociaux" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/01_social_media_pack.png" width="1536"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du système de contenu" class="elb-mockup-open" data-mockup-index="1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/02_content_marketing_system-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/02_content_marketing_system-desktop.webp" type="image/webp"/><img alt="Visuel du système de contenu" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/02_content_marketing_system.png" width="1536"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel de landing page pour leads" class="elb-mockup-open" data-mockup-index="2" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/03_landing_page_lead_generation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/03_landing_page_lead_generation-desktop.webp" type="image/webp"/><img alt="Visuel de landing page pour leads" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/03_landing_page_lead_generation.png" width="1536"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du tunnel WhatsApp" class="elb-mockup-open" data-mockup-index="3" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/04_whatsapp_lead_funnel-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/04_whatsapp_lead_funnel-desktop.webp" type="image/webp"/><img alt="Visuel du tunnel WhatsApp" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/04_whatsapp_lead_funnel.png" width="1535"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie SEO et contenu" class="elb-mockup-open" data-mockup-index="4" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/05_seo_content_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/05_seo_content_strategy-desktop.webp" type="image/webp"/><img alt="Visuel de stratégie SEO et contenu" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/05_seo_content_strategy.png" width="1535"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’automatisation email" class="elb-mockup-open" data-mockup-index="5" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/06_email_marketing_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/06_email_marketing_automation-desktop.webp" type="image/webp"/><img alt="Visuel d’automatisation email" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/06_email_marketing_automation.png" width="1535"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du kit de marque personnelle" class="elb-mockup-open" data-mockup-index="6" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/07_personal_branding_kit-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/07_personal_branding_kit-desktop.webp" type="image/webp"/><img alt="Visuel du kit de marque personnelle" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/07_personal_branding_kit.png" width="1535"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’agent IA et automatisation" class="elb-mockup-open" data-mockup-index="7" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/08_ai_agent_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/08_ai_agent_automation-desktop.webp" type="image/webp"/><img alt="Visuel d’agent IA et automatisation" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/08_ai_agent_automation.png" width="1536"/></picture></button></figure>
-<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie marketing digitale" class="elb-mockup-open" data-mockup-index="8" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/09_digital_marketing_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/09_digital_marketing_strategy-desktop.webp" type="image/webp"/><img alt="Visuel de stratégie marketing digitale" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/09_digital_marketing_strategy.png" width="1536"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du pack réseaux sociaux" class="elb-mockup-open" data-mockup-index="0" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/01_social_media_pack-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/01_social_media_pack-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/01_social_media_pack.png" width="1536"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du système de contenu" class="elb-mockup-open" data-mockup-index="1" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/02_content_marketing_system-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/02_content_marketing_system-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/02_content_marketing_system.png" width="1536"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel de landing page pour leads" class="elb-mockup-open" data-mockup-index="2" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/03_landing_page_lead_generation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/03_landing_page_lead_generation-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/03_landing_page_lead_generation.png" width="1536"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du tunnel WhatsApp" class="elb-mockup-open" data-mockup-index="3" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/04_whatsapp_lead_funnel-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/04_whatsapp_lead_funnel-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/04_whatsapp_lead_funnel.png" width="1535"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie SEO et contenu" class="elb-mockup-open" data-mockup-index="4" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/05_seo_content_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/05_seo_content_strategy-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/05_seo_content_strategy.png" width="1535"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’automatisation email" class="elb-mockup-open" data-mockup-index="5" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/06_email_marketing_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/06_email_marketing_automation-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/06_email_marketing_automation.png" width="1535"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du kit de marque personnelle" class="elb-mockup-open" data-mockup-index="6" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/07_personal_branding_kit-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/07_personal_branding_kit-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/07_personal_branding_kit.png" width="1535"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’agent IA et automatisation" class="elb-mockup-open" data-mockup-index="7" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/08_ai_agent_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/08_ai_agent_automation-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/08_ai_agent_automation.png" width="1536"/></picture></button></figure>
-<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie marketing digitale" class="elb-mockup-open" data-mockup-index="8" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/09_digital_marketing_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/09_digital_marketing_strategy-desktop.webp" type="image/webp"/><img alt="" decoding="async" height="1024" fetchpriority="low" loading="lazy" src="/assets/images/09_digital_marketing_strategy.png" width="1536"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du pack réseaux sociaux" class="elb-mockup-open" data-mockup-index="0" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/01_social_media_pack-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/01_social_media_pack-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel du pack réseaux sociaux" decoding="async" height="1024" loading="lazy" src="/assets/images/01_social_media_pack.png" width="1536"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du système de contenu" class="elb-mockup-open" data-mockup-index="1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/02_content_marketing_system-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/02_content_marketing_system-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel du système de contenu" decoding="async" height="1024" loading="lazy" src="/assets/images/02_content_marketing_system.png" width="1536"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel de landing page pour leads" class="elb-mockup-open" data-mockup-index="2" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/03_landing_page_lead_generation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/03_landing_page_lead_generation-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel de landing page pour leads" decoding="async" height="1024" loading="lazy" src="/assets/images/03_landing_page_lead_generation.png" width="1536"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du tunnel WhatsApp" class="elb-mockup-open" data-mockup-index="3" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/04_whatsapp_lead_funnel-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/04_whatsapp_lead_funnel-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel du tunnel WhatsApp" decoding="async" height="1024" loading="lazy" src="/assets/images/04_whatsapp_lead_funnel.png" width="1535"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie SEO et contenu" class="elb-mockup-open" data-mockup-index="4" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/05_seo_content_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/05_seo_content_strategy-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel de stratégie SEO et contenu" decoding="async" height="1024" loading="lazy" src="/assets/images/05_seo_content_strategy.png" width="1535"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’automatisation email" class="elb-mockup-open" data-mockup-index="5" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/06_email_marketing_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/06_email_marketing_automation-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel d’automatisation email" decoding="async" height="1024" loading="lazy" src="/assets/images/06_email_marketing_automation.png" width="1535"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel du kit de marque personnelle" class="elb-mockup-open" data-mockup-index="6" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/07_personal_branding_kit-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/07_personal_branding_kit-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel du kit de marque personnelle" decoding="async" height="1024" loading="lazy" src="/assets/images/07_personal_branding_kit.png" width="1535"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’agent IA et automatisation" class="elb-mockup-open" data-mockup-index="7" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/08_ai_agent_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/08_ai_agent_automation-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel d’agent IA et automatisation" decoding="async" height="1024" loading="lazy" src="/assets/images/08_ai_agent_automation.png" width="1536"/></picture></button></figure>
+<figure class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie marketing digitale" class="elb-mockup-open" data-mockup-index="8" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/09_digital_marketing_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/09_digital_marketing_strategy-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="Visuel de stratégie marketing digitale" decoding="async" height="1024" loading="lazy" src="/assets/images/09_digital_marketing_strategy.png" width="1536"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du pack réseaux sociaux" class="elb-mockup-open" data-mockup-index="0" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/01_social_media_pack-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/01_social_media_pack-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/01_social_media_pack.png" width="1536"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du système de contenu" class="elb-mockup-open" data-mockup-index="1" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/02_content_marketing_system-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/02_content_marketing_system-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/02_content_marketing_system.png" width="1536"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel de landing page pour leads" class="elb-mockup-open" data-mockup-index="2" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/03_landing_page_lead_generation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/03_landing_page_lead_generation-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/03_landing_page_lead_generation.png" width="1536"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du tunnel WhatsApp" class="elb-mockup-open" data-mockup-index="3" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/04_whatsapp_lead_funnel-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/04_whatsapp_lead_funnel-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/04_whatsapp_lead_funnel.png" width="1535"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie SEO et contenu" class="elb-mockup-open" data-mockup-index="4" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/05_seo_content_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/05_seo_content_strategy-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/05_seo_content_strategy.png" width="1535"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’automatisation email" class="elb-mockup-open" data-mockup-index="5" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/06_email_marketing_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/06_email_marketing_automation-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/06_email_marketing_automation.png" width="1535"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel du kit de marque personnelle" class="elb-mockup-open" data-mockup-index="6" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/07_personal_branding_kit-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/07_personal_branding_kit-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/07_personal_branding_kit.png" width="1535"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel d’agent IA et automatisation" class="elb-mockup-open" data-mockup-index="7" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/08_ai_agent_automation-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/08_ai_agent_automation-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/08_ai_agent_automation.png" width="1536"/></picture></button></figure>
+<figure aria-hidden="true" class="elb-mockup-slide"><button aria-label="Agrandir le visuel de stratégie marketing digitale" class="elb-mockup-open" data-mockup-index="8" tabindex="-1" type="button"><picture><source media="(max-width: 768px)" srcset="/assets/images/09_digital_marketing_strategy-mobile.webp" type="image/webp"/><source media="(min-width: 769px)" srcset="/assets/images/09_digital_marketing_strategy-desktop.webp" type="image/webp"/><img fetchpriority="low" alt="" decoding="async" height="1024" loading="lazy" src="/assets/images/09_digital_marketing_strategy.png" width="1536"/></picture></button></figure>
 </div>
 </div>
 </div>
@@ -596,7 +627,7 @@
 <div class="ea-footer-grid">
 <div class="ea-footer-brand ea-footer-block wow fadeInUp" data-wow-delay=".1s" data-wow-duration=".7s">
 <a aria-label="Retour en haut de page" class="ea-footer-logo" href="/">
-<img alt="Logo Elboubakry Abdessamad" decoding="async" height="46" fetchpriority="low" loading="lazy" src="/assets/images/logo-e-blue.png" width="46"/>
+<img fetchpriority="low" alt="Logo Elboubakry Abdessamad" decoding="async" height="46" loading="lazy" src="/assets/images/logo-e-blue.png" width="46"/>
 <span><strong id="footer-title">Elboubakry Abdessamad</strong><small>Consultant Marketing Digital au Maroc</small></span>
 </a>
 <p>J’aide les entreprises à structurer leur présence digitale en un système clair pour générer, convertir et mesurer.</p>
@@ -655,35 +686,32 @@
 </div>
 <!-- Backtotop end -->
 <!-- JS here -->
-<script src="/assets/js/vendor/jquery-3.7.1.min.js?v=upgrade3-mobile90"></script>
-<script src="/assets/js/vendor/bootstrap.bundle.min.js?v=upgrade3-mobile90"></script>
-<script src="/assets/js/plugins/meanmenu.min.js?v=upgrade3-mobile90"></script>
-<script src="/assets/js/plugins/headding-title.js?v=upgrade3-mobile90"></script>
-<script src="/assets/js/elboubakry-mobile-safe-stubs.js?v=upgrade3-mobile90"></script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/waypoints.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/swiper.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/wow.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/vendor/magnific-popup.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/vendor/isotope.pkgd.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/vendor/imagesloaded.pkgd.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/nice-select.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/jarallax.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/vendor/ajax-form.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/easypie.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/lenis.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/gsap.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/rs-anim-int.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/rs-scroll-trigger.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/rs-splitText.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/jquery.lettering.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/plugins/parallax-effect.min.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script>if(!window.matchMedia||!window.matchMedia('(max-width: 768px)').matches){document.write('<script src="/assets/js/vendor/purecounter.js?v=upgrade3-mobile90"><\/script>');}</script>
-<script src="/assets/js/main.js?v=upgrade3-mobile90"></script>
-<script defer src="/assets/js/elboubakry-mobile-motion.js?v=upgrade3-mobile90"></script>
-<script defer src="/assets/js/elboubakry-funnel-lightbox.js?v=upgrade3-mobile90"></script>
-<script defer src="/assets/js/elboubakry-mockup-carousel.js?v=upgrade3-mobile90"></script>
-<script defer src="/assets/js/elboubakry-preloader-safe.js?v=upgrade3-mobile90"></script>
-<script defer src="/assets/js/elboubakry-mobile-menu-premium.js?v=upgrade2-menu-premium-20260617"></script>
-<script defer src="/assets/js/elboubakry-mobile-performance-90.js?v=upgrade3-mobile90"></script>
+<script defer src="/assets/js/vendor/jquery-3.7.1.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/waypoints.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/vendor/bootstrap.bundle.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/meanmenu.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/swiper.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/wow.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/vendor/magnific-popup.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/vendor/isotope.pkgd.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/vendor/imagesloaded.pkgd.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/nice-select.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/jarallax.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/vendor/ajax-form.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/easypie.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/headding-title.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/lenis.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/gsap.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/rs-anim-int.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/rs-scroll-trigger.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/rs-splitText.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/jquery.lettering.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/plugins/parallax-effect.min.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/vendor/purecounter.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/main.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/elboubakry-mobile-motion.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/elboubakry-funnel-lightbox.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/elboubakry-mockup-carousel.js?v=20260617-menu-clean"></script>
+<script defer src="/assets/js/elboubakry-preloader-safe.js?v=20260617-menu-clean"></script>
 </body>
 </html>
