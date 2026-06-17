@@ -2,6 +2,38 @@
 
 <html class="no-js" dir="ltr" lang="fr" rs-theme="rs-theme-light">
 <head>
+<!-- Meta Pixel Code - EA clean setup -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '2322425664833523');
+fbq('track', 'PageView');
+
+(function() {
+  try {
+    var cleanPath = window.location.pathname.replace(/\/+$/, '');
+    var hasSubmittedLead = sessionStorage.getItem('lead_submitted') === 'true';
+
+    if (cleanPath === '/merci' && hasSubmittedLead) {
+      fbq('track', 'Lead', {
+        content_name: 'Diagnostic gratuit',
+        content_category: 'Lead Form',
+        value: 0,
+        currency: 'MAD'
+      });
+      sessionStorage.removeItem('lead_submitted');
+    }
+  } catch (error) {
+    console.warn('Meta Pixel Lead tracking could not run.', error);
+  }
+}());
+</script>
+<!-- End Meta Pixel Code -->
+
 <meta charset="utf-8"/>
 <meta content="ie=edge" http-equiv="x-ua-compatible"/>
 <title>Consultant Marketing Digital au Maroc | Elboubakry Abdessamad</title>
@@ -237,6 +269,11 @@
 <script defer="" src="/assets/js/analytics.js"></script>
 </head>
 <body class="rs-smoother-yes">
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=2322425664833523&ev=PageView&noscript=1" alt=""/>
+</noscript>
+
 <!-- preloader start -->
 <div id="pre-load">
 <div class="loader" id="loader">

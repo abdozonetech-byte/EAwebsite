@@ -1,6 +1,38 @@
 <!doctype html>
 <html lang="fr" dir="ltr">
 <head>
+<!-- Meta Pixel Code - EA clean setup -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '2322425664833523');
+fbq('track', 'PageView');
+
+(function() {
+  try {
+    var cleanPath = window.location.pathname.replace(/\/+$/, '');
+    var hasSubmittedLead = sessionStorage.getItem('lead_submitted') === 'true';
+
+    if (cleanPath === '/merci' && hasSubmittedLead) {
+      fbq('track', 'Lead', {
+        content_name: 'Diagnostic gratuit',
+        content_category: 'Lead Form',
+        value: 0,
+        currency: 'MAD'
+      });
+      sessionStorage.removeItem('lead_submitted');
+    }
+  } catch (error) {
+    console.warn('Meta Pixel Lead tracking could not run.', error);
+  }
+}());
+</script>
+<!-- End Meta Pixel Code -->
+
 <meta charset="utf-8"/>
 <meta http-equiv="x-ua-compatible" content="ie=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -284,6 +316,11 @@
 </style>
 </head>
 <body>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=2322425664833523&ev=PageView&noscript=1" alt=""/>
+</noscript>
+
 <div class="page">
   <header class="header" aria-label="En-tête">
     <a class="brand" href="/" aria-label="Retour au portfolio Elboubakry Abdessamad">
@@ -315,57 +352,5 @@
     © 2026 Elboubakry Abdessamad. Tous droits réservés.
   </footer>
 </div>
-
-<script>
-  const META_PIXEL_ID = "PASTE_META_PIXEL_ID_HERE";
-
-  (function () {
-    const META_PIXEL_PLACEHOLDER = ["PASTE", "META", "PIXEL", "ID", "HERE"].join("_");
-
-    function installMetaPixel() {
-      if (!META_PIXEL_ID || META_PIXEL_ID === META_PIXEL_PLACEHOLDER) {
-        if (typeof window.fbq !== "function") {
-          console.warn("Meta Pixel ID is not configured. Replace META_PIXEL_ID with your real Pixel ID.");
-        }
-        return;
-      }
-
-      if (typeof window.fbq === "function") return;
-
-      !function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = true;
-        n.version = "2.0";
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = true;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-
-      fbq("init", META_PIXEL_ID);
-    }
-
-    try {
-      if (sessionStorage.getItem("lead_submitted")) {
-        installMetaPixel();
-
-        if (typeof window.fbq === "function") {
-          fbq("track", "Lead");
-        }
-
-        sessionStorage.removeItem("lead_submitted");
-      }
-    } catch (error) {
-      console.warn("Lead tracking session guard could not run.");
-    }
-  }());
-</script>
 </body>
 </html>
