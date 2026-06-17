@@ -13,17 +13,17 @@
   }
 
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    window.setTimeout(hidePreloader, 250);
+    window.setTimeout(hidePreloader, 900);
   } else {
     document.addEventListener('DOMContentLoaded', function () {
-      window.setTimeout(hidePreloader, 250);
+      window.setTimeout(hidePreloader, 900);
     });
   }
 
   window.addEventListener('load', function () {
-    window.setTimeout(hidePreloader, 250);
+    window.setTimeout(hidePreloader, 700);
   });
 
   /* Safety fallback: never leave the visitor blocked by the loading screen. */
-  window.setTimeout(hidePreloader, 1800);
+  window.setTimeout(hidePreloader, 3200);
 })();

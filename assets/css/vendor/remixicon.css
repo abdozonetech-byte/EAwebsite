@@ -10,7 +10,7 @@
 */
 @font-face {
   font-family: "remixicon";
-  src: url("/assets/fonts/remixicon.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.woff2") format("woff2");
   font-display: swap;
 }
 
@@ -2930,3 +2930,4 @@
 .ri-triangular-flag-line:before { content: "\f54a"; }
 .ri-user-minus-fill:before { content: "\f54b"; }
 .ri-user-minus-line:before { content: "\f54c"; }
+
