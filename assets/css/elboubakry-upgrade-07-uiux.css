@@ -745,8 +745,40 @@ a, button { -webkit-tap-highlight-color: transparent; }
     min-height: 64px;
   }
 
+  .offcanvas-area {
+    width: 100% !important;
+    max-width: none !important;
+    background: rgba(8, 18, 42, .48) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+  }
+
+  .offcanvas-wrapper,
   .offcanvas-content {
-    width: min(100vw, 390px) !important;
+    width: 100% !important;
+    background: transparent !important;
+    border-left: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-wrapper {
+    width: 100% !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo,
+  .offcanvas-title-meta,
+  .offcanvas-about p,
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span,
+  .offcanvas-contact-text a {
+    color: #ffffff !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo span,
+  .mean-container .mean-nav ul li a:hover,
+  .mean-container .mean-nav ul li a.active,
+  .offcanvas-contact-text a:hover {
+    color: #7fa2ff !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn,
