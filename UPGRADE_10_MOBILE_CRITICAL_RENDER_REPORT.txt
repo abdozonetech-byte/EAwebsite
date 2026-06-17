@@ -1,0 +1,31 @@
+Upgrade 10 — Mobile Critical Rendering / LCP only
+
+Scope:
+- Mobile performance only.
+- Desktop CSS/layout kept as desktop media loading.
+- SEO, Analytics, sitemap, robots, form, content untouched.
+
+Bottlenecks observed from PageSpeed:
+- TBT already excellent/near 0ms.
+- Remaining issues: FCP/LCP/Speed Index and render-blocking CSS.
+
+Changes:
+1. Added inline mobile critical CSS for first screen only: header, hero, buttons, portrait, basic menu shell.
+2. Deferred heavy CSS on mobile only by changing mobile rendering of these files to desktop-first + mobile deferred loader:
+   - bootstrap.min.css
+   - spacing.css
+   - remixicon.css
+   - main.css
+   - abdessamad-polish.css
+   - elboubakry-hero-official-fix.css
+   - elboubakry-icons-polish.css
+   - elboubakry-mobile-final-qa.css
+   - elboubakry-upgrade-07-uiux.css
+3. Kept final mobile menu/focus/performance CSS as mobile CSS.
+4. Moved deferred CSS trigger earlier to DOMContentLoaded idle instead of waiting for full window load.
+5. Added explicit background-image style for the mobile hero background to avoid waiting for JS.
+6. Marked decorative above-fold shape images as lazy/low priority with dimensions.
+
+Expected result:
+- Faster mobile FCP/LCP/Speed Index.
+- Desktop should remain unchanged because desktop still loads the same CSS through min-width media rules.
