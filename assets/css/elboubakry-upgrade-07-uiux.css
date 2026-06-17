@@ -947,3 +947,99 @@ a, button { -webkit-tap-highlight-color: transparent; }
     font-size: 14px !important;
   }
 }
+
+/* Mobile menu panel removal: keep content, remove every white/card-like drawer layer. */
+@media (max-width: 768px) {
+  .offcanvas-area,
+  .offcanvas-area.info-open {
+    width: 100% !important;
+    max-width: none !important;
+    background-color: rgba(8, 18, 42, .50) !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
+    backdrop-filter: blur(18px) saturate(145%) !important;
+  }
+
+  .offcanvas-area::before,
+  .offcanvas-area::after,
+  .offcanvas-wrapper::before,
+  .offcanvas-wrapper::after,
+  .offcanvas-content::before,
+  .offcanvas-content::after,
+  .mobile-menu::before,
+  .mobile-menu::after {
+    display: none !important;
+    content: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-wrapper,
+  .offcanvas-content,
+  .mobile-menu,
+  .rs-offcanvas-menu,
+  .mean-container,
+  .mean-container .mean-bar,
+  .mean-container .mean-nav,
+  .mean-container .mean-nav > ul,
+  .mean-container .mean-nav ul,
+  .mean-container .mean-nav ul li {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-wrapper,
+  .offcanvas-content {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .offcanvas-overlay-white {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    background: transparent !important;
+  }
+
+  .offcanvas-overlay {
+    background: rgba(3, 9, 24, .24) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+    backdrop-filter: blur(2px) !important;
+  }
+
+  .offcanvas-top {
+    border-bottom-color: rgba(255, 255, 255, .18) !important;
+  }
+
+  .mean-container .mean-nav ul li {
+    border-bottom-color: rgba(255, 255, 255, .16) !important;
+  }
+
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span {
+    color: #ffffff !important;
+    background: transparent !important;
+    border-top-color: rgba(255, 255, 255, .08) !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo,
+  .offcanvas-title-meta,
+  .offcanvas-about p,
+  .offcanvas-contact-text a {
+    color: #ffffff !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo span,
+  .mean-container .mean-nav ul li a:hover,
+  .mean-container .mean-nav ul li a.active,
+  .offcanvas-contact-text a:hover {
+    color: #7fa2ff !important;
+  }
+}
