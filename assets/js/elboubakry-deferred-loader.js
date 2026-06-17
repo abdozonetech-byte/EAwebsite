@@ -28,8 +28,7 @@
     '/assets/js/vendor/purecounter.js',
     '/assets/js/main.js',
     '/assets/js/elboubakry-mobile-motion.js',
-    '/assets/js/elboubakry-funnel-lightbox.js',
-    '/assets/js/elboubakry-mockup-carousel.js'
+    '/assets/js/elboubakry-funnel-lightbox.js'
   ];
 
   function loadScript(src) {
