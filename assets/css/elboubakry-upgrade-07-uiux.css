@@ -1048,13 +1048,16 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 768px) {
   .offcanvas-area,
   .offcanvas-area.info-open {
-    width: min(390px, calc(100vw - 18px)) !important;
+    width: min(368px, 90vw) !important;
     max-width: none !important;
     min-height: 100dvh !important;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 56%, #eef4ff 100%) !important;
+    overflow-x: hidden !important;
+    background:
+      radial-gradient(circle at 84% 4%, rgba(47, 99, 255, .12) 0, rgba(47, 99, 255, 0) 34%),
+      linear-gradient(180deg, #ffffff 0%, #fbfdff 58%, #eef4ff 100%) !important;
     border: 0 !important;
-    border-radius: 28px 0 0 28px !important;
-    box-shadow: -18px 0 48px rgba(11, 32, 82, .16) !important;
+    border-radius: 24px 0 0 24px !important;
+    box-shadow: -18px 0 44px rgba(11, 32, 82, .14) !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
@@ -1063,18 +1066,22 @@ a, button { -webkit-tap-highlight-color: transparent; }
     inset-inline-end: 0 !important;
     right: 0 !important;
     left: auto !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
     transform: translate3d(100%, 0, 0) !important;
-    transition: transform .38s cubic-bezier(.22, 1, .36, 1) !important;
+    transition: transform .34s cubic-bezier(.22, 1, .36, 1), opacity .2s ease !important;
   }
 
   .offcanvas-area.info-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
     transform: translate3d(0, 0, 0) !important;
   }
 
   .offcanvas-wrapper {
     min-height: 100dvh !important;
     width: 100% !important;
-    padding: 30px 26px 24px !important;
+    padding: 24px 20px 20px !important;
     display: flex !important;
     flex-direction: column !important;
     background: transparent !important;
@@ -1084,28 +1091,34 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
   .offcanvas-content {
     width: 100% !important;
-    min-height: calc(100dvh - 56px) !important;
+    min-height: calc(100dvh - 44px) !important;
     display: flex !important;
     flex-direction: column !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important;
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
   }
 
-  .offcanvas-about,
-  .offcanvas-contact {
+  .offcanvas-content::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .offcanvas-about {
     display: none !important;
   }
 
   .offcanvas-top {
     padding-bottom: 0 !important;
-    margin-bottom: 28px !important;
+    margin-bottom: 18px !important;
     border: 0 !important;
   }
 
   .offcanvas-logo a.ea-premium-logo {
     color: #071832 !important;
-    font-size: 30px !important;
+    font-size: 26px !important;
     line-height: 1 !important;
   }
 
@@ -1114,13 +1127,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
   }
 
   .offcanvas-close {
-    width: 48px !important;
-    height: 48px !important;
-    flex: 0 0 48px !important;
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px !important;
     border: 1px solid rgba(47, 99, 255, .12) !important;
-    border-radius: 16px !important;
+    border-radius: 50% !important;
     background: rgba(255, 255, 255, .92) !important;
-    box-shadow: 0 14px 34px rgba(11, 32, 82, .10) !important;
+    box-shadow: 0 12px 28px rgba(11, 32, 82, .09) !important;
   }
 
   .offcanvas-close-icon,
@@ -1129,18 +1142,29 @@ a, button { -webkit-tap-highlight-color: transparent; }
   }
 
   .offcanvas-diagnostic-cta {
-    margin: 0 0 28px !important;
+    margin: 0 0 18px !important;
   }
 
   .offcanvas-diagnostic-cta .rs-btn {
     width: 100% !important;
-    min-height: 56px !important;
+    min-height: 50px !important;
     justify-content: center !important;
+    gap: 8px !important;
+    padding: 13px 16px !important;
     border: 0 !important;
-    border-radius: 18px !important;
+    border-radius: 16px !important;
     background: linear-gradient(135deg, #245dff 0%, #4776ff 100%) !important;
     color: #ffffff !important;
-    box-shadow: 0 18px 44px rgba(47, 99, 255, .28) !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    box-shadow: 0 16px 34px rgba(47, 99, 255, .24) !important;
+  }
+
+  .offcanvas-diagnostic-cta .rs-btn .icon-box {
+    margin-inline-start: 0 !important;
+    flex: 0 0 auto !important;
   }
 
   .mobile-menu,
@@ -1166,31 +1190,35 @@ a, button { -webkit-tap-highlight-color: transparent; }
     background: transparent !important;
   }
 
+  .mean-container .mean-nav ul li + li {
+    margin-top: 4px !important;
+  }
+
   .mean-container .mean-nav ul li a,
   .mean-container .mean-nav ul li span {
     position: relative !important;
     display: flex !important;
     align-items: center !important;
-    gap: 16px !important;
+    gap: 12px !important;
     width: 100% !important;
-    min-height: 58px !important;
-    padding: 13px 14px !important;
+    min-height: 54px !important;
+    padding: 11px 13px !important;
     border: 0 !important;
-    border-radius: 16px !important;
+    border-radius: 15px !important;
     color: #071832 !important;
     background: transparent !important;
-    font-size: 18px !important;
+    font-size: 16px !important;
     font-weight: 800 !important;
     line-height: 1.2 !important;
     letter-spacing: 0 !important;
   }
 
   .mean-container .mean-nav ul li a::before {
-    width: 28px;
-    flex: 0 0 28px;
+    width: 24px;
+    flex: 0 0 24px;
     color: #2f63ff;
     font-family: "remixicon";
-    font-size: 24px;
+    font-size: 21px;
     font-weight: 400;
     line-height: 1;
     text-align: center;
@@ -1221,6 +1249,97 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .mean-container .mean-nav > ul > li:first-child > a {
     color: #2f63ff !important;
     background: #f1f5ff !important;
+    box-shadow: inset 0 0 0 1px rgba(47, 99, 255, .04) !important;
+  }
+
+  .offcanvas-contact {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 22px 0 0 !important;
+    padding-top: 10px !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-contact::before {
+    content: "Restons connectés";
+    margin-bottom: 12px;
+    color: #66738f;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .offcanvas-contact .offcanvas-title-meta {
+    display: none !important;
+  }
+
+  .offcanvas-contact ul {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+
+  .offcanvas-contact li {
+    position: relative !important;
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    border: 1px solid rgba(47, 99, 255, .10) !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, .76) !important;
+    box-shadow: 0 12px 26px rgba(11, 32, 82, .07) !important;
+  }
+
+  .offcanvas-contact-icon {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .offcanvas-contact-icon i {
+    color: #2f63ff !important;
+    font-size: 19px !important;
+    line-height: 1 !important;
+  }
+
+  .offcanvas-contact li:first-child .offcanvas-contact-icon i {
+    color: #22c55e !important;
+  }
+
+  .offcanvas-contact-text {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .offcanvas-contact-text a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+  }
+
+  .offcanvas-contact-text a:focus-visible {
+    outline: 2px solid rgba(47, 99, 255, .55) !important;
+    outline-offset: 3px !important;
+    border-radius: 14px !important;
   }
 
   .offcanvas-overlay {
@@ -1231,5 +1350,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
   .offcanvas-overlay-white {
     display: none !important;
+  }
+
+  body:has(.offcanvas-area.info-open) {
+    overflow: hidden !important;
   }
 }
