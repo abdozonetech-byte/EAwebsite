@@ -1,0 +1,17 @@
+Upgrade 02 — Professional Mobile Menu Only
+
+Scope applied:
+- Mobile menu UI only.
+- Desktop layout, desktop CSS media queries, hero, sections, SEO, Analytics, sitemap and robots were not changed.
+
+Files changed/added:
+- index.html: added cache-busted mobile-only CSS and small deferred JS references.
+- assets/css/elboubakry-mobile-menu-premium.css: premium Blanc & Bleu mobile drawer override.
+- assets/js/elboubakry-mobile-menu-premium.js: lightweight body-lock + close-on-link behavior.
+
+Expected result:
+- Clean white/light-blue professional side drawer.
+- No À propos section visible.
+- No long description visible.
+- Compact CTA, organized nav links, small contact icons at bottom.
+- Smooth open/close and no desktop impact.

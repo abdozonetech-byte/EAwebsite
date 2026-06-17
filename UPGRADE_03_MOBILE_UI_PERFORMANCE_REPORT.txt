@@ -1,0 +1,33 @@
+Upgrade 03 — Mobile UI + Performance 90+ Only
+
+Scope completed:
+- Mobile-only UI/performance improvements.
+- Desktop layout/media queries were not edited.
+- SEO, Analytics, sitemap, robots, canonical and meta tags were preserved.
+- Google Analytics ID G-KRP71BRZ5E was preserved.
+
+Files changed/added:
+- index.html
+- assets/css/elboubakry-mobile-ui-performance-90.css
+- assets/js/elboubakry-mobile-safe-stubs.js
+- assets/js/elboubakry-mobile-performance-90.js
+
+Main improvements:
+1. Added mobile-only CSS polish for hero, sections, cards, carousel and footer organization.
+2. Added mobile-only content-visibility/contain optimizations for below-the-fold sections.
+3. Added mobile-only LCP stability improvements for the hero area.
+4. Kept hero word animation working and prevented clipping on mobile.
+5. Kept systems marketing carousel/swipe behavior working while reducing early load pressure.
+6. Lazy-loaded below-the-fold images and lowered priority for non-hero images.
+7. Skipped desktop-only plugin scripts on mobile using safe stubs so main.js does not break.
+8. Kept plugin loading for desktop unchanged in behavior through desktop-only conditional loading.
+9. Reduced mobile render-blocking plugin CSS by loading non-critical plugin CSS on desktop only.
+10. Added cache-busting version strings for the mobile performance files.
+
+Testing checklist after push:
+- Test mobile menu open/close.
+- Test hero word animation.
+- Test systems carousel swipe/scroll.
+- Test lead page/form remains working.
+- Run PageSpeed mobile and desktop.
+- Confirm desktop visual layout is unchanged.
