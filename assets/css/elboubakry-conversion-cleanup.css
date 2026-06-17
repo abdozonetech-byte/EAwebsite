@@ -1,0 +1,23 @@
+
+/* Upgrade 07 — Homepage Conversion Cleanup */
+.ea-impact-clean .rs-section-description{max-width:760px;margin:18px auto 0;opacity:.82;}
+.ea-impact-grid{align-items:stretch;}
+.ea-impact-card{height:100%;display:flex;flex-direction:column;}
+.ea-impact-card p{flex:1;}
+.ea-impact-card .ea-card-icon{background:transparent;border-radius:0;width:auto;height:auto;display:inline-flex;align-items:center;justify-content:flex-start;color:var(--rs-theme-primary,#086ad8);font-size:34px;margin-bottom:18px;}
+.ea-impact-card .ea-card-icon i{line-height:1;}
+.ea-impact-card a{margin-top:8px;}
+@media (max-width:767px){.ea-impact-clean .rs-section-description{font-size:15px}.ea-impact-card .ea-card-icon{font-size:30px}}
+#homeservices .rs-section-title-wrapper,
+#homeservices .rs-section-title,
+#homeservices .rs-section-title div,
+#homeservices .rs-section-title span{
+  overflow:visible !important;
+  max-width:none;
+}
+#homeservices .rs-section-title{
+  display:block;
+  white-space:normal;
+  opacity:1 !important;
+  visibility:visible !important;
+}
