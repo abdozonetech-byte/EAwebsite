@@ -8,7 +8,7 @@ Included:
 - SEO title, meta description, keywords, canonical, Open Graph and Twitter metadata
 - H1/H2 structure, breadcrumb, CTA to /reserver-diagnostic/
 - Service schema, FAQ schema and BreadcrumbList schema
-- Internal link to /insights/meta-ads-leads-qualifies-maroc.html
+- Internal link to /insights/meta-ads-leads-qualifies-maroc/
 - Services hub card updated to point to the new page
 - Footer service links updated across service pages
 - sitemap.xml updated

@@ -1,0 +1,19 @@
+Insights Clean URLs SEO Fix
+
+Completed changes:
+- Converted 29 Insights articles from .html URLs to clean folder URLs.
+- Updated canonical URLs, Open Graph URLs, schema URLs, internal links and sitemap entries.
+- Added 301 redirects from old .html article URLs to clean URLs.
+- Added 301 redirects from no-trailing-slash article URLs to trailing-slash clean URLs.
+- Cleaned the About page URL from /about-elboubakry-abdessamad.html to /about-elboubakry-abdessamad/.
+- Updated the Insights hub JS so article cards now link to /insights/slug/ instead of /insights/slug.html.
+
+SEO result:
+- New preferred article format: https://elboubakry.com/insights/article-slug/
+- Old URLs still work through 301 redirects.
+- Sitemap now only promotes clean URLs.
+
+Next after deploy:
+1. Open https://elboubakry.com/sitemap.xml and confirm clean URLs.
+2. Resubmit sitemap.xml in Google Search Console.
+3. Test one old URL, e.g. /insights/generation-leads-qualifies-maroc.html, and confirm it redirects to /insights/generation-leads-qualifies-maroc/.

@@ -10,7 +10,7 @@ Included:
 - Service schema, FAQPage schema, BreadcrumbList schema
 - H1/H2 structure focused on automation, AI, CRM, lead follow-up and Morocco
 - CTA to /reserver-diagnostic/
-- Internal link to /insights/ia-business-petite-entreprise.html
+- Internal link to /insights/ia-business-petite-entreprise/
 - Services hub updated: automation card now links to full service page
 - Footer service links updated from anchor to full page
 - sitemap.xml updated

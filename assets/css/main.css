@@ -133,7 +133,7 @@
 /*----------------------------------------*/
 /*  1.1 Theme Default
 /*----------------------------------------*/
-@import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
+/* Urbanist font is preconnected and loaded from the HTML head for faster first paint. */
 .offcanvas-overlay, a,
 .btn,
 button,

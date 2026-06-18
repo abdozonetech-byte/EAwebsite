@@ -9,7 +9,7 @@ Included:
 - Open Graph and Twitter meta
 - Service schema, BreadcrumbList schema, FAQPage schema
 - H1/H2 structure with sections for problems, method, included items, use cases, FAQ and CTA
-- Internal link to related Insights guide: /insights/generation-leads-qualifies-maroc.html
+- Internal link to related Insights guide: /insights/generation-leads-qualifies-maroc/
 - CTA to /reserver-diagnostic/
 - Services hub updated: Génération de leads card now links to the full service page
 - Footer links updated in services pages

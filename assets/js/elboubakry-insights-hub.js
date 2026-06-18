@@ -49,7 +49,7 @@
 
   function articleUrl(article) {
     const slug = encodeURIComponent(article.slug || article.id);
-    return `/insights/${slug}.html`;
+    return `/insights/${slug}/`;
   }
 
   function renderArticles() {
@@ -96,7 +96,7 @@
         "@type": "ListItem",
         "position": index + 1,
         "name": article.title,
-        "url": `https://elboubakry.com/insights/${article.slug || article.id}.html`
+        "url": `https://elboubakry.com/insights/${article.slug || article.id}/`
       }))
     };
     const script = document.createElement("script");

@@ -8,16 +8,16 @@
   var IMPORTANT_INTERNAL_PATHS = [
     '/#footer-contact',
     '/reserver-diagnostic/',
-    '/about-elboubakry-abdessamad.html',
+    '/about-elboubakry-abdessamad/',
     '/insights/',
-    '/insights/strategie-marketing-digital-maroc.html',
-    '/insights/publicite-digitale-maroc-meta-google-tiktok.html',
-    '/insights/landing-page-generation-leads-maroc.html',
-    '/insights/seo-content-strategy-maroc.html',
-    '/insights/analytics-tracking-marketing-maroc.html',
-    '/insights/automatisation-marketing-maroc.html',
-    '/insights/consultant-marketing-digital-maroc.html',
-    '/insights/consultant-marketing-digital-casablanca.html'
+    '/insights/strategie-marketing-digital-maroc/',
+    '/insights/publicite-digitale-maroc-meta-google-tiktok/',
+    '/insights/landing-page-generation-leads-maroc/',
+    '/insights/seo-content-strategy-maroc/',
+    '/insights/analytics-tracking-marketing-maroc/',
+    '/insights/automatisation-marketing-maroc/',
+    '/insights/consultant-marketing-digital-maroc/',
+    '/insights/consultant-marketing-digital-casablanca/'
   ];
   var SERVICE_PAGES = {
     'strategie-marketing-digital-maroc': 'strategie_marketing_digital',
@@ -35,6 +35,21 @@
     return !/^G-[A-Z0-9]+$/.test(GA_MEASUREMENT_ID);
   }
 
+  function runWhenBrowserIsFree(callback) {
+    var run = function () {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(callback, { timeout: 2200 });
+      } else {
+        window.setTimeout(callback, 1200);
+      }
+    };
+    if (document.readyState === 'complete') {
+      run();
+    } else {
+      window.addEventListener('load', run, { once: true });
+    }
+  }
+
   function loadGoogleTag() {
     if (window.__elboubakryAnalyticsLoaded) return;
     window.__elboubakryAnalyticsLoaded = true;
@@ -49,10 +64,14 @@
     });
     window.__elboubakryAnalyticsMeasurementId = GA_MEASUREMENT_ID;
     if (isPlaceholderMeasurementId()) return;
-    var tagScript = document.createElement('script');
-    tagScript.async = true;
-    tagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_MEASUREMENT_ID);
-    document.head.appendChild(tagScript);
+
+    runWhenBrowserIsFree(function () {
+      if (document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) return;
+      var tagScript = document.createElement('script');
+      tagScript.async = true;
+      tagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_MEASUREMENT_ID);
+      document.head.appendChild(tagScript);
+    });
   }
 
   function cleanText(value) {

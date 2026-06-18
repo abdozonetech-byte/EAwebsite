@@ -60,3 +60,29 @@
     animation: none !important;
   }
 }
+
+
+/* 2026-06 performance refinement: same UI, less mobile rendering work. */
+@media (max-width: 768px) {
+  .ea-services-section,
+  .ea-services-method,
+  .ea-services-guides,
+  .ea-services-faq,
+  .ea-service-page-section,
+  .ea-service-proof,
+  .ea-service-method,
+  .ea-service-faq,
+  .ea-service-related,
+  .ea-footer-v11,
+  .ea-footer,
+  footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 760px;
+  }
+
+  .wow,
+  [data-wow-delay],
+  [data-wow-duration] {
+    animation-delay: 0s !important;
+  }
+}
