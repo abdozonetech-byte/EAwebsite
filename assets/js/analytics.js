@@ -67,10 +67,20 @@
       return;
     }
 
+    var runAfterDesktopInteraction = function () {
+      window.setTimeout(run, 1200);
+    };
+    ['pointerdown', 'keydown', 'scroll'].forEach(function (eventName) {
+      window.addEventListener(eventName, runAfterDesktopInteraction, { once: true, passive: true });
+    });
+
+    var scheduleDesktopFallback = function () {
+      window.setTimeout(run, 18000);
+    };
     if (document.readyState === 'complete') {
-      run();
+      scheduleDesktopFallback();
     } else {
-      window.addEventListener('load', run, { once: true });
+      window.addEventListener('load', scheduleDesktopFallback, { once: true });
     }
   }
 

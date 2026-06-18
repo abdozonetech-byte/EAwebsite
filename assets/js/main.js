@@ -3,9 +3,15 @@
     var windowOn = $(window);
 
     /* Windows Load */
-    $(window).on('load', function () {
+    function runWowAnimation() {
         wowAnimation();
-    });
+    }
+
+    if (document.readyState === 'complete') {
+        window.setTimeout(runWowAnimation, 0);
+    } else {
+        $(window).on('load', runWowAnimation);
+    }
 
 
     // rtl setting start
@@ -67,10 +73,16 @@
 
 
     /* Preloader activation */
-    $(window).on('load', function (event) {
+    function hideLegacyPreloader() {
         $("#pre-load").delay(600).fadeOut(500);
         $(".pre-loader").delay(600).fadeOut(500);
-    });
+    }
+
+    if (document.readyState === 'complete') {
+        window.setTimeout(hideLegacyPreloader, 0);
+    } else {
+        $(window).on('load', hideLegacyPreloader);
+    }
 
     /* footer year */
     var yearElement = document.getElementById("year");

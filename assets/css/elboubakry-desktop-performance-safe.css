@@ -1,6 +1,25 @@
 /* Desktop-only performance-safe picture support.
    Keeps mobile CSS and mobile behavior untouched. */
 @media (min-width: 769px) {
+  .rs-banner-bg[data-background="assets/images/bg/banner-bg-01.png"] {
+    background-image: url("/assets/images/bg/banner-bg-01.png");
+  }
+
+  .rs-banner-one .ea-hero-role-line .rs-title-slide,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide .cd-words-wrapper {
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    line-height: 24px !important;
+  }
+
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b {
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    line-height: 24px !important;
+  }
+
   .rs-banner-one .ea-hero-portrait-photo picture,
   .ea-core-photo picture,
   .ea-process-visual picture,

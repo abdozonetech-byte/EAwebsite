@@ -2,6 +2,14 @@
     "use strict";
 
     $(window).on("load", function () {
+        gsap_rs_run_all();
+    });
+
+    if (document.readyState === "complete") {
+        window.setTimeout(gsap_rs_run_all, 0);
+    }
+
+    function gsap_rs_run_all() {
         gsap_rs_split_text();
         gsap_rs_marqueeSlider();
         gsap_rs_scrollRotate();
@@ -9,7 +17,7 @@
         gsap_rs_custom_cursor();
         gsap_rs_image_reveal();
         gsap_fixed_elements();
-    });
+    }
 
     // Split Text
     function gsap_rs_split_text() {
