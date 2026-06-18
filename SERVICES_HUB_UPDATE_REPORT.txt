@@ -1,0 +1,26 @@
+SERVICES HUB UPDATE REPORT — 2026-06-18
+
+What was added:
+- New Services hub page: /services/
+- Premium UI/UX services grid with 8 services.
+- Navbar Services link updated to /services/ across HTML pages.
+- New services CSS: /assets/css/elboubakry-services-hub.css
+- SEO title, meta description, canonical, Open Graph, Twitter Card.
+- JSON-LD: CollectionPage, ItemList, BreadcrumbList, FAQPage.
+- Sitemap updated with https://elboubakry.com/services/
+- Canonical domain aligned to non-www across HTML/sitemap.
+- _redirects cleaned for old .html URLs.
+
+8 services included in hub:
+1. Consulting marketing digital
+2. Génération de leads
+3. Landing pages de conversion
+4. Meta Ads
+5. Google Ads
+6. SEO & référencement naturel
+7. Content marketing
+8. Automatisation marketing & IA
+
+Next recommended step:
+Create the first full service SEO page:
+/services/consultant-marketing-digital-maroc/

@@ -1,0 +1,20 @@
+SERVICE PAGE 04 — META ADS MAROC
+
+Added page:
+/services/meta-ads-maroc/
+
+Included:
+- Premium SEO service page for Meta Ads / Facebook Ads / Instagram Ads in Morocco
+- SEO title, meta description, keywords, canonical, Open Graph and Twitter metadata
+- H1/H2 structure, breadcrumb, CTA to /reserver-diagnostic/
+- Service schema, FAQ schema and BreadcrumbList schema
+- Internal link to /insights/meta-ads-leads-qualifies-maroc.html
+- Services hub card updated to point to the new page
+- Footer service links updated across service pages
+- sitemap.xml updated
+- _redirects updated for clean URL redirects
+
+Test after deploy:
+https://elboubakry.com/services/meta-ads-maroc/
+
+Then submit the URL in Google Search Console.

@@ -1,0 +1,20 @@
+SERVICE PAGE 08 — AUTOMATISATION MARKETING & IA MAROC
+
+Added page:
+/services/automatisation-marketing-ia-maroc/
+
+Included:
+- Premium service detail page aligned with existing service page design system
+- SEO title, meta description, keywords, canonical URL
+- Open Graph and Twitter meta tags
+- Service schema, FAQPage schema, BreadcrumbList schema
+- H1/H2 structure focused on automation, AI, CRM, lead follow-up and Morocco
+- CTA to /reserver-diagnostic/
+- Internal link to /insights/ia-business-petite-entreprise.html
+- Services hub updated: automation card now links to full service page
+- Footer service links updated from anchor to full page
+- sitemap.xml updated
+- _redirects updated for clean URL variants
+
+Test URL after deployment:
+https://elboubakry.com/services/automatisation-marketing-ia-maroc/

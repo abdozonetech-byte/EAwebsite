@@ -16,4 +16,4 @@ Allow: /
 User-agent: GPTBot
 Disallow: /
 
-Sitemap: https://www.elboubakry.com/sitemap.xml
+Sitemap: https://elboubakry.com/sitemap.xml

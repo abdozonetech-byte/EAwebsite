@@ -1,0 +1,28 @@
+SERVICE PAGE 02 — GENERATION DE LEADS MAROC
+
+Created page:
+/services/generation-leads-maroc/
+
+Included:
+- Premium service detail page using the same design system as Page 01
+- SEO title, meta description, keywords, canonical URL
+- Open Graph and Twitter meta
+- Service schema, BreadcrumbList schema, FAQPage schema
+- H1/H2 structure with sections for problems, method, included items, use cases, FAQ and CTA
+- Internal link to related Insights guide: /insights/generation-leads-qualifies-maroc.html
+- CTA to /reserver-diagnostic/
+- Services hub updated: Génération de leads card now links to the full service page
+- Footer links updated in services pages
+- sitemap.xml updated
+- _redirects updated for old .html and no-slash URL
+
+Target keywords:
+- génération de leads maroc
+- leads qualifiés maroc
+- stratégie génération de leads maroc
+- acquisition clients maroc
+- landing page leads maroc
+
+Test after deploy:
+https://elboubakry.com/services/generation-leads-maroc/
+Then request indexing in Google Search Console.
