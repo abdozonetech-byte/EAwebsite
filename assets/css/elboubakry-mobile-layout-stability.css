@@ -207,3 +207,85 @@
     --ea-hero-text-width: min(100%, 292px);
   }
 }
+
+/* Mobile hero focus word sync — keeps the Focus label and rotating text aligned, same font system,
+   stable size, and active from first page load. Scope: mobile hero only. */
+@media (max-width: 768px) {
+  .rs-banner-one .ea-hero-role-line {
+    --ea-focus-word-size: clamp(16px, 4.35vw, 18px);
+    --ea-focus-word-height: 44px;
+    text-align: center !important;
+  }
+
+  .rs-banner-one .ea-hero-role-label,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b {
+    font-family: var(--rs-ff-heading, "Urbanist", sans-serif) !important;
+    font-size: var(--ea-focus-word-size) !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.015em !important;
+  }
+
+  .rs-banner-one .ea-hero-role-label {
+    width: 100% !important;
+    min-height: auto !important;
+    line-height: 1.15 !important;
+    margin: 0 auto !important;
+    padding: 4px 0 0 !important;
+  }
+
+  .rs-banner-one .ea-hero-role-line .rs-title-slide,
+  .rs-banner-one .ea-hero-role-line .cd-words-wrapper {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: var(--ea-focus-word-height) !important;
+    min-height: var(--ea-focus-word-height) !important;
+    max-height: var(--ea-focus-word-height) !important;
+    line-height: var(--ea-focus-word-height) !important;
+    overflow: hidden !important;
+  }
+
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b.is-hidden,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b.is-visible {
+    position: absolute !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: var(--ea-focus-word-height) !important;
+    min-height: var(--ea-focus-word-height) !important;
+    max-height: var(--ea-focus-word-height) !important;
+    line-height: 1.15 !important;
+    margin: 0 auto !important;
+    padding: 0 4px !important;
+    color: #2563ff !important;
+    -webkit-text-fill-color: #2563ff !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    transform: translate3d(0, 8px, 0) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity .34s ease, transform .34s ease, visibility .34s ease !important;
+    will-change: opacity, transform !important;
+  }
+
+  .rs-banner-one .ea-hero-role-line .rs-title-slide b.is-visible {
+    transform: translate3d(0, 0, 0) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .rs-banner-one .ea-hero-role-line {
+    --ea-focus-word-size: clamp(15px, 4.2vw, 17px);
+  }
+}

@@ -147,14 +147,18 @@
       word.classList.toggle('is-hidden', i !== index);
     });
 
-    window.setInterval(function () {
+    function rotateWord() {
       var next = (index + 1) % words.length;
       words[index].classList.remove('is-visible');
       words[index].classList.add('is-hidden');
       words[next].classList.remove('is-hidden');
       words[next].classList.add('is-visible');
       index = next;
-    }, 2200);
+    }
+
+    // Start the focus word rotation from the initial page load instead of waiting too long.
+    window.setTimeout(rotateWord, 750);
+    window.setInterval(rotateWord, 2200);
   }
 
   function setupBackToTop() {

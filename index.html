@@ -70,7 +70,7 @@ fbq('track', 'PageView');
       link.setAttribute('data-mobile-loaded-css', href);
       document.head.appendChild(link);
     });
-    var stabilityHref = '/assets/css/elboubakry-mobile-layout-stability.css?v=mobile-layout-stability-20260619';
+    var stabilityHref = '/assets/css/elboubakry-mobile-layout-stability.css?v=focus-role-sync-20260619';
     if (!document.querySelector('link[data-mobile-layout-stability="true"]')) {
       var stability = document.createElement('link');
       stability.rel = 'stylesheet';
@@ -152,7 +152,7 @@ fbq('track', 'PageView');
     '/assets/css/elboubakry-mobile-performance-ultra.css?v=mobile-perf-09',
     '/assets/css/elboubakry-mobile-systems-cleanup.css?v=systems-mobile-clean-20260618',
     '/assets/css/elboubakry-mobile-critical.css?v=mobile-critical-20260618',
-    '/assets/css/elboubakry-mobile-layout-stability.css?v=mobile-layout-stability-20260619'
+    '/assets/css/elboubakry-mobile-layout-stability.css?v=focus-role-sync-20260619'
   ].forEach(function(href){
     document.write('<link href="' + href + '" media="(max-width: 768px)" rel="stylesheet"/>');
   });
@@ -1336,7 +1336,7 @@ fbq('track', 'PageView');
     }, 2500);
   }
   if (isMobile) {
-    load('/assets/js/elboubakry-mobile-core-optimized.js?v=mobile-core-10');
+    load('/assets/js/elboubakry-mobile-core-optimized.js?v=focus-role-sync-20260619');
   } else {
     setupDesktopHeroWordRotation();
     loadSequential(desktopCriticalScripts, 0);
