@@ -137,6 +137,14 @@ fbq('track', 'PageView');
   <script type="module" crossorigin src="/assets/lead-page/reserver-diagnostic.js?v=lead-fix-20260617-01"></script>
   <link rel="stylesheet" crossorigin href="/assets/lead-page/reserver-diagnostic.css">
   <link rel="stylesheet" href="/assets/lead-page/reserver-diagnostic-polish.css">
+
+<style id="ea-lead-no-flash">
+  /* Prevent the static fallback from flashing before the interactive lead app loads. */
+  #root > .ea-diagnostic-static { display: none; }
+</style>
+<noscript>
+  <style>#root > .ea-diagnostic-static { display: block; }</style>
+</noscript>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"/>

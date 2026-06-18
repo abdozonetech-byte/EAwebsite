@@ -83,6 +83,56 @@
     });
   }
 
+
+  function stabilizeMobileLayout() {
+    if (!mobileQuery.matches) return;
+
+    var root = doc.documentElement;
+    var lastWidth = 0;
+    var rafId = 0;
+
+    function measure() {
+      var viewportWidth = Math.max(320, Math.round(window.innerWidth || root.clientWidth || 0));
+      if (!viewportWidth) return;
+      if (Math.abs(viewportWidth - lastWidth) < 1) return;
+      lastWidth = viewportWidth;
+
+      var gutter = viewportWidth <= 360 ? 16 : (viewportWidth <= 420 ? 18 : 20);
+      var pageWidth = Math.max(0, viewportWidth - gutter * 2);
+      var heroWidth = Math.min(pageWidth, viewportWidth <= 360 ? 292 : (viewportWidth <= 420 ? 318 : 350));
+
+      root.style.setProperty('--ea-vw', viewportWidth + 'px');
+      root.style.setProperty('--ea-page-gutter', gutter + 'px');
+      root.style.setProperty('--ea-page-width', pageWidth + 'px');
+      root.style.setProperty('--ea-hero-text-width', heroWidth + 'px');
+      root.classList.add('ea-mobile-layout-stable');
+    }
+
+    function scheduleMeasure() {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(function () {
+        rafId = 0;
+        measure();
+      });
+    }
+
+    measure();
+    window.addEventListener('resize', scheduleMeasure, { passive: true });
+    window.addEventListener('orientationchange', function () {
+      window.setTimeout(scheduleMeasure, 80);
+      window.setTimeout(scheduleMeasure, 280);
+    }, { passive: true });
+    window.addEventListener('load', function () {
+      scheduleMeasure();
+      window.setTimeout(scheduleMeasure, 250);
+      window.setTimeout(scheduleMeasure, 900);
+    }, { once: true, passive: true });
+
+    if (doc.fonts && doc.fonts.ready) {
+      doc.fonts.ready.then(scheduleMeasure).catch(function () {});
+    }
+  }
+
   function setupHeroWordRotation() {
     var wrapper = qs('.cd-words-wrapper');
     if (!wrapper) return;
@@ -181,6 +231,7 @@
 
   function init() {
     setDataBackgrounds();
+    stabilizeMobileLayout();
     setupMenu();
     setupHeroWordRotation();
     setupBackToTop();
