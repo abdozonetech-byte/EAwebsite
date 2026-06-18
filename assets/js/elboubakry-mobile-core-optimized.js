@@ -122,6 +122,20 @@
     }
   }
 
+  function scheduleDeferredCSS() {
+    var loaded = false;
+    function run(event) {
+      if (event && event.type === 'scroll' && window.scrollY < 24) return;
+      if (loaded) return;
+      loaded = true;
+      loadDeferredCSS();
+    }
+    ['touchstart', 'pointerdown', 'keydown'].forEach(function (eventName) {
+      window.addEventListener(eventName, run, { once: true, passive: true });
+    });
+    window.setTimeout(run, 18000);
+  }
+
   function afterIdle(callback, timeout) {
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(callback, { timeout: timeout || 2200 });
@@ -157,7 +171,7 @@
   }
 
   function setupDeferredFeatures() {
-    afterIdle(loadDeferredCSS, 1800);
+    scheduleDeferredCSS();
     observeAndLoad('#homeportfolio', '/assets/js/elboubakry-mockup-carousel.js?v=mobile-late-20260617', 'ea-mobile-carousel-js');
     observeAndLoad('#homeservices', '/assets/js/elboubakry-funnel-lightbox.js?v=mobile-late-20260617', 'ea-mobile-funnel-js');
     afterIdle(function () {
