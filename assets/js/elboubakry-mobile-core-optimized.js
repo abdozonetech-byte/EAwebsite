@@ -83,56 +83,6 @@
     });
   }
 
-
-  function stabilizeMobileLayout() {
-    if (!mobileQuery.matches) return;
-
-    var root = doc.documentElement;
-    var lastWidth = 0;
-    var rafId = 0;
-
-    function measure() {
-      var viewportWidth = Math.max(320, Math.round(window.innerWidth || root.clientWidth || 0));
-      if (!viewportWidth) return;
-      if (Math.abs(viewportWidth - lastWidth) < 1) return;
-      lastWidth = viewportWidth;
-
-      var gutter = viewportWidth <= 360 ? 16 : (viewportWidth <= 420 ? 18 : 20);
-      var pageWidth = Math.max(0, viewportWidth - gutter * 2);
-      var heroWidth = Math.min(pageWidth, viewportWidth <= 360 ? 292 : (viewportWidth <= 420 ? 318 : 350));
-
-      root.style.setProperty('--ea-vw', viewportWidth + 'px');
-      root.style.setProperty('--ea-page-gutter', gutter + 'px');
-      root.style.setProperty('--ea-page-width', pageWidth + 'px');
-      root.style.setProperty('--ea-hero-text-width', heroWidth + 'px');
-      root.classList.add('ea-mobile-layout-stable');
-    }
-
-    function scheduleMeasure() {
-      if (rafId) window.cancelAnimationFrame(rafId);
-      rafId = window.requestAnimationFrame(function () {
-        rafId = 0;
-        measure();
-      });
-    }
-
-    measure();
-    window.addEventListener('resize', scheduleMeasure, { passive: true });
-    window.addEventListener('orientationchange', function () {
-      window.setTimeout(scheduleMeasure, 80);
-      window.setTimeout(scheduleMeasure, 280);
-    }, { passive: true });
-    window.addEventListener('load', function () {
-      scheduleMeasure();
-      window.setTimeout(scheduleMeasure, 250);
-      window.setTimeout(scheduleMeasure, 900);
-    }, { once: true, passive: true });
-
-    if (doc.fonts && doc.fonts.ready) {
-      doc.fonts.ready.then(scheduleMeasure).catch(function () {});
-    }
-  }
-
   function setupHeroWordRotation() {
     var wrapper = qs('.cd-words-wrapper');
     if (!wrapper) return;
@@ -147,18 +97,14 @@
       word.classList.toggle('is-hidden', i !== index);
     });
 
-    function rotateWord() {
+    window.setInterval(function () {
       var next = (index + 1) % words.length;
       words[index].classList.remove('is-visible');
       words[index].classList.add('is-hidden');
       words[next].classList.remove('is-hidden');
       words[next].classList.add('is-visible');
       index = next;
-    }
-
-    // Start the focus word rotation from the initial page load instead of waiting too long.
-    window.setTimeout(rotateWord, 750);
-    window.setInterval(rotateWord, 2200);
+    }, 2200);
   }
 
   function setupBackToTop() {
@@ -174,20 +120,6 @@
     if (typeof window.eaLoadDeferredMobileCSS === 'function') {
       window.eaLoadDeferredMobileCSS();
     }
-  }
-
-  function scheduleDeferredCSS() {
-    var loaded = false;
-    function run(event) {
-      if (event && event.type === 'scroll' && window.scrollY < 24) return;
-      if (loaded) return;
-      loaded = true;
-      loadDeferredCSS();
-    }
-    ['touchstart', 'pointerdown', 'keydown'].forEach(function (eventName) {
-      window.addEventListener(eventName, run, { once: true, passive: true });
-    });
-    window.setTimeout(run, 18000);
   }
 
   function afterIdle(callback, timeout) {
@@ -225,7 +157,7 @@
   }
 
   function setupDeferredFeatures() {
-    scheduleDeferredCSS();
+    afterIdle(loadDeferredCSS, 1800);
     observeAndLoad('#homeportfolio', '/assets/js/elboubakry-mockup-carousel.js?v=mobile-late-20260617', 'ea-mobile-carousel-js');
     observeAndLoad('#homeservices', '/assets/js/elboubakry-funnel-lightbox.js?v=mobile-late-20260617', 'ea-mobile-funnel-js');
     afterIdle(function () {
@@ -235,7 +167,6 @@
 
   function init() {
     setDataBackgrounds();
-    stabilizeMobileLayout();
     setupMenu();
     setupHeroWordRotation();
     setupBackToTop();

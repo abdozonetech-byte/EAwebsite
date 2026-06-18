@@ -36,51 +36,17 @@
   }
 
   function runWhenBrowserIsFree(callback) {
-    var hasRun = false;
     var run = function () {
-      if (hasRun) return;
-      hasRun = true;
       if ('requestIdleCallback' in window) {
         window.requestIdleCallback(callback, { timeout: 2200 });
       } else {
         window.setTimeout(callback, 1200);
       }
     };
-
-    var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile) {
-      var runAfterInteraction = function () {
-        window.setTimeout(run, 1200);
-      };
-      ['touchstart', 'pointerdown', 'keydown'].forEach(function (eventName) {
-        window.addEventListener(eventName, runAfterInteraction, { once: true, passive: true });
-      });
-
-      var scheduleMobileFallback = function () {
-        window.setTimeout(run, 18000);
-      };
-      if (document.readyState === 'complete') {
-        scheduleMobileFallback();
-      } else {
-        window.addEventListener('load', scheduleMobileFallback, { once: true });
-      }
-      return;
-    }
-
-    var runAfterDesktopInteraction = function () {
-      window.setTimeout(run, 1200);
-    };
-    ['pointerdown', 'keydown', 'scroll'].forEach(function (eventName) {
-      window.addEventListener(eventName, runAfterDesktopInteraction, { once: true, passive: true });
-    });
-
-    var scheduleDesktopFallback = function () {
-      window.setTimeout(run, 18000);
-    };
     if (document.readyState === 'complete') {
-      scheduleDesktopFallback();
+      run();
     } else {
-      window.addEventListener('load', scheduleDesktopFallback, { once: true });
+      window.addEventListener('load', run, { once: true });
     }
   }
 
