@@ -1,0 +1,14 @@
+Mobile CTA + Focus Final Fix
+
+Changes:
+- Mobile-only CSS override added at the end of assets/css/elboubakry-mobile-performance-ultra.css.
+- The primary reservation CTA now matches the secondary "Voir les systèmes" CTA width, height, radius, alignment and text scale on mobile.
+- The mobile Focus pill remains a single rounded white container with label + animated skill text inline.
+- The animated skills keep a desktop-like slide transition inside the pill.
+- Updated the CSS cache version in index.html.
+
+Not changed:
+- Desktop layout.
+- SEO, sitemap, canonical URLs, redirects.
+- Forms, GA4, Meta Pixel, Lead event.
+- Sections, texts, services pages.
