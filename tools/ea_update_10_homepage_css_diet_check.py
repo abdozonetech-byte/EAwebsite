@@ -13,16 +13,17 @@ expected = 12 + 1  # 12 local CSS + 1 Google Font stylesheet
 errors = []
 if count != expected:
     errors.append(f'Expected {expected} stylesheet links on homepage including Google Font, found {count}')
-required = [
-    '/assets/css/pages/home-shared-pre.css?v=ea-update-10',
-    '/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean',
-    '/assets/css/pages/home-shared-post.css?v=ea-update-10',
-    '/assets/css/pages/home-mobile.css?v=ea-update-02',
-    '/assets/css/pages/home-desktop.css?v=ea-update-03',
+required_any = [
+    ['/assets/css/pages/home-shared-pre.css?v=ea-update-10', '/assets/css/pages/home-shared-pre.css?v=ea-update-11'],
+    ['/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean'],
+    ['/assets/css/pages/home-shared-post.css?v=ea-update-10', '/assets/css/pages/home-shared-post.css?v=ea-update-11'],
+    ['/assets/css/pages/home-mobile.css?v=ea-update-02'],
+    ['/assets/css/pages/home-desktop.css?v=ea-update-03'],
 ]
-for href in required:
-    if href not in html:
-        errors.append(f'Missing required CSS link: {href}')
+required = [next((h for h in group if h in html), group[0]) for group in required_any]
+for group in required_any:
+    if not any(href in html for href in group):
+        errors.append(f'Missing required CSS link option: {group}')
 removed = [
     '/assets/css/main.css?v=20260617-menu-clean',
     '/assets/css/abdessamad-polish.css?v=20260617-menu-clean',
