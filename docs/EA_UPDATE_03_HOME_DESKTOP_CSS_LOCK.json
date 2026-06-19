@@ -1,0 +1,36 @@
+{
+  "project": "elboubakry.com / EA Portfolio",
+  "update": "03 - homepage desktop CSS separation",
+  "scope": "index.html desktop CSS only",
+  "homepage_css_link_count_before": 25,
+  "homepage_css_link_count_after": 25,
+  "new_bundle": "/assets/css/pages/home-desktop.css",
+  "new_bundle_exists": true,
+  "new_bundle_bytes": 640,
+  "new_bundle_media_on_homepage": "(min-width: 769px)",
+  "old_desktop_file_removed_from_homepage": true,
+  "old_desktop_file_still_in_project": true,
+  "new_bundle_linked_once": true,
+  "mobile_applicable_css_unchanged": true,
+  "desktop_replacement_same_position": true,
+  "desktop_min_width_links_before": [
+    "/assets/css/vendor/animate.min.css",
+    "/assets/css/plugins/nice-select.css",
+    "/assets/css/vendor/magnific-popup.css",
+    "/assets/css/elboubakry-desktop-performance-safe.css"
+  ],
+  "desktop_min_width_links_after": [
+    "/assets/css/vendor/animate.min.css",
+    "/assets/css/plugins/nice-select.css",
+    "/assets/css/vendor/magnific-popup.css",
+    "/assets/css/pages/home-desktop.css"
+  ],
+  "mobile_max_width_links_after": [
+    "/assets/css/elboubakry-mobile-performance-safe.css",
+    "/assets/css/pages/home-mobile.css"
+  ],
+  "homepage_local_css_bytes_before": 1449807,
+  "homepage_local_css_bytes_after": 1449807,
+  "old_new_css_hash_equal": true,
+  "css_braces_balanced": true
+}

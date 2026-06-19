@@ -1,0 +1,34 @@
+EA UPDATE 03 REPORT — HOMEPAGE DESKTOP CSS SEPARATION
+
+Scope:
+- Homepage desktop CSS only.
+- No UI/UX redesign.
+- No animation removal.
+- No mobile CSS/behavior change.
+- No SEO, tracking, forms, URLs, redirects, sitemap, schema, or content change.
+
+Files added:
+- assets/css/pages/home-desktop.css
+- docs/EA_UPDATE_03_HOME_DESKTOP_CSS_LOCK.json
+- docs/EA_UPDATE_03_HOME_DESKTOP_CSS_SEPARATION.md
+- tools/ea_update_03_home_desktop_check.py
+
+File modified:
+- index.html
+
+Result:
+- Homepage CSS links: 25 -> 25
+- Desktop-only homepage CSS now has a controlled page file: assets/css/pages/home-desktop.css
+- New desktop bundle raw size: 640 bytes
+- Homepage local CSS raw total: 1449807 bytes -> 1449807 bytes
+- Mobile-applicable CSS links unchanged: True
+- Desktop replacement kept in the same cascade position: True
+- Old and new CSS hashes equal: True
+
+Important safety note:
+- This update is an architecture/protection step, not a visual redesign.
+- The old desktop CSS file was kept in the project for rollback safety but is no longer linked from the homepage.
+- Mobile links and mobile bundle from Update 02 were not touched.
+
+Next:
+- Update 04 = safe performance cleanup: vendor/page-specific reduction and render-blocking cleanup without changing UI/UX or animations.

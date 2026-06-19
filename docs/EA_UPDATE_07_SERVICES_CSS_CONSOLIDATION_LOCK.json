@@ -1,0 +1,142 @@
+{
+  "update": "EA Update 07",
+  "title": "Services page CSS consolidation / performance-safe cleanup",
+  "created_at": "2026-06-19T13:17:15.799655+00:00",
+  "scope": "services/* pages only",
+  "protected_existing_files_outside_services_changed": 0,
+  "non_goals": [
+    "No homepage changes",
+    "No UI/UX redesign",
+    "No animation removal",
+    "No SEO/tracking/form changes",
+    "No desktop/mobile behavior changes"
+  ],
+  "service_pages_updated": 9,
+  "css_bundles": {
+    "desktop_plugins": {
+      "path": "assets/css/pages/services-desktop-plugins.css",
+      "media": "(min-width: 769px)",
+      "source_order": [
+        "/assets/css/vendor/animate.min.css",
+        "/assets/css/plugins/swiper.min.css",
+        "/assets/css/plugins/nice-select.css",
+        "/assets/css/vendor/magnific-popup.css"
+      ],
+      "before_bytes_sum": 78657,
+      "after_bytes_with_comments": 78544,
+      "sha256": "62fb994f42506b4cebfde30e4419fe9d9c18134574feebd97f43c6e808e65bc4"
+    },
+    "mobile": {
+      "path": "assets/css/pages/services-mobile.css",
+      "media": "(max-width: 768px)",
+      "source_order": [
+        "/assets/css/elboubakry-mobile-menu-blanc-bleu-reference.css",
+        "/assets/css/elboubakry-mobile-performance-safe.css",
+        "/assets/css/elboubakry-mobile-performance-ultra.css"
+      ],
+      "before_bytes_sum": 35550,
+      "after_bytes_with_comments": 36020,
+      "sha256": "a76ed9643041a60897ed2d6ef89bf1bf246c38cfe83c8db40c3da9165cdb1832"
+    }
+  },
+  "per_page_changes": [
+    {
+      "page": "services/automatisation-marketing-ia-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "69a19e2328a62f03617055af9a2e4df5ca11349e383c5560556df039b008819a",
+      "hash_after": "6855f9e18c3e18517494b8e05acf22d03a6b2c84bcf94e9dbd2d17cf799fbc35"
+    },
+    {
+      "page": "services/consultant-marketing-digital-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "95a4b8d9bc7920b498fa8b4a81aa2e3e1a209f9397aa8455e6427414535e64cc",
+      "hash_after": "11fa28a043da92d5ec570d56428dd5c3e5989b0b8df4ba561aacb50077365e9a"
+    },
+    {
+      "page": "services/content-marketing-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "91335016184ece420f5147a28bf1f0807a1a651f5095db90ff06a5cabeb9d24b",
+      "hash_after": "eaff974d40fca61301b05dac41fbc2b18e070a8304d62fa03c6ecbdba19ee223"
+    },
+    {
+      "page": "services/generation-leads-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "ea9a72702f9cf0c2186643d405f0a03dffc01a60ec114693b2bcc7d3b26fd113",
+      "hash_after": "afc9977276972b7594ae10bb97b7c8665ab622d5438db46dfdc6107c41590f0c"
+    },
+    {
+      "page": "services/google-ads-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "4d983c7c5ec5ef4f1313ed78680fdff90962b7ffffbe41577b6e33d7104ffbf5",
+      "hash_after": "1c77ed542e9792f2bcd4052d518063dae27670abfab31f3cad19a148187512f7"
+    },
+    {
+      "page": "services/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "6f9832dc79520ba407a08c683c746b923918e697926e509fd52e9cae820e2728",
+      "hash_after": "1ca0ebcd85199486fd7e8eae7572b4c10952d8b8315996e400093749492deb43"
+    },
+    {
+      "page": "services/landing-page-lead-generation-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "e4776017e88ed65b17b50c790b33df92bce490389e5089cc594df1db56fbd8ce",
+      "hash_after": "ba3e240b6f23e832f84ea359349193f5d997090beb3b3f2219511624f3b1a4c1"
+    },
+    {
+      "page": "services/meta-ads-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "a5a0eff677227a2607f734ab30699e7ffb2ede926ae318f1b0803b535dd0ae80",
+      "hash_after": "a043135fa7a58c59a037e40609ba7b5e10da9a66361af3b54da7c20ec63b5a01"
+    },
+    {
+      "page": "services/seo-maroc/index.html",
+      "before_css_links": 18,
+      "after_css_links": 13,
+      "desktop_plugin_links_replaced": 4,
+      "mobile_css_links_replaced": 3,
+      "net_css_link_reduction": 5,
+      "hash_before": "5a9db73bf36bdfd9afdbca176fb42c2bb4b387e01e46548b4a108c44c5554a55",
+      "hash_after": "1ecf7cbd8fd43cf5d757b3a57a39f5c4072b97b7024c9f6120e73552467573ea"
+    }
+  ],
+  "results": {
+    "css_links_before_per_service_page": 18,
+    "css_links_after_per_service_page": 13,
+    "css_link_reduction_per_service_page": 5,
+    "total_css_link_references_removed_across_services": 45,
+    "mobile_css_requests_removed_per_service_page": 2,
+    "desktop_plugin_css_requests_removed_per_service_page": 3
+  }
+}

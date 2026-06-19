@@ -1,0 +1,21 @@
+EA UPDATE 05 REPORT
+
+Status: PASS
+Scope: Insights/About page performance cleanup only
+Modified pages: 31
+Homepage changed: NO
+Services changed: NO
+Lead page changed: NO
+Merci page changed: NO
+
+Changes:
+- Desktop-only media added to Swiper/Nice Select/Magnific Popup CSS on Insights/About pages.
+- Animate CSS moved to desktop-only on article/About pages, but kept unchanged on Insights hub to preserve hub mobile animations.
+- Defer added to bottom external JS libraries on Insights/About pages while preserving script order.
+
+Representative mobile CSS savings:
+- Insights hub: 33,621 bytes
+- Insight article: 78,657 bytes
+- About page: 78,657 bytes
+
+No UI/UX, layout, sections, text, colors, forms, SEO, sitemap, schema, GA4 or Meta Pixel logic was changed.

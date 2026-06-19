@@ -1,0 +1,146 @@
+{
+  "update": "EA Update 05",
+  "scope": "Insights and About pages only",
+  "modified_pages": [
+    "about-elboubakry-abdessamad/index.html",
+    "insights/analytics-tracking-marketing-maroc/index.html",
+    "insights/automatisation-marketing-maroc/index.html",
+    "insights/bons-kpi-performance/index.html",
+    "insights/calendrier-contenu-vente/index.html",
+    "insights/clarifier-offre-message-tunnel/index.html",
+    "insights/confiance-levier-marketing/index.html",
+    "insights/consultant-marketing-digital-casablanca/index.html",
+    "insights/consultant-marketing-digital-maroc/index.html",
+    "insights/erreurs-budget-meta-ads/index.html",
+    "insights/generation-leads-pme-maroc/index.html",
+    "insights/generation-leads-qualifies-maroc/index.html",
+    "insights/growth-strategy-visibilite-croissance/index.html",
+    "insights/ia-business-petite-entreprise/index.html",
+    "insights/ia-strategie-marketing/index.html",
+    "insights/index.html",
+    "insights/landing-page-conversion-maroc/index.html",
+    "insights/landing-page-generation-leads-maroc/index.html",
+    "insights/meta-ads-leads-qualifies-maroc/index.html",
+    "insights/parcours-client-avant-pub/index.html",
+    "insights/presence-digitale-credible/index.html",
+    "insights/publicite-digitale-maroc-meta-google-tiktok/index.html",
+    "insights/seo-content-strategy-maroc/index.html",
+    "insights/seo-contenu-maroc/index.html",
+    "insights/seo-local-maroc/index.html",
+    "insights/seo-maroc-visibilite-entreprise/index.html",
+    "insights/strategie-digitale-pme-maroc/index.html",
+    "insights/strategie-marketing-digital-maroc/index.html",
+    "insights/tracking-kpi-marketing/index.html",
+    "insights/video-courte-message/index.html",
+    "insights/whatsapp-leads-qualifies/index.html"
+  ],
+  "modified_page_count": 31,
+  "homepage_modified": false,
+  "services_modified": false,
+  "rules": {
+    "swiper_css_media": "(min-width: 769px)",
+    "nice_select_css_media": "(min-width: 769px)",
+    "magnific_popup_css_media": "(min-width: 769px)",
+    "animate_css_media": "desktop-only for insight article pages and about page; kept unchanged on insights hub to preserve mobile wow animations",
+    "bottom_js": "defer added while preserving order; analytics.js unchanged"
+  },
+  "metrics": {
+    "insights/index.html": {
+      "mobile_applicable_css_before_bytes": 969839,
+      "mobile_applicable_css_after_bytes": 936218,
+      "mobile_applicable_css_saved_bytes": 33621,
+      "mobile_applicable_css_links_before": 16,
+      "mobile_applicable_css_links_after": 13
+    },
+    "insights/analytics-tracking-marketing-maroc/index.html": {
+      "mobile_applicable_css_before_bytes": 969839,
+      "mobile_applicable_css_after_bytes": 891182,
+      "mobile_applicable_css_saved_bytes": 78657,
+      "mobile_applicable_css_links_before": 16,
+      "mobile_applicable_css_links_after": 12
+    },
+    "about-elboubakry-abdessamad/index.html": {
+      "mobile_applicable_css_before_bytes": 969839,
+      "mobile_applicable_css_after_bytes": 891182,
+      "mobile_applicable_css_saved_bytes": 78657,
+      "mobile_applicable_css_links_before": 16,
+      "mobile_applicable_css_links_after": 12
+    },
+    "services/index.html": {
+      "mobile_applicable_css_before_bytes": 878311,
+      "mobile_applicable_css_after_bytes": 878311,
+      "mobile_applicable_css_saved_bytes": 0,
+      "mobile_applicable_css_links_before": 13,
+      "mobile_applicable_css_links_after": 13
+    },
+    "index.html": {
+      "mobile_applicable_css_before_bytes": 1256991,
+      "mobile_applicable_css_after_bytes": 1256991,
+      "mobile_applicable_css_saved_bytes": 0,
+      "mobile_applicable_css_links_before": 20,
+      "mobile_applicable_css_links_after": 20
+    }
+  },
+  "js_stats": {
+    "insights/index.html": {
+      "before": {
+        "external_scripts": 27,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      },
+      "after": {
+        "external_scripts": 27,
+        "defer_scripts": 27,
+        "async_scripts": 0
+      }
+    },
+    "insights/analytics-tracking-marketing-maroc/index.html": {
+      "before": {
+        "external_scripts": 25,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      },
+      "after": {
+        "external_scripts": 25,
+        "defer_scripts": 25,
+        "async_scripts": 0
+      }
+    },
+    "about-elboubakry-abdessamad/index.html": {
+      "before": {
+        "external_scripts": 25,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      },
+      "after": {
+        "external_scripts": 25,
+        "defer_scripts": 25,
+        "async_scripts": 0
+      }
+    },
+    "services/index.html": {
+      "before": {
+        "external_scripts": 1,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      },
+      "after": {
+        "external_scripts": 1,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      }
+    },
+    "index.html": {
+      "before": {
+        "external_scripts": 1,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      },
+      "after": {
+        "external_scripts": 1,
+        "defer_scripts": 1,
+        "async_scripts": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "update": "EA Update 08",
+  "scope": "/reserver-diagnostic/ lead diagnostic page only",
+  "changed_files": [
+    "reserver-diagnostic/index.html"
+  ],
+  "added_files": [
+    "assets/lead-page/reserver-diagnostic-page.css"
+  ],
+  "removed_files": [],
+  "protected_not_changed": [
+    "index.html homepage",
+    "services pages",
+    "insights pages",
+    "merci page",
+    "sitemap.xml",
+    "robots.txt",
+    "_redirects",
+    "_headers",
+    "assets/lead-page/reserver-diagnostic.js",
+    "assets/js/analytics.js"
+  ],
+  "before": {
+    "lead_local_css_links": 2,
+    "lead_css_raw_bytes": 21403,
+    "font_render_blocking_stylesheet": true
+  },
+  "after": {
+    "lead_local_css_links": 1,
+    "lead_css_raw_bytes": 21772,
+    "lead_css_request_reduction": 1,
+    "font_render_blocking_stylesheet": false,
+    "font_keeps_noscript_stylesheet_fallback": true
+  },
+  "hashes": {
+    "lead_html_sha256": "3f58b003be7b8a753f0fd5f5add543307a58cb7c1051e4f48fc8b14e6d896db4",
+    "lead_bundle_css_sha256": "a1a51e1ea6c15bf68bb380e6cc86d1ada97ec0519f26ca0c29fe774d07501a7b",
+    "original_reserver_diagnostic_css_sha256": "8bb69f0da1a17c1c4d7fec3da58b7772117c8e3c647926cc253d390a5c5a627e",
+    "original_reserver_diagnostic_polish_css_sha256": "ddc1793e38e93b8f1131db85f68b5e956e8d96b109225ae6a3d84672835b6b34",
+    "lead_js_sha256": "f4d2961cf9c6a0b92018293d8befad6e05ff7b503f8203d6ed41982a5be8ae49",
+    "analytics_js_sha256": "ccbff36f88da61f3c441a48f12f5a6c6d966c5bfeebef313846cf55f6046f288"
+  },
+  "active_css_links_after": [
+    "<link rel=\"stylesheet\" href=\"/assets/lead-page/reserver-diagnostic-page.css?v=ea-update-08\">",
+    "<link rel=\"preload\" as=\"style\" href=\"https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap\" onload=\"this.onload=null;this.rel='stylesheet'\"/>",
+    "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap\"/>"
+  ],
+  "active_script_links_after": [
+    "<script defer src=\"/assets/js/analytics.js\">",
+    "<script type=\"module\" crossorigin src=\"/assets/lead-page/reserver-diagnostic.js?v=lead-fix-20260617-01\">"
+  ]
+}
