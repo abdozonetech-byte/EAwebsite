@@ -1,0 +1,20 @@
+Desktop Performance Safe Optimization
+
+Scope:
+- Performance-only cleanup for the homepage desktop path.
+- No UI/UX, animation design, SEO, sitemap, forms, Meta Pixel event logic, GA4 logic, or page content was intentionally changed.
+
+Changes:
+1. Delayed loading of the external Meta Pixel library until browser load/idle while keeping fbq queue, PageView, and Lead logic active.
+2. Added high fetch priority to the desktop hero image preload.
+3. Converted below-the-fold desktop CSS files to non-render-blocking preload-onload stylesheets.
+4. Reduced desktop JavaScript payload by not loading unused heavy template plugins on the homepage path. Safe no-op stubs were added for plugins that main.js expects but the current homepage does not visibly use.
+5. Kept custom carousel, lightbox, header/menu, Lenis/smooth scroll, GSAP/WOW animation dependencies, tracking, and preloader logic active.
+
+Manual checks after deploy:
+- Homepage desktop layout and animations.
+- Homepage mobile layout and focus pill.
+- Systèmes Marketing carousel.
+- Reservation button and /reserver-diagnostic/.
+- /merci/ lead tracking.
+- PageSpeed desktop and mobile.
