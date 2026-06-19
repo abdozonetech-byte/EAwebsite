@@ -2,20 +2,13 @@
 
 <html class="no-js" dir="ltr" lang="fr" rs-theme="rs-theme-light">
 <head>
-<!-- Meta Pixel Code - EA delayed performance-safe setup -->
+<!-- Meta Pixel Code - EA clean setup -->
 <script>
-(function(f,b,e,v,n,t,s){
-  if(f.fbq)return;
-  n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
-  f.__eaLoadMetaPixel=function(){
-    if(f.__eaMetaPixelLoaded)return;
-    f.__eaMetaPixelLoaded=true;
-    t=b.createElement(e);t.async=!0;t.src=v;
-    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
-  };
-})(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
 
 fbq('init', '2322425664833523');
 fbq('track', 'PageView');
@@ -37,16 +30,6 @@ fbq('track', 'PageView');
   } catch (error) {
     console.warn('Meta Pixel Lead tracking could not run.', error);
   }
-
-  var loadPixel = function(){
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(window.__eaLoadMetaPixel, { timeout: 1800 });
-    } else {
-      setTimeout(window.__eaLoadMetaPixel, 900);
-    }
-  };
-  if (document.readyState === 'complete') loadPixel();
-  else window.addEventListener('load', loadPixel, { once: true });
 }());
 </script>
 <!-- End Meta Pixel Code -->
@@ -102,7 +85,7 @@ fbq('track', 'PageView');
 <link href="/assets/images/logo-e-blue.png" rel="icon" sizes="76x76" type="image/png"/>
 <link href="/assets/images/logo-e-blue.png" rel="shortcut icon" type="image/png"/>
 <link href="/assets/images/logo-e-blue.png" rel="apple-touch-icon"/>
-<link href="/assets/images/site.webmanifest" rel="manifest"/><link as="image" fetchpriority="high" href="/assets/images/elboubakry-growth-portrait-mobile-480.webp" imagesizes="(max-width: 768px) 72vw" imagesrcset="/assets/images/elboubakry-growth-portrait-mobile-480.webp 480w, /assets/images/elboubakry-growth-portrait-mobile.webp 640w" media="(max-width: 768px)" rel="preload" type="image/webp"/><link as="image" fetchpriority="high" href="/assets/images/elboubakry-growth-portrait-desktop.webp" imagesizes="(min-width: 769px) 42vw" imagesrcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" media="(min-width: 769px)" rel="preload" type="image/webp"/>
+<link href="/assets/images/site.webmanifest" rel="manifest"/><link as="image" fetchpriority="high" href="/assets/images/elboubakry-growth-portrait-mobile-480.webp" imagesizes="(max-width: 768px) 72vw" imagesrcset="/assets/images/elboubakry-growth-portrait-mobile-480.webp 480w, /assets/images/elboubakry-growth-portrait-mobile.webp 640w" media="(max-width: 768px)" rel="preload" type="image/webp"/><link as="image" href="/assets/images/elboubakry-growth-portrait-desktop.webp" imagesizes="(min-width: 769px) 42vw" imagesrcset="/assets/images/elboubakry-growth-portrait-desktop.webp 960w" media="(min-width: 769px)" rel="preload" type="image/webp"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"/>
@@ -113,26 +96,26 @@ fbq('track', 'PageView');
 <link rel="dns-prefetch" href="//connect.facebook.net"/>
 <!-- CSS here -->
 <link href="/assets/css/vendor/bootstrap.min.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link rel="preload" as="style" href="/assets/css/vendor/animate.min.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/plugins/swiper.min.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/plugins/nice-select.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/vendor/magnific-popup.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
+<link href="/assets/css/vendor/animate.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/plugins/swiper.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/plugins/nice-select.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/vendor/magnific-popup.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/vendor/spacing.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/vendor/remixicon.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/main.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/abdessamad-polish.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/elboubakry-hero-official-fix.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/elboubakry-icons-polish.css?v=20260617-menu-clean" rel="stylesheet"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-contact-leads.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-conversion-cleanup.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-portfolio-showcase.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-roadmap-system.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-footer-premium.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
+<link href="/assets/css/elboubakry-contact-leads.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-conversion-cleanup.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-portfolio-showcase.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-roadmap-system.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-footer-premium.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/elboubakry-mobile-final-qa.css?v=20260617-menu-clean" rel="stylesheet"/>
 <link href="/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean" media="(max-width: 768px)" rel="stylesheet"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-final-ending.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-final-polish-pass.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
-<link rel="preload" as="style" href="/assets/css/elboubakry-growth-system.css?v=20260617-menu-clean" media="(min-width: 769px)" onload="this.onload=null;this.rel='stylesheet'" data-desktop-defer-css="true"/>
+<link href="/assets/css/elboubakry-final-ending.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-final-polish-pass.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
+<link href="/assets/css/elboubakry-growth-system.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/elboubakry-upgrade-07-uiux.css?v=20260617-menu-pro" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-menu-blanc-bleu-reference.css?v=menu-fullscreen-white-blue-20260617" media="(max-width: 768px)" rel="stylesheet"/><link href="/assets/css/elboubakry-desktop-performance-safe.css?v=20260617-menu-clean" media="(min-width: 769px)" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-hero-focus-blue.css?v=focus-blue-20260617" media="(max-width: 768px)" rel="stylesheet"/><link href="/assets/css/elboubakry-mobile-performance-ultra.css?v=mobile-perf-09" media="(max-width: 768px)" rel="stylesheet"/>
 <meta content="fr-MA" name="language"/>
 <meta content="MA-CAS" name="geo.region"/>
@@ -753,37 +736,34 @@ fbq('track', 'PageView');
   var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
   var desktopScripts = [
     '/assets/js/vendor/jquery-3.7.1.min.js?v=20260617-menu-clean',
-    '__EA_DESKTOP_STUBS__',
+    '/assets/js/plugins/waypoints.min.js?v=20260617-menu-clean',
     '/assets/js/vendor/bootstrap.bundle.min.js?v=20260617-menu-clean',
     '/assets/js/plugins/meanmenu.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/swiper.min.js?v=20260617-menu-clean',
     '/assets/js/plugins/wow.js?v=20260617-menu-clean',
+    '/assets/js/vendor/magnific-popup.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/isotope.pkgd.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/imagesloaded.pkgd.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/nice-select.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/jarallax.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/ajax-form.js?v=20260617-menu-clean',
+    '/assets/js/plugins/easypie.js?v=20260617-menu-clean',
     '/assets/js/plugins/headding-title.js?v=20260617-menu-clean',
     '/assets/js/plugins/lenis.min.js?v=20260617-menu-clean',
     '/assets/js/plugins/gsap.min.js?v=20260617-menu-clean',
+    '/assets/js/plugins/rs-anim-int.js?v=20260617-menu-clean',
     '/assets/js/plugins/rs-scroll-trigger.min.js?v=20260617-menu-clean',
     '/assets/js/plugins/rs-splitText.min.js?v=20260617-menu-clean',
-    '/assets/js/plugins/rs-anim-int.js?v=20260617-menu-clean',
     '/assets/js/plugins/jquery.lettering.js?v=20260617-menu-clean',
+    '/assets/js/plugins/parallax-effect.min.js?v=20260617-menu-clean',
+    '/assets/js/vendor/purecounter.js?v=20260617-menu-clean',
     '/assets/js/main.js?v=20260617-menu-clean',
+    '/assets/js/elboubakry-mobile-motion.js?v=20260617-menu-clean',
     '/assets/js/elboubakry-funnel-lightbox.js?v=20260617-menu-clean',
     '/assets/js/elboubakry-mockup-carousel.js?v=20260617-menu-clean',
     '/assets/js/elboubakry-preloader-safe.js?v=20260617-menu-clean'
   ];
-  function installDesktopStubs(done){
-    if (window.jQuery) {
-      var $ = window.jQuery;
-      $.fn.magnificPopup = $.fn.magnificPopup || function(){ return this; };
-      $.fn.niceSelect = $.fn.niceSelect || function(){ return this; };
-      $.fn.imagesLoaded = $.fn.imagesLoaded || function(callback){ if (typeof callback === 'function') { callback.call(this); } return this; };
-      $.fn.isotope = $.fn.isotope || function(){ return this; };
-    }
-    window.jarallax = window.jarallax || function(){};
-    window.PureCounter = window.PureCounter || function(){};
-    window.Swiper = window.Swiper || function(){ return { on:function(){}, update:function(){}, slideTo:function(){}, destroy:function(){} }; };
-    if (done) done();
-  }
   function load(src, done){
-    if (src === '__EA_DESKTOP_STUBS__') { installDesktopStubs(done); return; }
     var script = document.createElement('script');
     script.src = src;
     script.async = false;
