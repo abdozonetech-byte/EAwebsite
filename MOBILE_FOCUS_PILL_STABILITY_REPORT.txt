@@ -1,0 +1,31 @@
+Mobile Focus Pill Stability Fix
+
+Goal:
+Keep the mobile hero Focus area in the same rounded white pill state after page load.
+
+Changed files:
+- assets/css/elboubakry-mobile-performance-ultra.css
+- index.html
+
+What changed:
+- Added a mobile-only final CSS override for .ea-hero-role-line.
+- Forces the Focus label and animated word to remain in one centered rounded white pill.
+- Keeps the animated word visible, blue, centered/aligned, and stable after page load.
+- Bumped CSS cache version in index.html.
+
+What was not changed:
+- Desktop design
+- Sections
+- SEO
+- Sitemap
+- Forms
+- Meta Pixel
+- GA4
+- Services pages
+- Menu
+
+Manual test after deploy:
+- Open homepage on mobile.
+- Wait 3 seconds.
+- Confirm Focus still appears inside the rounded white pill.
+- Clear Cloudflare cache if old CSS appears.
