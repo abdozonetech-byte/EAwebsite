@@ -1,0 +1,15 @@
+Lead page flash fix
+
+What changed:
+- Removed the static fallback diagnostic content inside reserver-diagnostic/index.html.
+- The #root container is now empty so the real lead page app renders directly.
+- This prevents the old temporary diagnostic screen from appearing for 1 second after clicking reservation buttons.
+
+What was not changed:
+- URLs, SEO metadata, canonical, schema, sitemap, redirects, Meta Pixel, GA4, form script, CSS, desktop, mobile layout, animations, and design assets were not changed.
+
+Test after deploy:
+1. Click any reservation button.
+2. It should open /reserver-diagnostic/ and show the real interactive lead page directly.
+3. Submit the form and confirm it redirects to /merci/.
+4. Confirm Meta Pixel PageView and Lead tracking still work.
