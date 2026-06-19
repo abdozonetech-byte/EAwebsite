@@ -1,0 +1,22 @@
+Mobile official Focus state fix
+
+Goal:
+- Keep the mobile hero Focus pill exactly like the approved screenshot.
+- Remove the second state that appeared after page load.
+
+Root cause:
+- Deferred desktop/below-fold CSS files were injected on mobile after page load.
+- Those delayed styles overrode the mobile Focus pill CSS, so the first second looked correct and then changed to a broken second state.
+
+Fix:
+- Stopped injecting deferred desktop CSS on mobile.
+- Kept the official mobile Focus pill CSS active from first paint through final loaded state.
+- Bumped mobile CSS cache version.
+
+Not changed:
+- Desktop design
+- Mobile UI except the Focus pill stability
+- Animations logic
+- SEO, sitemap, schema, redirects
+- Forms, Meta Pixel, GA4
+- Lead page behavior
