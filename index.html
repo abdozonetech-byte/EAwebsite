@@ -54,31 +54,24 @@ fbq('track', 'PageView');
   var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
   if (isMobile) document.documentElement.classList.add('ea-mobile-optimized');
   window.eaLoadDeferredMobileCSS = function(){
-    /* Mobile official UI lock: do not inject desktop/deferred styles on phones.
-       Loading those files after idle was overriding the hero Focus pill and created
-       two different mobile states. Desktop behavior is unchanged. */
-    if (isMobile || window.eaDeferredMobileCSSLoaded) return;
+    if (window.eaDeferredMobileCSSLoaded) return;
     window.eaDeferredMobileCSSLoaded = true;
-    var links = document.querySelectorAll('link[data-mobile-defer-css]');
-    links.forEach(function(original){
-      var href = original.getAttribute('href');
-      if (!href || document.querySelector('link[data-mobile-loaded-css="' + href.replace(/"/g, '\"') + '"]')) return;
+    if (isMobile) {
+      var href = '/assets/css/pages/home-mobile-deferred.css?v=ea-update-13';
+      if (document.querySelector('link[data-ea-mobile-deferred-css="true"]')) return;
       var link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
-      link.media = 'all';
-      link.setAttribute('data-mobile-loaded-css', href);
+      link.media = '(max-width: 768px)';
+      link.setAttribute('data-ea-mobile-deferred-css', 'true');
       document.head.appendChild(link);
-    });
+    }
   };
   if (isMobile) {
     var run = function(){
       var load = window.eaLoadDeferredMobileCSS;
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(load, {timeout: 1600});
-      } else {
-        setTimeout(load, 900);
-      }
+      if ('requestIdleCallback' in window) requestIdleCallback(load, {timeout: 2400});
+      else setTimeout(load, 1800);
     };
     if (document.readyState === 'complete') run();
     else window.addEventListener('load', run, {once:true});
@@ -99,7 +92,7 @@ fbq('track', 'PageView');
 <link rel="dns-prefetch" href="//www.googletagmanager.com"/>
 <link rel="dns-prefetch" href="//connect.facebook.net"/>
 <!-- CSS here -->
-<link href="/assets/css/pages/home-mobile-vendor.css?v=ea-update-12" rel="stylesheet" media="(max-width: 768px)"/>
+<link href="/assets/css/pages/home-mobile-critical.css?v=ea-update-13" rel="stylesheet" media="(max-width: 768px)"/>
 <link href="/assets/css/vendor/bootstrap.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)"/>
 <link href="/assets/css/vendor/animate.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/plugins/swiper.min.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)"/>
@@ -107,11 +100,10 @@ fbq('track', 'PageView');
 <link href="/assets/css/vendor/magnific-popup.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)" data-mobile-defer-css="true"/>
 <link href="/assets/css/vendor/spacing.css?v=20260617-menu-clean" rel="stylesheet" media="(min-width: 769px)"/>
 <link href="/assets/css/vendor-subsets/remixicon-site-subset.css?v=ea-update-04" rel="stylesheet" media="(min-width: 769px)" data-ea-remixicon-subset="site"/>
-<link href="/assets/css/pages/home-shared-pre.css?v=ea-update-11" rel="stylesheet"/>
-<link href="/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean" media="(max-width: 768px)" rel="stylesheet"/>
-<link href="/assets/css/pages/home-shared-post.css?v=ea-update-11" rel="stylesheet"/>
-<link href="/assets/css/pages/home-mobile.css?v=ea-update-02" media="(max-width: 768px)" rel="stylesheet"/>
+<link href="/assets/css/pages/home-shared-pre.css?v=ea-update-11" rel="stylesheet" media="(min-width: 769px)"/>
+<link href="/assets/css/pages/home-shared-post.css?v=ea-update-11" rel="stylesheet" media="(min-width: 769px)"/>
 <link href="/assets/css/pages/home-desktop.css?v=ea-update-03" media="(min-width: 769px)" rel="stylesheet"/>
+<noscript><link href="/assets/css/pages/home-mobile-deferred.css?v=ea-update-13" rel="stylesheet" media="(max-width: 768px)"/></noscript>
 
 <meta content="fr-MA" name="language"/>
 <meta content="MA-CAS" name="geo.region"/>
