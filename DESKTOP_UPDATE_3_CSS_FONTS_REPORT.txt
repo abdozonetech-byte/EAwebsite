@@ -1,0 +1,60 @@
+Desktop Update 3 — CSS + Fonts Safe Optimization
+
+Goal
+Improve desktop PageSpeed performance by reducing render-blocking CSS and font loading cost without changing the final UI/UX, animations, SEO, forms, tracking, URLs, sitemap, or page content.
+
+Files changed
+- index.html
+- all HTML pages that load the Google Urbanist font stylesheet
+
+What changed
+1. Desktop/homepage below-the-fold CSS delivery was made non-blocking for selected non-critical CSS files:
+   - assets/css/elboubakry-contact-leads.css
+   - assets/css/elboubakry-portfolio-showcase.css
+   - assets/css/elboubakry-roadmap-system.css
+   - assets/css/elboubakry-footer-premium.css
+   - assets/css/elboubakry-final-ending.css
+   - assets/css/elboubakry-growth-system.css
+
+2. These files are still loaded and applied, but they no longer block the first render:
+   - rel="preload" as="style"
+   - onload converts them to rel="stylesheet"
+   - noscript fallback keeps them available if JavaScript is disabled
+
+3. Google Urbanist font stylesheet loading was made non-blocking using:
+   - media="print"
+   - onload="this.media='all'"
+   - noscript fallback
+
+Why this can improve desktop performance
+- Reduces render-blocking requests during initial page render.
+- Helps improve FCP / LCP timing without changing the final visual design.
+- Keeps the same CSS files and same font family.
+- Keeps the same animations and layout after load.
+
+What was NOT changed
+- No UI/UX redesign
+- No desktop layout changes
+- No mobile layout changes
+- No animations removed
+- No sections removed
+- No SEO metadata changed
+- No sitemap changed
+- No schema changed
+- No redirects changed
+- No form code changed
+- No Meta Pixel changes
+- No GA4 changes
+- No service page content changed
+
+Manual checks after deployment
+1. Clear Cloudflare cache.
+2. Open homepage desktop and confirm the design loads normally.
+3. Open homepage mobile and confirm no layout changes.
+4. Test /services/ and service pages.
+5. Test /reserver-diagnostic/ and /merci/.
+6. Run PageSpeed desktop again.
+7. Compare mobile PageSpeed to ensure it was not degraded.
+
+Risk level
+Low-medium: this is a standard non-blocking CSS/font loading technique. Final UI should remain the same, but check quickly for any short flash of unstyled below-the-fold sections on very slow networks.

@@ -1,0 +1,51 @@
+Desktop Update 4 — JavaScript + Final QA
+
+Scope:
+- Desktop performance optimization only.
+- No UI/UX redesign.
+- No animation removal.
+- No SEO, sitemap, schema, form, GA4, Meta Pixel, URL, or redirect changes.
+
+Changes made:
+1. Desktop plugin bundle loading now waits until after the first render/load idle window.
+   - This reduces render-blocking and early main-thread pressure on desktop.
+   - The same desktop scripts still load in the same sequential order after the page is visible.
+   - Animations and carousel behavior are preserved.
+
+2. Removed mobile-only animation helper from the desktop script list.
+   - /assets/js/elboubakry-mobile-motion.js is only for max-width 768px behavior.
+   - Mobile still loads it through the mobile core script.
+   - Desktop no longer downloads this mobile-only file.
+
+Files changed:
+- index.html
+
+Files removed:
+- None.
+
+What was NOT changed:
+- UI/UX design
+- Desktop layout
+- Mobile layout
+- Animations design
+- Sections
+- Text
+- SEO metadata
+- Sitemap
+- Schema
+- Forms
+- Meta Pixel
+- GA4
+- Lead event
+- URLs and redirects
+- Service pages
+
+Manual tests after deploy:
+1. Clear Cloudflare cache.
+2. Open homepage desktop and wait 3 seconds.
+3. Confirm animations still start.
+4. Confirm carousel still works.
+5. Confirm mobile homepage still works.
+6. Confirm /reserver-diagnostic/ opens directly.
+7. Confirm /merci/ still triggers Lead only after form submit.
+8. Run PageSpeed desktop and mobile again.
