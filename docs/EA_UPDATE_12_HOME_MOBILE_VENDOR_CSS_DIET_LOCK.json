@@ -1,0 +1,92 @@
+{
+  "update": 12,
+  "name": "Homepage mobile vendor CSS diet",
+  "created_utc": "2026-06-19T13:52:51+00:00",
+  "scope": "index.html homepage CSS loading and generated mobile vendor bundle only; desktop keeps full vendor CSS under desktop media; no UI/UX/animation/tracking/SEO changes",
+  "generated": {
+    "mobile_vendor": "assets/css/pages/home-mobile-vendor.css",
+    "bytes": 64561,
+    "sha256": "41b59fc4387320d51771a433d26b92e862003040e3605b1a180614bc0a473e16",
+    "bootstrap_original_bytes": 294472,
+    "bootstrap_subset_estimated_bytes": 20035,
+    "used_homepage_classes_count": 216
+  },
+  "mobile_css_bytes_before": 1124821,
+  "mobile_css_bytes_after": 850628,
+  "mobile_css_bytes_saved": 274193,
+  "mobile_links_before": [
+    [
+      "/assets/css/vendor/bootstrap.min.css?v=20260617-menu-clean",
+      "all",
+      294472
+    ],
+    [
+      "/assets/css/plugins/swiper.min.css?v=20260617-menu-clean",
+      "all",
+      21064
+    ],
+    [
+      "/assets/css/vendor/spacing.css?v=20260617-menu-clean",
+      "all",
+      17244
+    ],
+    [
+      "/assets/css/vendor-subsets/remixicon-site-subset.css?v=ea-update-04",
+      "all",
+      5974
+    ],
+    [
+      "/assets/css/pages/home-shared-pre.css?v=ea-update-11",
+      "all",
+      468254
+    ],
+    [
+      "/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean",
+      "(max-width:768px)",
+      3578
+    ],
+    [
+      "/assets/css/pages/home-shared-post.css?v=ea-update-11",
+      "all",
+      263333
+    ],
+    [
+      "/assets/css/pages/home-mobile.css?v=ea-update-02",
+      "(max-width:768px)",
+      50902
+    ]
+  ],
+  "mobile_links_after": [
+    [
+      "/assets/css/pages/home-mobile-vendor.css?v=ea-update-12",
+      "(max-width:768px)",
+      64561
+    ],
+    [
+      "/assets/css/pages/home-shared-pre.css?v=ea-update-11",
+      "all",
+      468254
+    ],
+    [
+      "/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean",
+      "(max-width:768px)",
+      3578
+    ],
+    [
+      "/assets/css/pages/home-shared-post.css?v=ea-update-11",
+      "all",
+      263333
+    ],
+    [
+      "/assets/css/pages/home-mobile.css?v=ea-update-02",
+      "(max-width:768px)",
+      50902
+    ]
+  ],
+  "desktop_vendor_protection": {
+    "bootstrap": "full file still loaded at min-width 769px",
+    "swiper": "full file still loaded at min-width 769px",
+    "spacing": "full file still loaded at min-width 769px",
+    "remixicon_subset": "same subset still loaded at min-width 769px"
+  }
+}
