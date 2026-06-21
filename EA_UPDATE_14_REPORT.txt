@@ -1,0 +1,27 @@
+EA UPDATE 14 — GOOGLE SEO STARTER GUIDE IMPLEMENTATION
+Date: 2026-06-21
+
+STATUS: PASS
+
+Scope:
+- SEO-only update based on Google Search Central SEO Starter Guide.
+- No UI/UX, layout, animations, CSS, JS, forms, GA4, or Meta Pixel logic changed.
+
+Implemented:
+- Standardized lang=fr-MA.
+- Added/normalized og:locale and og:site_name.
+- Added author meta.
+- Added self hreflang alternates.
+- Added invisible H1 to /reserver-diagnostic/ for semantic clarity without visual change.
+- Added homepage BreadcrumbList JSON-LD.
+- Updated JSON-LD inLanguage and article dateModified.
+- Regenerated sitemap.xml with 42 indexable canonical URLs; /merci/ excluded.
+- Added /merci/ X-Robots-Tag: noindex, follow in _headers.
+- Added /sitemap.xml XML content type in _headers.
+
+Files changed: 45
+Verification: use tools/ea_update_14_google_seo_check.py
+Additional safety check:
+- Compared against Update 13 package.
+- CSS/JS file hash changes: 0.
+- Latest mobile LCP check: PASS.

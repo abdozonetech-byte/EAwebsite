@@ -1,0 +1,547 @@
+{
+  "updated": "2026-06-21",
+  "market": "Morocco / French-first",
+  "pages": [
+    {
+      "url": "/",
+      "canonical": "https://elboubakry.com/",
+      "primary_keyword": "consultant marketing digital maroc",
+      "secondary_keywords": [
+        "expert marketing digital maroc",
+        "stratégie marketing digital maroc",
+        "chef de projet marketing digital maroc"
+      ],
+      "search_intent": "Brand + service discovery",
+      "funnel_stage": "MOFU/BOFU",
+      "priority": 0,
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/consultant-marketing-digital-maroc/"
+    },
+    {
+      "url": "/services/",
+      "canonical": "https://elboubakry.com/services/",
+      "primary_keyword": "services marketing digital maroc",
+      "secondary_keywords": [
+        "agence marketing digital maroc",
+        "consultant marketing digital maroc",
+        "services génération de leads maroc"
+      ],
+      "search_intent": "Service navigation",
+      "funnel_stage": "MOFU",
+      "priority": 0,
+      "conversion_target": "/reserver-diagnostic/"
+    },
+    {
+      "url": "/reserver-diagnostic/",
+      "canonical": "https://elboubakry.com/reserver-diagnostic/",
+      "primary_keyword": "diagnostic marketing gratuit maroc",
+      "secondary_keywords": [
+        "audit marketing gratuit maroc",
+        "consultation marketing gratuite",
+        "audit marketing digital maroc"
+      ],
+      "search_intent": "Lead conversion",
+      "funnel_stage": "BOFU",
+      "priority": 0,
+      "conversion_target": "lead form"
+    },
+    {
+      "url": "/assistant-ia-maroc/",
+      "canonical": "https://elboubakry.com/assistant-ia-maroc/",
+      "primary_keyword": "assistant ia maroc",
+      "secondary_keywords": [
+        "ia entrepreneurs maroc",
+        "business plan maroc",
+        "assistant business maroc",
+        "marketing ia maroc",
+        "startup maroc ia"
+      ],
+      "search_intent": "AI business assistant discovery + lead generation",
+      "funnel_stage": "TOFU/MOFU",
+      "priority": 1,
+      "conversion_target": "/reserver-diagnostic/",
+      "notes": "Namaa AI UI/UX MVP page. No AI API in update 1; future Moroccan business knowledge base/RAG layer."
+    },
+    {
+      "url": "/services/consultant-marketing-digital-maroc/",
+      "canonical": "https://elboubakry.com/services/consultant-marketing-digital-maroc/",
+      "primary_keyword": "consultant marketing digital maroc",
+      "secondary_keywords": [
+        "consultant marketing digital casablanca",
+        "expert marketing digital maroc",
+        "stratégie marketing digital maroc",
+        "chef de projet marketing digital maroc",
+        "consultant marketing PME maroc"
+      ],
+      "search_intent": "Service / décision",
+      "funnel_stage": "BOFU",
+      "priority": 1,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/consultant-marketing-digital-maroc/",
+      "related_service_pages": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/seo-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/generation-leads-maroc/",
+      "canonical": "https://elboubakry.com/services/generation-leads-maroc/",
+      "primary_keyword": "génération de leads maroc",
+      "secondary_keywords": [
+        "leads qualifiés maroc",
+        "acquisition clients maroc",
+        "système de génération de leads",
+        "formulaire lead maroc",
+        "qualification leads whatsapp"
+      ],
+      "search_intent": "Service / acquisition",
+      "funnel_stage": "BOFU",
+      "priority": 2,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/generation-leads-qualifies-maroc/",
+      "related_service_pages": [
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/meta-ads-maroc/",
+        "/services/google-ads-maroc/",
+        "/services/automatisation-marketing-ia-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/landing-page-lead-generation-maroc/",
+      "canonical": "https://elboubakry.com/services/landing-page-lead-generation-maroc/",
+      "primary_keyword": "landing page lead generation maroc",
+      "secondary_keywords": [
+        "landing page maroc",
+        "page de vente maroc",
+        "page diagnostic marketing",
+        "conversion leads maroc",
+        "landing page PME maroc"
+      ],
+      "search_intent": "Service / conversion",
+      "funnel_stage": "BOFU",
+      "priority": 3,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/landing-page-generation-leads-maroc/",
+      "related_service_pages": [
+        "/services/generation-leads-maroc/",
+        "/services/meta-ads-maroc/",
+        "/services/google-ads-maroc/",
+        "/services/consultant-marketing-digital-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/meta-ads-maroc/",
+      "canonical": "https://elboubakry.com/services/meta-ads-maroc/",
+      "primary_keyword": "meta ads maroc",
+      "secondary_keywords": [
+        "facebook ads maroc",
+        "publicité facebook maroc",
+        "publicité instagram maroc",
+        "campagne meta ads maroc",
+        "leads facebook maroc"
+      ],
+      "search_intent": "Service / publicité",
+      "funnel_stage": "BOFU",
+      "priority": 4,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/meta-ads-leads-qualifies-maroc/",
+      "related_service_pages": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/google-ads-maroc/",
+        "/services/automatisation-marketing-ia-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/google-ads-maroc/",
+      "canonical": "https://elboubakry.com/services/google-ads-maroc/",
+      "primary_keyword": "google ads maroc",
+      "secondary_keywords": [
+        "publicité google maroc",
+        "campagne search maroc",
+        "leads google ads maroc",
+        "google ads casablanca",
+        "SEA maroc"
+      ],
+      "search_intent": "Service / recherche payante",
+      "funnel_stage": "BOFU",
+      "priority": 5,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/publicite-digitale-maroc-meta-google-tiktok/",
+      "related_service_pages": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/meta-ads-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/seo-maroc/",
+      "canonical": "https://elboubakry.com/services/seo-maroc/",
+      "primary_keyword": "seo maroc",
+      "secondary_keywords": [
+        "référencement naturel maroc",
+        "consultant seo maroc",
+        "visibilité google maroc",
+        "seo local maroc",
+        "stratégie contenu seo maroc"
+      ],
+      "search_intent": "Service / visibilité organique",
+      "funnel_stage": "BOFU",
+      "priority": 6,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/seo-maroc-visibilite-entreprise/",
+      "related_service_pages": [
+        "/services/content-marketing-maroc/",
+        "/services/consultant-marketing-digital-maroc/",
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/content-marketing-maroc/",
+      "canonical": "https://elboubakry.com/services/content-marketing-maroc/",
+      "primary_keyword": "content marketing maroc",
+      "secondary_keywords": [
+        "stratégie contenu maroc",
+        "contenu seo maroc",
+        "calendrier éditorial maroc",
+        "articles seo maroc",
+        "contenu social media maroc"
+      ],
+      "search_intent": "Service / contenu",
+      "funnel_stage": "MOFU",
+      "priority": 7,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/seo-contenu-maroc/",
+      "related_service_pages": [
+        "/services/seo-maroc/",
+        "/services/consultant-marketing-digital-maroc/",
+        "/services/generation-leads-maroc/",
+        "/services/meta-ads-maroc/"
+      ],
+      "recommended_next_content": []
+    },
+    {
+      "url": "/services/automatisation-marketing-ia-maroc/",
+      "canonical": "https://elboubakry.com/services/automatisation-marketing-ia-maroc/",
+      "primary_keyword": "automatisation marketing maroc",
+      "secondary_keywords": [
+        "ia marketing maroc",
+        "crm leads maroc",
+        "suivi leads whatsapp",
+        "automatisation google sheets",
+        "workflows marketing PME maroc"
+      ],
+      "search_intent": "Service / productivité",
+      "funnel_stage": "BOFU",
+      "priority": 8,
+      "target_market": "Morocco / Casablanca-first French-speaking B2B search",
+      "conversion_target": "/reserver-diagnostic/",
+      "supporting_article": "/insights/ia-business-petite-entreprise/",
+      "related_service_pages": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/consultant-marketing-digital-maroc/"
+      ],
+      "recommended_next_content": []
+    }
+  ],
+  "content_plan": [
+    {
+      "topic": "Comment générer des leads qualifiés au Maroc ?",
+      "target_keyword": "génération de leads qualifiés maroc",
+      "target_url": "/insights/generation-leads-qualifies-maroc/",
+      "internal_cta": "/reserver-diagnostic/",
+      "status": "published"
+    },
+    {
+      "topic": "Pourquoi vos publicités Facebook ne génèrent pas de clients ?",
+      "target_keyword": "publicité facebook maroc pas de clients",
+      "target_url": "/insights/pourquoi-publicites-facebook-ne-generent-pas-clients/",
+      "internal_cta": "/services/meta-ads-maroc/",
+      "status": "published"
+    },
+    {
+      "topic": "Combien coûte une campagne Meta Ads au Maroc ?",
+      "target_keyword": "prix campagne facebook maroc",
+      "target_url": "/insights/combien-coute-campagne-meta-ads-maroc/",
+      "internal_cta": "/services/meta-ads-maroc/",
+      "status": "published"
+    },
+    {
+      "topic": "Comment créer une stratégie marketing digital pour une PME au Maroc ?",
+      "target_keyword": "stratégie marketing digital PME Maroc",
+      "target_url": "/insights/strategie-digitale-pme-maroc/",
+      "internal_cta": "/services/consultant-marketing-digital-maroc/",
+      "status": "published"
+    },
+    {
+      "topic": "Combien coûte une campagne Meta Ads au Maroc ?",
+      "target_keyword": "prix campagne facebook maroc",
+      "target_url": "/insights/meta-ads-leads-qualifies-maroc/",
+      "internal_cta": "/services/meta-ads-maroc/"
+    },
+    {
+      "topic": "Landing page ou site vitrine : que choisir pour générer des leads ?",
+      "target_keyword": "landing page lead generation maroc",
+      "target_url": "/insights/landing-page-generation-leads-maroc/",
+      "internal_cta": "/services/landing-page-lead-generation-maroc/"
+    },
+    {
+      "topic": "SEO au Maroc : par où commencer pour une PME ?",
+      "target_keyword": "seo maroc pme",
+      "target_url": "/insights/seo-maroc-visibilite-entreprise/",
+      "internal_cta": "/services/seo-maroc/"
+    },
+    {
+      "topic": "Pourquoi vos publicités Facebook ne génèrent pas de clients ?",
+      "target_keyword": "publicité facebook maroc pas de clients",
+      "target_url": "/insights/erreurs-budget-meta-ads/",
+      "internal_cta": "/services/meta-ads-maroc/"
+    },
+    {
+      "topic": "Comment suivre les leads avec Google Sheets, WhatsApp et Meta Pixel ?",
+      "target_keyword": "suivi leads whatsapp meta pixel",
+      "target_url": "/insights/whatsapp-leads-qualifies/",
+      "internal_cta": "/services/automatisation-marketing-ia-maroc/"
+    },
+    {
+      "topic": "Consultant marketing digital au Maroc : rôle, méthode et résultats attendus",
+      "target_keyword": "consultant marketing digital maroc",
+      "target_url": "/insights/consultant-marketing-digital-maroc/",
+      "internal_cta": "/services/consultant-marketing-digital-maroc/"
+    },
+    {
+      "topic": "Stratégie marketing digital simple pour PME marocaines",
+      "target_keyword": "stratégie marketing digital maroc",
+      "target_url": "/insights/strategie-marketing-digital-maroc/",
+      "internal_cta": "/services/consultant-marketing-digital-maroc/"
+    }
+  ],
+  "last_content_optimization": {
+    "updated": "2026-06-21",
+    "update": "EA Update 16",
+    "scope": "Service pages content SEO optimization",
+    "rules": [
+      "No CSS changes",
+      "No JS changes",
+      "Same service-page layout classes",
+      "Visible FAQ and related-service content added",
+      "JSON-LD aligned with visible content"
+    ]
+  },
+  "service_content_optimization": [
+    {
+      "url": "/services/consultant-marketing-digital-maroc/",
+      "primary_keyword": "consultant marketing digital maroc",
+      "secondary_keywords": [
+        "consultant marketing digital casablanca",
+        "expert marketing digital maroc",
+        "stratégie marketing digital maroc"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/seo-maroc/",
+        "/reserver-diagnostic/"
+      ]
+    },
+    {
+      "url": "/services/generation-leads-maroc/",
+      "primary_keyword": "génération de leads maroc",
+      "secondary_keywords": [
+        "leads qualifiés maroc",
+        "acquisition clients maroc",
+        "qualification leads whatsapp"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/meta-ads-maroc/",
+        "/services/google-ads-maroc/",
+        "/services/automatisation-marketing-ia-maroc/"
+      ]
+    },
+    {
+      "url": "/services/landing-page-lead-generation-maroc/",
+      "primary_keyword": "landing page lead generation maroc",
+      "secondary_keywords": [
+        "landing page maroc",
+        "page de vente maroc",
+        "conversion leads maroc"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/meta-ads-maroc/",
+        "/services/google-ads-maroc/",
+        "/services/generation-leads-maroc/",
+        "/reserver-diagnostic/"
+      ]
+    },
+    {
+      "url": "/services/meta-ads-maroc/",
+      "primary_keyword": "meta ads maroc",
+      "secondary_keywords": [
+        "facebook ads maroc",
+        "publicité facebook maroc",
+        "publicité instagram maroc"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/content-marketing-maroc/",
+        "/insights/meta-ads-leads-qualifies-maroc/"
+      ]
+    },
+    {
+      "url": "/services/google-ads-maroc/",
+      "primary_keyword": "google ads maroc",
+      "secondary_keywords": [
+        "campagne google ads maroc",
+        "publicité google maroc",
+        "google search ads maroc"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/seo-maroc/",
+        "/services/generation-leads-maroc/",
+        "/reserver-diagnostic/"
+      ]
+    },
+    {
+      "url": "/services/seo-maroc/",
+      "primary_keyword": "seo maroc",
+      "secondary_keywords": [
+        "référencement naturel maroc",
+        "consultant seo maroc",
+        "seo casablanca"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/content-marketing-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/consultant-marketing-digital-maroc/",
+        "/insights/seo-maroc-visibilite-entreprise/"
+      ]
+    },
+    {
+      "url": "/services/content-marketing-maroc/",
+      "primary_keyword": "content marketing maroc",
+      "secondary_keywords": [
+        "stratégie de contenu maroc",
+        "contenu seo maroc",
+        "contenu réseaux sociaux maroc"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/seo-maroc/",
+        "/services/meta-ads-maroc/",
+        "/services/generation-leads-maroc/",
+        "/services/consultant-marketing-digital-maroc/"
+      ]
+    },
+    {
+      "url": "/services/automatisation-marketing-ia-maroc/",
+      "primary_keyword": "automatisation marketing maroc",
+      "secondary_keywords": [
+        "automatisation ia maroc",
+        "crm google sheets maroc",
+        "workflow marketing maroc"
+      ],
+      "added_content_blocks": [
+        "hero context sentence",
+        "use-case SEO context",
+        "one FAQ answer",
+        "related services section"
+      ],
+      "internal_link_targets": [
+        "/services/generation-leads-maroc/",
+        "/services/landing-page-lead-generation-maroc/",
+        "/services/meta-ads-maroc/",
+        "/reserver-diagnostic/"
+      ]
+    }
+  ],
+  "update_17_published_articles": [
+    {
+      "topic": "Comment générer des leads qualifiés au Maroc ?",
+      "target_keyword": "génération de leads qualifiés maroc",
+      "target_url": "/insights/generation-leads-qualifies-maroc/",
+      "internal_cta": "/reserver-diagnostic/",
+      "status": "published"
+    },
+    {
+      "topic": "Pourquoi vos publicités Facebook ne génèrent pas de clients ?",
+      "target_keyword": "publicité facebook maroc pas de clients",
+      "target_url": "/insights/pourquoi-publicites-facebook-ne-generent-pas-clients/",
+      "internal_cta": "/services/meta-ads-maroc/",
+      "status": "published"
+    },
+    {
+      "topic": "Combien coûte une campagne Meta Ads au Maroc ?",
+      "target_keyword": "prix campagne facebook maroc",
+      "target_url": "/insights/combien-coute-campagne-meta-ads-maroc/",
+      "internal_cta": "/services/meta-ads-maroc/",
+      "status": "published"
+    },
+    {
+      "topic": "Comment créer une stratégie marketing digital pour une PME au Maroc ?",
+      "target_keyword": "stratégie marketing digital PME Maroc",
+      "target_url": "/insights/strategie-digitale-pme-maroc/",
+      "internal_cta": "/services/consultant-marketing-digital-maroc/",
+      "status": "published"
+    }
+  ]
+}

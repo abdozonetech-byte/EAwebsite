@@ -1,0 +1,24 @@
+{
+  "update": "EA Update 16",
+  "date": "2026-06-21",
+  "changed_files": [
+    "services/consultant-marketing-digital-maroc/index.html",
+    "services/generation-leads-maroc/index.html",
+    "services/landing-page-lead-generation-maroc/index.html",
+    "services/meta-ads-maroc/index.html",
+    "services/google-ads-maroc/index.html",
+    "services/seo-maroc/index.html",
+    "services/content-marketing-maroc/index.html",
+    "services/automatisation-marketing-ia-maroc/index.html",
+    "reserver-diagnostic/index.html",
+    "assets/data/seo-keyword-map.json",
+    "docs/EA_UPDATE_16_SERVICE_PAGES_CONTENT_SEO.md",
+    "docs/EA_UPDATE_16_SERVICE_PAGES_CONTENT_SEO_LOCK.json",
+    "tools/ea_update_16_service_content_seo_check.py",
+    "EA_UPDATE_16_REPORT.txt"
+  ],
+  "service_pages_updated": 8,
+  "css_js_changed": false,
+  "css_js_changed_files": [],
+  "expected_no_visual_system_change": true
+}

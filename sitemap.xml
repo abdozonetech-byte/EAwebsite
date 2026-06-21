@@ -2,254 +2,272 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://elboubakry.com/</loc>
-    <lastmod>2026-06-16</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
-    <url>
+  <url>
     <loc>https://elboubakry.com/services/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/consultant-marketing-digital-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/generation-leads-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/landing-page-lead-generation-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/meta-ads-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/google-ads-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/seo-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://elboubakry.com/services/content-marketing-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/services/automatisation-marketing-ia-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
-<url>
-    <loc>https://elboubakry.com/insights/</loc>
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+  <url>
+    <loc>https://elboubakry.com/services/consultant-marketing-digital-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/services/content-marketing-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/services/generation-leads-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/services/google-ads-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/services/landing-page-lead-generation-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/services/meta-ads-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/services/seo-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/reserver-diagnostic/</loc>
-    <lastmod>2026-06-16</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/about-elboubakry-abdessamad/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/insights/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/analytics-tracking-marketing-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/automatisation-marketing-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/bons-kpi-performance/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/calendrier-contenu-vente/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/clarifier-offre-message-tunnel/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/confiance-levier-marketing/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/consultant-marketing-digital-casablanca/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/consultant-marketing-digital-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/erreurs-budget-meta-ads/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/generation-leads-pme-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/generation-leads-qualifies-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/growth-strategy-visibilite-croissance/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/ia-business-petite-entreprise/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/ia-strategie-marketing/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/landing-page-conversion-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/landing-page-generation-leads-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/meta-ads-leads-qualifies-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/parcours-client-avant-pub/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/presence-digitale-credible/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/publicite-digitale-maroc-meta-google-tiktok/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/seo-content-strategy-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/seo-contenu-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/seo-local-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/seo-maroc-visibilite-entreprise/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/strategie-digitale-pme-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/strategie-marketing-digital-maroc/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/tracking-kpi-marketing/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://elboubakry.com/insights/video-courte-message/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/insights/whatsapp-leads-qualifies/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/insights/pourquoi-publicites-facebook-ne-generent-pas-clients/</loc>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://elboubakry.com/insights/whatsapp-leads-qualifies/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <loc>https://elboubakry.com/insights/combien-coute-campagne-meta-ads-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://elboubakry.com/assistant-ia-maroc/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
 </urlset>

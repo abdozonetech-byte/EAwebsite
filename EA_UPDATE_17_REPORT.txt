@@ -1,0 +1,29 @@
+EA Update 17 — First SEO Articles
+Date: 2026-06-21
+
+Completed:
+- Published/optimized 4 priority SEO articles.
+- Added 2 new article URLs.
+- Strengthened 2 existing priority articles.
+- Updated Insights hub article data from 29 to 31 guides.
+- Updated sitemap.xml.
+- Updated assets/data/seo-keyword-map.json with published article layer.
+- Added Article/Breadcrumb/FAQ JSON-LD for new/updated article pages.
+
+New pages:
+- /insights/pourquoi-publicites-facebook-ne-generent-pas-clients/
+- /insights/combien-coute-campagne-meta-ads-maroc/
+
+Optimized pages:
+- /insights/generation-leads-qualifies-maroc/
+- /insights/strategie-digitale-pme-maroc/
+
+Safety:
+- CSS files changed: []
+- JS/data files changed: ['assets/data/insights-articles.js']
+- Behavior logic changed: No
+- Forms/tracking changed: No
+- UI/animation CSS changed: No
+
+Verification:
+Run: python3 tools/ea_update_17_articles_check.py

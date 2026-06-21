@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="no-js" dir="ltr" lang="fr" rs-theme="rs-theme-light">
+<html class="no-js" dir="ltr" lang="fr-MA" rs-theme="rs-theme-light">
 <head>
 <!-- Meta Pixel Code - EA clean setup -->
 <script>
@@ -109,6 +109,8 @@ fbq('track', 'PageView');
 <meta content="MA-CAS" name="geo.region"/>
 <meta content="Casablanca, Maroc" name="geo.placename"/>
 <link href="https://elboubakry.com/" rel="canonical"/>
+<link rel="alternate" hreflang="fr-MA" href="https://elboubakry.com/"/>
+<link rel="alternate" hreflang="x-default" href="https://elboubakry.com/"/>
 <meta content="Consultant Marketing Digital au Maroc | Elboubakry Abdessamad" property="og:title"/>
 <meta content="Consultant marketing digital au Maroc, Elboubakry Abdessamad aide PME et services à structurer stratégie, SEO, publicité et génération de leads." property="og:description"/>
 <meta content="website" property="og:type"/>
@@ -174,7 +176,12 @@ fbq('track', 'PageView');
     "author": {
       "@id": "https://elboubakry.com/#person"
     },
-    "description": "Portfolio professionnel d’Elboubakry Abdessamad, consultant marketing digital au Maroc."
+    "description": "Portfolio professionnel d’Elboubakry Abdessamad, consultant marketing digital au Maroc.",
+    "publisher": {
+      "@type": "Person",
+      "@id": "https://elboubakry.com/#person",
+      "name": "Elboubakry Abdessamad"
+    }
   },
   {
     "@context": "https://schema.org",
@@ -212,7 +219,8 @@ fbq('track', 'PageView');
     ],
     "sameAs": [
       "https://www.linkedin.com/in/elboubakry-abdessamad-a77360192/"
-    ]
+    ],
+    "inLanguage": "fr-MA"
   },
   {
     "@context": "https://schema.org",
@@ -258,11 +266,29 @@ fbq('track', 'PageView');
           "text": "Non. Le marketing dépend de plusieurs facteurs : l’offre, le marché, le budget, la concurrence, la qualité des pages et le suivi. L’objectif est de construire une méthode claire, mesurer les résultats et optimiser progressivement."
         }
       }
+    ],
+    "inLanguage": "fr-MA"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": "https://elboubakry.com/"
+      }
     ]
   }
 ]
 </script>
 <script defer="" src="/assets/js/analytics.js"></script>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
+<meta name="author" content="Elboubakry Abdessamad"/>
+<meta property="og:locale" content="fr_MA"/>
+<meta property="og:site_name" content="Elboubakry Abdessamad"/>
+<link href="/assets/css/namaa-ai-floating.css?v=namaa-u1" rel="stylesheet" />
 </head>
 <body class="rs-smoother-yes">
 <noscript>
@@ -301,6 +327,7 @@ fbq('track', 'PageView');
 <li> <a href="/services/">Services</a></li>
 <li> <a href="#homeportfolio">Systèmes</a> </li>
 <li><a href="/insights/">Insights</a> </li>
+<li><a class="ea-namaa-nav-link" href="/assistant-ia-maroc/">Namaa AI</a></li>
 <li><a href="#footer-contact">Contact</a></li>
 </ul>
 </nav>
@@ -769,5 +796,6 @@ fbq('track', 'PageView');
   }
 })();
 </script>
+<a class="ea-namaa-float" href="/assistant-ia-maroc/" aria-label="Parler avec Namaa AI">Parler avec Namaa AI</a>
 </body>
 </html>

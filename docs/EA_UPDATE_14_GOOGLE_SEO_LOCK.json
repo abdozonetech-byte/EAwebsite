@@ -1,0 +1,227 @@
+{
+  "update": "EA Update 14 - Google SEO Starter Guide implementation",
+  "date": "2026-06-21",
+  "source_guideline": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide?hl=en",
+  "scope": "SEO-only HTML/head/structured-data/sitemap/header update; no CSS/JS/visual changes",
+  "indexable_urls": 42,
+  "changed_files": [
+    "about-elboubakry-abdessamad/index.html",
+    "index.html",
+    "insights/analytics-tracking-marketing-maroc/index.html",
+    "insights/automatisation-marketing-maroc/index.html",
+    "insights/bons-kpi-performance/index.html",
+    "insights/calendrier-contenu-vente/index.html",
+    "insights/clarifier-offre-message-tunnel/index.html",
+    "insights/confiance-levier-marketing/index.html",
+    "insights/consultant-marketing-digital-casablanca/index.html",
+    "insights/consultant-marketing-digital-maroc/index.html",
+    "insights/erreurs-budget-meta-ads/index.html",
+    "insights/generation-leads-pme-maroc/index.html",
+    "insights/generation-leads-qualifies-maroc/index.html",
+    "insights/growth-strategy-visibilite-croissance/index.html",
+    "insights/ia-business-petite-entreprise/index.html",
+    "insights/ia-strategie-marketing/index.html",
+    "insights/index.html",
+    "insights/landing-page-conversion-maroc/index.html",
+    "insights/landing-page-generation-leads-maroc/index.html",
+    "insights/meta-ads-leads-qualifies-maroc/index.html",
+    "insights/parcours-client-avant-pub/index.html",
+    "insights/presence-digitale-credible/index.html",
+    "insights/publicite-digitale-maroc-meta-google-tiktok/index.html",
+    "insights/seo-content-strategy-maroc/index.html",
+    "insights/seo-contenu-maroc/index.html",
+    "insights/seo-local-maroc/index.html",
+    "insights/seo-maroc-visibilite-entreprise/index.html",
+    "insights/strategie-digitale-pme-maroc/index.html",
+    "insights/strategie-marketing-digital-maroc/index.html",
+    "insights/tracking-kpi-marketing/index.html",
+    "insights/video-courte-message/index.html",
+    "insights/whatsapp-leads-qualifies/index.html",
+    "merci/index.html",
+    "reserver-diagnostic/index.html",
+    "services/automatisation-marketing-ia-maroc/index.html",
+    "services/consultant-marketing-digital-maroc/index.html",
+    "services/content-marketing-maroc/index.html",
+    "services/generation-leads-maroc/index.html",
+    "services/google-ads-maroc/index.html",
+    "services/index.html",
+    "services/landing-page-lead-generation-maroc/index.html",
+    "services/meta-ads-maroc/index.html",
+    "services/seo-maroc/index.html",
+    "_headers",
+    "sitemap.xml"
+  ],
+  "structured_data_updates": [
+    {
+      "file": "about-elboubakry-abdessamad/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/analytics-tracking-marketing-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/automatisation-marketing-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/bons-kpi-performance/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/calendrier-contenu-vente/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/clarifier-offre-message-tunnel/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/confiance-levier-marketing/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/consultant-marketing-digital-casablanca/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/consultant-marketing-digital-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/erreurs-budget-meta-ads/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/generation-leads-pme-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/generation-leads-qualifies-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/growth-strategy-visibilite-croissance/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/ia-business-petite-entreprise/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/ia-strategie-marketing/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/landing-page-conversion-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/landing-page-generation-leads-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/meta-ads-leads-qualifies-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/parcours-client-avant-pub/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/presence-digitale-credible/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/publicite-digitale-maroc-meta-google-tiktok/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/seo-content-strategy-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/seo-contenu-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/seo-local-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/seo-maroc-visibilite-entreprise/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/strategie-digitale-pme-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/strategie-marketing-digital-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/tracking-kpi-marketing/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/video-courte-message/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "insights/whatsapp-leads-qualifies/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "reserver-diagnostic/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/automatisation-marketing-ia-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/consultant-marketing-digital-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/content-marketing-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/generation-leads-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/google-ads-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/landing-page-lead-generation-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/meta-ads-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    },
+    {
+      "file": "services/seo-maroc/index.html",
+      "ldjson_blocks_updated": 1
+    }
+  ],
+  "checks_expected": {
+    "all_indexable_pages_have_title_description_canonical_robots_h1": true,
+    "merci_noindex_not_in_sitemap": true,
+    "all_indexable_pages_have_og_locale_and_site_name": true,
+    "homepage_has_breadcrumb_json_ld": true,
+    "all_json_ld_valid": true
+  }
+}

@@ -1,0 +1,45 @@
+.ea-namaa-float {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 16px 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0a4fff 0%, #51a8ff 100%);
+  color: #fff !important;
+  text-decoration: none !important;
+  font-family: Urbanist, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  box-shadow: 0 18px 46px rgba(10, 79, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  transform: translateZ(0);
+}
+.ea-namaa-float::before {
+  content: "N";
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  color: #0a4fff;
+  font-weight: 950;
+}
+.ea-namaa-float:hover { color: #fff !important; transform: translateY(-2px); }
+@media (max-width: 768px) {
+  .ea-namaa-float {
+    right: 14px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    min-height: 48px;
+    max-width: calc(100vw - 28px);
+    padding: 0 13px 0 9px;
+    font-size: 13px;
+  }
+  .ea-namaa-float::before { width: 30px; height: 30px; }
+}

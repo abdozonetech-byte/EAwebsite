@@ -1,0 +1,36 @@
+EA UPDATE 15 REPORT — KEYWORD MAP + SERVICE PAGE SEO OPTIMIZATION
+Date: 2026-06-21
+
+Status: completed safely.
+
+Scope:
+- Keyword map and page-to-keyword targeting.
+- Service page metadata improvements.
+- Structured data enrichment for service pages.
+- Internal SEO cluster metadata.
+- First 8 article/content topics plan.
+
+No visual change:
+- CSS changed: NO
+- JavaScript changed: NO
+
+Main files added:
+- assets/data/seo-keyword-map.json
+- docs/EA_UPDATE_15_KEYWORD_MAP_SERVICE_SEO.md
+- docs/EA_UPDATE_15_KEYWORD_MAP_SERVICE_SEO_LOCK.json
+- tools/ea_update_15_keyword_map_check.py
+
+Pages updated:
+- services/consultant-marketing-digital-maroc/index.html
+- services/generation-leads-maroc/index.html
+- services/landing-page-lead-generation-maroc/index.html
+- services/meta-ads-maroc/index.html
+- services/google-ads-maroc/index.html
+- services/seo-maroc/index.html
+- services/content-marketing-maroc/index.html
+- services/automatisation-marketing-ia-maroc/index.html
+- services/index.html
+- reserver-diagnostic/index.html
+
+Verification command:
+python3 tools/ea_update_15_keyword_map_check.py
