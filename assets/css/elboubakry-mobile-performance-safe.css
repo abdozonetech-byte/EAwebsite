@@ -1,0 +1,160 @@
+/* Mobile-only performance safety pass.
+   Scope: max-width: 768px only. Desktop is untouched. */
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .offcanvas-area {
+    width: 100% !important;
+    max-width: none !important;
+    background: rgba(8, 18, 42, .48) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+  }
+
+  .offcanvas-wrapper,
+  .offcanvas-content,
+  .mobile-menu,
+  .rs-offcanvas-menu,
+  .mean-container,
+  .mean-container .mean-bar,
+  .mean-container .mean-nav {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .offcanvas-wrapper {
+    min-height: 100%;
+    padding: 30px 26px !important;
+  }
+
+  .offcanvas-top {
+    border-bottom-color: rgba(255, 255, 255, .18) !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo,
+  .offcanvas-title-meta,
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span,
+  .offcanvas-contact-text a {
+    color: #ffffff !important;
+  }
+
+  .offcanvas-logo a.ea-premium-logo span,
+  .mean-container .mean-nav ul li a:hover,
+  .mean-container .mean-nav ul li a.active,
+  .offcanvas-contact-text a:hover {
+    color: #7fa2ff !important;
+  }
+
+  .offcanvas-about p {
+    color: rgba(255, 255, 255, .78) !important;
+  }
+
+  .mean-container .mean-nav ul li {
+    border-bottom-color: rgba(255, 255, 255, .14) !important;
+  }
+
+  .mean-container .mean-nav ul li a,
+  .mean-container .mean-nav ul li span {
+    border-top-color: rgba(255, 255, 255, .08) !important;
+  }
+
+  .offcanvas-contact-icon {
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, .22) !important;
+    background: rgba(255, 255, 255, .08) !important;
+  }
+
+  .offcanvas-contact-icon i {
+    color: #ffffff !important;
+  }
+
+  .offcanvas-overlay {
+    background: rgba(3, 9, 24, .28) !important;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+
+  .rs-banner-one .ea-hero-portrait-card,
+  .rs-banner-one .ea-hero-portrait-photo,
+  .rs-banner-one .ea-hero-portrait-photo picture,
+  .rs-banner-one .ea-hero-portrait-photo img {
+    contain: layout paint;
+  }
+
+  .rs-banner-one .ea-hero-portrait-photo picture {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+  }
+
+  .rs-banner-one .ea-hero-portrait-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  #homemarketingsystem,
+  #homeservices,
+  #homeportfolio,
+  #homefaq,
+  #footer-contact {
+    content-visibility: auto;
+    contain-intrinsic-size: 720px;
+  }
+
+  .ea-core-photo picture,
+  .ea-funnel-visual picture,
+  .elb-mockup-slide picture {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+  }
+
+  .ea-core-photo picture {
+    aspect-ratio: 4 / 5;
+  }
+
+  .ea-core-photo img,
+  .ea-funnel-visual img,
+  .elb-mockup-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ea-core-photo img {
+    object-fit: contain;
+  }
+
+  .rs-banner-one .ea-hero-role-line,
+  .rs-banner-one .ea-hero-role-line .rs-title-slide,
+  .rs-banner-one .ea-hero-role-line .cd-words-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .rs-banner-one .ea-hero-role-line .cd-words-wrapper b {
+    white-space: nowrap;
+    will-change: opacity, transform;
+  }
+
+  .elb-mockup-slide img,
+  .ea-section3-visual img,
+  .ea-growth-visual img {
+    content-visibility: auto;
+    contain-intrinsic-size: 480px 320px;
+  }
+
+  .elb-mockup-track,
+  .elb-mockup-slide,
+  .ea-home-faq,
+  .ea-footer-v11 {
+    backface-visibility: hidden;
+  }
+}

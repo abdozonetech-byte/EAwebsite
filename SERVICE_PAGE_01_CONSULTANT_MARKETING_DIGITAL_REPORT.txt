@@ -1,0 +1,17 @@
+Service Page 01 added: Consultant Marketing Digital au Maroc
+
+URL:
+/services/consultant-marketing-digital-maroc/
+
+Included:
+- SEO title and meta description
+- Canonical URL
+- Open Graph/Twitter meta
+- Service, BreadcrumbList and FAQPage structured data
+- Premium UI/UX service page layout
+- Clear H1/H2 structure
+- CTA links to /reserver-diagnostic/
+- Internal link to related Insights guide
+- Services hub first card now links to the new service page
+- Sitemap updated
+- Redirects added for old .html and no-trailing-slash versions

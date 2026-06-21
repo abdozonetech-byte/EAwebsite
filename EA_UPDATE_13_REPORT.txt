@@ -1,0 +1,26 @@
+EA UPDATE 13 REPORT — MOBILE LCP + ABOVE-THE-FOLD OPTIMIZATION
+
+Status: completed safely.
+
+Scope:
+- Homepage mobile performance only.
+- No UI/UX redesign.
+- No animation removal.
+- No SEO/tracking/form changes.
+- Desktop CSS remains desktop-protected.
+
+Created:
+- assets/css/pages/home-mobile-critical.css (328,463 bytes)
+- assets/css/pages/home-mobile-deferred.css (786,439 bytes)
+- docs/EA_UPDATE_13_MOBILE_LCP_ABOVE_THE_FOLD.md
+- docs/EA_UPDATE_13_MOBILE_LCP_ABOVE_THE_FOLD_LOCK.json
+- tools/ea_update_13_mobile_lcp_check.py
+
+Mobile render-blocking CSS before: 850,628 bytes
+Mobile render-blocking CSS after: 328,463 bytes
+Saved from initial mobile render path: 522,165 bytes
+
+Important:
+- Full mobile CSS is still preserved in a deferred bundle.
+- Desktop still loads original desktop/vendor CSS via media="(min-width: 769px)".
+- This update is intended to improve FCP/LCP by reducing above-the-fold blocking CSS.

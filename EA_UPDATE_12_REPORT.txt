@@ -1,0 +1,23 @@
+EA UPDATE 12 REPORT — HOMEPAGE MOBILE VENDOR CSS DIET
+
+Status: PASS
+
+Scope:
+- Homepage mobile performance only.
+- No UI/UX, layout, animation, SEO, tracking, form, sitemap, schema, or desktop behavior changes intended.
+
+Changes:
+- Added assets/css/pages/home-mobile-vendor.css
+- Mobile now loads a smaller homepage Bootstrap subset instead of full Bootstrap.
+- Swiper, spacing, and Remix Icon subset are bundled into the mobile vendor file.
+- Desktop still loads the original full vendor CSS files under min-width: 769px.
+
+Mobile CSS result:
+- Before: 1,124,821 bytes
+- After: 850,628 bytes
+- Saved: 274,193 bytes
+
+Verification:
+- index.html updated only in CSS vendor link block.
+- Old vendor files kept.
+- Desktop vendor files still present and loaded for desktop media.

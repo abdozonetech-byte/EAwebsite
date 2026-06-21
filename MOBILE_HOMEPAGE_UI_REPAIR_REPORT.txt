@@ -1,0 +1,27 @@
+Mobile Homepage UI Repair Report
+
+Scope:
+- Mobile homepage only.
+- Fixed layout errors visible in the long mobile screenshot.
+
+Fixed:
+- Restored essential section CSS on mobile so below-fold sections no longer look unstyled/compressed.
+- Kept the official mobile hero Focus layout stable.
+- Repaired CTA mobile sizes.
+- Repaired Mon système / growth section mobile stacking.
+- Repaired project/process section mobile cards and images.
+- Repaired Systèmes Marketing carousel so mockups stay in a horizontal carousel instead of stacking vertically.
+- Repaired FAQ/footer mobile spacing.
+- Added safe overflow protection for mobile.
+
+Not changed:
+- Desktop design.
+- SEO metadata, sitemap, schema, robots.
+- Forms and Google Sheets logic.
+- Meta Pixel and GA4.
+- URLs and redirects.
+- Page content and sections.
+
+Files changed:
+- index.html
+- assets/css/elboubakry-mobile-official-repair.css

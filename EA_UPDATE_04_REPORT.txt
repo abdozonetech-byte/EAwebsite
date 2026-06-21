@@ -1,0 +1,40 @@
+EA UPDATE 04 — SAFE VENDOR CLEANUP
+
+Status: COMPLETED SAFELY
+
+Changed:
+- Added: assets/css/vendor-subsets/remixicon-site-subset.css
+- Replaced full Remix Icon stylesheet references in active HTML pages with the new sitewide subset.
+- Added: docs/EA_UPDATE_04_SAFE_VENDOR_CLEANUP.md
+- Added: docs/EA_UPDATE_04_REMIXICON_SUBSET_LOCK.json
+- Added: tools/ea_update_04_remixicon_subset_check.py
+
+Not changed:
+- UI/UX design
+- layout
+- sections
+- colors
+- text
+- animations
+- desktop/mobile CSS architecture from updates 2 and 3
+- SEO metadata
+- sitemap
+- schema JSON-LD
+- redirects
+- forms
+- GA4 / Meta Pixel tracking logic
+
+Performance result:
+- Original Remix Icon CSS raw size: 140,557 bytes
+- New sitewide subset raw size: 5,974 bytes
+- Raw CSS saved per page: 134,583 bytes
+- Active full remixicon.css HTML links after update: 0
+- Active subset links after update: 41
+- Subset verification status: PASS
+
+Important note:
+- ri-target-line exists in one HTML page but does not exist in the original Remix Icon CSS.
+- This update keeps the same behavior and does not replace it, to avoid visual changes.
+
+Next suggested update:
+- Update 5: page-specific CSS load cleanup for Insights/Services pages or safe navbar polish if you want a visual-only navbar improvement.

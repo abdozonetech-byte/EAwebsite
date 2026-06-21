@@ -1,0 +1,44 @@
+/* Upgrade 16: final homepage ending, contact-focused conversion cleanup. */
+.ea-contact-leads {
+  padding-bottom: 34px;
+}
+.ea-contact-final-line {
+  width: min(1120px, calc(100% - 32px));
+  margin: 54px auto 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(82, 111, 246, 0.14);
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: rgba(3, 18, 13, 0.62);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.ea-contact-leads .rs-contact-bg {
+  opacity: .72;
+}
+.ea-contact-leads .ea-contact-form-card {
+  box-shadow: 0 26px 70px rgba(38, 55, 119, 0.10);
+}
+.ea-contact-action-card .rs-contact-icon span,
+.ea-contact-location-card .rs-contact-icon span {
+  background: rgba(82, 111, 246, 0.10);
+  color: #526ff6;
+}
+.ea-contact-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 767px) {
+  .ea-contact-final-line {
+    margin-top: 34px;
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+  }
+  .ea-contact-leads {
+    padding-bottom: 26px;
+  }
+}
