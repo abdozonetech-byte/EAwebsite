@@ -134,8 +134,8 @@
   }
   function factoryEntryHtml(){
     return '<div class="namaa-entry-grid" aria-label="Choisir le mode Namaa">'+
-      '<button class="namaa-entry-card namaa-entry-talk" type="button" data-flow-action="free-talk-mode"><span>💬</span><strong>Free Talk</strong><small>Business, AI, IT, startups, marketing. Conversation libre, rapide et friendly.</small></button>'+ 
-      '<button class="namaa-entry-card namaa-entry-build" type="button" data-flow-action="build-project-flow"><span>🏗️</span><strong>Build My Project</strong><small>Brief guidé → PDF strategy → logo/mockups → landing page.</small></button>'+ 
+      '<button class="namaa-entry-card namaa-entry-talk" type="button" data-flow-action="free-talk-mode"><span>💬</span><strong>Free Talk</strong><small>Hder m3a Namaa 3la AI, business, IT, marketing. Quick and natural.</small><em>Conversation libre</em></button>'+ 
+      '<button class="namaa-entry-card namaa-entry-build" type="button" data-flow-action="build-project-flow"><span>🏗️</span><strong>Build My Project</strong><small>Brief guidé → strategy PDF → logo/mockups → landing page.</small><em>Project factory</em></button>'+ 
     '</div>';
   }
   function agentMapHtml(){
@@ -161,8 +161,8 @@
   function guidedCtaHtml(){
     return entryChoiceHeroHtml()+
     '<div class="namaa-factory-strip" aria-label="Namaa project factory steps">'+
-      '<span><b>01</b> Brief</span><span><b>02</b> Strategy Agent</span><span><b>03</b> Design Agent</span><span><b>04</b> Web Agent</span>'+
-    '</div>'+agentMapHtml();
+      '<span><b>01</b> Brief</span><span><b>02</b> Strategy</span><span><b>03</b> Design</span><span><b>04</b> Web</span>'+
+    '</div>';
   }
 
 
@@ -440,8 +440,8 @@
     welcome.id='namaaHero';
     welcome.innerHTML='<div class="namaa-orb" aria-hidden="true"><span>N</span></div>'+ 
       '<p class="namaa-kicker" id="namaaHeroKicker">'+utils.escapeHtml(meta.hero.kicker)+'</p>'+ 
-      '<h1 id="namaaHeroTitle">Namaa AI, choose your path.</h1>'+ 
-      '<p class="namaa-intro" id="namaaHeroIntro">Start with free business talk or build a complete project with Namaa agents.</p>'+ 
+      '<h1 id="namaaHeroTitle">Namaa AI, chno bghiti ndirou lyoum?</h1>'+ 
+      '<p class="namaa-intro" id="namaaHeroIntro">Hder m3a Namaa 3la AI, business, IT — ola bni project step by step.</p>'+ 
       guidedCtaHtml()+
       '<div class="namaa-chip-row namaa-quick-prompts" aria-label="Exemples de questions">'+promptButtonsHtml()+'</div>';
     thread.appendChild(welcome);
@@ -453,7 +453,7 @@
     input.value='';
     input.style.height='auto';
     closeSidebar();
-    setSidebarNote('＋','New project','Choose Free Talk for business conversation or Build Project for the guided factory flow.');
+    setSidebarNote('＋','New chat','Choose Free Talk or Build Project. Details appear only when needed.');
     input.focus();
   }
   function applyResult(result){

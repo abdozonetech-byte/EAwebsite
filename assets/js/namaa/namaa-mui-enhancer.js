@@ -11,7 +11,7 @@
   var CDN_REACT='https://esm.sh/react@18.2.0';
   var CDN_REACT_DOM='https://esm.sh/react-dom@18.2.0/client';
   var CDN_MUI='https://esm.sh/@mui/material@5.15.20?deps=react@18.2.0,react-dom@18.2.0';
-  var NAMAA_MUI_VERSION='40-strategy-agent-ui';
+  var NAMAA_MUI_VERSION='46-mui-template-rebuild';
 
   function ensureSlot(id, className, parent, position){
     var el=document.getElementById(id);
@@ -166,8 +166,8 @@
             h(Paper,{className:'namaa-mui-factory-stepper',elevation:0},
               h(Stack,{direction:{xs:'column',sm:'row'},alignItems:{xs:'stretch',sm:'center'},justifyContent:'space-between',spacing:1.4},
                 h(Box,null,
-                  h(Typography,{variant:'overline',sx:{fontWeight:950,letterSpacing:'.08em',color:'#2563eb',lineHeight:1}},'Choose your Namaa path'),
-                  h(Typography,{variant:'body2',sx:{fontWeight:850,color:'#50617c',lineHeight:1.25}},'Start with Free Talk or launch Build My Project when you want the full factory.')
+                  h(Typography,{variant:'overline',sx:{fontWeight:950,letterSpacing:'.08em',color:'#2563eb',lineHeight:1}},'Namaa workspace'),
+                  h(Typography,{variant:'body2',sx:{fontWeight:850,color:'#50617c',lineHeight:1.25}},'Free Talk first. Project Builder appears only when needed.')
                 ),
                 h(Stack,{direction:'row',spacing:1},
                   h(Button,{variant:'outlined',size:'small',onClick:function(){flowAction('free-talk-mode');}},'Free Talk'),
@@ -203,10 +203,10 @@
               h(Stack,{direction:'row',alignItems:'center',spacing:1.1},
                 h(Avatar,{className:'namaa-mui-command-avatar'},'N'),
                 h(Box,{sx:{minWidth:0,flex:1}},
-                  h(Typography,{variant:'caption',sx:{display:'block',fontWeight:950,letterSpacing:'.08em',textTransform:'uppercase',color:'#8fb4ff'}},'Factory command'),
-                  h(Typography,{variant:'body2',sx:{fontWeight:950,color:'#fff',lineHeight:1.1}},'Choose: Free Talk or Build Project')
+                  h(Typography,{variant:'caption',sx:{display:'block',fontWeight:950,letterSpacing:'.08em',textTransform:'uppercase',color:'#8fb4ff'}},'Namaa command'),
+                  h(Typography,{variant:'body2',sx:{fontWeight:950,color:'#fff',lineHeight:1.1}},'Simple workspace')
                 ),
-                h(Chip,{label:'U40',size:'small',sx:{height:24,borderRadius:'999px',bgcolor:'rgba(96,165,250,.16)',color:'#dbeafe'}})
+                h(Chip,{label:'U46',size:'small',sx:{height:24,borderRadius:'999px',bgcolor:'rgba(96,165,250,.16)',color:'#dbeafe'}})
               ),
               h(Box,{className:'namaa-mui-command-progress',sx:{mt:1.25}},h('span',{style:{width:(Math.max(25,briefScore || ((currentIndex+1)*25)))+'%'}})),
               h(Stack,{direction:'row',spacing:.75,sx:{mt:1.25}},
@@ -244,7 +244,7 @@
               h('span',null,currentIndex<1?'🧭':currentIndex<2?'📊':currentIndex<3?'🎨':'💻'),
               h(Box,{sx:{minWidth:0,flex:1}},
                 h(Typography,{variant:'caption',sx:{display:'block',fontWeight:950,color:'#fff'}},currentIndex<1?'Next: complete the brief':currentIndex<2?'Next: Strategy PDF':currentIndex<3?'Next: logo + mockups':'Next: website preview'),
-                h(Typography,{variant:'caption',sx:{display:'block',color:'#a9b8cc',fontWeight:800}},'Namaa keeps the flow simple and premium.')
+                h(Typography,{variant:'caption',sx:{display:'block',color:'#a9b8cc',fontWeight:800}},'Clean MUI template flow. No clutter before the user needs it.')
               )
             )
           )
@@ -253,7 +253,7 @@
       function FactoryStatus(){
         var state=useNamaaState();
         var working=/generating|strategy-generating|pdf-ready/.test(state.stage);
-        var label=state.stage.indexOf('images')>-1?'Design Agent is preparing visual assets':state.stage.indexOf('dev')>-1?'Web Agent is building the preview':state.stage.indexOf('strategy-generating')>-1?'Strategy Agent is preparing the PDF':state.stage.indexOf('pdf')>-1?'Strategy Agent prepared a branded document':'Choose your Namaa path';
+        var label=state.stage.indexOf('images')>-1?'Design Agent is preparing visual assets':state.stage.indexOf('dev')>-1?'Web Agent is building the preview':state.stage.indexOf('strategy-generating')>-1?'Strategy Agent is preparing the PDF':state.stage.indexOf('pdf')>-1?'Strategy Agent prepared a branded document':'Namaa workspace';
         return h(ThemeProvider,{theme:theme},
           h(Fade,{in:true,timeout:360},
             h(Paper,{className:'namaa-mui-status-rail',elevation:0},

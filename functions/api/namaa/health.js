@@ -5,7 +5,7 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: true,
     service: 'Namaa AI API',
-    update: '45-live-sources-grounding',
+    update: '46-mui-template-rebuild',
     security: 'API keys are read only from Cloudflare environment secrets.',
     promptLibrary: ['sources/source-registry.js','voice-layer.js','conversation.js','market-research.js','marketing-strategy.js','roadmap.js','image-mockup.js','website-template.js','system-talk.js'],
     diagnosticsEndpoint: '/api/namaa/diagnostics',

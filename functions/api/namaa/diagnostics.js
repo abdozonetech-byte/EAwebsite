@@ -71,7 +71,7 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: allPassed,
     service: 'Namaa Diagnostics',
-    update: '45-live-sources-grounding',
+    update: '46-mui-template-rebuild',
     note: 'This endpoint tests Namaa routing logic without calling Gemini. Live chat uses Gemini through Namaa Voice Layer so replies feel like Namaa, not a generic model.',
     geminiConfigured: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
     activeTextModel: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
@@ -98,7 +98,7 @@ export async function onRequestPost(context) {
   return jsonResponse({
     ok: true,
     service: 'Namaa Diagnostics',
-    update: '45-live-sources-grounding',
+    update: '46-mui-template-rebuild',
     note: 'Controller preview only. No Gemini call was made here. Live /talk uses Gemini plus Namaa Voice Layer to keep replies natural, short and on-brand while keeping scope safe.',
     input: { message, action, hasBrief: Boolean(brief) },
     decision: summarizeDecision(decision),
