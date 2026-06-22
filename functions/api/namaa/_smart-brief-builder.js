@@ -384,7 +384,7 @@ export function smartBriefAnswer({ brief = {}, language = '' } = {}) {
     return 'Parfait, j’ai assez d’informations. Que voulez-vous créer en premier : Market Research PDF, Marketing Strategy PDF, ou Launch Roadmap ?';
   }
   const questions = status.nextQuestions;
-  if (lang === 'ar') return `مزيان، فهمت الاتجاه. باش مانضيعوش الوقت ونبني prompt قوي فالباكند، جاوبني غير على هاد ${questions.length} سؤال: ${questions.join(' ')}`;
-  if (lang === 'en') return `Good, I understand the direction. To build a strong backend prompt without wasting tokens, answer these ${questions.length} question(s): ${questions.join(' ')}`;
-  return `Très bien, je comprends la direction. Pour construire un prompt backend fort sans gaspiller les tokens, répondez juste à ces ${questions.length} question(s) : ${questions.join(' ')}`;
+  if (lang === 'ar') return `مزيان، فهمت الاتجاه 😄 باش نعطيك نتيجة قوية وما نطولش عليك، جاوبني غير على هاد ${questions.length} سؤال: ${questions.join(' ')}`;
+  if (lang === 'en') return `Good, I understand the direction 😄 To give you a strong result without long random answers, answer these ${questions.length} question(s): ${questions.join(' ')}`;
+  return `Très bien, je comprends la direction 😄 Pour vous donner un résultat fort sans réponse trop longue, répondez juste à ces ${questions.length} question(s) : ${questions.join(' ')}`;
 }

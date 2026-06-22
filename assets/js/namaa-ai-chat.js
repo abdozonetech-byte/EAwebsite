@@ -492,7 +492,7 @@
     var prompt='Créer '+label+' pour '+(brief.projectName || 'ce projet');
     addMessage('user',utils.escapeHtml(prompt));
     addHistory('user',prompt);
-    var loading=addMessage('ai','<p>Namaa prépare le bon prompt en backend, puis génère '+utils.escapeHtml(label)+'...</p>');
+    var loading=addMessage('ai','<div class="namaa-typing"><span></span><span></span><span></span><em>Namaa prépare '+utils.escapeHtml(label)+'...</em></div>');
     loading.classList.add('is-loading');
     answerAsync(prompt,{brief:brief,history:[],action:action}).then(function(html){
       appState.flowStage='pdf-ready';
@@ -508,6 +508,10 @@
     });
   }
 
+  function typingLoadingHtml(agent){
+    var labels={talk:'Namaa kaykteb...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
+    return '<div class="namaa-typing"><span></span><span></span><span></span><em>'+utils.escapeHtml(labels[agent] || 'Namaa kaykteb...')+'</em></div>';
+  }
   function submit(){
     var q=input.value.trim();
     if(!q){input.focus();return;}
@@ -519,7 +523,7 @@
     input.value='';
     input.style.height='auto';
     closePlusMenu();
-    var loading=addMessage('ai','<p>Namaa organise la réponse courte...</p>');
+    var loading=addMessage('ai',typingLoadingHtml(submittedAgent));
     loading.classList.add('is-loading');
     answerAsync(q,{brief:appState.projectBrief || null}).then(function(html){
       if(submittedAgent==='images' && appState.projectBrief){

@@ -56,14 +56,14 @@ export async function onRequestPost(context) {
   const briefStatus = decision.briefStatus || getSmartBriefStatus(decision.brief || brief || {}, decision.language);
 
   // Most Namaa Talk messages are intentionally short and do not call Gemini.
-  // This keeps the conversation natural and avoids long answers before the brief is ready.
+  // The v29 controller handles small talk, Darija, emojis, light jokes and smart redirects before any long output.
   if (!decision.generate) {
     return jsonResponse({
       ok: true,
       route: 'namaa-talk',
       connected: true,
       provider: 'namaa-controller',
-      model: 'conversation-controller-v28 + smart-brief-builder + prompt-library + diagnostics',
+      model: 'conversation-controller-v29 + natural-darija-router + smart-brief-builder + prompt-library',
       intent: decision.intent,
       answer: decision.answer,
       briefPatch: decision.briefPatch || {},
@@ -144,7 +144,7 @@ export async function onRequestGet(context) {
     connected: hasSecret,
     expectedSecret: config.apiKeyEnv,
     model,
-    update: '28-testing-gemini-optimization',
-    behavior: 'short chat first; smart brief builder asks only missing fields; confirmed deliverables use optimized Gemini prompts and branded PDFs',
+    update: '29-natural-conversation-intelligence',
+    behavior: 'natural short conversation first; Darija smart router; emoji-aware replies; confirmed deliverables use optimized Gemini prompts and branded PDFs',
   });
 }

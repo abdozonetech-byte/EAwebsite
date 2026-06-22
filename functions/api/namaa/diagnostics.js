@@ -17,7 +17,9 @@ const READY_BRIEF = {
 
 const TEST_CASES = [
   { id: 'small_talk', message: 'salam kifach nta', expectGenerate: false, expectIntent: 'small_talk' },
-  { id: 'out_of_scope', message: 'chkon ghadi yrba7 match lyoum?', expectGenerate: false, expectIntent: 'out_of_scope' },
+  { id: 'language_switch_darija', message: 'darija', expectGenerate: false, expectIntent: 'language_switch' },
+  { id: 'short_command', message: 'jawb', expectGenerate: false, expectIntent: 'casual_conversation' },
+  { id: 'football_bridge', message: 'chkon ghadi yrba7 match lyoum?', expectGenerate: false, expectIntent: 'friendly_off_topic_bridge' },
   { id: 'brief_needed', message: 'bghit ndir projet ecommerce f casa budget 3000dh', expectGenerate: false },
   { id: 'deliverable_blocked_until_brief', message: 'create market research pdf', expectGenerate: false, expectIntent: 'brief_required' },
   { id: 'deliverable_ready', message: 'create market research pdf', brief: READY_BRIEF, expectGenerate: true, expectIntent: 'market_research' },
@@ -65,8 +67,8 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: allPassed,
     service: 'Namaa Diagnostics',
-    update: '28-testing-gemini-optimization',
-    note: 'This endpoint tests Namaa controller logic without calling Gemini, so it costs 0 tokens.',
+    update: '29-natural-conversation-intelligence',
+    note: 'This endpoint tests Namaa natural conversation controller logic without calling Gemini, so it costs 0 tokens.',
     geminiConfigured: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
     activeTextModel: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
     activeImageModel: env[NAMAA_API_CONFIG.images.modelEnv] || NAMAA_API_CONFIG.images.fallbackModel,
@@ -84,8 +86,8 @@ export async function onRequestPost(context) {
   return jsonResponse({
     ok: true,
     service: 'Namaa Diagnostics',
-    update: '28-testing-gemini-optimization',
-    note: 'Controller preview only. No Gemini call was made.',
+    update: '29-natural-conversation-intelligence',
+    note: 'Controller preview only. No Gemini call was made. v29 includes Darija small talk, emojis, friendly off-topic bridge, and strict domain return.',
     input: { message, action, hasBrief: Boolean(brief) },
     decision: summarizeDecision(decision),
   });
