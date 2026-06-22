@@ -112,7 +112,7 @@
   function documentLanguageHint(brief){
     var lang=String((brief && brief.language) || '').toLowerCase();
     if(lang.indexOf('darija')>-1)return 'Darija Latin';
-    if(lang.indexOf('arab')>-1 || lang.indexOf('العربية')>-1)return 'Arabic script';
+    if(lang.indexOf('arab')>-1 || lang.indexOf('العربية')>-1)return 'العربية';
     if(lang.indexOf('english')>-1)return 'English';
     if(lang.indexOf('fr')>-1 || lang.indexOf('français')>-1)return 'Français';
     return 'Darija / Français';
@@ -165,7 +165,7 @@
     var hasLive=sources.some(function(source){return source.type==='live_google_search' || source.url || source.uri;});
     var note=mode==='print'
       ? (hasLive ? 'Namaa combines curated trusted Morocco sources with live Gemini Google Search citations. Exact numbers must still be checked in the original source before legal, financial or investment decisions.' : 'Namaa separates verified/source-backed context from strategic recommendations. Exact numbers must be checked in the original official source before legal, financial or investment decisions.')
-      : (hasLive ? 'Namaa dar research b sources trusted + live citations. Exact numbers khas-hom verification men source original.' : 'Namaa kayferreq bin facts w recommendations. Exact numbers khas-hom verification men official source.');
+      : (hasLive ? 'Namaa دار research بمصادر موثوقة + live citations. الأرقام الدقيقة خاصها verification من المصدر الأصلي.' : 'Namaa يفرّق بين facts والمقترحات. الأرقام الدقيقة خاصها verification من المصدر الرسمي.');
     return '<section class="namaa-sources-panel '+(mode==='print'?'is-print':'')+'"><div class="namaa-sources-head"><span>🔐</span><div><h3>'+title+'</h3><p>'+utils.escapeHtml(note)+'</p></div></div><ol>'+cards+'</ol></section>';
   }
 
@@ -425,7 +425,7 @@
       '<div class="namaa-brief-meter"><i style="width:'+Math.max(8,Math.min(100,score))+'%"></i></div>'+ 
       '<div class="namaa-brief-missing">'+chips+'</div>'+ 
       (qs?'<ol>'+qs+'</ol>':'')+ 
-      '<p>Namaa ghadi ysowlek ghir 3la lma3lomat lmohima bach ykhrrej result wadih bla sda3.</p>'+ 
+      '<p>Namaa غادي يسولك غير على المعلومات المهمة باش يخرج نتيجة واضحة بلا صداع.</p>'+ 
     '</div>';
   }
 
@@ -439,7 +439,7 @@
       var attr=id==='guided_brief'?'data-flow-action="guided-intake"':'data-talk-action="'+utils.escapeHtml(id)+'"';
       return '<button class="namaa-mini-button '+(id==='guided_brief'?'secondary':'')+'" type="button" '+attr+'><span>'+icon+'</span>'+utils.escapeHtml(label)+'</button>';
     }).join('');
-    return '<div class="namaa-action-card namaa-controller-card"><div><span>⚡</span><strong>Chno bghiti nwjed lik daba?</strong><p>Khtar document li mhtaj, w Namaa ghadi yhawwel brief dyalek l result organised.</p></div><div class="namaa-flow-actions">'+buttons+'</div></div>';
+    return '<div class="namaa-action-card namaa-controller-card"><div><span>⚡</span><strong>شنو بغيتي نوجد ليك دابا؟</strong><p>اختار الوثيقة اللي محتاج، وNamaa غادي يحول brief ديالك لنتيجة منظمة.</p></div><div class="namaa-flow-actions">'+buttons+'</div></div>';
   }
 
   function talkApi(question,history,options){
