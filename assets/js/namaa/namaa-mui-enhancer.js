@@ -11,7 +11,7 @@
   var CDN_REACT='https://esm.sh/react@18.2.0';
   var CDN_REACT_DOM='https://esm.sh/react-dom@18.2.0/client';
   var CDN_MUI='https://esm.sh/@mui/material@5.15.20?deps=react@18.2.0,react-dom@18.2.0';
-  var NAMAA_MUI_VERSION='46-mui-template-rebuild';
+  var NAMAA_MUI_VERSION='53-adaptive-agent-dashboards';
 
   function ensureSlot(id, className, parent, position){
     var el=document.getElementById(id);
@@ -32,11 +32,26 @@
     try{return (window.NamaaRuntime && window.NamaaRuntime.getState && window.NamaaRuntime.getState()) || {};}
     catch(error){return {};}
   }
+  function runtimeProjectDNA(){
+    try{return (window.NamaaRuntime && window.NamaaRuntime.getProjectDNA && window.NamaaRuntime.getProjectDNA()) || (getRuntimeState().projectDNA) || null;}
+    catch(error){return null;}
+  }
+  function isDNAReady(){
+    var dna=runtimeProjectDNA();
+    return !!(dna && dna.brief);
+  }
   function clickSelector(selector){
     var target=document.querySelector(selector);
     if(target)target.click();
   }
-  function activateAgent(agent){clickSelector('.namaa-agent-link[data-agent="'+agent+'"], .namaa-plus-menu [data-agent="'+agent+'"]');}
+  function activateAgent(agent){
+    var target=document.querySelector('.namaa-agent-link[data-agent="'+agent+'"], .namaa-plus-menu [data-agent="'+agent+'"]');
+    if(target){target.click();return;}
+    var dnaTarget=document.querySelector('[data-dna-agent="'+agent+'"]');
+    if(dnaTarget){dnaTarget.click();return;}
+    if(!isDNAReady()){flowAction('build-project-flow');return;}
+    flowAction('build-project-flow');
+  }
   function flowAction(action){clickSelector('[data-flow-action="'+action+'"]');}
 
   function injectFallback(){
@@ -100,9 +115,15 @@
         {key:'web',label:'Web',emoji:'💻'}
       ];
       var agents=[
-        {key:'talk',label:'Talk',name:'Namaa Talk',emoji:'🧠',route:'Free talk',text:'Conversation business, AI, IT and project direction',goal:'Understand the user, keep it human, guide softly.'},
-        {key:'images',label:'Images',name:'Design Agent',emoji:'🎨',route:'Logo + mockups',text:'Logo concepts, brand board and category visuals',goal:'Make the project visible before building.'},
-        {key:'dev',label:'Dev',name:'Web Agent',emoji:'💻',route:'Website preview',text:'HTML/CSS/JS landing preview with category templates',goal:'Turn the brief into a real simple page.'}
+        {key:'talk',label:'Talk',name:'Namaa AI Talk',emoji:'💬',route:'Free Talk',text:'Main chat that understands the user and collects Project DNA',goal:'Talk freely or start Project Build.'},
+        {key:'market',label:'Market',name:'Market Research',emoji:'🔎',route:'Morocco research',text:'Cities, demand, competitors, pricing and opportunity gaps',goal:'Works after Project DNA.'},
+        {key:'strategy',label:'Strategy',name:'Strategy Agent',emoji:'🧭',route:'Roadmap',text:'Positioning, offer, 30/60/90 days and business actions',goal:'Works after Project DNA.'},
+        {key:'marketing',label:'Marketing',name:'Marketing Agent',emoji:'📣',route:'Ads + funnel',text:'Meta, Google, TikTok, content, landing page and leads',goal:'Works after Project DNA.'},
+        {key:'crm',label:'CRM',name:'WhatsApp & CRM',emoji:'🟢',route:'Lead flow',text:'Scripts, qualification, follow-up and CRM mini workflow',goal:'Works after Project DNA.'},
+        {key:'startup',label:'Startup',name:'Startup Launch',emoji:'🚀',route:'MVP launch',text:'Validation, pricing, launch checklist and execution plan',goal:'Works after Project DNA.'},
+        {key:'automation',label:'Automation',name:'AI & Automation',emoji:'⚙️',route:'Systems',text:'AI tools, automations, workflows and business systems',goal:'Works after Project DNA.'},
+        {key:'website',label:'Website',name:'IT / Website',emoji:'💻',route:'Web + SEO',text:'Landing page, SEO, performance, UI/UX and tech planning',goal:'Works after Project DNA.'},
+        {key:'images',label:'Brand',name:'Brand / Mockups',emoji:'🎨',route:'Logo + mockups',text:'Logo concept, brand board and category mockups',goal:'Runs after strategy.'}
       ];
       function stageIndex(stage){
         if(/complete|dev/.test(stage))return 3;
@@ -112,10 +133,10 @@
       }
       function agentStatus(agent,active,stage){
         if(agent===active)return stage.indexOf('generating')>-1?'Working':'Active';
-        if(agent==='images' && stageIndex(stage)>=2)return 'Ready';
-        if(agent==='dev' && stageIndex(stage)>=3)return 'Ready';
         if(agent==='talk')return 'Ready';
-        return 'After brief';
+        if(agent==='images' && stageIndex(stage)>=2)return 'Ready';
+        if(['market','strategy','marketing','crm','startup','automation','website'].indexOf(agent)>-1 && stageIndex(stage)>=1)return 'Project DNA';
+        return 'After DNA';
       }
       function useNamaaState(){
         var state=React.useState({agent:getActiveAgent(),stage:getFlowStage(),runtime:getRuntimeState()});
@@ -130,8 +151,9 @@
           var observer=new MutationObserver(refresh);
           observer.observe(document.body,{attributes:true,attributeFilter:['data-namaa-agent','data-namaa-flow-stage']});
           window.addEventListener('namaa:flow-stage',refresh);
+          window.addEventListener('namaa:project-dna',refresh);
           document.addEventListener('click',refresh,true);
-          return function(){observer.disconnect();window.removeEventListener('namaa:flow-stage',refresh);document.removeEventListener('click',refresh,true);window.cancelAnimationFrame(raf);};
+          return function(){observer.disconnect();window.removeEventListener('namaa:flow-stage',refresh);window.removeEventListener('namaa:project-dna',refresh);document.removeEventListener('click',refresh,true);window.cancelAnimationFrame(raf);};
         },[]);
         return value;
       }
@@ -184,17 +206,19 @@
       function AgentHub(){
         var state=useNamaaState();
         var currentIndex=stageIndex(state.stage);
+        var runtime=state.runtime || {};
+        var projectDNA=runtime.projectDNA || runtimeProjectDNA();
+        var dnaReady=!!(projectDNA && projectDNA.brief);
+        var activeBrief=dnaReady ? projectDNA.brief : (runtime.projectBrief || runtime.projectBriefDraft || {});
         var briefScore=0;
         try{
-          var runtime=state.runtime || {};
-          var brief=runtime.projectBrief || runtime.projectBriefDraft || {};
           var keys=['projectName','category','market','budget','goal','target','offer','channels'];
-          var filled=keys.filter(function(key){return brief && brief[key] && String(brief[key]).length;}).length;
-          briefScore=Math.round((filled/keys.length)*100);
+          var filled=keys.filter(function(key){return activeBrief && activeBrief[key] && String(activeBrief[key]).length;}).length;
+          briefScore=dnaReady ? Number(projectDNA.score || Math.round((filled/keys.length)*100)) : Math.round((filled/keys.length)*100);
         }catch(error){briefScore=0;}
         function statusTone(status,active){
           if(status==='Working')return 'warning';
-          if(active || status==='Ready')return 'success';
+          if(active || status==='Ready' || status==='DNA ready')return 'success';
           return 'default';
         }
         return h(ThemeProvider,{theme:theme},
@@ -203,12 +227,12 @@
               h(Stack,{direction:'row',alignItems:'center',spacing:1.1},
                 h(Avatar,{className:'namaa-mui-command-avatar'},'N'),
                 h(Box,{sx:{minWidth:0,flex:1}},
-                  h(Typography,{variant:'caption',sx:{display:'block',fontWeight:950,letterSpacing:'.08em',textTransform:'uppercase',color:'#8fb4ff'}},'Namaa command'),
-                  h(Typography,{variant:'body2',sx:{fontWeight:950,color:'#fff',lineHeight:1.1}},'Simple workspace')
+                  h(Typography,{variant:'caption',sx:{display:'block',fontWeight:950,letterSpacing:'.08em',textTransform:'uppercase',color:'#8fb4ff'}},dnaReady?'Project DNA active':'Namaa command'),
+                  h(Typography,{variant:'body2',sx:{fontWeight:950,color:'#fff',lineHeight:1.1}},dnaReady?(activeBrief.projectName || 'Project DNA ready'):'Simple workspace')
                 ),
-                h(Chip,{label:'U46',size:'small',sx:{height:24,borderRadius:'999px',bgcolor:'rgba(96,165,250,.16)',color:'#dbeafe'}})
+                h(Chip,{label:dnaReady?'DNA '+briefScore+'%':'U52',size:'small',sx:{height:24,borderRadius:'999px',bgcolor:dnaReady?'rgba(16,185,129,.16)':'rgba(96,165,250,.16)',color:dnaReady?'#bbf7d0':'#dbeafe'}})
               ),
-              h(Box,{className:'namaa-mui-command-progress',sx:{mt:1.25}},h('span',{style:{width:(Math.max(25,briefScore || ((currentIndex+1)*25)))+'%'}})),
+              h(Box,{className:'namaa-mui-command-progress',sx:{mt:1.25}},h('span',{style:{width:(Math.max(dnaReady?35:25,briefScore || ((currentIndex+1)*25)))+'%'}})),
               h(Stack,{direction:'row',spacing:.75,sx:{mt:1.25}},
                 h(Button,{variant:'contained',size:'small',onClick:function(){flowAction('build-project-flow');},sx:{flex:1,bgcolor:'#2563eb','&:hover':{bgcolor:'#1d4ed8'}}},'Build'),
                 h(Button,{variant:'outlined',size:'small',onClick:function(){flowAction('free-talk-mode');},sx:{flex:1,color:'#dbeafe',borderColor:'rgba(219,234,254,.25)','&:hover':{borderColor:'rgba(219,234,254,.45)',bgcolor:'rgba(255,255,255,.06)'}}},'Free Talk')
@@ -218,9 +242,9 @@
             h(Typography,{variant:'caption',sx:{px:.5,color:'#9fb1cc',fontWeight:950,letterSpacing:'.08em',textTransform:'uppercase'}},'Agent Hub'),
             agents.map(function(agent,index){
               var active=state.agent===agent.key;
-              var status=agentStatus(agent.key,state.agent,state.stage);
+              var status=dnaReady && agent.key!=='talk' ? 'DNA ready' : agentStatus(agent.key,state.agent,state.stage);
               var working=status==='Working';
-              var available=agent.key==='talk' || status==='Ready' || active || currentIndex>=index;
+              var available=agent.key==='talk' || dnaReady || status==='Ready' || active || currentIndex>=index;
               return h(Grow,{key:agent.key,in:true,timeout:240+(index*70)},
                 h(Paper,{elevation:0,className:'namaa-mui-agent-card namaa-mui-agent-card-v36 '+(active?'is-active':'')+' '+(available?'is-available':'is-locked')},
                   h(ButtonBase,{onClick:function(){activateAgent(agent.key);},sx:{width:'100%',borderRadius:'20px',textAlign:'left',display:'block'}},
@@ -234,7 +258,7 @@
                       ),
                       h(Chip,{label:status,size:'small',color:statusTone(status,active),sx:{height:24,borderRadius:'999px',fontSize:10,bgcolor:active?'rgba(16,185,129,.16)':'rgba(255,255,255,.08)',color:active?'#bbf7d0':'#b8c5d8'}})
                     ),
-                    h(Typography,{variant:'caption',className:'namaa-mui-agent-goal'},agent.goal),
+                    h(Typography,{variant:'caption',className:'namaa-mui-agent-goal'},dnaReady && agent.key!=='talk' ? ('Uses DNA: '+(activeBrief.projectName || 'active project')) : agent.goal),
                     working?h(LinearProgress,{sx:{mt:1.15,borderRadius:99,height:4,bgcolor:'rgba(255,255,255,.08)'}}):null
                   )
                 )
@@ -271,13 +295,10 @@
       }
 
       var rootSlots=[];
-      if(dock)rootSlots.push([dock,ModeDock]);
-      var stepperSlot=ensureSlot('namaaMuiFactoryStepper','namaa-mui-slot',hero,{after:document.querySelector('.namaa-entry-grid') || document.querySelector('.namaa-factory-strip')});
-      if(stepperSlot)rootSlots.push([stepperSlot,FactoryStepper]);
+      // Update 48: keep the Home screen clean. No factory stepper or extra topbar widgets on the chat home.
+      // The premium MUI layer now enhances only the Namaa Agents sidebar.
       var hubSlot=ensureSlot('namaaMuiAgentHub','namaa-mui-sidebar-slot',sidebar,'append');
       if(hubSlot)rootSlots.push([hubSlot,AgentHub]);
-      var statusSlot=ensureSlot('namaaMuiFactoryStatus','namaa-mui-status-slot',topbar,{after:topbar});
-      if(statusSlot)rootSlots.push([statusSlot,FactoryStatus]);
 
       rootSlots.forEach(function(item){
         var el=item[0];

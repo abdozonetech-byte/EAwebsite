@@ -49,3 +49,18 @@
 .namaa-mui-sidebar-slot{border-top:0;margin-top:10px;padding-top:0}.namaa-mui-loaded .namaa-sidebar-flow-map{display:none}
 @media(max-width:1280px){.namaa-sidebar-cockpit{display:none}.namaa-mui-base-ready .namaa-sidebar-section > .namaa-agent-link{display:flex}}
 @media(max-width:760px){.namaa-mui-agent-goal{display:none}.namaa-sidebar-cockpit{display:block;padding:11px;border-radius:20px}.namaa-cockpit-grid{gap:5px}.namaa-cockpit-grid small{font-size:8.5px}.namaa-cockpit-actions button{min-height:34px;font-size:11.5px}}
+
+/* Namaa Update 48 — MUI enhancer limited to Agents sidebar only */
+.namaa-mui-base-ready .namaa-template-rebuild .namaa-sidebar-section > .namaa-agent-link{display:none}
+.namaa-template-rebuild #namaaMuiAgentHub{display:block!important}
+.namaa-template-rebuild #namaaMuiFactoryStepper,
+.namaa-template-rebuild #namaaMuiFactoryStatus{display:none!important}
+.namaa-mui-agent-card-v36{animation:namaaAgentFade48 .42s cubic-bezier(.2,.8,.2,1) both}
+.namaa-mui-agent-card-v36.is-locked{opacity:.78}
+.namaa-mui-agent-card-v36.is-locked:hover{opacity:1}
+@keyframes namaaAgentFade48{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+
+/* Namaa Update 52 — Project DNA-aware MUI agent hub */
+.namaa-mui-agent-card-v36.is-available{border-color:rgba(52,211,153,.14)!important}
+.namaa-mui-agent-card-v36.is-available .namaa-mui-agent-route{background:rgba(16,185,129,.12);color:#bbf7d0!important}
+.namaa-mui-command-card .MuiChip-root{font-weight:950}

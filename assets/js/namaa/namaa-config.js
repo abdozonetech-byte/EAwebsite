@@ -1,7 +1,7 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u42-design-agent-factory',
+    version:'20260622-u56-final-qa-agent-flow',
     api:{
       enabled:true,
       provider:'gemini',
@@ -20,7 +20,7 @@
       normalChatMaxWords:100,
       smartBriefBuilder:true,
       deliverableRequiresConfirmation:true,
-      imagePackEngine:'category-based-logo-mockup-board-v42-factory-animation',
+      imagePackEngine:'category-based-logo-mockup-board-v56-final-qa',
       marketTaxonomy:'morocco-categories-cities-v39',
       keysLocation:'server-environment-only'
     },
@@ -29,11 +29,11 @@
         id:'talk',
         label:'Namaa Talk',
         bodyClass:'talk',
-        placeholder:'Talk to Namaa about your project, AI, startup, marketing in Morocco...',
+        placeholder:'Free Talk: ask Namaa about business, AI, IT, marketing, startups in Morocco...',
         hero:{
           kicker:'Namaa Talk',
-          title:'Free Talk ou Project Factory : choisissez votre chemin.',
-          intro:'Parlez librement business/AI/IT, ou lancez un parcours guidé avec Strategy Agent, Design Agent et Web Agent.'
+          title:'Namaa AI Talk — free chat first, Project Build when needed.',
+          intro:'Free Talk huwa chat only. Ila bghiti agents ykhdmo result ready, Project Build kayjme3 Project DNA f popup organised.'
         }
       },
       images:{
@@ -61,9 +61,9 @@
     },
     promptChips:[
       {index:'01',label:'Free Talk',prompt:'Salam Namaa, bghit nhder 3la business idea'},
-      {index:'02',label:'Build Project',prompt:'Lancer le brief projet avec catégorie, ville, budget et objectif'},
-      {index:'03',label:'Strategy Agent',prompt:'Je veux préparer une market research PDF pour mon projet'},
-      {index:'04',label:'Design Agent',prompt:'Je veux créer un logo et des mockups pour mon projet'}
+      {index:'02',label:'Project Build',prompt:'Lancer le brief projet'},
+      {index:'03',label:'Morocco Market',prompt:'Bghit research 3la market f Morocco l project dyali'},
+      {index:'04',label:'Project DNA',prompt:'Bghit nbni Project DNA bach agents ykhdmo 3lih'}
     ],
     ui:{
       apiBadgeText:'Namaa modes',
