@@ -11,16 +11,60 @@
       endpoints:(config.api || {})
     };
   }
-  function pdfPlaceholder(lastQuestion){
+  var PDF_DOCUMENTS={
+    market_research:{
+      key:'market_research',
+      badge:'Market Research PDF',
+      shortTitle:'Market Research',
+      title:'Market Research PDF',
+      tag:'Market research · Morocco',
+      intro:'A clear market diagnosis for Morocco: customer behavior, alternatives, opportunity gap, risks and validation plan.',
+      icon:'🔎',
+      sectionTitle:'Market research Maroc',
+      sections:['Project snapshot','Morocco market context','Target customer behavior','Competitors and alternatives','Opportunity gap','Risks and assumptions','Positioning recommendation','7-day validation plan'],
+      next:['📈 Convert insights into a marketing strategy.','🎨 Create logo + category mockups.','💻 Build a landing page prototype.'],
+      footer:'Market research document — not a legal, financial or live-statistics report.'
+    },
+    marketing_strategy:{
+      key:'marketing_strategy',
+      badge:'Marketing Strategy PDF',
+      shortTitle:'Marketing Strategy',
+      title:'Marketing Strategy PDF',
+      tag:'Marketing strategy · 30 days',
+      intro:'A practical marketing plan: positioning, funnel, ads, content, WhatsApp script, budget split and KPIs.',
+      icon:'📈',
+      sectionTitle:'Stratégie marketing 30 jours',
+      sections:['Executive summary','Positioning and offer message','Funnel content → WhatsApp/landing page','30-day action plan','Ads plan','Budget split in MAD','Content ideas','WhatsApp sales script','KPIs and next actions'],
+      next:['🎨 Create a matching visual identity and mockup pack.','💻 Turn the strategy into a landing page.','📲 Launch a small WhatsApp/ads test.'],
+      footer:'Marketing strategy document — built for practical testing and iteration.'
+    },
+    roadmap:{
+      key:'roadmap',
+      badge:'Launch Roadmap PDF',
+      shortTitle:'Launch Roadmap',
+      title:'Launch Roadmap PDF',
+      tag:'Roadmap · launch plan',
+      intro:'A simple launch roadmap: week-by-week execution, tasks, KPIs and decision rules for the project.',
+      icon:'🗺️',
+      sectionTitle:'Roadmap lancement',
+      sections:['Project objective','Week 1: offer and proof','Week 2: content and landing page','Week 3: ads and first leads','Week 4: optimization and scale decision','Task checklist','KPIs and decision rules'],
+      next:['🔎 Validate market assumptions.','🎨 Create visual assets for launch.','💻 Build the landing page demo.'],
+      footer:'Launch roadmap document — focused on action, not theory.'
+    }
+  };
+  function normalizePdfType(type){
+    type=String(type || '').trim();
+    if(type==='market_research' || type==='marketing_strategy' || type==='roadmap')return type;
+    return 'marketing_strategy';
+  }
+  function pdfDocConfig(type){return PDF_DOCUMENTS[normalizePdfType(type)] || PDF_DOCUMENTS.marketing_strategy;}
+  function pdfPlaceholder(lastQuestion,type){
+    var doc=pdfDocConfig(type);
     var context=lastQuestion?'<p><strong>Base :</strong> '+utils.escapeHtml(lastQuestion)+'</p>':'';
-    return '<h2>PDF Strategy is ready.</h2>'+context+
-      '<p>Namaa Talk can transform the guided project brief into a clean strategy document.</p>'+ 
+    return '<h2>'+utils.escapeHtml(doc.title)+' is ready.</h2>'+context+
+      '<p>Namaa Talk can transform the guided project brief into a clean branded document.</p>'+ 
       '<ol class="namaa-pdf-steps">'+
-        '<li>Project summary</li>'+ 
-        '<li>Moroccan market diagnosis</li>'+ 
-        '<li>Offer + target audience</li>'+ 
-        '<li>30-day action plan</li>'+ 
-        '<li>WhatsApp script and CTA</li>'+ 
+        doc.sections.slice(0,6).map(function(item){return '<li>'+utils.escapeHtml(item)+'</li>';}).join('')+
       '</ol>';
   }
   function stripHtml(html){
@@ -57,40 +101,53 @@
         .replace(/\son\w+="[^"]*"/gi,'')
         .replace(/\son\w+='[^']*'/gi,'');
     }
-    return '<p>'+utils.escapeHtml(text || 'La stratégie sera générée après le brief guidé.').replace(/\n/g,'<br>')+'</p>';
+    return '<p>'+utils.escapeHtml(text || 'Le document sera généré après le brief guidé.').replace(/\n/g,'<br>')+'</p>';
+  }
+  function renderSectionChips(items){
+    return (items || []).map(function(item,i){
+      var num=(utils.pad2 ? utils.pad2(i+1) : String(i+1).padStart(2,'0'));
+      return '<span><b>'+num+'</b>'+utils.escapeHtml(item)+'</span>';
+    }).join('');
   }
   function renderStrategyPreview(payload){
     payload=payload || {};
     var brief=payload.brief || {};
+    var doc=pdfDocConfig(payload.documentType || payload.deliverableType || payload.action);
     var strategyHtml=cleanStrategyHtml(payload.strategyHtml,payload.strategyText);
     var title=brief.projectName || 'Projet Namaa';
-    return '<article class="namaa-pdf-preview">'+
+    return '<article class="namaa-pdf-preview namaa-pdf-preview-branded" data-pdf-type="'+utils.escapeHtml(doc.key)+'">'+
       '<header class="namaa-pdf-preview-cover">'+
-        '<span>Namaa Strategy PDF</span>'+
-        '<h2>'+utils.escapeHtml(title)+'</h2>'+
-        '<p>Mini market search, positionnement, stratégie 30 jours, budget, WhatsApp scripts et KPI.</p>'+ 
+        '<div class="namaa-pdf-preview-brand"><img src="/assets/images/logo-e-blue.png" alt="Namaa logo"><div><strong>Namaa AI</strong><small>by Elboubakry Abdessamad</small></div></div>'+ 
+        '<span>'+utils.escapeHtml(doc.tag)+'</span>'+
+        '<h2>'+utils.escapeHtml(title)+'</h2>'+ 
+        '<p>'+utils.escapeHtml(doc.intro)+'</p>'+ 
       '</header>'+ 
       '<section class="namaa-pdf-preview-meta">'+
+        '<div><small>Document</small><strong>'+utils.escapeHtml(doc.shortTitle)+'</strong></div>'+ 
         '<div><small>Marché</small><strong>'+utils.escapeHtml(brief.market || 'Maroc')+'</strong></div>'+ 
-        '<div><small>Catégorie</small><strong>'+utils.escapeHtml(brief.category || 'Business')+'</strong></div>'+ 
         '<div><small>Objectif</small><strong>'+utils.escapeHtml(brief.goal || 'Croissance')+'</strong></div>'+ 
       '</section>'+ 
+      '<section class="namaa-pdf-preview-map"><h3>Structure du PDF</h3><div>'+renderSectionChips(doc.sections)+'</div></section>'+ 
       '<section class="namaa-pdf-preview-brief"><h3>Brief projet</h3><table>'+makeBriefTable(brief)+'</table></section>'+ 
-      '<section class="namaa-pdf-preview-strategy"><h3>Market search + stratégie</h3>'+strategyHtml+'</section>'+ 
-      '<footer class="namaa-pdf-preview-footer"><strong>Next:</strong> mockup visuel → landing page simple → diagnostic avec Abdessamad.</footer>'+ 
+      '<section class="namaa-pdf-preview-strategy"><h3>'+utils.escapeHtml(doc.sectionTitle)+'</h3>'+strategyHtml+'</section>'+ 
+      '<footer class="namaa-pdf-preview-footer"><strong>Prepared by Namaa AI — Elboubakry Abdessamad.</strong><br>'+utils.escapeHtml(doc.footer)+'</footer>'+ 
     '</article>';
   }
   function openStrategyPdf(payload){
     payload=payload || {};
     var brief=payload.brief || {};
+    var doc=pdfDocConfig(payload.documentType || payload.deliverableType || payload.action);
     var strategyHtml=cleanStrategyHtml(payload.strategyHtml,payload.strategyText);
-    var title='Namaa Strategy - '+(brief.projectName || 'Project');
+    var title='Namaa '+doc.shortTitle+' - '+(brief.projectName || 'Project');
     var date=new Date().toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
-    var doc='<!doctype html><html><head><meta charset="utf-8"><title>'+utils.escapeHtml(title)+'</title><style>'+ 
-      '@page{size:A4;margin:16mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#07152f;background:#fff;line-height:1.55}.page{min-height:100vh}.cover{position:relative;overflow:hidden;border-radius:28px;padding:34px 34px 30px;background:radial-gradient(circle at 85% 15%,#bfdbfe,transparent 32%),linear-gradient(135deg,#07152f,#123a85 55%,#2563eb);color:#fff}.cover:after{content:"";position:absolute;right:-80px;bottom:-110px;width:260px;height:260px;border-radius:999px;background:rgba(255,255,255,.10)}.brand{display:flex;align-items:center;gap:10px;margin-bottom:32px}.brand img{width:42px;height:42px;border-radius:14px;background:#fff}.brand strong{font-size:16px;letter-spacing:.02em}.tag{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.cover h1{max-width:720px;margin:12px 0 12px;font-size:44px;line-height:.98;letter-spacing:-.055em}.cover p{max-width:640px;margin:0;color:#dbeafe;font-size:16px}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:26px}.meta div{padding:14px;border-radius:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}.meta small{display:block;color:#bfdbfe;text-transform:uppercase;font-size:10px;font-weight:900;letter-spacing:.1em}.meta b{display:block;margin-top:4px;font-size:14px}section{margin-top:22px}.section-title{display:flex;align-items:center;gap:10px;margin:0 0 12px}.section-title span{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#dbeafe;color:#2563eb;font-size:12px;font-weight:900}.section-title h2{margin:0;font-size:23px;line-height:1.1;letter-spacing:-.035em;color:#0b255d}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #dbeafe;border-radius:18px}th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #e7f0ff;vertical-align:top}tr:last-child th,tr:last-child td{border-bottom:0}th{width:30%;background:#eff6ff;color:#1d4ed8;font-size:12px;text-transform:uppercase;letter-spacing:.06em}td{color:#1f3557;font-weight:700}.strategy{border:1px solid #dbeafe;border-radius:22px;padding:22px;background:linear-gradient(180deg,#fbfdff,#fff)}.strategy h2,.strategy h3{break-after:avoid;color:#0b255d;letter-spacing:-.035em}.strategy h2{font-size:22px;margin:18px 0 9px}.strategy h3{font-size:18px;margin:15px 0 8px}.strategy p{color:#334155;margin:8px 0}.strategy ul,.strategy ol{padding-left:20px;color:#334155}.strategy li{margin:6px 0}.next{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}.next div{padding:14px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#0b255d;font-weight:800}.footer{margin-top:26px;padding-top:14px;border-top:1px solid #dbeafe;display:flex;justify-content:space-between;gap:14px;color:#64748b;font-size:12px}.print-button{position:fixed;right:18px;bottom:18px;z-index:10;border:0;border-radius:999px;background:#2563eb;color:#fff;font-weight:900;padding:14px 18px;box-shadow:0 16px 40px rgba(37,99,235,.28);cursor:pointer}@media print{.print-button{display:none}.cover{print-color-adjust:exact;-webkit-print-color-adjust:exact}.strategy{break-inside:auto}.next div{break-inside:avoid}}'+
-      '</style></head><body><button class="print-button" onclick="window.print()">Save / Print PDF</button><main class="page"><section class="cover"><div class="brand"><img src="/assets/images/logo-e-blue.png" alt=""><strong>Namaa AI by Elboubakry</strong></div><span class="tag">Market search + strategy</span><h1>'+utils.escapeHtml(brief.projectName || 'Stratégie projet')+'</h1><p>Document généré pour transformer le brief en stratégie claire, mockup visuel et landing page simple.</p><div class="meta"><div><small>Date</small><b>'+utils.escapeHtml(date)+'</b></div><div><small>Marché</small><b>'+utils.escapeHtml(brief.market || 'Maroc')+'</b></div><div><small>Objectif</small><b>'+utils.escapeHtml(brief.goal || 'Croissance')+'</b></div></div></section><section><div class="section-title"><span>01</span><h2>Brief projet</h2></div><table>'+makeBriefTable(brief)+'</table></section><section><div class="section-title"><span>02</span><h2>Market search + stratégie</h2></div><div class="strategy">'+strategyHtml+'</div></section><section><div class="section-title"><span>03</span><h2>Suite recommandée</h2></div><div class="next"><div>🎨 Créer logo + mockups adaptés à la catégorie.</div><div>💻 Générer une landing page simple HTML/CSS/JS.</div><div>📲 Tester l’offre avec WhatsApp + ads légères.</div></div></section><p class="footer"><span>Namaa AI · elboubakry.com</span><span>Document de diagnostic et stratégie — usage business.</span></p></main><script>window.onload=function(){setTimeout(function(){window.print()},420)}<\/script></body></html>';
+    var nextCards=(doc.next || []).map(function(item){return '<div>'+utils.escapeHtml(item)+'</div>';}).join('');
+    var structure=(doc.sections || []).map(function(item,i){return '<li><b>'+String(i+1).padStart(2,'0')+'</b><span>'+utils.escapeHtml(item)+'</span></li>';}).join('');
+    var safeTitle=utils.escapeHtml(brief.projectName || doc.title);
+    var docHtml='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+utils.escapeHtml(title)+'</title><style>'+ 
+      '@page{size:A4;margin:15mm}*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:#07152f;background:#fff;line-height:1.55}.page{min-height:100vh}.cover{position:relative;overflow:hidden;border-radius:30px;padding:34px 34px 30px;background:radial-gradient(circle at 82% 12%,#bfdbfe,transparent 34%),linear-gradient(135deg,#07152f 0%,#0f2f6d 47%,#2563eb 100%);color:#fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}.cover:before{content:"";position:absolute;left:-80px;top:-110px;width:270px;height:270px;border-radius:999px;background:rgba(255,255,255,.08)}.cover:after{content:"";position:absolute;right:-92px;bottom:-120px;width:300px;height:300px;border-radius:999px;background:rgba(255,255,255,.11)}.brand{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:34px}.brand-main{display:flex;align-items:center;gap:12px}.brand img{width:48px;height:48px;border-radius:16px;background:#fff;padding:6px;box-shadow:0 12px 34px rgba(0,0,0,.16)}.brand strong{display:block;font-size:18px;letter-spacing:-.02em}.brand small{display:block;color:#bfdbfe;font-size:12px;font-weight:800}.brand-code{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.14);font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#dbeafe}.tag{position:relative;z-index:1;display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.cover h1{position:relative;z-index:1;max-width:760px;margin:13px 0 12px;font-size:44px;line-height:.98;letter-spacing:-.055em}.cover p{position:relative;z-index:1;max-width:660px;margin:0;color:#dbeafe;font-size:16px}.meta{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px}.meta div{padding:13px;border-radius:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}.meta small{display:block;color:#bfdbfe;text-transform:uppercase;font-size:9px;font-weight:900;letter-spacing:.1em}.meta b{display:block;margin-top:4px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}section{margin-top:22px}.section-title{display:flex;align-items:center;gap:10px;margin:0 0 12px}.section-title span{display:grid;place-items:center;width:31px;height:31px;border-radius:11px;background:#dbeafe;color:#2563eb;font-size:12px;font-weight:900}.section-title h2{margin:0;font-size:23px;line-height:1.1;letter-spacing:-.035em;color:#0b255d}.doc-map{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0;padding:0;list-style:none}.doc-map li{display:flex;gap:9px;align-items:center;padding:10px 11px;border-radius:15px;background:#f8fbff;border:1px solid #dbeafe;color:#334155;font-size:12px;font-weight:800}.doc-map b{display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#eaf2ff;color:#1d4ed8;font-size:10px;flex:0 0 auto}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #dbeafe;border-radius:18px}th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #e7f0ff;vertical-align:top}tr:last-child th,tr:last-child td{border-bottom:0}th{width:30%;background:#eff6ff;color:#1d4ed8;font-size:11px;text-transform:uppercase;letter-spacing:.06em}td{color:#1f3557;font-weight:700}.content{border:1px solid #dbeafe;border-radius:22px;padding:22px;background:linear-gradient(180deg,#fbfdff,#fff)}.content h1,.content h2,.content h3{break-after:avoid;color:#0b255d;letter-spacing:-.035em}.content h1{font-size:24px}.content h2{font-size:21px;margin:18px 0 9px}.content h3{font-size:17px;margin:15px 0 8px}.content p{color:#334155;margin:8px 0}.content ul,.content ol{padding-left:20px;color:#334155}.content li{margin:6px 0}.next{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}.next div{padding:14px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#0b255d;font-weight:800}.footer{margin-top:26px;padding-top:14px;border-top:1px solid #dbeafe;display:flex;justify-content:space-between;gap:14px;color:#64748b;font-size:12px}.footer b{color:#1d4ed8}.print-button{position:fixed;right:18px;bottom:18px;z-index:10;border:0;border-radius:999px;background:#2563eb;color:#fff;font-weight:900;padding:14px 18px;box-shadow:0 16px 40px rgba(37,99,235,.28);cursor:pointer}@media(max-width:720px){.cover h1{font-size:34px}.meta{grid-template-columns:1fr 1fr}.doc-map{grid-template-columns:1fr}.next{grid-template-columns:1fr}}@media print{.print-button{display:none}.cover{break-inside:avoid}.content{break-inside:auto}.doc-map li,.next div{break-inside:avoid}}'+
+      '</style></head><body><button class="print-button" onclick="window.print()">Save / Print PDF</button><main class="page"><section class="cover"><div class="brand"><div class="brand-main"><img src="/assets/images/logo-e-blue.png" alt="Namaa logo"><div><strong>Namaa AI</strong><small>by Elboubakry Abdessamad · elboubakry.com</small></div></div><div class="brand-code">'+utils.escapeHtml(doc.badge)+'</div></div><span class="tag">'+utils.escapeHtml(doc.tag)+'</span><h1>'+safeTitle+'</h1><p>'+utils.escapeHtml(doc.intro)+'</p><div class="meta"><div><small>Date</small><b>'+utils.escapeHtml(date)+'</b></div><div><small>Document</small><b>'+utils.escapeHtml(doc.shortTitle)+'</b></div><div><small>Marché</small><b>'+utils.escapeHtml(brief.market || 'Maroc')+'</b></div><div><small>Objectif</small><b>'+utils.escapeHtml(brief.goal || 'Croissance')+'</b></div></div></section><section><div class="section-title"><span>01</span><h2>Brief projet</h2></div><table>'+makeBriefTable(brief)+'</table></section><section><div class="section-title"><span>02</span><h2>Structure du document</h2></div><ul class="doc-map">'+structure+'</ul></section><section><div class="section-title"><span>03</span><h2>'+utils.escapeHtml(doc.sectionTitle)+'</h2></div><div class="content">'+strategyHtml+'</div></section><section><div class="section-title"><span>04</span><h2>Suite recommandée</h2></div><div class="next">'+nextCards+'</div></section><p class="footer"><span><b>Namaa AI</b> · Prepared by Elboubakry Abdessamad</span><span>'+utils.escapeHtml(doc.footer)+'</span></p></main><script>window.onload=function(){setTimeout(function(){window.print()},420)}<\/script></body></html>';
     var win=window.open('','_blank','noopener,noreferrer');
-    if(win){win.document.open();win.document.write(doc);win.document.close();}
+    if(win){win.document.open();win.document.write(docHtml);win.document.close();}
     return stripHtml(strategyHtml);
   }
   function uploadPlaceholder(files){
@@ -273,13 +330,54 @@
     });
   }
 
+
+  function renderSmartBriefCoach(data){
+    var status=data && data.briefStatus;
+    if(!status || !data.shortMode || status.isReady)return '';
+    var missing=Array.isArray(status.missingFields)?status.missingFields:[];
+    var questions=Array.isArray(status.nextQuestions)?status.nextQuestions:[];
+    if(!missing.length && !questions.length)return '';
+    var score=Number(status.score || data.briefReadiness || 0);
+    var chips=missing.slice(0,5).map(function(field){return '<span>'+utils.escapeHtml(field.shortLabel || field.label || field.key)+'</span>';}).join('');
+    var qs=questions.slice(0,2).map(function(q){return '<li>'+utils.escapeHtml(q)+'</li>';}).join('');
+    return '<div class="namaa-brief-coach" data-readiness="'+utils.escapeHtml(score)+'">'+
+      '<div class="namaa-brief-coach-top"><span>Brief intelligence</span><strong>'+utils.escapeHtml(score)+'% prêt</strong></div>'+ 
+      '<div class="namaa-brief-meter"><i style="width:'+Math.max(8,Math.min(100,score))+'%"></i></div>'+ 
+      '<div class="namaa-brief-missing">'+chips+'</div>'+ 
+      (qs?'<ol>'+qs+'</ol>':'')+ 
+      '<p>Namaa garde la discussion courte, puis construit le prompt fort en backend quand le brief est prêt.</p>'+ 
+    '</div>';
+  }
+
+  function renderTalkActions(actions, data){
+    actions=Array.isArray(actions)?actions:[];
+    if(!actions.length)return '';
+    var buttons=actions.map(function(action){
+      var id=action.id || action;
+      var label=action.label || id;
+      var icon=id==='market_research'?'🔎':id==='marketing_strategy'?'📈':id==='roadmap'?'🗺️':id==='guided_brief'?'🧭':'✨';
+      var attr=id==='guided_brief'?'data-flow-action="guided-intake"':'data-talk-action="'+utils.escapeHtml(id)+'"';
+      return '<button class="namaa-mini-button '+(id==='guided_brief'?'secondary':'')+'" type="button" '+attr+'><span>'+icon+'</span>'+utils.escapeHtml(label)+'</button>';
+    }).join('');
+    return '<div class="namaa-action-card namaa-controller-card"><div><span>⚡</span><strong>Namaa peut préparer la suite</strong><p>Choisissez le document à générer. Le prompt fort est construit automatiquement dans le backend.</p></div><div class="namaa-flow-actions">'+buttons+'</div></div>';
+  }
+
   function talkApi(question,history,options){
     options=options || {};
     var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.textEndpoint) || '/api/namaa/talk';
-    return postJson(endpoint,{message:question,history:history || [],brief:options.brief || null,controlled:!!options.brief,mode:'talk'}).then(function(data){
+    return postJson(endpoint,{message:question,history:history || [],brief:options.brief || null,action:options.action || null,controlled:!!options.brief,mode:'talk'}).then(function(data){
+      var label=data.deliverableLabel || (data.shortMode ? 'Conversation courte' : 'Document business');
+      var html='<div class="namaa-answer-head"><span>Namaa Talk</span><strong>'+utils.escapeHtml(label)+'</strong></div>'+textToHtml(data.answer || '');
+      html+=renderSmartBriefCoach(data);
+      html+=renderTalkActions(data.actions || [],data);
+      var state={lastTalkQuestion:question};
+      if(data.brief){state.projectBrief=data.brief;}
+      if(data.briefPatch){state.projectBriefPatch=data.briefPatch;}
+      if(data.briefStatus){state.briefStatus=data.briefStatus;}
+      state.lastDeliverableType=data.shortMode ? '' : (data.action || '');
       return {
-        answerHtml:'<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Advisor business</strong></div>'+textToHtml(data.answer || ''),
-        state:{lastTalkQuestion:question}
+        answerHtml:html,
+        state:state
       };
     });
   }

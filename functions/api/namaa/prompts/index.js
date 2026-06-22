@@ -1,0 +1,18 @@
+import { buildMarketResearchPrompt } from './market-research.js';
+import { buildMarketingStrategyPrompt } from './marketing-strategy.js';
+import { buildRoadmapPrompt } from './roadmap.js';
+
+export { NAMAA_TALK_SYSTEM_PROMPT } from './system-talk.js';
+export { buildMarketResearchPrompt } from './market-research.js';
+export { buildMarketingStrategyPrompt } from './marketing-strategy.js';
+export { buildRoadmapPrompt } from './roadmap.js';
+export { buildImageMockupPrompt } from './image-mockup.js';
+export { NAMAA_DEV_SYSTEM_PROMPT, buildWebsiteTemplatePrompt } from './website-template.js';
+export { INTENT_ROUTER_SCHEMA } from './intent-router.js';
+
+export function buildDeliverablePrompt(action, brief, language) {
+  const normalized = String(action || '').trim();
+  if (normalized === 'market_research') return buildMarketResearchPrompt({ brief, language });
+  if (normalized === 'roadmap') return buildRoadmapPrompt({ brief, language });
+  return buildMarketingStrategyPrompt({ brief, language });
+}

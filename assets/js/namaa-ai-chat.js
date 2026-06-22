@@ -31,7 +31,7 @@
 
   var currentAgent='talk';
   var history=[];
-  var appState={lastTalkQuestion:'',lastDevFiles:null,projectBrief:null,lastStrategyText:'',lastStrategyHtml:'',flowStage:'intake',lastMockupQuestion:'',lastDevQuestion:''};
+  var appState={lastTalkQuestion:'',lastDevFiles:null,projectBrief:null,lastStrategyText:'',lastStrategyHtml:'',flowStage:'intake',lastMockupQuestion:'',lastDevQuestion:'',lastDeliverableType:'',createdDocuments:{}};
 
   if(!form || !input || !thread)return;
 
@@ -141,13 +141,36 @@
       return '<span class="'+klass+'"><b>'+icons[step]+'</b>'+labels[step]+'</span>';
     }).join('')+'</div>';
   }
+  function pdfDocLabel(type){
+    var labels={market_research:'Market Research PDF',marketing_strategy:'Marketing Strategy PDF',roadmap:'Launch Roadmap PDF'};
+    return labels[type] || 'Namaa PDF';
+  }
   function pdfReadyCardHtml(){
+    var type=appState.lastDeliverableType || 'marketing_strategy';
+    var label=pdfDocLabel(type);
+    var nextText=type==='market_research' ? 'Après téléchargement, Namaa vous proposera de transformer ce diagnostic en Marketing Strategy PDF.' : (type==='roadmap' ? 'Après téléchargement, Namaa vous proposera la stratégie marketing détaillée ou le mockup.' : 'Après téléchargement, Namaa vous proposera le logo et les mockups adaptés au projet.');
     return flowProgressHtml('strategy')+
-      '<div class="namaa-pdf-card namaa-flow-card namaa-pdf-ready-card"><div><span>📄</span><strong>Market search + stratégie prêts</strong><p>Le PDF est organisé avec diagnostic marché, cible, plan 30 jours, budget, scripts WhatsApp et KPI. Après téléchargement, Namaa passera automatiquement au mockup.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button secondary" type="button" data-namaa-pdf-preview="true">Aperçu PDF</button><button class="namaa-mini-button" type="button" data-namaa-pdf="true">Télécharger le PDF</button></div></div>';
+      '<div class="namaa-pdf-card namaa-flow-card namaa-pdf-ready-card" data-current-pdf-type="'+utils.escapeHtml(type)+'"><div><span>📄</span><strong>'+utils.escapeHtml(label)+' prêt</strong><p>Le document est brandé Namaa + Elboubakry : logo, couverture, brief, contenu structuré et prochaines étapes. '+utils.escapeHtml(nextText)+'</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button secondary" type="button" data-namaa-pdf-preview="true">Aperçu PDF</button><button class="namaa-mini-button" type="button" data-namaa-pdf="true">Télécharger le PDF</button></div></div>';
+  }
+  function documentChoiceCardHtml(){
+    return flowProgressHtml('strategy')+
+      '<div class="namaa-action-card namaa-controller-card namaa-document-choice"><div><span>🧠</span><strong>Brief prêt. On choisit le bon document.</strong><p>Namaa ne génère pas un long résultat sans votre accord. Chaque choix lance un prompt fort Gemini en backend et un PDF brandé Namaa + Elboubakry.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-talk-action="market_research"><span>🔎</span>Market Research PDF</button><button class="namaa-mini-button" type="button" data-talk-action="marketing_strategy"><span>📈</span>Marketing Strategy PDF</button><button class="namaa-mini-button secondary" type="button" data-talk-action="roadmap"><span>🗺️</span>Roadmap PDF</button></div></div>';
   }
   function imagesEntryCardHtml(){
     return flowProgressHtml('images')+
       '<div class="namaa-flow-card namaa-next-step namaa-agent-handoff"><div><span>🎨</span><strong>PDF téléchargé. Passons au mockup.</strong><p>Je peux créer un pack visuel adapté à votre catégorie : logo concept, mockup principal, social/flyer et direction premium. Vous avez une idée précise ou je laisse Namaa être créatif ?</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-flow-action="creative-mockup">Laisse Namaa être créatif</button><button class="namaa-mini-button secondary" type="button" data-flow-action="custom-mockup">J’ai une idée</button></div></div>';
+  }
+  function marketToStrategyCardHtml(){
+    return flowProgressHtml('strategy')+
+      '<div class="namaa-flow-card namaa-next-step namaa-agent-handoff namaa-handoff-choice"><div><span>📈</span><strong>Market research téléchargé. On transforme ça en stratégie ?</strong><p>Le diagnostic marché est prêt. La suite logique est une Marketing Strategy PDF avec plan 30 jours, budget, contenu, WhatsApp et KPIs. Vous pouvez aussi passer directement au mockup.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-flow-action="create-marketing-strategy">Créer Marketing Strategy</button><button class="namaa-mini-button secondary" type="button" data-flow-action="skip-to-images">Passer au mockup</button></div></div>';
+  }
+  function roadmapToNextCardHtml(){
+    return flowProgressHtml('strategy')+
+      '<div class="namaa-flow-card namaa-next-step namaa-agent-handoff namaa-handoff-choice"><div><span>🗺️</span><strong>Roadmap téléchargée. Quelle suite ?</strong><p>Vous avez le plan d’exécution. Namaa peut maintenant préparer la stratégie marketing détaillée ou passer au pack visuel.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-flow-action="create-marketing-strategy">Créer Marketing Strategy</button><button class="namaa-mini-button secondary" type="button" data-flow-action="skip-to-images">Passer au mockup</button></div></div>';
+  }
+  function strategyToImagesCardHtml(){
+    return flowProgressHtml('images')+
+      '<div class="namaa-flow-card namaa-next-step namaa-agent-handoff namaa-handoff-choice"><div><span>🎨</span><strong>Stratégie téléchargée. On crée l’identité visuelle ?</strong><p>Maintenant Namaa Images peut générer un logo concept et les bons mockups selon la catégorie du projet. Vous avez une idée précise ou je laisse Namaa être créatif ?</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-flow-action="creative-mockup">Laisse Namaa être créatif</button><button class="namaa-mini-button secondary" type="button" data-flow-action="custom-mockup">J’ai une idée</button></div></div>';
   }
   function imageNextStepHtml(){
     return flowProgressHtml('images')+
@@ -304,7 +327,7 @@
   }
   function finishIntake(){
     appState.projectBrief=Object.assign({},appState.projectBriefDraft || {});
-    appState.flowStage='strategy';
+    appState.flowStage='brief-ready';
     closeIntakeWizard();
     setAgent('talk');
     document.body.classList.add('namaa-has-messages');
@@ -312,18 +335,9 @@
     var summary=briefSummaryHtml(appState.projectBrief);
     addMessage('user',summary);
     addHistory('user',formatBrief(appState.projectBrief));
-    var q=buildStrategyPrompt(appState.projectBrief);
-    var loading=addMessage('ai','<p>Namaa organise votre brief et prépare une stratégie courte, claire et prête pour le PDF...</p>');
-    loading.classList.add('is-loading');
-    answerAsync(q,{brief:appState.projectBrief,history:[]}).then(function(html){
-      appState.lastStrategyHtml=html;
-      appState.lastStrategyText=html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
-      var next=pdfReadyCardHtml();
-      updateAiMessage(loading,html+next);
-      addHistory('assistant',appState.lastStrategyText);
-    }).catch(function(error){
-      updateAiMessage(loading,'<p>Namaa had a temporary problem: '+utils.escapeHtml(error.message || 'Unknown error')+'</p>');
-    });
+    var ready='<p>Parfait. J’ai maintenant un brief clair. Je ne vais pas générer un long document sans votre accord.</p><p>Choisissez le document que Namaa doit créer avec un prompt backend optimisé pour Gemini.</p>'+documentChoiceCardHtml();
+    addMessage('ai','<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Brief contrôlé</strong></div>'+ready);
+    addHistory('assistant','Brief prêt. Choisissez Market Research, Marketing Strategy ou Roadmap.');
   }
   function resetChat(){
     closePreview();
@@ -338,6 +352,8 @@
     appState.flowStage='intake';
     appState.lastMockupQuestion='';
     appState.lastDevQuestion='';
+    appState.lastDeliverableType='';
+    appState.createdDocuments={};
     var meta=agentConfig(currentAgent);
     var welcome=document.createElement('div');
     welcome.className='namaa-welcome';
@@ -361,7 +377,12 @@
   }
   function applyResult(result){
     if(result && result.state){
-      Object.keys(result.state).forEach(function(key){appState[key]=result.state[key];});
+      if(result.state.projectBriefPatch){
+        appState.projectBrief=Object.assign({},appState.projectBrief || {},result.state.projectBriefPatch || {});
+      }
+      Object.keys(result.state).forEach(function(key){
+        if(key!=='projectBriefPatch')appState[key]=result.state[key];
+      });
     }
     if(result && result.preview)openPreview(result.preview.type,result.preview.title,result.preview.bodyHtml);
     return (result && result.answerHtml) || '<p>Namaa is ready.</p>';
@@ -459,6 +480,34 @@
     var win=window.open('','_blank','noopener,noreferrer');
     if(win){win.document.open();win.document.write(doc || '<!doctype html><title>NamaaDev</title><p>No preview available.</p>');win.document.close();}
   }
+  function generateTalkDeliverable(action){
+    var labels={market_research:'Market Research PDF',marketing_strategy:'Marketing Strategy PDF',roadmap:'Launch Roadmap'};
+    var brief=appState.projectBrief || {};
+    var label=labels[action] || 'Namaa PDF';
+    appState.lastDeliverableType=action;
+    appState.createdDocuments=appState.createdDocuments || {};
+    setAgent('talk');
+    document.body.classList.add('namaa-has-messages');
+    if(hero){hero.remove();hero=null;}
+    var prompt='Créer '+label+' pour '+(brief.projectName || 'ce projet');
+    addMessage('user',utils.escapeHtml(prompt));
+    addHistory('user',prompt);
+    var loading=addMessage('ai','<p>Namaa prépare le bon prompt en backend, puis génère '+utils.escapeHtml(label)+'...</p>');
+    loading.classList.add('is-loading');
+    answerAsync(prompt,{brief:brief,history:[],action:action}).then(function(html){
+      appState.flowStage='pdf-ready';
+      appState.lastDeliverableType=action;
+      appState.createdDocuments=appState.createdDocuments || {};
+      appState.createdDocuments[action]=true;
+      appState.lastStrategyHtml=html;
+      appState.lastStrategyText=html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+      updateAiMessage(loading,html+pdfReadyCardHtml());
+      addHistory('assistant',appState.lastStrategyText);
+    }).catch(function(error){
+      updateAiMessage(loading,'<p>Namaa had a temporary problem: '+utils.escapeHtml(error.message || 'Unknown error')+'</p>');
+    });
+  }
+
   function submit(){
     var q=input.value.trim();
     if(!q){input.focus();return;}
@@ -470,7 +519,7 @@
     input.value='';
     input.style.height='auto';
     closePlusMenu();
-    var loading=addMessage('ai','<p>Namaa réfléchit avec vous...</p>');
+    var loading=addMessage('ai','<p>Namaa organise la réponse courte...</p>');
     loading.classList.add('is-loading');
     answerAsync(q,{brief:appState.projectBrief || null}).then(function(html){
       if(submittedAgent==='images' && appState.projectBrief){
@@ -484,7 +533,7 @@
         html+=devFinishHtml();
       }
       updateAiMessage(loading,html);
-      if(submittedAgent==='talk'){appState.lastStrategyHtml=html;appState.lastStrategyText=html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();}
+      if(submittedAgent==='talk' && appState.lastDeliverableType){appState.lastStrategyHtml=html;appState.lastStrategyText=html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();}
       addHistory('assistant',html.replace(/<[^>]*>/g,' '));
     }).catch(function(error){
       updateAiMessage(loading,'<p>Namaa had a temporary problem: '+utils.escapeHtml(error.message || 'Unknown error')+'</p>');
@@ -508,6 +557,13 @@
   bindPromptButtons(document);
 
   document.addEventListener('click',function(event){
+    var talkActionBtn=event.target.closest('[data-talk-action]');
+    if(talkActionBtn){
+      var talkAction=talkActionBtn.getAttribute('data-talk-action');
+      if(talkAction==='guided_brief'){startIntakeWizard();return;}
+      generateTalkDeliverable(talkAction);
+      return;
+    }
     var devTab=event.target.closest('[data-dev-tab]');
     if(devTab){
       var root=devTab.closest('.namaa-dev-result');
@@ -553,24 +609,48 @@
     }
     var pdfPreviewBtn=event.target.closest('[data-namaa-pdf-preview]');
     if(pdfPreviewBtn){
-      var previewHtml=services.pdf && services.pdf.renderStrategyPreview ? services.pdf.renderStrategyPreview({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText}) : '<p>PDF preview is not ready yet.</p>';
-      openPreview('Namaa PDF','Market search + strategy PDF',previewHtml);
+      var currentPdfType=appState.lastDeliverableType || 'marketing_strategy';
+      var previewHtml=services.pdf && services.pdf.renderStrategyPreview ? services.pdf.renderStrategyPreview({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:currentPdfType}) : '<p>PDF preview is not ready yet.</p>';
+      openPreview('Namaa PDF',pdfDocLabel(currentPdfType),previewHtml);
       return;
     }
     var pdfBtn=event.target.closest('[data-namaa-pdf]');
     if(pdfBtn){
       pdfBtn.disabled=true;
       pdfBtn.textContent='PDF téléchargé';
-      if(services.pdf && services.pdf.openStrategy){services.pdf.openStrategy({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText});}
-      appState.flowStage='images';
-      setAgent('images');
-      addMessage('ai',imagesEntryCardHtml());
+      var downloadedType=appState.lastDeliverableType || 'marketing_strategy';
+      if(services.pdf && services.pdf.openStrategy){services.pdf.openStrategy({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:downloadedType});}
+      appState.createdDocuments=appState.createdDocuments || {};
+      appState.createdDocuments[downloadedType]=true;
+      if(downloadedType==='market_research'){
+        appState.flowStage='strategy-offer';
+        setAgent('talk');
+        addMessage('ai',marketToStrategyCardHtml());
+      }else if(downloadedType==='roadmap'){
+        appState.flowStage='strategy-or-images';
+        setAgent('talk');
+        addMessage('ai',roadmapToNextCardHtml());
+      }else{
+        appState.flowStage='images-offer';
+        setAgent('images');
+        addMessage('ai',strategyToImagesCardHtml());
+      }
       return;
     }
     var flowBtn=event.target.closest('[data-flow-action]');
     if(flowBtn){
       var action=flowBtn.getAttribute('data-flow-action');
       if(action==='guided-intake'){startIntakeWizard();return;}
+      if(action==='create-marketing-strategy'){
+        generateTalkDeliverable('marketing_strategy');
+        return;
+      }
+      if(action==='skip-to-images'){
+        appState.flowStage='images-offer';
+        setAgent('images');
+        addMessage('ai',strategyToImagesCardHtml());
+        return;
+      }
       if(action==='creative-mockup'){
         appState.flowStage='images-generating';
         setAgent('images');

@@ -1,5 +1,5 @@
 // Namaa API configuration
-// Update 22: Gemini agents with automatic Talk → PDF → Images → Dev flow.
+// Update 28: Gemini agents with conversation controller, smart brief builder, prompt library, diagnostics, and reliability tuning.
 // Keep API keys outside frontend JavaScript. Add GEMINI_API_KEY in Cloudflare Pages Secrets.
 
 export const NAMAA_API_CONFIG = {
@@ -8,8 +8,12 @@ export const NAMAA_API_CONFIG = {
     modelEnv: 'GEMINI_TEXT_MODEL',
     fallbackModel: 'gemini-3.1-flash-lite',
     apiKeyEnv: 'GEMINI_API_KEY',
-    maxOutputTokens: 1100,
-    temperature: 0.62,
+    // Normal chat is handled mostly by the controller. Gemini is called mainly for confirmed deliverables.
+    maxOutputTokens: 560,
+    deliverableMaxOutputTokens: 2400,
+    temperature: 0.38,
+    requestTimeoutMs: 25000,
+    retryAttempts: 1,
   },
   images: {
     provider: 'gemini',
@@ -21,6 +25,8 @@ export const NAMAA_API_CONFIG = {
     connected: true,
     aspectRatio: '16:9',
     imageSize: '1K',
+    requestTimeoutMs: 45000,
+    retryAttempts: 1,
   },
   dev: {
     provider: 'gemini',
@@ -28,7 +34,9 @@ export const NAMAA_API_CONFIG = {
     fallbackModel: 'gemini-3.1-flash-lite',
     apiKeyEnv: 'GEMINI_API_KEY',
     maxOutputTokens: 2600,
-    temperature: 0.45,
+    temperature: 0.38,
+    requestTimeoutMs: 28000,
+    retryAttempts: 1,
   },
 };
 
@@ -89,6 +97,47 @@ export function extractGeminiText(data) {
   return parts.map((part) => part.text || '').join('\n').trim();
 }
 
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function shouldRetry(status) {
+  return status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort('Namaa request timeout'), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchJsonWithRetry(url, options = {}, config = {}) {
+  const attempts = Math.max(0, Number(config.retryAttempts || 0));
+  const timeoutMs = Number(config.requestTimeoutMs || 25000);
+  let lastResponse = null;
+  let lastData = null;
+  for (let attempt = 0; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetchWithTimeout(url, options, timeoutMs);
+      const data = await response.json().catch(() => ({}));
+      lastResponse = response;
+      lastData = data;
+      if (response.ok || !shouldRetry(response.status) || attempt === attempts) {
+        return { response, data };
+      }
+    } catch (error) {
+      if (attempt === attempts) throw error;
+    }
+    await sleep(350 * (attempt + 1));
+  }
+  return { response: lastResponse, data: lastData || {} };
+}
+
 export function extractGeminiImage(data) {
   const parts = data?.candidates?.[0]?.content?.parts || [];
   const imagePart = parts.find((part) => part.inlineData?.data || part.inline_data?.data);
@@ -134,13 +183,23 @@ export async function callGemini({ env, config, systemInstruction, contents }) {
     },
   };
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await response.json().catch(() => ({}));
+  let response;
+  let data;
+  try {
+    ({ response, data } = await fetchJsonWithRetry(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    }, config));
+  } catch (error) {
+    return {
+      ok: false,
+      status: 504,
+      error: error?.message || 'Gemini API request timed out.',
+      model,
+      provider: 'gemini',
+    };
+  }
   if (!response.ok) {
     return {
       ok: false,
@@ -234,17 +293,27 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     response_format: responseFormat,
   };
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-goog-api-key': apiKey,
-      'Api-Revision': '2026-05-20',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await response.json().catch(() => ({}));
+  let response;
+  let data;
+  try {
+    ({ response, data } = await fetchJsonWithRetry(endpoint, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-goog-api-key': apiKey,
+        'Api-Revision': '2026-05-20',
+      },
+      body: JSON.stringify(payload),
+    }, config));
+  } catch (error) {
+    return {
+      ok: false,
+      status: 504,
+      error: error?.message || 'Gemini image request timed out.',
+      model,
+      provider: 'gemini',
+    };
+  }
   if (!response.ok) {
     return {
       ok: false,

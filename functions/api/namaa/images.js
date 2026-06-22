@@ -9,6 +9,8 @@ import {
   safeText,
 } from './_api-config.js';
 
+import { buildImageMockupPrompt } from './prompts/index.js';
+
 const ALLOWED_SCOPE = [
   'business', 'startup', 'marketing', 'landing page', 'website', 'ads', 'restaurant', 'clinic',
   'ecommerce', 'e-commerce', 'service', 'brand', 'product', 'whatsapp', 'leads', 'morocco',
@@ -235,7 +237,7 @@ export async function onRequestPost(context) {
     }, 400);
   }
 
-  const imagePrompt = buildImagePrompt(prompt, aspectRatio, brief, pack);
+  const imagePrompt = buildImageMockupPrompt({ userPrompt: prompt, aspectRatio, brief, pack });
   const result = await callGeminiImage({
     env: context.env,
     config,

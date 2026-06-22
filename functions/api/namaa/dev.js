@@ -8,32 +8,13 @@ import {
   safeText,
 } from './_api-config.js';
 
-const SYSTEM_PROMPT = `
-You are NamaaDev by Elboubakry Abdessamad.
-You create simple landing page examples for Moroccan businesses and startups using the NamaaDev template library when provided.
+import {
+  NAMAA_DEV_SYSTEM_PROMPT,
+  buildWebsiteTemplatePrompt,
+} from './prompts/index.js';
 
-Scope:
-Only create landing pages, website structure, HTML/CSS/JS examples, copywriting, CTAs, sections and UI ideas for business/startup/marketing projects in Morocco.
-If the user asks outside this scope, politely refuse and redirect to landing pages or business projects.
+const SYSTEM_PROMPT = NAMAA_DEV_SYSTEM_PROMPT;
 
-Output requirements:
-Return ONLY valid JSON. No markdown fences. No commentary outside JSON.
-The JSON must have this exact shape:
-{
-  "answer": "short explanation for the chat",
-  "pageName": "short landing page name",
-  "sector": "detected sector",
-  "city": "detected city or Morocco",
-  "html": "complete standalone HTML page using <link rel=\"stylesheet\" href=\"style.css\"> and <script src=\"script.js\"></script>",
-  "css": "CSS only",
-  "js": "small JavaScript only, can be empty"
-}
-
-Code rules:
-Keep code simple, responsive and safe. No external scripts. No tracking code. No API keys. No forms that submit to unknown services. The HTML must be usable as index.html together with style.css and script.js.
-Use French by default unless the user writes in Darija/Arabic/English.
-Landing page sections should include hero, benefits, method/process, trust, FAQ/CTA when relevant. If a NamaaDev template is provided, follow its category, tone, layout and sections instead of inventing a generic page.
-`;
 
 function formatBrief(brief = {}) {
   if (!brief || typeof brief !== 'object') return '';
@@ -103,7 +84,7 @@ export async function onRequestPost(context) {
   const prompt = safeText(body.prompt || body.message || body.question, 4000);
   const brief = body.brief && typeof body.brief === 'object' ? body.brief : null;
   const template = body.template && typeof body.template === 'object' ? body.template : null;
-  const controlledPrompt = safeText(buildDevPrompt(prompt, brief, template), 6500);
+  const controlledPrompt = safeText(buildWebsiteTemplatePrompt({ prompt, brief, template }), 6500);
 
   if (!prompt) {
     return jsonResponse({ ok: false, error: 'Prompt is required.' }, 400);
@@ -180,6 +161,7 @@ export async function onRequestGet(context) {
     route: 'namaa-dev',
     provider: 'gemini',
     connected: hasSecret,
+    promptLibrary: 'update-24',
     expectedSecret: config.apiKeyEnv,
     model,
   });

@@ -1,7 +1,7 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u22-agent-flow',
+    version:'20260622-u28-testing-gemini-optimization',
     api:{
       enabled:true,
       provider:'gemini',
@@ -16,7 +16,10 @@
       preferredLowCostModel:'gemini-3.1-flash-lite',
       maxHistoryTurns:3,
       briefTokenBudget:1100,
-      strategyOutputMaxWords:820,
+      strategyOutputMaxWords:900,
+      normalChatMaxWords:100,
+      smartBriefBuilder:true,
+      deliverableRequiresConfirmation:true,
       imagePackEngine:'category-based-logo-mockup-board',
       keysLocation:'server-environment-only'
     },
