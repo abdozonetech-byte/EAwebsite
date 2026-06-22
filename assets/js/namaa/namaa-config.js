@@ -1,7 +1,7 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u7-api-files-ready',
+    version:'20260622-u9-mui-ui-polish',
     api:{
       enabled:false,
       provider:'',
@@ -62,7 +62,7 @@
       {index:'04',label:'Clinique',prompt:'Quelle stratégie marketing pour une clinique esthétique au Maroc ?'}
     ],
     ui:{
-      apiBadgeText:'API files ready · keys empty',
+      apiBadgeText:'MUI UI ready · API keys empty',
       resultPanelLabel:'Right result panel'
     }
   };
