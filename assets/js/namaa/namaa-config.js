@@ -1,19 +1,19 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u9-mui-ui-polish',
+    version:'20260622-u11-smooth-chatgpt-ui',
     api:{
-      enabled:false,
-      provider:'',
-      talkProvider:'',
-      imagesProvider:'',
-      devProvider:'',
+      enabled:true,
+      provider:'gemini',
+      talkProvider:'gemini',
+      imagesProvider:'local-mockup',
+      devProvider:'gemini',
       textEndpoint:'/api/namaa/talk',
       imageEndpoint:'/api/namaa/images',
       devEndpoint:'/api/namaa/dev',
       healthEndpoint:'/api/namaa/health',
       pdfEndpoint:'/api/namaa/pdf',
-      preferredLowCostModel:'',
+      preferredLowCostModel:'gemini-3.1-flash-lite',
       maxHistoryTurns:8,
       keysLocation:'server-environment-only'
     },
@@ -23,7 +23,6 @@
         label:'Namaa Talk',
         bodyClass:'talk',
         placeholder:'Ask Namaa about business, AI, startups, marketing in Morocco...',
-        sidebarNote:{icon:'🧠',title:'Namaa Talk active',text:'Strategy + PDF flow are separated and ready for API connection.'},
         hero:{
           kicker:'Namaa Talk',
           title:'Comment puis-je aider votre business\u00a0?',
@@ -35,7 +34,6 @@
         label:'Namaa Images',
         bodyClass:'images',
         placeholder:'Describe the mockup you want Namaa Images to prepare...',
-        sidebarNote:{icon:'🎨',title:'Namaa Images active',text:'Mockup result panel is separated from the chat and ready for image API.'},
         hero:{
           kicker:'Namaa Images',
           title:'Quel mockup voulez-vous visualiser\u00a0?',
@@ -47,7 +45,6 @@
         label:'NamaaDev',
         bodyClass:'dev',
         placeholder:'Describe the landing page example you want NamaaDev to build...',
-        sidebarNote:{icon:'💻',title:'NamaaDev active',text:'Landing page preview and code output are ready for future API generation.'},
         hero:{
           kicker:'NamaaDev',
           title:'Quelle landing page voulez-vous créer\u00a0?',
@@ -62,7 +59,7 @@
       {index:'04',label:'Clinique',prompt:'Quelle stratégie marketing pour une clinique esthétique au Maroc ?'}
     ],
     ui:{
-      apiBadgeText:'MUI UI ready · API keys empty',
+      apiBadgeText:'Namaa modes',
       resultPanelLabel:'Right result panel'
     }
   };

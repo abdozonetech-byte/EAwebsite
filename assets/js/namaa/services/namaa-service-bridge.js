@@ -13,8 +13,8 @@
   }
   function pdfPlaceholder(lastQuestion){
     var context=lastQuestion?'<p><strong>Base :</strong> '+utils.escapeHtml(lastQuestion)+'</p>':'';
-    return '<h2>PDF Strategy flow is ready.</h2>'+context+
-      '<p>For now this is a safe placeholder before API. Later Namaa Talk will transform the conversation into a professional PDF.</p>'+ 
+    return '<h2>PDF Strategy is ready.</h2>'+context+
+      '<p>Namaa Talk will transform this conversation into a clean professional strategy document.</p>'+ 
       '<ol class="namaa-pdf-steps">'+
         '<li>Project summary</li>'+ 
         '<li>Moroccan market diagnosis</li>'+ 
@@ -22,11 +22,11 @@
         '<li>30-day action plan</li>'+ 
         '<li>WhatsApp script and CTA</li>'+ 
       '</ol>'+ 
-      '<p class="namaa-note-line">No API connected yet. This button only confirms the PDF position inside Namaa Talk.</p>';
+      '<p class="namaa-note-line">The PDF action stays inside Namaa Talk, after the strategy is clear.</p>';
   }
   function uploadPlaceholder(files){
     var count=files && files.length ? files.length : 0;
-    return '<h2>Files received locally.</h2><p>'+count+' file(s) selected. Upload analysis will be connected in a later update. For now, the interface is ready before API.</p>';
+    return '<h2>Files received.</h2><p>'+count+' file(s) selected. Namaa will use uploaded files for context when file analysis is enabled.</p>';
   }
   function buildDevFiles(question){
     var b=brain.inferDevBlueprint(question);
@@ -49,8 +49,110 @@
     var previewDoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style></head><body>'+bodyOnly+'</body></html>';
     return {blueprint:b,html:html,css:css,js:js,previewDoc:previewDoc};
   }
+
+  function textToHtml(text){
+    var safe=utils.escapeHtml(text || '');
+    var lines=safe.split(/\n+/).map(function(line){return line.trim();}).filter(Boolean);
+    if(!lines.length)return '<p>Namaa is ready.</p>';
+    var html='';
+    var inList=false;
+    lines.forEach(function(line){
+      var isBullet=/^([-*•]|\d+[.)])\s+/.test(line);
+      if(isBullet){
+        if(!inList){html+='<ul class="namaa-compact-list">';inList=true;}
+        html+='<li><span>'+line.replace(/^([-*•]|\d+[.)])\s+/,'')+'</span></li>';
+      }else{
+        if(inList){html+='</ul>';inList=false;}
+        if(/^#{1,3}\s+/.test(line)){
+          html+='<h2>'+line.replace(/^#{1,3}\s+/,'')+'</h2>';
+        }else{
+          html+='<p>'+line+'</p>';
+        }
+      }
+    });
+    if(inList)html+='</ul>';
+    return html;
+  }
+  function postJson(endpoint,payload){
+    return fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload||{})}).then(function(response){
+      return response.json().catch(function(){return {};}).then(function(data){
+        if(!response.ok){
+          var err=new Error(data.error || data.message || 'Namaa request failed');
+          err.status=response.status;
+          err.data=data;
+          throw err;
+        }
+        return data;
+      });
+    });
+  }
+  function makePreviewDocFromFiles(files){
+    files=files || {};
+    var html=String(files.html || '<main><h1>NamaaDev preview</h1><p>No HTML returned yet.</p></main>');
+    var css=String(files.css || 'body{font-family:Arial,sans-serif;padding:24px;background:#f8fbff;color:#07152f}');
+    var js=String(files.js || '');
+    var body=html;
+    if(/<body[\s>]/i.test(html)){
+      body=html.replace(/^[\s\S]*<body[^>]*>/i,'').replace(/<\/body>[\s\S]*$/i,'');
+    }
+    if(/<!doctype|<html[\s>]/i.test(html) && !/<body[\s>]/i.test(html)){
+      body=html.replace(/^[\s\S]*<html[^>]*>/i,'').replace(/<\/html>[\s\S]*$/i,'');
+    }
+    return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style></head><body>'+body+'<script>'+js.replace(/<\/script/gi,'<\\/script')+'</script></body></html>';
+  }
+  function renderDevFiles(apiResult,question){
+    var files=(apiResult && apiResult.files) || buildDevFiles(question);
+    var meta=(apiResult && apiResult.meta) || {};
+    var title=meta.pageName || (files.blueprint && files.blueprint.pageName) || 'NamaaDev landing page';
+    var sector=meta.sector || (files.blueprint && files.blueprint.sector) || 'business';
+    var city=meta.city || (files.blueprint && files.blueprint.city) || 'Morocco';
+    var previewDoc=files.previewDoc || makePreviewDocFromFiles(files);
+    return '<div class="namaa-dev-result">'+
+      '<div class="namaa-dev-status"><span>💻 Landing page preview</span><small>HTML · CSS · JS</small></div>'+ 
+      '<div class="namaa-dev-brief">'+
+        '<div><span>Page</span><strong>'+utils.escapeHtml(title)+'</strong></div>'+ 
+        '<div><span>Sector</span><strong>'+utils.escapeHtml(sector)+'</strong></div>'+ 
+        '<div><span>City</span><strong>'+utils.escapeHtml(city)+'</strong></div>'+ 
+      '</div>'+ 
+      '<div class="namaa-dev-tabs" role="tablist" aria-label="NamaaDev preview and code tabs">'+
+        '<button class="is-active" type="button" data-dev-tab="preview">Preview</button>'+ 
+        '<button type="button" data-dev-tab="html">HTML</button>'+ 
+        '<button type="button" data-dev-tab="css">CSS</button>'+ 
+        '<button type="button" data-dev-tab="js">JS</button>'+ 
+      '</div>'+ 
+      '<div class="namaa-dev-panels">'+
+        '<section class="namaa-dev-panel is-active" data-dev-panel="preview"><iframe class="namaa-dev-frame" title="NamaaDev Gemini landing page preview" sandbox="" srcdoc="'+utils.escapeHtml(previewDoc)+'"></iframe></section>'+ 
+        '<section class="namaa-dev-panel" data-dev-panel="html"><pre><code>'+utils.escapeHtml(files.html || '')+'</code></pre></section>'+ 
+        '<section class="namaa-dev-panel" data-dev-panel="css"><pre><code>'+utils.escapeHtml(files.css || '')+'</code></pre></section>'+ 
+        '<section class="namaa-dev-panel" data-dev-panel="js"><pre><code>'+utils.escapeHtml(files.js || '')+'</code></pre></section>'+ 
+      '</div>'+ 
+      '<div class="namaa-dev-actions"><button class="namaa-mini-button" type="button" data-dev-copy="true">Copy ready later</button><button class="namaa-mini-button secondary" type="button" disabled>Download files soon</button></div>'+ 
+      '<p class="namaa-preview-note">Preview generated inside NamaaDev. Review the structure before using it in a real project.</p>'+ 
+    '</div>';
+  }
+  function talkApi(question,history){
+    var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.textEndpoint) || '/api/namaa/talk';
+    return postJson(endpoint,{message:question,history:history || [],mode:'talk'}).then(function(data){
+      return {
+        answerHtml:'<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Business Maroc</strong></div>'+textToHtml(data.answer || ''),
+        state:{lastTalkQuestion:question}
+      };
+    });
+  }
+  function devApi(question,history){
+    var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.devEndpoint) || '/api/namaa/dev';
+    return postJson(endpoint,{prompt:question,history:history || [],mode:'dev'}).then(function(data){
+      var answer=data.answer || 'NamaaDev generated a landing page example.';
+      var body=data.files ? renderDevFiles(data,question) : renderDevFiles({files:buildDevFiles(question)},question);
+      return {
+        answerHtml:'<div class="namaa-answer-head"><span>NamaaDev</span><strong>Landing page</strong></div>'+textToHtml(answer),
+        preview:{type:'NamaaDev',title:'Landing page HTML/CSS/JS',bodyHtml:body}
+      };
+    });
+  }
+
   window.NamaaServices={
-    api:{status:apiStatus},
+    api:{status:apiStatus,talk:talkApi,dev:devApi,textToHtml:textToHtml,renderDevFiles:renderDevFiles},
     pdf:{placeholder:pdfPlaceholder},
     upload:{placeholder:uploadPlaceholder},
     dev:{buildFiles:buildDevFiles}

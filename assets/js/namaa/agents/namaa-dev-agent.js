@@ -7,7 +7,7 @@
     var files=services.dev.buildFiles(question);
     var b=files.blueprint;
     return '<div class="namaa-dev-result">'+
-      '<div class="namaa-dev-status"><span>💻 Landing page generated</span><small>No API yet · template preview</small></div>'+ 
+      '<div class="namaa-dev-status"><span>💻 Landing page generated</span><small>Template preview</small></div>'+ 
       '<div class="namaa-dev-brief">'+
         '<div><span>Sector</span><strong>'+utils.escapeHtml(b.sector)+'</strong></div>'+ 
         '<div><span>City</span><strong>'+utils.escapeHtml(b.city)+'</strong></div>'+ 
@@ -26,7 +26,7 @@
         '<section class="namaa-dev-panel" data-dev-panel="js"><pre><code>'+utils.escapeHtml(files.js)+'</code></pre></section>'+ 
       '</div>'+ 
       '<div class="namaa-dev-actions"><button class="namaa-mini-button" type="button" data-dev-copy="true">Copy ready later</button><button class="namaa-mini-button secondary" type="button" disabled>Download files soon</button></div>'+ 
-      '<p class="namaa-preview-note">This is a safe NamaaDev template before OpenAI API. Later the same panel will receive custom generated code and a stronger live preview.</p>'+ 
+      '<p class="namaa-preview-note">Template NamaaDev organisé dans le panneau droit avec preview, HTML, CSS et JS.</p>'+ 
     '</div>';
   }
   function answerHtml(question){
@@ -37,8 +37,8 @@
       '<p><strong>Résultat :</strong> '+utils.escapeHtml(files.blueprint.pageName)+' avec preview, HTML, CSS et JS prêts en mode template.</p>'+ 
       '<ul class="namaa-compact-list">'+
         '<li><span class="namaa-compact-index">1</span><span>Le panneau droit montre la preview du site.</span></li>'+ 
-        '<li><span class="namaa-compact-index">2</span><span>Les onglets HTML/CSS/JS préparent l’architecture avant API.</span></li>'+ 
-        '<li><span class="namaa-compact-index">3</span><span>Après OpenAI API, NamaaDev générera un code plus personnalisé selon le projet.</span></li>'+ 
+        '<li><span class="namaa-compact-index">2</span><span>Les onglets HTML/CSS/JS organisent la structure du site.</span></li>'+ 
+        '<li><span class="namaa-compact-index">3</span><span>Ajoutez la ville, la cible et l’offre pour rendre le résultat plus personnalisé.</span></li>'+ 
       '</ul>';
   }
   window.NamaaAgents.dev={

@@ -8,7 +8,7 @@
 
   function setFallback(agent){
     var label=agent==='images'?'Namaa Images':agent==='dev'?'NamaaDev':'Namaa Talk';
-    dock.innerHTML='<span>'+label+'</span><span>Business Maroc</span><span>API-ready</span>';
+    dock.innerHTML='<span>'+label+'</span><span>Business Maroc</span>';
   }
   function getActive(){return document.body.getAttribute('data-namaa-agent') || 'talk';}
 

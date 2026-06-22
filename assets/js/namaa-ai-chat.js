@@ -76,7 +76,7 @@
   }
   function setSidebarNote(icon,title,text){
     if(!sidebarNote)return;
-    sidebarNote.innerHTML='<span>'+utils.escapeHtml(icon || '⚡')+'</span><p><strong>'+utils.escapeHtml(title || 'Namaa UI phase')+'</strong>'+utils.escapeHtml(text || 'The interface is ready before API connection.')+'</p>';
+    sidebarNote.innerHTML='<span>'+utils.escapeHtml(icon || '⚡')+'</span><p><strong>'+utils.escapeHtml(title || 'Namaa UI phase')+'</strong>'+utils.escapeHtml(text || 'The workspace is ready.')+'</p>';
   }
   function syncAgentButtons(agent){
     document.querySelectorAll('[data-agent]').forEach(function(el){
@@ -145,17 +145,42 @@
     input.value='';
     input.style.height='auto';
     closeSidebar();
-    setSidebarNote('＋','New chat ready','Start a fresh Namaa conversation in the active mode.');
+    setSidebarNote('＋','New chat','Start a fresh Namaa conversation in the active mode.');
     input.focus();
   }
-  function answer(question){
-    var agent=agents[currentAgent] || agents.talk;
-    var result=agent.reply({question:question,history:history.slice(),state:appState,config:config});
+  function applyResult(result){
     if(result && result.state){
       Object.keys(result.state).forEach(function(key){appState[key]=result.state[key];});
     }
     if(result && result.preview)openPreview(result.preview.type,result.preview.title,result.preview.bodyHtml);
     return (result && result.answerHtml) || '<p>Namaa is ready.</p>';
+  }
+  function localAnswer(question){
+    var agent=agents[currentAgent] || agents.talk;
+    return applyResult(agent.reply({question:question,history:history.slice(),state:appState,config:config}));
+  }
+  function answerAsync(question){
+    var apiEnabled=!!(config.api && config.api.enabled && services.api);
+    if(apiEnabled && currentAgent==='talk' && services.api.talk){
+      return services.api.talk(question,history.slice()).then(function(result){return applyResult(result);}).catch(function(error){
+        var fallback=localAnswer(question);
+        return '<div class="namaa-answer-head"><span>Namaa backup</span><strong>Temporary issue</strong></div><p>Namaa used a local backup response so the conversation stays smooth.</p>'+fallback;
+      });
+    }
+    if(apiEnabled && currentAgent==='dev' && services.api.dev){
+      return services.api.dev(question,history.slice()).then(function(result){return applyResult(result);}).catch(function(error){
+        var fallback=localAnswer(question);
+        return '<div class="namaa-answer-head"><span>Namaa backup</span><strong>Temporary issue</strong></div><p>NamaaDev used a local landing-page template so the preview stays available.</p>'+fallback;
+      });
+    }
+    return Promise.resolve(localAnswer(question));
+  }
+  function updateAiMessage(wrap,html){
+    if(!wrap)return;
+    var bubble=wrap.querySelector('.namaa-bubble');
+    if(bubble)bubble.innerHTML=html;
+    wrap.classList.remove('is-loading');
+    thread.scrollTop=thread.scrollHeight;
   }
   function submit(){
     var q=input.value.trim();
@@ -167,11 +192,14 @@
     input.value='';
     input.style.height='auto';
     closePlusMenu();
-    window.setTimeout(function(){
-      var html=answer(q);
-      addMessage('ai',html);
+    var loading=addMessage('ai','<p>Namaa is typing...</p>');
+    loading.classList.add('is-loading');
+    answerAsync(q).then(function(html){
+      updateAiMessage(loading,html);
       addHistory('assistant',html.replace(/<[^>]*>/g,' '));
-    },220);
+    }).catch(function(error){
+      updateAiMessage(loading,'<p>Namaa had a temporary problem: '+utils.escapeHtml(error.message || 'Unknown error')+'</p>');
+    });
   }
   function bindPromptButtons(scope){
     (scope||document).querySelectorAll('[data-prompt]').forEach(function(btn){
@@ -222,12 +250,12 @@
       if(action==='new-chat'){
         resetChat();
       }else if(action==='search'){
-        setSidebarNote('⌕','Search chats soon','This stays prepared for history after accounts or saved chats are added.');
+        setSidebarNote('⌕','Search chats','This feature will help find saved conversations later.');
       }else if(action==='library'){
-        setSidebarNote('▥','Namaa Library soon','Later this can hold templates, prompts and Moroccan business examples.');
+        setSidebarNote('▥','Namaa Library','Templates and Moroccan business examples will appear here later.');
       }else if(action==='more'){
         var status=services.api && services.api.status ? services.api.status() : {model:'gpt-5.4-nano'};
-        setSidebarNote('•••','API-ready architecture','Agents are separated. Next update can connect '+status.model+' safely from a backend endpoint.');
+        setSidebarNote('•••','More','More Namaa workspace actions will appear here later.');
       }
     });
   });

@@ -7,7 +7,7 @@
     var d=brain.inferMockupDirection(question);
     var chips=d.layout.map(function(item,i){return '<span><b>'+utils.pad2(i+1)+'</b>'+utils.escapeHtml(item)+'</span>';}).join('');
     return '<div class="namaa-image-result">'+
-      '<div class="namaa-image-status"><span>🎨 Mockup generated</span><small>No API yet · static preview</small></div>'+ 
+      '<div class="namaa-image-status"><span>🎨 Mockup generated</span><small>Mockup preview</small></div>'+ 
       '<div class="namaa-mock-card">'+
         '<div class="namaa-mock-browser"><i></i><i></i><i></i><strong>Namaa Images</strong></div>'+ 
         '<div class="namaa-mock-hero">'+
@@ -30,18 +30,18 @@
         '</dl>'+ 
       '</div>'+ 
       '<div class="namaa-layout-chips" aria-label="Suggested sections">'+chips+'</div>'+ 
-      '<p class="namaa-preview-note">This is a safe mock result before OpenAI image generation. Later this panel will show the real generated image or saved mockup.</p>'+ 
+      '<p class="namaa-preview-note">Mockup preview organisé dans le panneau droit. Utilisez-le comme direction visuelle avant design final.</p>'+ 
     '</div>';
   }
   function answerHtml(question){
     var d=brain.inferMockupDirection(question);
-    return '<div class="namaa-answer-head"><span>Mock mode</span><strong>Namaa Images — Design result</strong></div>'+ 
+    return '<div class="namaa-answer-head"><span>Namaa mode</span><strong>Namaa Images — Design result</strong></div>'+ 
       '<h2>Mockup généré dans le panneau droit.</h2>'+ 
       '<p><strong>Demande :</strong> '+utils.escapeHtml(question)+'</p>'+ 
       '<p><strong>Direction :</strong> '+utils.escapeHtml(d.title)+' — '+utils.escapeHtml(d.subtitle)+'.</p>'+ 
       '<ul class="namaa-compact-list">'+
         '<li><span class="namaa-compact-index">1</span><span>Le résultat visuel s’ouvre à droite pour garder la conversation propre.</span></li>'+ 
-        '<li><span class="namaa-compact-index">2</span><span>En v1, c’est un mockup statique. Après API, Namaa Images générera une vraie image.</span></li>'+ 
+        '<li><span class="namaa-compact-index">2</span><span>Le mockup donne une direction visuelle claire avant production finale.</span></li>'+ 
       '</ul>';
   }
   window.NamaaAgents.images={

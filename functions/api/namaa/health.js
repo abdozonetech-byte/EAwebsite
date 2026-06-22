@@ -1,28 +1,29 @@
-import { NAMAA_API_CONFIG, getSecret, jsonResponse } from './_api-config.js';
+import { NAMAA_API_CONFIG, jsonResponse } from './_api-config.js';
 
 export async function onRequestGet(context) {
+  const env = context.env || {};
   return jsonResponse({
     ok: true,
-    name: 'Namaa API placeholder',
-    connected: false,
-    agents: {
+    service: 'Namaa AI API',
+    update: '10-gemini-text-connection',
+    security: 'API keys are read only from Cloudflare environment secrets.',
+    providers: {
       talk: {
-        provider: NAMAA_API_CONFIG.talk.provider,
-        model: NAMAA_API_CONFIG.talk.model,
-        expectedSecret: NAMAA_API_CONFIG.talk.apiKeyEnv,
-        hasSecret: Boolean(getSecret(context.env, NAMAA_API_CONFIG.talk.apiKeyEnv)),
-      },
-      images: {
-        provider: NAMAA_API_CONFIG.images.provider,
-        model: NAMAA_API_CONFIG.images.model,
-        expectedSecret: NAMAA_API_CONFIG.images.apiKeyEnv,
-        hasSecret: Boolean(getSecret(context.env, NAMAA_API_CONFIG.images.apiKeyEnv)),
+        provider: 'gemini',
+        connected: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
+        secret: NAMAA_API_CONFIG.talk.apiKeyEnv,
+        model: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
       },
       dev: {
-        provider: NAMAA_API_CONFIG.dev.provider,
-        model: NAMAA_API_CONFIG.dev.model,
-        expectedSecret: NAMAA_API_CONFIG.dev.apiKeyEnv,
-        hasSecret: Boolean(getSecret(context.env, NAMAA_API_CONFIG.dev.apiKeyEnv)),
+        provider: 'gemini',
+        connected: Boolean(env[NAMAA_API_CONFIG.dev.apiKeyEnv]),
+        secret: NAMAA_API_CONFIG.dev.apiKeyEnv,
+        model: env[NAMAA_API_CONFIG.dev.modelEnv] || NAMAA_API_CONFIG.dev.fallbackModel,
+      },
+      images: {
+        provider: 'gemini',
+        connected: false,
+        status: 'kept as local mockup panel for now',
       },
     },
   });

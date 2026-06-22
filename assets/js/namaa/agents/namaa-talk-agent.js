@@ -21,7 +21,7 @@
     if(!brain.isBusinessQuestion(question))return outOfScopeAnswer();
     var sector=brain.inferSector(question);
     var objective=brain.inferObjective(question);
-    return '<div class="namaa-answer-head"><span>Mock mode</span><strong>Namaa Talk — Strategy draft</strong></div>'+ 
+    return '<div class="namaa-answer-head"><span>Namaa mode</span><strong>Namaa Talk — Strategy draft</strong></div>'+ 
     '<h2>Première stratégie pour votre projet.</h2>'+ 
     '<p><strong>Ce que je comprends :</strong> vous parlez d’un <strong>'+utils.escapeHtml(sector)+'</strong> avec comme objectif principal : <strong>'+utils.escapeHtml(objective)+'</strong>.</p>'+ 
     '<div class="namaa-strategy-grid">'+
@@ -36,7 +36,7 @@
       '<li><span class="namaa-compact-index">3</span><span><strong>Étape suivante :</strong> envoyez “ville + budget + projet” et Namaa pourra organiser un plan 30 jours.</span></li>'+ 
     '</ul>'+ 
     '<div class="namaa-pdf-card">'+
-      '<div><span>📄</span><strong>PDF stratégie</strong><p>Le PDF reste dans Namaa Talk. En v1, le bouton prépare le flow. Après API, il exportera la stratégie complète.</p></div>'+ 
+      '<div><span>📄</span><strong>PDF stratégie</strong><p>Le PDF reste dans Namaa Talk et s’active après une stratégie claire.</p></div>'+ 
       '<button class="namaa-mini-button" type="button" data-namaa-pdf="true">Generate PDF Strategy</button>'+ 
     '</div>'+ 
     '<div class="namaa-cta-row"><a class="namaa-mini-cta" href="/reserver-diagnostic/">Réserver un diagnostic</a><a class="namaa-mini-cta secondary" href="/">Retour au site</a></div>';
