@@ -1,52 +1,5 @@
 window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
   {
-    "id": "generation-leads-qualifies-maroc",
-    "slug": "generation-leads-qualifies-maroc",
-    "title": "Comment générer des leads qualifiés au Maroc ?",
-    "category": "Génération de Leads",
-    "excerpt": "Guide pratique pour attirer des demandes exploitables : offre claire, landing page, formulaire, WhatsApp, suivi commercial et tracking.",
-    "readingTime": "8 min",
-    "keywords": [
-      "génération de leads qualifiés maroc",
-      "leads qualifiés Maroc"
-    ]
-  },
-  {
-    "id": "pourquoi-publicites-facebook-ne-generent-pas-clients",
-    "slug": "pourquoi-publicites-facebook-ne-generent-pas-clients",
-    "title": "Pourquoi vos publicités Facebook ne génèrent pas de clients ?",
-    "category": "Publicité Digitale",
-    "excerpt": "Comprendre pourquoi une campagne Facebook ou Instagram peut générer des clics et messages sans créer de vrais clients : offre, créatif, page et suivi.",
-    "readingTime": "8 min",
-    "keywords": [
-      "publicité Facebook Maroc",
-      "Meta Ads Maroc"
-    ]
-  },
-  {
-    "id": "combien-coute-campagne-meta-ads-maroc",
-    "slug": "combien-coute-campagne-meta-ads-maroc",
-    "title": "Combien coûte une campagne Meta Ads au Maroc ?",
-    "category": "Publicité Digitale",
-    "excerpt": "Guide pour comprendre le budget d’une campagne Meta Ads : diffusion, gestion, création, landing page, tracking et qualité des leads.",
-    "readingTime": "8 min",
-    "keywords": [
-      "prix campagne Facebook Maroc",
-      "budget Meta Ads Maroc"
-    ]
-  },
-  {
-    "id": "strategie-digitale-pme-maroc",
-    "slug": "strategie-digitale-pme-maroc",
-    "title": "Comment créer une stratégie marketing digital pour une PME au Maroc ?",
-    "category": "Stratégie Marketing",
-    "excerpt": "Méthode simple pour clarifier l’offre, choisir les bons canaux, organiser contenu, publicité, SEO, WhatsApp et mesurer les demandes qualifiées.",
-    "readingTime": "9 min",
-    "keywords": [
-      "stratégie marketing digital PME Maroc"
-    ]
-  },
-  {
     "id": "strategie-marketing-digital-maroc",
     "slug": "strategie-marketing-digital-maroc",
     "title": "Stratégie marketing digital au Maroc : construire un système de croissance clair",
@@ -66,6 +19,17 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "readingTime": "4 min",
     "keywords": [
       "Publicité digitale au Maroc"
+    ]
+  },
+  {
+    "id": "generation-leads-qualifies-maroc",
+    "slug": "generation-leads-qualifies-maroc",
+    "title": "Comment générer des leads qualifiés au Maroc ?",
+    "category": "Publicité Digitale",
+    "excerpt": "Guide sur la génération de leads qualifiés au Maroc : offre, landing page, formulaire, WhatsApp, suivi commercial et mesure de performance.",
+    "readingTime": "4 min",
+    "keywords": [
+      "Leads qualifiés au Maroc"
     ]
   },
   {
@@ -319,6 +283,17 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     "readingTime": "5 min",
     "keywords": [
       "Croissance mesurable"
+    ]
+  },
+  {
+    "id": "strategie-digitale-pme-maroc",
+    "slug": "strategie-digitale-pme-maroc",
+    "title": "Stratégie digitale pour PME au Maroc : construire un plan clair",
+    "category": "Stratégie Marketing",
+    "excerpt": "Comment organiser vos priorités marketing, vos canaux et votre mesure sans disperser vos efforts. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
+    "readingTime": "5 min",
+    "keywords": [
+      "Stratégie digitale pour PME au Maroc"
     ]
   },
   {

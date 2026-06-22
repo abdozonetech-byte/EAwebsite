@@ -1,9 +1,0 @@
-Mobile Focus official vertical pill fix
-
-Changed only mobile hero Focus CSS.
-- Removed the final-state duplicate/old focus layout by overriding it.
-- Kept Focus label visible above the skill.
-- Put the animated skill text inside a centered white rounded pill.
-- Kept animation active and centered.
-- Kept reservation and secondary CTA sizing from the previous fix.
-- No desktop, SEO, forms, Pixel, GA4, sitemap, services pages, or content changes.
