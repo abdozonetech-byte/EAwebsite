@@ -18,3 +18,4 @@ export function buildDeliverablePrompt(action, brief, language) {
 }
 
 export { NAMAA_CONVERSATION_SYSTEM_PROMPT, buildConversationPrompt } from './conversation.js';
+export { NAMAA_VOICE_LAYER_SYSTEM_PROMPT, buildNamaaVoicePrompt } from './voice-layer.js';

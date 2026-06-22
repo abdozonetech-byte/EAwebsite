@@ -20,12 +20,13 @@ import {
 import {
   NAMAA_TALK_SYSTEM_PROMPT,
   NAMAA_CONVERSATION_SYSTEM_PROMPT,
-  buildConversationPrompt,
+  NAMAA_VOICE_LAYER_SYSTEM_PROMPT,
+  buildNamaaVoicePrompt,
   buildDeliverablePrompt,
 } from './prompts/index.js';
 
 const SYSTEM_PROMPT = NAMAA_TALK_SYSTEM_PROMPT;
-const CONVERSATION_PROMPT = NAMAA_CONVERSATION_SYSTEM_PROMPT;
+const CONVERSATION_PROMPT = NAMAA_VOICE_LAYER_SYSTEM_PROMPT || NAMAA_CONVERSATION_SYSTEM_PROMPT;
 
 const ACTION_LABELS = {
   market_research: 'Market Research PDF',
@@ -58,14 +59,13 @@ export async function onRequestPost(context) {
   const decision = controlTalk({ message, brief, action: requestedAction || null });
   const briefStatus = decision.briefStatus || getSmartBriefStatus(decision.brief || brief || {}, decision.language);
 
-  // Update 32: Gemini Free Talk mode.
-  // Namaa uses Gemini for daily/free conversation whenever the key is available.
-  // The controller only routes intent, keeps the project brief clean, and provides a fallback if Gemini is unavailable.
+  // Update 33: Namaa Voice Layer.
+  // Gemini is the intelligence engine, but the final answer is shaped by Namaa's own voice, language and soft steering rules.
   if (!decision.generate) {
     const hasGemini = Boolean(context.env?.[NAMAA_API_CONFIG.talk.apiKeyEnv]);
     let naturalAnswer = decision.answer;
     let provider = hasGemini ? 'gemini-free-talk' : 'namaa-controller-fallback';
-    let model = hasGemini ? (context.env?.[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel) : 'conversation-controller-v32';
+    let model = hasGemini ? (context.env?.[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel) : 'conversation-controller-v33';
 
     const shouldUseGeminiConversation = hasGemini;
 
@@ -77,18 +77,25 @@ export async function onRequestPost(context) {
         requestTimeoutMs: NAMAA_API_CONFIG.talk.conversationTimeoutMs || 9000,
         retryAttempts: 0,
       };
-      const conversationPrompt = buildConversationPrompt({
+      const normalizedHistory = normalizeHistory(body.history).slice(-4);
+      const recentAssistantReplies = (Array.isArray(body.history) ? body.history : [])
+        .filter((item) => item?.role === 'assistant' && typeof item.content === 'string')
+        .slice(-3)
+        .map((item) => item.content);
+
+      const conversationPrompt = buildNamaaVoicePrompt({
         message,
         decision,
         brief: decision.brief || brief || {},
-        draftAnswer: decision.answer || '',
+        fallbackAnswer: decision.answer || '',
+        recentAssistantReplies,
       });
       const result = await callGemini({
         env: context.env,
         config: chatConfig,
         systemInstruction: CONVERSATION_PROMPT,
         contents: [
-          ...normalizeHistory(body.history).slice(-6),
+          ...normalizedHistory,
           { role: 'user', parts: [{ text: conversationPrompt }] },
         ],
       });
@@ -119,7 +126,7 @@ export async function onRequestPost(context) {
       actions: htmlActionHint(decision.actions || []),
       shortMode: true,
       showBriefCoach,
-      conversationLabel: hasGemini ? 'AI Talk · Free Talk' : (decision.intent === 'out_of_scope' ? 'Conversation légère' : 'Namaa kayhder m3ak'),
+      conversationLabel: hasGemini ? 'Namaa Voice · Free Talk' : (decision.intent === 'out_of_scope' ? 'Conversation légère' : 'Namaa kayhder m3ak'),
     });
   }
 
@@ -186,11 +193,11 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: true,
     route: 'namaa-talk',
-    provider: 'gemini + namaa-free-talk-controller',
+    provider: 'gemini + namaa-voice-layer',
     connected: hasSecret,
     expectedSecret: config.apiKeyEnv,
     model,
-    update: '32-gemini-free-talk',
-    behavior: 'Gemini Free Talk for daily conversation, limited to AI/business/IT/startups/marketing/technology/programming; controlled deliverables use optimized prompts and branded PDFs',
+    update: '33-namaa-voice-layer',
+    behavior: 'Gemini powers the intelligence, then Namaa Voice Layer shapes the final answer so it feels Moroccan, friendly, short and limited to AI/business/IT/startups/marketing/technology/programming; controlled deliverables use optimized prompts and branded PDFs',
   });
 }
