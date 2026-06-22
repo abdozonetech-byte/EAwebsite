@@ -10,7 +10,7 @@ import {
 
 const SYSTEM_PROMPT = `
 You are NamaaDev by Elboubakry Abdessamad.
-You create simple landing page examples for Moroccan businesses and startups.
+You create simple landing page examples for Moroccan businesses and startups using the NamaaDev template library when provided.
 
 Scope:
 Only create landing pages, website structure, HTML/CSS/JS examples, copywriting, CTAs, sections and UI ideas for business/startup/marketing projects in Morocco.
@@ -24,15 +24,15 @@ The JSON must have this exact shape:
   "pageName": "short landing page name",
   "sector": "detected sector",
   "city": "detected city or Morocco",
-  "html": "complete body content or full HTML page",
+  "html": "complete standalone HTML page using <link rel=\"stylesheet\" href=\"style.css\"> and <script src=\"script.js\"></script>",
   "css": "CSS only",
   "js": "small JavaScript only, can be empty"
 }
 
 Code rules:
-Keep code simple, responsive and safe. No external scripts. No tracking code. No API keys. No forms that submit to unknown services.
+Keep code simple, responsive and safe. No external scripts. No tracking code. No API keys. No forms that submit to unknown services. The HTML must be usable as index.html together with style.css and script.js.
 Use French by default unless the user writes in Darija/Arabic/English.
-Landing page sections should include hero, benefits, method/process, trust, FAQ/CTA when relevant.
+Landing page sections should include hero, benefits, method/process, trust, FAQ/CTA when relevant. If a NamaaDev template is provided, follow its category, tone, layout and sections instead of inventing a generic page.
 `;
 
 function formatBrief(brief = {}) {
@@ -40,14 +40,41 @@ function formatBrief(brief = {}) {
   const rows = [
     ['Nom', brief.projectName], ['Étape', brief.stage], ['Type', brief.category], ['Branche', brief.branch],
     ['Marché', brief.market], ['Budget', brief.budget], ['Objectif', brief.goal],
+    ['Cible', brief.target], ['Offre', brief.offer],
     ['Canaux', Array.isArray(brief.channels) ? brief.channels.join(', ') : brief.channels],
+    ['Langue', brief.language],
   ].filter((row) => row[1]);
-  return rows.map(([key, value]) => `${key}: ${String(value).slice(0, 300)}`).join('\n');
+  return rows.map(([key, value]) => `${key}: ${String(value).replace(/\s+/g, ' ').trim().slice(0, 220)}`).join('\n');
 }
-function buildDevPrompt(prompt, brief) {
+function formatTemplate(template = null) {
+  if (!template || typeof template !== 'object') return '';
+  const sections = Array.isArray(template.sections) ? template.sections.join(', ') : '';
+  const cards = Array.isArray(template.cards) ? template.cards.map((card) => Array.isArray(card) ? card.join(': ') : String(card)).join(' | ') : '';
+  const faq = Array.isArray(template.faq) ? template.faq.map((item) => Array.isArray(item) ? item.join(' -> ') : String(item)).join(' | ') : '';
+  return [
+    `Template: ${String(template.label || template.key || 'Namaa template').slice(0, 120)}`,
+    `Tone: ${String(template.tone || '').slice(0, 180)}`,
+    `Layout: ${String(template.layout || '').slice(0, 180)}`,
+    `Accent: ${String(template.accent || '').slice(0, 50)}`,
+    `Sections: ${sections.slice(0, 420)}`,
+    `Cards: ${cards.slice(0, 520)}`,
+    `FAQ: ${faq.slice(0, 420)}`,
+  ].filter(Boolean).join('\n');
+}
+function buildDevPrompt(prompt, brief, template) {
   const briefText = formatBrief(brief);
-  if (!briefText) return prompt;
-  return `Structured project brief:\n${briefText}\n\nUser request:\n${prompt}\n\nCreate the landing page from the structured brief. Use the project name, sector, city, budget and goal where relevant.`;
+  const templateText = formatTemplate(template);
+  if (!briefText && !templateText) return prompt;
+  return `Structured project brief:
+${briefText || 'No brief'}
+
+NamaaDev selected template:
+${templateText || 'No template'}
+
+User request:
+${prompt}
+
+Create the landing page from the structured brief and the selected template. Use the project name, sector, city, budget and goal where relevant. Keep the page visually aligned with the template tone and sections.`;
 }
 
 function extractJson(text) {
@@ -75,7 +102,8 @@ export async function onRequestPost(context) {
   const body = await readJson(context.request);
   const prompt = safeText(body.prompt || body.message || body.question, 4000);
   const brief = body.brief && typeof body.brief === 'object' ? body.brief : null;
-  const controlledPrompt = safeText(buildDevPrompt(prompt, brief), 5000);
+  const template = body.template && typeof body.template === 'object' ? body.template : null;
+  const controlledPrompt = safeText(buildDevPrompt(prompt, brief, template), 6500);
 
   if (!prompt) {
     return jsonResponse({ ok: false, error: 'Prompt is required.' }, 400);
@@ -132,6 +160,8 @@ export async function onRequestPost(context) {
       pageName: parsed.pageName || 'Namaa landing page',
       sector: parsed.sector || 'business',
       city: parsed.city || 'Morocco',
+      templateKey: template?.key || parsed.templateKey || '',
+      templateLabel: template?.label || parsed.templateLabel || '',
     },
     files: {
       html: String(parsed.html || '').slice(0, 50000),

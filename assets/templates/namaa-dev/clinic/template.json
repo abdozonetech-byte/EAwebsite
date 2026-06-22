@@ -1,0 +1,14 @@
+{
+  "key": "clinic",
+  "label": "Clinic / Medical",
+  "accent": "#0ea5e9",
+  "description": "Appointment landing page",
+  "sections": [
+    "Trust hero",
+    "services",
+    "doctor proof",
+    "FAQ",
+    "booking CTA"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}

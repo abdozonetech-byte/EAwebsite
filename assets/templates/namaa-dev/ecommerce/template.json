@@ -1,0 +1,15 @@
+{
+  "key": "ecommerce",
+  "label": "E-commerce Maroc",
+  "accent": "#22c55e",
+  "description": "Product sales landing page",
+  "sections": [
+    "Product hero",
+    "benefits",
+    "proof",
+    "offer stack",
+    "COD/livraison",
+    "order CTA"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}

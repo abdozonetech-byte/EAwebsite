@@ -1,0 +1,15 @@
+{
+  "key": "restaurant",
+  "label": "Restaurant / Food",
+  "accent": "#f97316",
+  "description": "Menu + reservation landing page",
+  "sections": [
+    "Hero food",
+    "menu best sellers",
+    "offer",
+    "reviews",
+    "map",
+    "WhatsApp"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}

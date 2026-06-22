@@ -1,7 +1,7 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u14-guided-flow',
+    version:'20260622-u22-agent-flow',
     api:{
       enabled:true,
       provider:'gemini',
@@ -14,7 +14,10 @@
       healthEndpoint:'/api/namaa/health',
       pdfEndpoint:'/api/namaa/pdf',
       preferredLowCostModel:'gemini-3.1-flash-lite',
-      maxHistoryTurns:8,
+      maxHistoryTurns:3,
+      briefTokenBudget:1100,
+      strategyOutputMaxWords:820,
+      imagePackEngine:'category-based-logo-mockup-board',
       keysLocation:'server-environment-only'
     },
     agents:{
@@ -22,11 +25,11 @@
         id:'talk',
         label:'Namaa Talk',
         bodyClass:'talk',
-        placeholder:'Ask freely, or launch the guided project brief for a cleaner strategy...',
+        placeholder:'Talk to Namaa about your project, AI, startup, marketing in Morocco...',
         hero:{
           kicker:'Namaa Talk',
-          title:'Créons une stratégie claire pour votre projet\u00a0?',
-          intro:'Commencez par un brief guidé pour obtenir une stratégie PDF, puis un mockup et une landing page. Vous pouvez aussi poser une question libre.'
+          title:'Parlez naturellement, Namaa organise votre projet.',
+          intro:'Un advisor friendly et professionnel : business, IA, startup, marketing, mockups et landing pages pour le marché marocain.'
         }
       },
       images:{
@@ -36,8 +39,8 @@
         placeholder:'Describe the mockup you want Namaa Images to prepare...',
         hero:{
           kicker:'Namaa Images',
-          title:'Quel mockup voulez-vous visualiser\u00a0?',
-          intro:'Décrivez une landing page, une publicité, un hero section ou une direction visuelle. Le panneau résultat s’ouvre à droite quand le mode Images génère un résultat.'
+          title:'Visualisez votre identité et vos mockups.',
+          intro:'Namaa Images prépare une direction visuelle, logo concept, mockup desktop/mobile, flyer ou creative pack selon la catégorie du projet.'
         }
       },
       dev:{
@@ -47,16 +50,16 @@
         placeholder:'Describe the landing page example you want NamaaDev to build...',
         hero:{
           kicker:'NamaaDev',
-          title:'Quelle landing page voulez-vous créer\u00a0?',
-          intro:'Décrivez le projet, la cible, la ville et l’objectif. NamaaDev préparera ensuite une structure HTML/CSS/JS avec preview à droite.'
+          title:'Créez un exemple de site pour votre projet.',
+          intro:'NamaaDev choisit un template adapté à la catégorie, puis génère une landing page simple avec aperçu desktop/mobile et code organisé.'
         }
       }
     },
     promptChips:[
-      {index:'01',label:'Brief guidé',prompt:'Lancer le brief projet'},
-      {index:'02',label:'Restaurant',prompt:'J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?'},
+      {index:'01',label:'Lancer le brief',prompt:'Lancer le brief projet'},
+      {index:'02',label:'Food / Restaurant',prompt:'J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?'},
       {index:'03',label:'E-commerce',prompt:'Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?'},
-      {index:'04',label:'Clinique',prompt:'Quelle stratégie marketing pour une clinique esthétique au Maroc ?'}
+      {index:'04',label:'Clinique / médical',prompt:'Quelle stratégie marketing pour une clinique esthétique au Maroc ?'}
     ],
     ui:{
       apiBadgeText:'Namaa modes',

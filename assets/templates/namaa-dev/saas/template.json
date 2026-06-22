@@ -1,0 +1,14 @@
+{
+  "key": "saas",
+  "label": "SaaS / Application",
+  "accent": "#38bdf8",
+  "description": "Desktop dashboard + mobile app landing page",
+  "sections": [
+    "Hero SaaS",
+    "problem cards",
+    "dashboard preview",
+    "workflow",
+    "demo CTA"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}

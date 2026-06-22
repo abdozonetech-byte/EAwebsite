@@ -677,3 +677,225 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid rg
 /* Namaa Update 14 — guided project brief, cleaner strategy flow and automatic agent journey */
 .namaa-guided-card{width:min(760px,100%);margin:24px auto 0;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px;border:1px solid rgba(191,219,254,.86);border-radius:26px;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(239,246,255,.84));box-shadow:0 22px 70px rgba(37,99,235,.10);text-align:left}.namaa-guided-card h2{margin:6px 0 6px;color:#07152f;font-size:22px;line-height:1.05;letter-spacing:-.05em}.namaa-guided-card p{margin:0;color:#5c6f8b;font-size:14px;line-height:1.45;font-weight:800}.namaa-guided-pill{display:inline-flex;align-items:center;width:max-content;padding:7px 10px;border-radius:999px;background:#eaf2ff;color:#2563eb;text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:950}.namaa-intake-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:22px;background:rgba(2,6,23,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.namaa-intake-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 16% 84%,rgba(124,58,237,.25),transparent 32%),radial-gradient(circle at 84% 38%,rgba(14,165,233,.22),transparent 34%)}.namaa-intake-card{position:relative;width:min(960px,calc(100vw - 28px));min-height:min(760px,calc(100svh - 34px));display:grid;grid-template-rows:auto auto 1fr auto;border:1px solid rgba(148,163,184,.24);border-radius:34px;overflow:hidden;background:linear-gradient(140deg,#100b2a 0%,#0c1027 52%,#082033 100%);box-shadow:0 38px 120px rgba(0,0,0,.45);color:#fff;animation:namaaModalIn .26s cubic-bezier(.2,.8,.2,1)}@keyframes namaaModalIn{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}.namaa-intake-modal.is-shaking .namaa-intake-card{animation:namaaShake .28s linear}@keyframes namaaShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}.namaa-intake-card header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:24px 30px;background:rgba(15,23,42,.30);border-bottom:1px solid rgba(255,255,255,.07)}.namaa-intake-card header span{display:inline-flex;margin-bottom:8px;padding:8px 13px;border-radius:999px;background:rgba(14,165,233,.18);color:#bae6fd;font-size:12px;font-weight:950}.namaa-intake-card header h2{margin:0;font-size:28px;letter-spacing:-.04em;line-height:1}.namaa-intake-card header button{width:56px;height:56px;border:0;border-radius:19px;background:rgba(255,255,255,.10);color:#fff;font-size:30px;font-weight:800;cursor:pointer}.namaa-intake-progress{height:10px;background:rgba(255,255,255,.08)}.namaa-intake-progress i{display:block;height:100%;width:10%;background:linear-gradient(90deg,#7c3aed,#06b6d4,#22c55e);transition:width .28s cubic-bezier(.2,.8,.2,1)}.namaa-intake-body{padding:34px 30px 26px;overflow:auto}.namaa-intake-body h3{margin:0 0 12px;font-size:44px;line-height:1.05;letter-spacing:-.06em}.namaa-intake-body p{margin:0 0 26px;color:rgba(255,255,255,.70);font-size:19px;line-height:1.6;font-weight:760}.namaa-intake-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.namaa-intake-options button,.namaa-intake-input{min-height:86px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.065);color:#fff;text-align:left;padding:0 22px;font-size:20px;font-weight:900;letter-spacing:-.02em;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease}.namaa-intake-options button:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.45);background:rgba(255,255,255,.095)}.namaa-intake-options button.is-selected{border-color:rgba(34,211,238,.72);background:linear-gradient(135deg,rgba(124,58,237,.28),rgba(14,165,233,.22));box-shadow:0 18px 48px rgba(14,165,233,.12),inset 0 1px 0 rgba(255,255,255,.12)}.namaa-intake-options.is-multi button.is-selected::after{content:'✓';float:right;color:#22c55e}.namaa-intake-input{width:100%;cursor:text;outline:0}.namaa-intake-input:focus{border-color:rgba(34,211,238,.82);background:rgba(255,255,255,.09);box-shadow:0 18px 48px rgba(14,165,233,.10)}.namaa-intake-card footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 30px;background:rgba(2,6,23,.22);border-top:1px solid rgba(255,255,255,.07)}.namaa-intake-card footer strong{color:rgba(255,255,255,.72);font-size:15px}.namaa-intake-card footer div{display:flex;gap:12px}.namaa-intake-back,.namaa-intake-next{min-width:160px;min-height:56px;border:0;border-radius:22px;color:#fff;font-size:18px;font-weight:950;cursor:pointer}.namaa-intake-back{background:rgba(255,255,255,.10)}.namaa-intake-back:disabled{opacity:.4;cursor:not-allowed}.namaa-intake-next{background:linear-gradient(135deg,#7c3aed,#0ea5e9);box-shadow:0 18px 42px rgba(14,165,233,.24)}.namaa-brief-summary{display:grid;gap:12px;min-width:min(100%,620px)}.namaa-brief-summary>span{display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.16);color:#dbeafe;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.07em}.namaa-brief-summary>strong{font-size:24px;line-height:1.05;letter-spacing:-.045em}.namaa-brief-summary dl{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.namaa-brief-summary dl div{border-radius:14px;background:rgba(255,255,255,.10);padding:9px 11px}.namaa-brief-summary dt{color:#bfdbfe;font-size:10px;text-transform:uppercase;font-weight:950;letter-spacing:.08em}.namaa-brief-summary dd{margin:4px 0 0;color:#fff;font-size:13px;font-weight:850}.namaa-flow-card{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #bfdbfe;border-radius:24px;background:linear-gradient(135deg,#eff6ff,#fff);padding:16px}.namaa-flow-card>div:first-child{display:grid;gap:5px}.namaa-flow-card span{font-size:24px}.namaa-flow-card strong{display:block;color:#0b255d;font-size:17px;line-height:1.15;letter-spacing:-.025em}.namaa-flow-card p{margin:0;color:#52657f;font-size:13px;line-height:1.45;font-weight:800}.namaa-flow-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.namaa-next-step{background:linear-gradient(135deg,#f8fbff,#eef6ff)}.namaa-bubble .namaa-answer-head+ul,.namaa-bubble .namaa-answer-head+p{margin-top:10px}.namaa-bubble h2{letter-spacing:-.04em}.namaa-bubble p{line-height:1.65}.namaa-bubble .namaa-compact-list li{align-items:flex-start}.namaa-bubble .namaa-compact-list li span:not(.namaa-compact-index){line-height:1.55}
 @media(max-width:760px){.namaa-guided-card{margin-top:16px;flex-direction:column;align-items:stretch;border-radius:22px;padding:14px}.namaa-guided-card h2{font-size:19px}.namaa-guided-card p{font-size:12.5px}.namaa-intake-modal{padding:0;place-items:stretch}.namaa-intake-card{width:100%;min-height:100svh;border-radius:0;border:0}.namaa-intake-card header{padding:18px 18px}.namaa-intake-card header h2{font-size:22px}.namaa-intake-card header button{width:46px;height:46px;border-radius:15px;font-size:26px}.namaa-intake-body{padding:24px 18px 18px}.namaa-intake-body h3{font-size:34px}.namaa-intake-body p{font-size:15px;margin-bottom:18px}.namaa-intake-options{grid-template-columns:1fr;gap:10px}.namaa-intake-options button,.namaa-intake-input{min-height:64px;border-radius:18px;font-size:17px;padding:0 17px}.namaa-intake-card footer{padding:14px 18px calc(14px + env(safe-area-inset-bottom));align-items:stretch;flex-direction:column}.namaa-intake-card footer div{display:grid;grid-template-columns:1fr 1fr}.namaa-intake-back,.namaa-intake-next{min-width:0;min-height:50px;border-radius:18px;font-size:16px}.namaa-brief-summary dl{grid-template-columns:1fr}.namaa-flow-card{align-items:stretch;flex-direction:column;border-radius:20px}.namaa-flow-actions{justify-content:stretch}.namaa-flow-actions .namaa-mini-button,.namaa-flow-card>.namaa-mini-button{width:100%}}
+
+/* Update 15 — Namaa core experience polish: premium project-factory UI */
+:root{
+  --namaa-violet:#7c3aed;
+  --namaa-cyan:#06b6d4;
+  --namaa-green:#22c55e;
+  --namaa-ink:#08111f;
+}
+body{
+  background:
+    radial-gradient(circle at 80% 12%,rgba(37,99,235,.18),transparent 32%),
+    radial-gradient(circle at 14% 88%,rgba(6,182,212,.12),transparent 34%),
+    linear-gradient(180deg,#fbfdff 0%,#f4f8ff 48%,#eaf3ff 100%);
+}
+.namaa-app{grid-template-columns:304px minmax(0,1fr);background:linear-gradient(90deg,#070d1a 0 304px,transparent 304px)}
+.namaa-sidebar{background:linear-gradient(180deg,#08111f 0%,#070d1a 62%,#090f1d 100%);border-right:1px solid rgba(148,163,184,.14);box-shadow:inset -1px 0 0 rgba(255,255,255,.03)}
+.namaa-logo-mark,.namaa-orb span{background:linear-gradient(135deg,#2563eb 0%,#06b6d4 48%,#22c55e 110%)}
+.namaa-sidebar-brand small{color:#a9b8ce;letter-spacing:.16em}.namaa-sidebar-label,.namaa-sidebar-section p{color:#8ea0ba;letter-spacing:.18em}
+.namaa-nav-item,.namaa-agent-link{border:1px solid transparent;color:#dbe7fb;min-height:54px}.namaa-nav-item:hover,.namaa-agent-link:hover{background:rgba(255,255,255,.075);border-color:rgba(147,197,253,.10)}
+.namaa-nav-primary.is-active,.namaa-agent-link.is-active{background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(14,165,233,.08));border-color:rgba(96,165,250,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 14px 40px rgba(2,6,23,.20)}
+.namaa-agent-emoji,.namaa-nav-icon{border-radius:13px;background:rgba(255,255,255,.075);min-height:34px;display:grid;place-items:center}
+.namaa-agent-copy small{color:#98a9c4}.namaa-sidebar-footer{background:linear-gradient(135deg,rgba(255,255,255,.095),rgba(255,255,255,.04));border-color:rgba(255,255,255,.10)}
+.namaa-shell{padding:18px clamp(16px,2.3vw,34px) calc(14px + env(safe-area-inset-bottom));gap:16px}
+.namaa-topbar{min-height:72px;border-radius:28px;background:rgba(255,255,255,.74);border-color:rgba(203,218,242,.85);box-shadow:0 24px 80px rgba(15,54,125,.10);position:relative;overflow:hidden}
+.namaa-topbar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(37,99,235,.06),rgba(6,182,212,.04),transparent);pointer-events:none}.namaa-topbar>*{position:relative;z-index:1}
+.namaa-brand img{border-radius:16px}.namaa-product{background:rgba(255,255,255,.72);border-color:#dbeafe;box-shadow:0 14px 34px rgba(37,99,235,.08),inset 0 1px 0 #fff}.namaa-return{padding-inline:26px;min-height:48px;background:linear-gradient(135deg,#2563eb,#0ea5e9)}
+.namaa-thread{width:min(1020px,100%);padding:12px 6px 10px}.namaa-composer{width:min(1020px,100%);border-radius:30px;border-color:#d4e3fb;box-shadow:0 24px 86px rgba(37,99,235,.13),inset 0 1px 0 rgba(255,255,255,.92);transition:box-shadow .18s ease,transform .18s ease,border-color .18s ease}.namaa-composer:focus-within{transform:translateY(-1px);border-color:#a8c9ff;box-shadow:0 28px 96px rgba(37,99,235,.18),0 0 0 5px rgba(37,99,235,.075),inset 0 1px 0 #fff}
+.namaa-welcome{max-width:960px;padding-top:18px}.namaa-orb{width:74px;height:74px;border-radius:26px;background:linear-gradient(145deg,#fff,#e8f2ff);box-shadow:0 28px 88px rgba(37,99,235,.16),0 0 0 12px rgba(255,255,255,.56)}
+.namaa-kicker{background:linear-gradient(135deg,#eef6ff,#fff);border-color:#dceaff;color:#1d64df;box-shadow:0 10px 28px rgba(37,99,235,.06)}
+.namaa-welcome h1{font-size:clamp(38px,5.35vw,76px);line-height:.94;letter-spacing:-.075em;text-wrap:balance}.namaa-intro{max-width:720px;font-size:clamp(15.5px,1.45vw,19px);color:#4d5f7a;text-wrap:balance}
+.namaa-chip-row{margin-top:24px}.namaa-chip-row button{background:rgba(255,255,255,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:#dce8fb;min-height:44px}.namaa-chip-row button:hover{transform:translateY(-3px)}
+.namaa-factory-strip{width:min(860px,100%);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:22px auto 0}.namaa-factory-strip span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:1px solid #dbeafe;border-radius:999px;background:rgba(255,255,255,.72);box-shadow:0 12px 32px rgba(37,99,235,.06);font-size:13px;font-weight:900;color:#163264;white-space:nowrap}.namaa-factory-strip b{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;font-size:10px;box-shadow:0 8px 18px rgba(37,99,235,.20)}
+.namaa-guided-card-premium{margin-top:16px;border-radius:30px;padding:20px 22px;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(238,246,255,.82));border-color:#cfe2ff;box-shadow:0 28px 90px rgba(37,99,235,.12);position:relative;overflow:hidden}.namaa-guided-card-premium::after{content:'';position:absolute;right:-60px;top:-70px;width:180px;height:180px;background:radial-gradient(circle,rgba(6,182,212,.18),transparent 68%);pointer-events:none}.namaa-guided-card-premium>*{position:relative;z-index:1}.namaa-guided-pill{background:linear-gradient(135deg,#eaf2ff,#ecfeff);color:#1d4ed8;border:1px solid #d7e7ff}.namaa-mini-button{box-shadow:0 14px 32px rgba(37,99,235,.18);transition:transform .16s ease,box-shadow .16s ease}.namaa-mini-button:hover{transform:translateY(-1px);box-shadow:0 18px 42px rgba(37,99,235,.24)}
+.namaa-message{max-width:920px}.namaa-bubble{border-color:#dceaff;box-shadow:0 18px 58px rgba(24,75,180,.08);font-weight:760}.namaa-message.user .namaa-bubble{border-radius:22px 22px 8px 22px}.namaa-message.ai .namaa-bubble{border-radius:22px 22px 22px 8px}.namaa-answer-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px}.namaa-answer-head span{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;background:#eef6ff;color:#2563eb;border:1px solid #dbeafe;font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:950}.namaa-answer-head strong{font-size:13px;color:#15376d;font-weight:950}.namaa-flow-card,.namaa-pdf-card{border-color:#cfe2ff;background:linear-gradient(135deg,#f8fbff,#fff);box-shadow:0 18px 52px rgba(37,99,235,.08)}
+.namaa-preview{border-radius:30px;background:rgba(255,255,255,.82);border-color:#d6e6fc;box-shadow:0 28px 92px rgba(15,54,125,.14);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.namaa-preview-head{background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(239,246,255,.86))}.namaa-preview-empty{background:radial-gradient(circle at 50% 14%,rgba(37,99,235,.09),transparent 34%),linear-gradient(180deg,#fff,#f8fbff);border-color:#bed7ff}.namaa-image-result,.namaa-dev-result{animation:namaaFade .25s ease both}
+.namaa-intake-card{border-radius:38px;background:linear-gradient(140deg,#0c1027 0%,#101035 46%,#08243a 100%);box-shadow:0 48px 140px rgba(0,0,0,.46)}.namaa-intake-card header{background:linear-gradient(90deg,rgba(124,58,237,.12),rgba(14,165,233,.08));}.namaa-intake-options button,.namaa-intake-input{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}.namaa-intake-options button.is-selected{background:linear-gradient(135deg,rgba(37,99,235,.38),rgba(6,182,212,.20));border-color:rgba(125,211,252,.75)}
+@media(min-width:1280px){.namaa-workspace[data-preview="open"]{grid-template-columns:minmax(0,1fr) minmax(390px,480px)}.namaa-thread,.namaa-composer{width:min(1040px,100%)}}
+@media(max-width:1120px){.namaa-app{grid-template-columns:0 minmax(0,1fr);background:linear-gradient(180deg,#fbfdff,#eef5ff)}.namaa-sidebar{width:min(330px,90vw)}}
+@media(max-width:760px){
+  body{background:linear-gradient(180deg,#f8fbff,#eef5ff)}
+  .namaa-shell{padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:8px}.namaa-topbar{min-height:52px;border-radius:18px}.namaa-brand img{width:34px;height:34px}.namaa-return{min-height:38px;padding-inline:14px;font-size:12px}.namaa-thread{justify-content:flex-start;padding:8px 0 5px}.namaa-welcome{max-width:100%;padding:10px 0 4px}.namaa-orb{display:none}.namaa-kicker{margin-bottom:9px;font-size:10px;padding:6px 10px}.namaa-welcome h1{font-size:clamp(28px,8vw,38px);line-height:1.02;letter-spacing:-.065em;max-width:360px}.namaa-intro{max-width:354px;margin-top:11px;font-size:13px;line-height:1.48}.namaa-chip-row{width:100%;margin-top:15px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding:0 2px 8px;scroll-snap-type:x proximity}.namaa-chip-row button{white-space:nowrap;scroll-snap-align:start;min-height:39px;padding:8px 11px;font-size:12px}.namaa-factory-strip{display:flex;overflow-x:auto;width:100%;gap:8px;margin-top:8px;padding:0 2px 8px;scroll-snap-type:x proximity}.namaa-factory-strip::-webkit-scrollbar,.namaa-chip-row::-webkit-scrollbar{display:none}.namaa-factory-strip span{min-width:max-content;min-height:38px;padding:0 12px;font-size:11.5px;scroll-snap-align:start}.namaa-factory-strip b{width:21px;height:21px;font-size:9px}.namaa-guided-card-premium{margin-top:6px;display:grid;gap:12px;text-align:left;border-radius:22px;padding:14px}.namaa-guided-card h2{font-size:18px}.namaa-guided-card p{font-size:12.5px}.namaa-composer{border-radius:22px;min-height:64px}.namaa-plus-menu{position:fixed;left:8px;right:8px;bottom:calc(76px + env(safe-area-inset-bottom));width:auto;border-radius:22px;background:#25272d}.namaa-message{margin-bottom:12px}.namaa-bubble{font-size:14px}.namaa-signature{display:none}.namaa-preview{top:70px;bottom:calc(78px + env(safe-area-inset-bottom));border-radius:22px}.namaa-intake-card{border-radius:0}.namaa-intake-body h3{font-size:32px;letter-spacing:-.055em}.namaa-intake-options button,.namaa-intake-input{min-height:62px}.namaa-intake-card footer{background:rgba(2,6,23,.34)}
+}
+@media(max-height:720px) and (max-width:760px){.namaa-welcome h1{font-size:25px}.namaa-intro{display:none}.namaa-factory-strip{display:none}.namaa-guided-card-premium{display:none}.namaa-chip-row{margin-top:10px}.namaa-thread{padding-top:4px}}
+
+
+/* Namaa Update 17 — Guided brief and token control */
+.namaa-token-note{display:block;margin:10px 0 0;color:#a5b4fc;font-size:13px;font-weight:800;letter-spacing:.01em}
+.namaa-brief-summary-v17{position:relative;overflow:hidden}
+.namaa-brief-summary-v17::after{content:"";position:absolute;inset:auto -38px -48px auto;width:150px;height:150px;border-radius:999px;background:rgba(37,99,235,.08);pointer-events:none}
+.namaa-brief-score{display:inline-flex;width:max-content;margin:8px 0 12px;padding:7px 10px;border-radius:999px;background:#ecfdf5;border:1px solid #bbf7d0;color:#047857;font-size:12px;font-style:normal;font-weight:950;letter-spacing:.03em;text-transform:uppercase}
+.namaa-intake-input[maxlength]{padding-right:18px}
+.namaa-intake-options button{position:relative;overflow:hidden}
+.namaa-intake-options button::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);transform:translateX(-105%);transition:transform .36s ease}
+.namaa-intake-options button:hover::after,.namaa-intake-options button.is-selected::after{transform:translateX(105%)}
+@media(max-width:760px){.namaa-brief-score{font-size:10.5px;padding:6px 8px}.namaa-token-note{font-size:12px}.namaa-intake-card{max-height:calc(100dvh - 18px)}}
+
+/* Update 18 — branded strategy PDF preview */
+.namaa-pdf-ready-card{align-items:stretch}
+.namaa-pdf-ready-card .namaa-flow-actions{min-width:220px;align-items:center}
+.namaa-pdf-ready-card .namaa-mini-button.secondary{background:#fff;color:#1d4ed8;border:1px solid #bfdbfe;box-shadow:0 10px 24px rgba(37,99,235,.08)}
+.namaa-pdf-preview{display:grid;gap:16px;color:#07152f}
+.namaa-pdf-preview-cover{position:relative;overflow:hidden;border-radius:28px;padding:22px;background:radial-gradient(circle at 86% 18%,rgba(191,219,254,.86),transparent 36%),linear-gradient(135deg,#07152f,#123a85 58%,#2563eb);color:#fff;box-shadow:0 24px 70px rgba(37,99,235,.22)}
+.namaa-pdf-preview-cover::after{content:"";position:absolute;right:-58px;bottom:-78px;width:180px;height:180px;border-radius:999px;background:rgba(255,255,255,.11);pointer-events:none}
+.namaa-pdf-preview-cover span{display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:10px;font-weight:950;letter-spacing:.11em;text-transform:uppercase;color:#dbeafe}
+.namaa-pdf-preview-cover h2{position:relative;margin:12px 0 8px;font-size:clamp(28px,4vw,46px);line-height:.98;letter-spacing:-.06em;color:#fff}
+.namaa-pdf-preview-cover p{position:relative;max-width:640px;margin:0;color:#dbeafe!important;font-size:14px!important;line-height:1.5!important;font-weight:780!important}
+.namaa-pdf-preview-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.namaa-pdf-preview-meta div{min-width:0;border:1px solid #dbeafe;border-radius:18px;padding:12px;background:linear-gradient(135deg,#f8fbff,#fff);box-shadow:0 14px 34px rgba(37,99,235,.06)}
+.namaa-pdf-preview-meta small{display:block;color:#2563eb;font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.namaa-pdf-preview-meta strong{display:block;margin-top:4px;color:#0b255d;font-size:13px;line-height:1.2;font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.namaa-pdf-preview-brief,.namaa-pdf-preview-strategy{border:1px solid #dbeafe;border-radius:24px;background:#fff;padding:16px;box-shadow:0 16px 44px rgba(37,99,235,.07)}
+.namaa-pdf-preview h3{margin:0 0 12px;color:#0b255d;font-size:18px;letter-spacing:-.035em}.namaa-pdf-preview table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:16px}.namaa-pdf-preview th,.namaa-pdf-preview td{padding:10px 9px;border-bottom:1px solid #e7f0ff;text-align:left;vertical-align:top}.namaa-pdf-preview tr:last-child th,.namaa-pdf-preview tr:last-child td{border-bottom:0}.namaa-pdf-preview th{width:34%;background:#eff6ff;color:#1d4ed8;font-size:10px;letter-spacing:.07em;text-transform:uppercase}.namaa-pdf-preview td{color:#243b5f;font-size:12.5px;font-weight:800}.namaa-pdf-preview-strategy h2{margin:14px 0 7px;color:#0b255d;font-size:18px}.namaa-pdf-preview-strategy p,.namaa-pdf-preview-strategy li{color:#40546f!important;font-size:13px!important;line-height:1.55!important}.namaa-pdf-preview-strategy ul,.namaa-pdf-preview-strategy ol{padding-left:20px}.namaa-pdf-preview-footer{border:1px solid #bfdbfe;border-radius:18px;background:#eff6ff;color:#15376d;padding:13px;font-size:12.5px;line-height:1.5;font-weight:850}
+@media(max-width:760px){.namaa-pdf-ready-card .namaa-flow-actions{min-width:0;width:100%;display:grid;grid-template-columns:1fr}.namaa-pdf-preview-cover{border-radius:22px;padding:18px}.namaa-pdf-preview-meta{grid-template-columns:1fr}.namaa-pdf-preview-brief,.namaa-pdf-preview-strategy{border-radius:20px;padding:13px}.namaa-pdf-preview th,.namaa-pdf-preview td{display:block;width:100%}.namaa-pdf-preview th{border-bottom:0}.namaa-pdf-preview td{border-bottom:1px solid #e7f0ff}}
+
+/* Update 19 — Namaa Images professional category mockup packs */
+.namaa-image-result-pack{gap:16px}
+.namaa-brand-board{display:grid;grid-template-columns:.78fr 1.22fr;gap:12px;align-items:stretch}
+.namaa-logo-concept{min-height:210px;border:1px solid #d8e7fb;border-radius:24px;background:radial-gradient(circle at 72% 18%,rgba(96,165,250,.28),transparent 36%),linear-gradient(145deg,#07152f,#123a85 55%,#2563eb);color:#fff;padding:18px;display:grid;align-content:end;position:relative;overflow:hidden;box-shadow:0 22px 58px rgba(37,99,235,.16)}
+.namaa-logo-concept:before{content:"";position:absolute;right:-46px;top:-46px;width:140px;height:140px;border-radius:999px;background:rgba(255,255,255,.12)}
+.namaa-logo-concept span{position:absolute;left:18px;top:18px;display:grid;place-items:center;width:58px;height:58px;border-radius:20px;background:rgba(255,255,255,.94);color:#2563eb;font-size:24px;font-weight:950;box-shadow:0 18px 44px rgba(0,0,0,.18)}
+.namaa-logo-concept strong{position:relative;z-index:1;margin:0 0 8px;font-size:22px;letter-spacing:-.05em;line-height:1;font-weight:950}.namaa-logo-concept small{position:relative;z-index:1;color:#dbeafe;font-size:12px;line-height:1.45;font-weight:850}
+.namaa-board-main{overflow:hidden;border-radius:24px;border:1px solid #d8e7fb;background:#fff;box-shadow:0 20px 52px rgba(37,99,235,.11)}
+.namaa-mock-assets{border:1px solid #dbeafe;border-radius:22px;background:linear-gradient(180deg,#fff,#f8fbff);padding:15px;box-shadow:0 16px 44px rgba(37,99,235,.06)}
+.namaa-mock-assets h3,.namaa-copy-angles h3{margin:0 0 12px;color:#07152f;font-size:18px;line-height:1.1;letter-spacing:-.045em;font-weight:950}
+.namaa-asset-chips span{background:#fff;border-color:#d6e7ff;box-shadow:0 10px 26px rgba(37,99,235,.06)}
+.namaa-copy-angles{border:1px solid #dbeafe;border-radius:22px;background:linear-gradient(135deg,#eff6ff,#fff);padding:15px;box-shadow:0 16px 44px rgba(37,99,235,.06)}
+.namaa-copy-angles>div{display:flex;flex-wrap:wrap;gap:8px}.namaa-copy-angles span{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:#0b255d;color:#fff;font-size:12px;font-weight:900}.namaa-copy-angles b{display:grid;place-items:center;width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.15);font-size:10px;color:#dbeafe}
+.namaa-live-image-card-pack img{border-radius:0;background:radial-gradient(circle at 50% 0%,rgba(37,99,235,.12),transparent 42%),#f8fbff}
+.namaa-live-image-card-pack figcaption{background:linear-gradient(135deg,#fff,#f5f9ff)}
+@media(max-width:760px){.namaa-brand-board{grid-template-columns:1fr;gap:10px}.namaa-logo-concept{min-height:150px;border-radius:20px;padding:15px}.namaa-logo-concept span{width:48px;height:48px;border-radius:17px;font-size:20px}.namaa-logo-concept strong{font-size:19px}.namaa-board-main{border-radius:20px}.namaa-mock-assets,.namaa-copy-angles{border-radius:18px;padding:12px}.namaa-copy-angles>div{display:grid;grid-template-columns:1fr}.namaa-copy-angles span{border-radius:14px}}
+
+/* Update 20 — NamaaDev category template library */
+.namaa-dev-brief{grid-template-columns:repeat(4,minmax(0,1fr))}
+.namaa-dev-brief div:nth-child(4){background:linear-gradient(145deg,#eff6ff,#ffffff);border-color:#bfdbfe}
+.namaa-dev-brief div:nth-child(4) strong{color:#1d4ed8}
+.namaa-dev-panels{background:linear-gradient(180deg,#f8fbff,#ffffff)}
+.namaa-dev-status small::after{content:" · template library";opacity:.78}
+@media(max-width:720px){.namaa-dev-brief{grid-template-columns:1fr}.namaa-dev-status small::after{content:""}}
+
+/* Update 21 — NamaaDev live website builder polish */
+.namaa-dev-builder{gap:15px}
+.namaa-dev-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#ffffff);box-shadow:0 14px 34px rgba(37,99,235,.06)}
+.namaa-dev-devices{display:flex;gap:6px;padding:4px;border-radius:999px;background:#eff6ff;border:1px solid #dbeafe}
+.namaa-dev-devices button,.namaa-dev-open{border:0;border-radius:999px;min-height:34px;padding:0 12px;background:transparent;color:#49607d;font-size:11.5px;font-weight:950;cursor:pointer;transition:transform .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease}
+.namaa-dev-devices button:hover,.namaa-dev-open:hover{transform:translateY(-1px)}
+.namaa-dev-devices button.is-active{background:#2563eb;color:#fff;box-shadow:0 10px 24px rgba(37,99,235,.18)}
+.namaa-dev-open{background:#fff;border:1px solid #bfdbfe;color:#1d4ed8;box-shadow:0 10px 22px rgba(37,99,235,.08)}
+.namaa-dev-builder .namaa-dev-panels{position:relative;min-height:480px;background:linear-gradient(135deg,#eaf3ff,#ffffff 42%,#f8fbff);padding:12px}
+.namaa-dev-builder .namaa-dev-panel[data-dev-panel="preview"]{height:100%}
+.namaa-dev-device-shell{width:100%;height:100%;min-height:452px;margin:0 auto;border-radius:24px;overflow:hidden;background:#fff;border:1px solid #cfe2ff;box-shadow:0 22px 64px rgba(37,99,235,.14);transition:width .26s ease,max-width .26s ease,border-radius .26s ease,box-shadow .26s ease}
+.namaa-dev-builder[data-device="mobile"] .namaa-dev-device-shell{max-width:390px;width:390px;border-radius:34px;border:8px solid #0f172a;box-shadow:0 28px 80px rgba(15,23,42,.22)}
+.namaa-dev-builder[data-device="mobile"] .namaa-dev-frame{height:640px}
+.namaa-dev-builder .namaa-dev-frame{height:452px;border-radius:inherit}
+.namaa-dev-builder .namaa-dev-panel pre{height:452px;border-radius:18px;background:linear-gradient(180deg,#06142c,#0b1220);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.namaa-dev-actions{align-items:center}.namaa-dev-actions .namaa-mini-button{min-height:42px}.namaa-dev-actions .namaa-mini-button.secondary{background:#fff;color:#1d4ed8;border:1px solid #bfdbfe;box-shadow:0 12px 28px rgba(37,99,235,.08)}
+.namaa-dev-actions .namaa-mini-button.secondary:hover{background:#eff6ff}
+@media(max-width:760px){.namaa-dev-toolbar{display:grid;grid-template-columns:1fr;align-items:stretch;border-radius:16px}.namaa-dev-devices{display:grid;grid-template-columns:1fr 1fr;border-radius:15px}.namaa-dev-open{width:100%;border-radius:14px}.namaa-dev-builder .namaa-dev-panels{min-height:340px;padding:8px;border-radius:18px}.namaa-dev-device-shell{min-height:320px;border-radius:18px}.namaa-dev-builder .namaa-dev-frame{height:320px}.namaa-dev-builder[data-device="mobile"] .namaa-dev-device-shell{width:min(100%,330px);max-width:330px;border-width:6px;border-radius:28px}.namaa-dev-builder[data-device="mobile"] .namaa-dev-frame{height:520px}.namaa-dev-builder .namaa-dev-panel pre{height:320px}.namaa-dev-actions{display:grid;grid-template-columns:1fr}.namaa-dev-actions .namaa-mini-button{width:100%}}
+
+/* Namaa Update 22 — Automatic agent flow polish */
+.namaa-flow-progress{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin:14px 0 12px;
+  padding:8px;
+  border:1px solid #dbeafe;
+  border-radius:20px;
+  background:linear-gradient(135deg,#f8fbff,#eef6ff);
+}
+.namaa-flow-progress span{
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:8px 9px;
+  border-radius:15px;
+  background:#fff;
+  color:#5b6f8a;
+  border:1px solid #e4efff;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:-.01em;
+  text-align:center;
+  transition:transform .2s var(--namaa-ease), background .2s var(--namaa-ease), color .2s var(--namaa-ease), border-color .2s var(--namaa-ease);
+}
+.namaa-flow-progress b{
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border-radius:999px;
+  background:#edf5ff;
+  color:#2563eb;
+  font-size:10px;
+  font-weight:950;
+}
+.namaa-flow-progress span.is-done{
+  background:#f0fdf4;
+  color:#166534;
+  border-color:#bbf7d0;
+}
+.namaa-flow-progress span.is-done b{
+  background:#22c55e;
+  color:#fff;
+}
+.namaa-flow-progress span.is-active{
+  transform:translateY(-1px);
+  background:linear-gradient(135deg,#2563eb,#0ea5e9);
+  color:#fff;
+  border-color:#2563eb;
+  box-shadow:0 14px 32px rgba(37,99,235,.22);
+}
+.namaa-flow-progress span.is-active b{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.namaa-agent-handoff{
+  position:relative;
+  overflow:hidden;
+}
+.namaa-agent-handoff::after{
+  content:"";
+  position:absolute;
+  inset:auto -35px -60px auto;
+  width:140px;
+  height:140px;
+  border-radius:999px;
+  background:rgba(37,99,235,.08);
+  pointer-events:none;
+}
+.namaa-final-card{
+  border-color:#bbf7d0;
+  background:linear-gradient(135deg,#f0fdf4,#fff);
+}
+.namaa-final-card strong{color:#14532d}
+.namaa-final-card .namaa-mini-button{
+  text-decoration:none;
+}
+.namaa-bubble .namaa-flow-progress + .namaa-flow-card{
+  margin-top:0;
+}
+@media(max-width:760px){
+  .namaa-flow-progress{
+    display:flex;
+    overflow-x:auto;
+    padding:7px;
+    gap:7px;
+    border-radius:18px;
+    scroll-snap-type:x proximity;
+  }
+  .namaa-flow-progress::-webkit-scrollbar{display:none}
+  .namaa-flow-progress span{
+    min-width:max-content;
+    min-height:36px;
+    padding:7px 10px;
+    font-size:11px;
+    scroll-snap-align:start;
+  }
+  .namaa-flow-progress b{width:21px;height:21px;font-size:9px}
+}

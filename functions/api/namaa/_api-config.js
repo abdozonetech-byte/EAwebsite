@@ -1,5 +1,5 @@
 // Namaa API configuration
-// Update 13: Gemini text + Gemini Nano Banana image connection.
+// Update 22: Gemini agents with automatic Talk → PDF → Images → Dev flow.
 // Keep API keys outside frontend JavaScript. Add GEMINI_API_KEY in Cloudflare Pages Secrets.
 
 export const NAMAA_API_CONFIG = {
@@ -8,8 +8,8 @@ export const NAMAA_API_CONFIG = {
     modelEnv: 'GEMINI_TEXT_MODEL',
     fallbackModel: 'gemini-3.1-flash-lite',
     apiKeyEnv: 'GEMINI_API_KEY',
-    maxOutputTokens: 900,
-    temperature: 0.55,
+    maxOutputTokens: 1100,
+    temperature: 0.62,
   },
   images: {
     provider: 'gemini',
@@ -160,6 +160,45 @@ export async function callGemini({ env, config, systemInstruction, contents }) {
   };
 }
 
+function extractInteractionsImage(data) {
+  const outputImage = data?.output_image || data?.outputImage;
+  if (outputImage?.data) {
+    return {
+      mimeType: outputImage.mime_type || outputImage.mimeType || 'image/png',
+      data: outputImage.data,
+    };
+  }
+
+  const outputs = Array.isArray(data?.output) ? data.output : [];
+  for (const item of outputs) {
+    const image = item?.image || item?.output_image || item?.outputImage;
+    if (image?.data) {
+      return {
+        mimeType: image.mime_type || image.mimeType || 'image/png',
+        data: image.data,
+      };
+    }
+    if ((item?.type === 'image' || item?.mime_type || item?.mimeType) && item?.data) {
+      return {
+        mimeType: item.mime_type || item.mimeType || 'image/png',
+        data: item.data,
+      };
+    }
+  }
+
+  return extractGeminiImage(data);
+}
+
+function extractInteractionsText(data) {
+  if (typeof data?.output_text === 'string') return data.output_text.trim();
+  const outputs = Array.isArray(data?.output) ? data.output : [];
+  return outputs
+    .map((item) => item?.text || item?.content?.text || '')
+    .filter(Boolean)
+    .join('\n')
+    .trim() || extractGeminiText(data);
+}
+
 export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
   const apiKey = getSecret(env, config.apiKeyEnv);
   const model = getModel(env, config);
@@ -182,27 +221,17 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     };
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1/models/${encodeURIComponent(model)}:generateContent`;
-  const imageFormat = {
-    aspectRatio: aspectRatio || config.aspectRatio || '16:9',
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/interactions';
+  const responseFormat = {
+    type: 'image',
+    aspect_ratio: aspectRatio || config.aspectRatio || '16:9',
+    image_size: config.imageSize || '1K',
   };
-  if (config.imageSize && !/2\.5/.test(model)) {
-    imageFormat.imageSize = config.imageSize;
-  }
 
   const payload = {
-    contents: [
-      {
-        role: 'user',
-        parts: [{ text: prompt }],
-      },
-    ],
-    generationConfig: {
-      responseModalities: ['IMAGE'],
-      responseFormat: {
-        image: imageFormat,
-      },
-    },
+    model,
+    input: [{ type: 'text', text: prompt }],
+    response_format: responseFormat,
   };
 
   const response = await fetch(endpoint, {
@@ -210,6 +239,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     headers: {
       'content-type': 'application/json',
       'x-goog-api-key': apiKey,
+      'Api-Revision': '2026-05-20',
     },
     body: JSON.stringify(payload),
   });
@@ -225,8 +255,8 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     };
   }
 
-  const image = extractGeminiImage(data);
-  const text = extractGeminiText(data);
+  const image = extractInteractionsImage(data);
+  const text = extractInteractionsText(data);
 
   if (!image?.data) {
     return {

@@ -1,0 +1,14 @@
+{
+  "key": "tourism",
+  "label": "Tourisme / Hébergement",
+  "accent": "#f59e0b",
+  "description": "Travel booking page",
+  "sections": [
+    "Experience hero",
+    "rooms/offers",
+    "location",
+    "activities",
+    "booking CTA"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}

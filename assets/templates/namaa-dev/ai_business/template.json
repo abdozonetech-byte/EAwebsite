@@ -1,0 +1,14 @@
+{
+  "key": "ai_business",
+  "label": "AI Business / Automation",
+  "accent": "#06b6d4",
+  "description": "AI agent product page",
+  "sections": [
+    "AI agent hero",
+    "workflow",
+    "use cases",
+    "ROI",
+    "demo CTA"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}
