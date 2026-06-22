@@ -1,0 +1,419 @@
+:root{
+  --namaa-blue:#2563eb;
+  --namaa-blue-2:#0ea5e9;
+  --namaa-sidebar:#071226;
+  --namaa-sidebar-2:#0b1730;
+  --namaa-card:#111d33;
+  --namaa-card-active:#182338;
+  --namaa-text:#172033;
+  --namaa-muted:#7c879a;
+  --namaa-soft:#f5f7fb;
+  --namaa-line:#e6ebf5;
+  --namaa-white:#ffffff;
+  --namaa-radius:26px;
+  --namaa-shadow:0 22px 70px rgba(30,53,96,.12);
+}
+*{box-sizing:border-box}
+html{height:100%;scroll-behavior:smooth}
+body{
+  height:100%;
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f4f7fb;
+  color:var(--namaa-text);
+  overflow:hidden;
+}
+button,input,textarea{font:inherit}
+a{text-decoration:none;color:inherit}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.namaa-chat-app{
+  min-height:100dvh;
+  display:grid;
+  grid-template-columns:354px minmax(0,1fr);
+  background:var(--namaa-soft);
+}
+.namaa-sidebar{
+  position:relative;
+  z-index:30;
+  background:linear-gradient(180deg,#071226 0%,#050b17 100%);
+  color:#edf5ff;
+  padding:26px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.04);
+  overflow-y:auto;
+}
+.namaa-sidebar::-webkit-scrollbar{width:0}
+.namaa-sidebar-brand{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:4px 11px 12px;
+}
+.namaa-brand-mark{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  color:#fff;
+  font-weight:900;
+  font-size:22px;
+  background:linear-gradient(145deg,#0ea5e9,#2563eb);
+  box-shadow:0 16px 38px rgba(37,99,235,.35);
+}
+.namaa-sidebar-brand strong{
+  display:block;
+  font-size:26px;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+.namaa-sidebar-brand span span,
+.namaa-sidebar-brand small{
+  display:block;
+}
+.namaa-sidebar-brand span>span{
+  color:#9caecc;
+  margin-top:8px;
+  font-weight:900;
+  letter-spacing:.34em;
+  font-size:12px;
+}
+.namaa-new-chat{
+  width:100%;
+  border:1px solid rgba(96,165,250,.18);
+  background:#0b1a3b;
+  color:#fff;
+  border-radius:20px;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  cursor:pointer;
+  transition:transform .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.namaa-new-chat:hover{transform:translateY(-2px);border-color:rgba(96,165,250,.4);box-shadow:0 20px 46px rgba(3,9,25,.22)}
+.namaa-new-chat span{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:rgba(255,255,255,.09);
+  color:#fff;
+  font-size:32px;
+  line-height:1;
+}
+.namaa-new-chat strong{font-size:20px;letter-spacing:-.02em}
+.namaa-focus{display:flex;flex-direction:column;gap:14px}
+.namaa-sidebar-label{
+  color:#91a1bb;
+  margin:0 0 8px 14px;
+  letter-spacing:.36em;
+  font-size:14px;
+  font-weight:900;
+}
+.namaa-agent-card{
+  border:1px solid transparent;
+  width:100%;
+  text-align:left;
+  padding:14px 14px;
+  border-radius:20px;
+  color:#eaf2ff;
+  background:transparent;
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr);
+  align-items:center;
+  gap:14px;
+  cursor:pointer;
+  transition:transform .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.namaa-agent-card:hover,
+.namaa-agent-card.is-active{
+  background:var(--namaa-card-active);
+  border-color:rgba(255,255,255,.07);
+  box-shadow:0 18px 40px rgba(2,6,23,.18);
+}
+.namaa-agent-card:hover{transform:translateX(3px)}
+.namaa-agent-card.is-active{transform:none}
+.namaa-agent-icon{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:rgba(255,255,255,.08);
+  font-size:20px;
+}
+.namaa-agent-card.is-active .namaa-agent-icon{background:rgba(255,255,255,.12)}
+.namaa-agent-copy strong{
+  display:block;
+  font-size:18px;
+  letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.namaa-agent-copy small{
+  display:block;
+  color:#a5b2c8;
+  font-size:13.5px;
+  line-height:1.35;
+  font-weight:800;
+}
+.namaa-main{
+  min-width:0;
+  min-height:100dvh;
+  display:grid;
+  grid-template-rows:96px minmax(0,1fr) auto;
+  background:linear-gradient(180deg,#fbfcff 0%,#f7f9fe 45%,#eef4ff 100%);
+  position:relative;
+  overflow:hidden;
+}
+.namaa-topbar{
+  height:96px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:0 30px;
+  border-bottom:1px solid var(--namaa-line);
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(18px);
+}
+.namaa-menu-btn{display:none;border:0;background:#0b1730;color:#fff;width:44px;height:44px;border-radius:14px;font-size:22px;cursor:pointer}
+.namaa-owner{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  min-width:0;
+}
+.namaa-owner-logo{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#0b50ff,#2563eb);
+  color:#fff;
+  font-weight:900;
+  font-size:24px;
+  box-shadow:0 14px 32px rgba(37,99,235,.25);
+}
+.namaa-owner strong{display:block;font-size:20px;letter-spacing:-.03em;color:#111827}
+.namaa-owner small{display:block;color:#6b7689;font-weight:800;margin-top:4px;font-size:13.5px}
+.namaa-top-actions{display:flex;align-items:center;gap:18px;white-space:nowrap}
+.namaa-ready{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:13px 17px;
+  border-radius:999px;
+  background:#fff;
+  color:#076b5a;
+  font-weight:900;
+  box-shadow:0 12px 34px rgba(33,56,101,.08);
+}
+.namaa-ready i{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#27d3a2;
+  box-shadow:0 0 0 7px rgba(39,211,162,.14);
+}
+.namaa-return{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:52px;
+  padding:0 26px;
+  border-radius:999px;
+  background:linear-gradient(145deg,#2563eb,#1458e8);
+  color:#fff;
+  font-weight:900;
+  font-size:18px;
+  box-shadow:0 16px 40px rgba(37,99,235,.26);
+}
+.namaa-thread-wrap{
+  min-height:0;
+  overflow-y:auto;
+  padding:48px 38px 28px;
+  scroll-behavior:smooth;
+}
+.namaa-thread{
+  width:min(1040px,100%);
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+  padding-bottom:8px;
+}
+.namaa-message{
+  display:flex;
+  gap:16px;
+  animation:namaaFadeUp .3s ease both;
+}
+.namaa-message-user{justify-content:flex-end}
+.namaa-message-ai{justify-content:flex-start}
+.namaa-avatar{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#2563eb,#0ea5e9);
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 14px 34px rgba(37,99,235,.24);
+  margin-top:2px;
+}
+.namaa-bubble{
+  max-width:min(875px,80%);
+  padding:27px 28px;
+  border-radius:0 24px 24px 24px;
+  color:#172033;
+  background:#fff;
+  box-shadow:var(--namaa-shadow);
+  border:1px solid rgba(226,232,240,.82);
+  font-size:17px;
+  line-height:1.65;
+  font-weight:700;
+  overflow-wrap:anywhere;
+}
+.namaa-message-user .namaa-bubble{
+  max-width:min(560px,68%);
+  border-radius:24px 0 24px 24px;
+  background:linear-gradient(145deg,#2563eb,#1458e8);
+  color:#fff;
+  padding:19px 23px;
+  box-shadow:0 20px 50px rgba(37,99,235,.28);
+}
+.namaa-bubble p{margin:.2em 0 .72em}
+.namaa-bubble p:last-child{margin-bottom:0}
+.namaa-bubble pre{
+  white-space:pre-wrap;
+  background:#071226;
+  color:#eaf2ff;
+  padding:18px;
+  border-radius:18px;
+  overflow:auto;
+  font-size:14px;
+}
+.namaa-bubble code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+.namaa-thinking .namaa-bubble{color:#728197;font-weight:800}
+.namaa-handoff-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.namaa-handoff-row button{
+  border:1px solid rgba(37,99,235,.16);
+  background:#eef4ff;
+  color:#164cba;
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:900;
+  cursor:pointer;
+}
+.namaa-composer-zone{
+  padding:14px 28px 18px;
+  background:linear-gradient(180deg,rgba(245,247,251,0),rgba(239,244,255,.98) 30%,#eef4ff 100%);
+}
+.namaa-composer{
+  width:min(1080px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 44px 132px;
+  align-items:center;
+  gap:12px;
+  padding:13px 13px 13px 22px;
+  border-radius:28px;
+  background:#fff;
+  border:1px solid #cfe0ff;
+  box-shadow:0 18px 60px rgba(58,89,152,.14);
+}
+.namaa-composer textarea{
+  width:100%;
+  min-height:38px;
+  max-height:150px;
+  resize:none;
+  border:0;
+  outline:0;
+  color:#172033;
+  font-size:17px;
+  font-weight:800;
+  line-height:1.45;
+  background:transparent;
+  padding:8px 0;
+}
+.namaa-composer textarea::placeholder{color:#97a2b4}
+.namaa-attach{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:#f97316;
+  color:#fff;
+  cursor:pointer;
+  font-weight:900;
+  box-shadow:0 12px 24px rgba(249,115,22,.2);
+}
+.namaa-send{
+  min-height:58px;
+  border:0;
+  border-radius:22px;
+  background:linear-gradient(145deg,#2563eb,#1559ea);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  cursor:pointer;
+  font-weight:900;
+  font-size:18px;
+  box-shadow:0 16px 38px rgba(37,99,235,.25);
+  transition:transform .2s ease,opacity .2s ease;
+}
+.namaa-send:hover{transform:translateY(-1px)}
+.namaa-send:disabled{opacity:.65;cursor:not-allowed;transform:none}
+.namaa-created{
+  text-align:center;
+  margin:9px 0 0;
+  color:#7d8aa1;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+@keyframes namaaFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:1120px){
+  body{overflow:auto}
+  .namaa-chat-app{grid-template-columns:1fr;min-height:100dvh}
+  .namaa-sidebar{position:fixed;inset:0 auto 0 0;width:min(360px,88vw);transform:translateX(-105%);transition:transform .26s ease;box-shadow:22px 0 70px rgba(2,6,23,.32)}
+  body.namaa-sidebar-open .namaa-sidebar{transform:translateX(0)}
+  .namaa-mobile-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.44);z-index:25;backdrop-filter:blur(2px)}
+  .namaa-menu-btn{display:grid;place-items:center;flex:0 0 auto}
+  .namaa-main{min-height:100dvh;grid-template-rows:auto minmax(0,1fr) auto}
+  .namaa-topbar{height:auto;min-height:82px;padding:14px 18px}
+  .namaa-top-actions{gap:10px}
+  .namaa-ready{display:none}
+  .namaa-return{min-height:44px;padding:0 16px;font-size:14px}
+  .namaa-owner-logo{width:42px;height:42px;font-size:20px}
+  .namaa-owner strong{font-size:17px}
+  .namaa-owner small{font-size:12px}
+  .namaa-thread-wrap{padding:26px 16px 20px}
+  .namaa-thread{gap:18px}
+  .namaa-bubble{max-width:calc(100% - 54px);padding:20px 19px;font-size:15px}
+  .namaa-message-user .namaa-bubble{max-width:84%}
+  .namaa-composer-zone{padding:10px 12px 14px;position:sticky;bottom:0}
+  .namaa-composer{grid-template-columns:minmax(0,1fr) 38px 92px;border-radius:23px;padding:10px 10px 10px 16px;gap:8px}
+  .namaa-send{min-height:48px;border-radius:18px;font-size:15px}
+  .namaa-send svg{display:none}
+  .namaa-attach{width:34px;height:34px}
+}
+@media (max-width:620px){
+  .namaa-topbar{gap:10px}
+  .namaa-owner small{display:none}
+  .namaa-return{font-size:13px;padding:0 13px}
+  .namaa-thread-wrap{padding-top:18px}
+  .namaa-message{gap:10px}
+  .namaa-avatar{width:38px;height:38px;border-radius:12px}
+  .namaa-bubble{max-width:calc(100% - 44px);border-radius:0 20px 20px 20px;font-size:14px;line-height:1.6}
+  .namaa-message-user .namaa-bubble{max-width:88%;padding:15px 17px}
+  .namaa-composer textarea{font-size:15px}
+}
