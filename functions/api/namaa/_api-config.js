@@ -1,5 +1,5 @@
 // Namaa API configuration
-// Update 10: Gemini-only text connection for Namaa Talk and NamaaDev.
+// Update 13: Gemini text + Gemini Nano Banana image connection.
 // Keep API keys outside frontend JavaScript. Add GEMINI_API_KEY in Cloudflare Pages Secrets.
 
 export const NAMAA_API_CONFIG = {
@@ -14,10 +14,13 @@ export const NAMAA_API_CONFIG = {
   images: {
     provider: 'gemini',
     modelEnv: 'GEMINI_IMAGE_MODEL',
-    fallbackModel: '',
+    // Official Google Gemini image model. Can be overridden in Cloudflare with GEMINI_IMAGE_MODEL.
+    fallbackModel: 'gemini-3.1-flash-image',
     apiKeyEnv: 'GEMINI_API_KEY',
     purpose: 'mockup-only',
-    connected: false,
+    connected: true,
+    aspectRatio: '16:9',
+    imageSize: '1K',
   },
   dev: {
     provider: 'gemini',
@@ -86,6 +89,17 @@ export function extractGeminiText(data) {
   return parts.map((part) => part.text || '').join('\n').trim();
 }
 
+export function extractGeminiImage(data) {
+  const parts = data?.candidates?.[0]?.content?.parts || [];
+  const imagePart = parts.find((part) => part.inlineData?.data || part.inline_data?.data);
+  if (!imagePart) return null;
+  const inlineData = imagePart.inlineData || imagePart.inline_data || {};
+  return {
+    mimeType: inlineData.mimeType || inlineData.mime_type || 'image/png',
+    data: inlineData.data || '',
+  };
+}
+
 export async function callGemini({ env, config, systemInstruction, contents }) {
   const apiKey = getSecret(env, config.apiKeyEnv);
   const model = getModel(env, config);
@@ -143,6 +157,94 @@ export async function callGemini({ env, config, systemInstruction, contents }) {
     text: extractGeminiText(data),
     model,
     provider: 'gemini',
+  };
+}
+
+export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
+  const apiKey = getSecret(env, config.apiKeyEnv);
+  const model = getModel(env, config);
+
+  if (!apiKey) {
+    return {
+      ok: false,
+      status: 401,
+      error: `Missing Cloudflare secret: ${config.apiKeyEnv}`,
+      model,
+    };
+  }
+
+  if (!model) {
+    return {
+      ok: false,
+      status: 500,
+      error: 'Missing Gemini image model. Add GEMINI_IMAGE_MODEL or keep fallback model in _api-config.js.',
+      model,
+    };
+  }
+
+  const endpoint = `https://generativelanguage.googleapis.com/v1/models/${encodeURIComponent(model)}:generateContent`;
+  const imageFormat = {
+    aspectRatio: aspectRatio || config.aspectRatio || '16:9',
+  };
+  if (config.imageSize && !/2\.5/.test(model)) {
+    imageFormat.imageSize = config.imageSize;
+  }
+
+  const payload = {
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: prompt }],
+      },
+    ],
+    generationConfig: {
+      responseModalities: ['IMAGE'],
+      responseFormat: {
+        image: imageFormat,
+      },
+    },
+  };
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-goog-api-key': apiKey,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    return {
+      ok: false,
+      status: response.status,
+      error: data?.error?.message || 'Gemini image request failed.',
+      model,
+      provider: 'gemini',
+    };
+  }
+
+  const image = extractGeminiImage(data);
+  const text = extractGeminiText(data);
+
+  if (!image?.data) {
+    return {
+      ok: false,
+      status: 502,
+      error: text || 'Gemini returned no image data. Try a simpler visual prompt or a different GEMINI_IMAGE_MODEL.',
+      model,
+      provider: 'gemini',
+    };
+  }
+
+  return {
+    ok: true,
+    status: 200,
+    provider: 'gemini',
+    model,
+    image,
+    text,
   };
 }
 

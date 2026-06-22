@@ -14,15 +14,38 @@
   function pdfPlaceholder(lastQuestion){
     var context=lastQuestion?'<p><strong>Base :</strong> '+utils.escapeHtml(lastQuestion)+'</p>':'';
     return '<h2>PDF Strategy is ready.</h2>'+context+
-      '<p>Namaa Talk will transform this conversation into a clean professional strategy document.</p>'+ 
+      '<p>Namaa Talk can transform the guided project brief into a clean strategy document.</p>'+ 
       '<ol class="namaa-pdf-steps">'+
         '<li>Project summary</li>'+ 
         '<li>Moroccan market diagnosis</li>'+ 
         '<li>Offer + target audience</li>'+ 
         '<li>30-day action plan</li>'+ 
         '<li>WhatsApp script and CTA</li>'+ 
-      '</ol>'+ 
-      '<p class="namaa-note-line">The PDF action stays inside Namaa Talk, after the strategy is clear.</p>';
+      '</ol>';
+  }
+  function stripHtml(html){
+    var div=document.createElement('div');
+    div.innerHTML=String(html || '');
+    return (div.textContent || div.innerText || '').replace(/\s+/g,' ').trim();
+  }
+  function openStrategyPdf(payload){
+    payload=payload || {};
+    var brief=payload.brief || {};
+    var strategyHtml=payload.strategyHtml || '<p>'+utils.escapeHtml(payload.strategyText || 'Strategy not available yet.')+'</p>';
+    var title='Namaa Strategy - '+(brief.projectName || 'Project');
+    var briefRows=[
+      ['Nom du projet',brief.projectName],['Étape',brief.stage],['Type',brief.category],['Branche',brief.branch],['Marché',brief.market],['Budget',brief.budget],['Objectif',brief.goal],['Canaux',Array.isArray(brief.channels)?brief.channels.join(', '):brief.channels]
+    ].filter(function(row){return row[1];}).map(function(row){return '<tr><th>'+utils.escapeHtml(row[0])+'</th><td>'+utils.escapeHtml(row[1])+'</td></tr>';}).join('');
+    var doc='<!doctype html><html><head><meta charset="utf-8"><title>'+utils.escapeHtml(title)+'</title><style>'+ 
+      '@page{size:A4;margin:18mm}body{font-family:Arial,sans-serif;color:#0f172a;background:#fff;line-height:1.55}header{border-bottom:4px solid #2563eb;padding-bottom:18px;margin-bottom:22px}small{color:#2563eb;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{font-size:34px;line-height:1.05;margin:8px 0 4px}h2{font-size:22px;margin:22px 0 10px;color:#0b255d}p{margin:8px 0;color:#334155}table{width:100%;border-collapse:collapse;margin:14px 0 22px}th,td{border:1px solid #dbeafe;text-align:left;padding:10px 12px;vertical-align:top}th{width:31%;background:#eff6ff;color:#1d4ed8}ul{padding-left:20px}li{margin:7px 0}.footer{margin-top:34px;padding-top:14px;border-top:1px solid #dbeafe;color:#64748b;font-size:12px}.cta{background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;margin:18px 0;color:#0b255d;font-weight:700}@media print{button{display:none}}' +
+      '</style></head><body><header><small>Namaa AI · Business Maroc</small><h1>Stratégie marketing du projet</h1><p>Document généré par Namaa Talk pour préparer le mockup et la landing page.</p></header>'+ 
+      '<section><h2>Brief projet</h2><table>'+briefRows+'</table></section>'+ 
+      '<section><h2>Stratégie</h2>'+strategyHtml+'</section>'+ 
+      '<div class="cta">Prochaine étape : transformer cette stratégie en mockup visuel puis en landing page simple.</div>'+ 
+      '<p class="footer">Namaa AI by Elboubakry Abdessamad · elboubakry.com</p><script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script></body></html>';
+    var win=window.open('','_blank','noopener,noreferrer');
+    if(win){win.document.open();win.document.write(doc);win.document.close();}
+    return stripHtml(strategyHtml);
   }
   function uploadPlaceholder(files){
     var count=files && files.length ? files.length : 0;
@@ -51,7 +74,8 @@
   }
 
   function textToHtml(text){
-    var safe=utils.escapeHtml(text || '');
+    var cleaned=String(text || '').replace(/\*\*/g,'').replace(/^\s*[\"'`]+|[\"'`]+\s*$/gm,'');
+    var safe=utils.escapeHtml(cleaned);
     var lines=safe.split(/\n+/).map(function(line){return line.trim();}).filter(Boolean);
     if(!lines.length)return '<p>Namaa is ready.</p>';
     var html='';
@@ -130,18 +154,60 @@
       '<p class="namaa-preview-note">Preview generated inside NamaaDev. Review the structure before using it in a real project.</p>'+ 
     '</div>';
   }
-  function talkApi(question,history){
+
+  function renderImageResult(apiResult,question){
+    var dataUrl=apiResult && apiResult.image && apiResult.image.dataUrl;
+    var model=(apiResult && apiResult.model) || 'Gemini image';
+    var aspect=(apiResult && apiResult.aspectRatio) || '16:9';
+    if(!dataUrl){
+      return null;
+    }
+    return '<div class="namaa-image-result namaa-image-result-live">'+
+      '<div class="namaa-image-status"><span>🎨 Mockup generated</span><small>'+utils.escapeHtml(aspect)+'</small></div>'+ 
+      '<figure class="namaa-live-image-card">'+
+        '<img src="'+utils.escapeHtml(dataUrl)+'" alt="Namaa Images generated business mockup">'+
+        '<figcaption><strong>Namaa Images</strong><span>'+utils.escapeHtml(model)+'</span></figcaption>'+ 
+      '</figure>'+ 
+      '<div class="namaa-image-spec">'+
+        '<h3>Design request</h3>'+ 
+        '<dl>'+ 
+          '<div><dt>Prompt</dt><dd>'+utils.escapeHtml(question)+'</dd></div>'+ 
+          '<div><dt>Usage</dt><dd>Mockup visuel pour business, startup, marketing ou landing page au Maroc.</dd></div>'+ 
+          '<div><dt>Status</dt><dd>Generated securely as a mockup direction.</dd></div>'+ 
+        '</dl>'+ 
+      '</div>'+ 
+      '<p class="namaa-preview-note">Image générée dans le panneau droit. Utilisez-la comme direction visuelle avant design final.</p>'+ 
+    '</div>';
+  }
+  function imagesApi(question,history,options){
+    options=options || {};
+    var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.imageEndpoint) || '/api/namaa/images';
+    return postJson(endpoint,{prompt:question,history:history || [],brief:options.brief || null,mode:'images',aspectRatio:'16:9'}).then(function(data){
+      var body=renderImageResult(data,question);
+      if(!body){
+        throw new Error(data.error || 'No image returned');
+      }
+      return {
+        answerHtml:'<div class="namaa-answer-head"><span>Namaa Images</span><strong>Mockup generated</strong></div>'+textToHtml(data.answer || 'Mockup generated in the right panel.'),
+        preview:{type:'Namaa Images',title:'Generated mockup',bodyHtml:body}
+      };
+    });
+  }
+
+  function talkApi(question,history,options){
+    options=options || {};
     var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.textEndpoint) || '/api/namaa/talk';
-    return postJson(endpoint,{message:question,history:history || [],mode:'talk'}).then(function(data){
+    return postJson(endpoint,{message:question,history:history || [],brief:options.brief || null,controlled:!!options.brief,mode:'talk'}).then(function(data){
       return {
         answerHtml:'<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Business Maroc</strong></div>'+textToHtml(data.answer || ''),
         state:{lastTalkQuestion:question}
       };
     });
   }
-  function devApi(question,history){
+  function devApi(question,history,options){
+    options=options || {};
     var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.devEndpoint) || '/api/namaa/dev';
-    return postJson(endpoint,{prompt:question,history:history || [],mode:'dev'}).then(function(data){
+    return postJson(endpoint,{prompt:question,history:history || [],brief:options.brief || null,mode:'dev'}).then(function(data){
       var answer=data.answer || 'NamaaDev generated a landing page example.';
       var body=data.files ? renderDevFiles(data,question) : renderDevFiles({files:buildDevFiles(question)},question);
       return {
@@ -152,8 +218,8 @@
   }
 
   window.NamaaServices={
-    api:{status:apiStatus,talk:talkApi,dev:devApi,textToHtml:textToHtml,renderDevFiles:renderDevFiles},
-    pdf:{placeholder:pdfPlaceholder},
+    api:{status:apiStatus,talk:talkApi,images:imagesApi,dev:devApi,textToHtml:textToHtml,renderDevFiles:renderDevFiles,renderImageResult:renderImageResult},
+    pdf:{placeholder:pdfPlaceholder,openStrategy:openStrategyPdf},
     upload:{placeholder:uploadPlaceholder},
     dev:{buildFiles:buildDevFiles}
   };

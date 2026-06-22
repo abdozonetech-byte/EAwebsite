@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://esm.sh" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800;900&display=swap"></noscript>
-  <link rel="stylesheet" href="/assets/css/namaa-ai-chat.css?v=20260622-u12">
+  <link rel="stylesheet" href="/assets/css/namaa-ai-chat.css?v=20260622-u14">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -136,13 +136,17 @@
             <div class="namaa-welcome" id="namaaHero">
               <div class="namaa-orb" aria-hidden="true"><span>N</span></div>
               <p class="namaa-kicker" id="namaaHeroKicker">Namaa Talk</p>
-              <h1 id="namaaHeroTitle">Comment puis-je aider votre business&nbsp;?</h1>
-              <p class="namaa-intro" id="namaaHeroIntro">Posez une question libre sur un projet, une idée, le marché marocain, l’IA business ou une stratégie marketing.</p>
+              <h1 id="namaaHeroTitle">Créons une stratégie claire pour votre projet&nbsp;?</h1>
+              <p class="namaa-intro" id="namaaHeroIntro">Commencez par un brief guidé pour obtenir une stratégie PDF, puis un mockup et une landing page. Vous pouvez aussi poser une question libre.</p>
               <div class="namaa-chip-row" aria-label="Exemples de questions">
-                <button type="button" data-prompt="J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?"><span>01</span> Restaurant</button>
-                <button type="button" data-prompt="Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?"><span>02</span> E-commerce</button>
-                <button type="button" data-prompt="Comment générer des leads WhatsApp pour un service local au Maroc ?"><span>03</span> Leads WhatsApp</button>
+                <button type="button" data-prompt="Lancer le brief projet"><span>01</span> Brief guidé</button>
+                <button type="button" data-prompt="J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?"><span>02</span> Restaurant</button>
+                <button type="button" data-prompt="Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?"><span>03</span> E-commerce</button>
                 <button type="button" data-prompt="Quelle stratégie marketing pour une clinique esthétique au Maroc ?"><span>04</span> Clinique</button>
+              </div>
+              <div class="namaa-guided-card">
+                <div><span class="namaa-guided-pill">Smart brief</span><h2>Commencez par un brief guidé</h2><p>Namaa collecte les bonnes informations en 8 étapes, limite les tokens, puis prépare une stratégie PDF, un mockup et une landing page.</p></div>
+                <button class="namaa-mini-button" type="button" data-flow-action="guided-intake">Lancer le brief projet</button>
               </div>
             </div>
           </div>
@@ -159,7 +163,7 @@
               <input class="sr-only" id="namaaFileInput" type="file" multiple accept="image/*,.pdf,.txt,.doc,.docx">
             </div>
             <label class="sr-only" for="namaaInput">Votre question business</label>
-            <textarea id="namaaInput" name="question" rows="1" placeholder="Ask Namaa about business, AI, startups, marketing in Morocco..." aria-label="Votre question business"></textarea>
+            <textarea id="namaaInput" name="question" rows="1" placeholder="Ask freely, or launch the guided project brief for a cleaner strategy..." aria-label="Votre question business"></textarea>
             <button class="namaa-send" type="submit" aria-label="Envoyer la question">
               <span>Envoyer</span>
               <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M4 12.5 19 5l-4.2 15-3.1-6.1L4 12.5Zm7.9-.8 1.8 3.5 1.9-6.7-6.7 3.4 3 .8Z" fill="currentColor"/></svg>
@@ -180,7 +184,7 @@
             <div class="namaa-preview-empty">
               <span>✨</span>
               <h3>Ready for Namaa Images &amp; NamaaDev</h3>
-              <p>This panel is hidden by default. In this version, Namaa Images opens this panel with a visual mockup result. NamaaDev now opens a live HTML/CSS/JS preview panel.</p>
+              <p>This panel is hidden by default. In this version, Namaa Images opens this panel with a visual mockup result. Namaa Images generates Gemini mockups in this panel. NamaaDev opens a live HTML/CSS/JS preview panel.</p>
             </div>
           </div>
         </aside>
@@ -188,14 +192,14 @@
     </section>
   </main>
 
-  <script src="/assets/js/namaa/namaa-utils.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/namaa-config.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/brain/namaa-business-brain.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/services/namaa-service-bridge.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/agents/namaa-talk-agent.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/agents/namaa-images-agent.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/agents/namaa-dev-agent.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa/namaa-mui-enhancer.js?v=20260622-u11" defer></script>
-  <script src="/assets/js/namaa-ai-chat.js?v=20260622-u11" defer></script>
+  <script src="/assets/js/namaa/namaa-utils.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/namaa-config.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/brain/namaa-business-brain.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/services/namaa-service-bridge.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/agents/namaa-talk-agent.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/agents/namaa-images-agent.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/agents/namaa-dev-agent.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa/namaa-mui-enhancer.js?v=20260622-u14" defer></script>
+  <script src="/assets/js/namaa-ai-chat.js?v=20260622-u14" defer></script>
 </body>
 </html>

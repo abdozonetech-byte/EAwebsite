@@ -1,12 +1,12 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u11-smooth-chatgpt-ui',
+    version:'20260622-u14-guided-flow',
     api:{
       enabled:true,
       provider:'gemini',
       talkProvider:'gemini',
-      imagesProvider:'local-mockup',
+      imagesProvider:'gemini-nano-banana',
       devProvider:'gemini',
       textEndpoint:'/api/namaa/talk',
       imageEndpoint:'/api/namaa/images',
@@ -22,11 +22,11 @@
         id:'talk',
         label:'Namaa Talk',
         bodyClass:'talk',
-        placeholder:'Ask Namaa about business, AI, startups, marketing in Morocco...',
+        placeholder:'Ask freely, or launch the guided project brief for a cleaner strategy...',
         hero:{
           kicker:'Namaa Talk',
-          title:'Comment puis-je aider votre business\u00a0?',
-          intro:'Posez une question libre sur un projet, une idée, le marché marocain, l’IA business ou une stratégie marketing.'
+          title:'Créons une stratégie claire pour votre projet\u00a0?',
+          intro:'Commencez par un brief guidé pour obtenir une stratégie PDF, puis un mockup et une landing page. Vous pouvez aussi poser une question libre.'
         }
       },
       images:{
@@ -53,9 +53,9 @@
       }
     },
     promptChips:[
-      {index:'01',label:'Restaurant',prompt:'J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?'},
-      {index:'02',label:'E-commerce',prompt:'Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?'},
-      {index:'03',label:'Leads WhatsApp',prompt:'Comment générer des leads WhatsApp pour un service local au Maroc ?'},
+      {index:'01',label:'Brief guidé',prompt:'Lancer le brief projet'},
+      {index:'02',label:'Restaurant',prompt:'J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?'},
+      {index:'03',label:'E-commerce',prompt:'Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?'},
       {index:'04',label:'Clinique',prompt:'Quelle stratégie marketing pour une clinique esthétique au Maroc ?'}
     ],
     ui:{

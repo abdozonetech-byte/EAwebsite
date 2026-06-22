@@ -35,6 +35,21 @@ Use French by default unless the user writes in Darija/Arabic/English.
 Landing page sections should include hero, benefits, method/process, trust, FAQ/CTA when relevant.
 `;
 
+function formatBrief(brief = {}) {
+  if (!brief || typeof brief !== 'object') return '';
+  const rows = [
+    ['Nom', brief.projectName], ['Étape', brief.stage], ['Type', brief.category], ['Branche', brief.branch],
+    ['Marché', brief.market], ['Budget', brief.budget], ['Objectif', brief.goal],
+    ['Canaux', Array.isArray(brief.channels) ? brief.channels.join(', ') : brief.channels],
+  ].filter((row) => row[1]);
+  return rows.map(([key, value]) => `${key}: ${String(value).slice(0, 300)}`).join('\n');
+}
+function buildDevPrompt(prompt, brief) {
+  const briefText = formatBrief(brief);
+  if (!briefText) return prompt;
+  return `Structured project brief:\n${briefText}\n\nUser request:\n${prompt}\n\nCreate the landing page from the structured brief. Use the project name, sector, city, budget and goal where relevant.`;
+}
+
 function extractJson(text) {
   const raw = String(text || '').trim();
   try {
@@ -59,6 +74,8 @@ export async function onRequestOptions() {
 export async function onRequestPost(context) {
   const body = await readJson(context.request);
   const prompt = safeText(body.prompt || body.message || body.question, 4000);
+  const brief = body.brief && typeof body.brief === 'object' ? body.brief : null;
+  const controlledPrompt = safeText(buildDevPrompt(prompt, brief), 5000);
 
   if (!prompt) {
     return jsonResponse({ ok: false, error: 'Prompt is required.' }, 400);
@@ -68,7 +85,7 @@ export async function onRequestPost(context) {
     ...normalizeHistory(body.history),
     {
       role: 'user',
-      parts: [{ text: prompt }],
+      parts: [{ text: controlledPrompt }],
     },
   ];
 
