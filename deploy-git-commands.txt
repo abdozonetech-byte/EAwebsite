@@ -1,6 +1,6 @@
 git status
 git add .
-git commit -m "Update 56: restore Namaa chat design with Gemini agents"
+git commit -m "Update 57: restore Namaa UI UX like requested screenshot"
 git branch -M main
 git remote set-url origin https://github.com/abdozonetech-byte/EAwebsite.git
 git push -u origin main
