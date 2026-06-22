@@ -109,47 +109,116 @@
       return '<span><b>'+num+'</b>'+utils.escapeHtml(item)+'</span>';
     }).join('');
   }
+  function documentLanguageHint(brief){
+    var lang=String((brief && brief.language) || '').toLowerCase();
+    if(lang.indexOf('darija')>-1)return 'Darija Latin';
+    if(lang.indexOf('arab')>-1 || lang.indexOf('العربية')>-1)return 'العربية';
+    if(lang.indexOf('english')>-1)return 'English';
+    if(lang.indexOf('fr')>-1 || lang.indexOf('français')>-1)return 'Français';
+    return 'Darija / Français';
+  }
+  function safeMeta(value,fallback){
+    value=String(value || '').trim();
+    return utils.escapeHtml(value || fallback || '—');
+  }
+  function renderPdfPipeline(type){
+    var order=type==='market_research'
+      ? ['Market clarity','Audience + behavior','Opportunity gap','Validation plan']
+      : type==='roadmap'
+        ? ['Setup','Launch actions','Lead test','Scale decision']
+        : ['Positioning','Funnel','30-day plan','KPIs'];
+    return order.map(function(item,i){
+      return '<span><b>'+String(i+1).padStart(2,'0')+'</b>'+utils.escapeHtml(item)+'</span>';
+    }).join('');
+  }
+  function nextCardsHtml(doc){
+    return (doc.next || []).map(function(item){return '<div>'+utils.escapeHtml(item)+'</div>';}).join('');
+  }
+
+  function normalizeSources(sources){
+    return Array.isArray(sources) ? sources.filter(function(source){return source && (source.shortName || source.name || source.domain || source.url || source.uri);}).slice(0,10) : [];
+  }
+  function sourceLevelLabel(source){
+    var level=Number(source && source.trustLevel || 0);
+    if(level===1)return 'Official Morocco';
+    if(level===2)return 'International';
+    if(level===3)return source && source.type==='live_google_search' ? 'Live citation' : 'Industry support';
+    return source && source.type==='live_google_search' ? 'Live citation' : 'Reference';
+  }
+  function renderSourcesPanel(sources,mode){
+    sources=normalizeSources(sources);
+    if(!sources.length){
+      sources=[
+        {shortName:'HCP',domain:'hcp.ma',trustLevel:1,note:'Morocco economy, population and market context'},
+        {shortName:'ANRT',domain:'anrt.ma',trustLevel:1,note:'Digital, internet and mobile indicators'}
+      ];
+    }
+    var cards=sources.map(function(source){
+      var label=utils.escapeHtml(source.shortName || source.title || source.name || 'Source');
+      var domain=utils.escapeHtml(source.domain || '');
+      var link=source.url || source.uri || '';
+      var sourceTitle=link ? '<a href="'+utils.escapeHtml(link)+'" target="_blank" rel="noopener">'+label+'</a>' : label;
+      return '<li><strong>'+sourceTitle+'</strong><span>'+domain+'</span><em>'+utils.escapeHtml(sourceLevelLabel(source))+'</em><small>'+utils.escapeHtml(source.note || 'Used as a trusted research reference.')+'</small></li>';
+
+    }).join('');
+    var title=mode==='print'?'Sources used':'Sources utilisées';
+    var hasLive=sources.some(function(source){return source.type==='live_google_search' || source.url || source.uri;});
+    var note=mode==='print'
+      ? (hasLive ? 'Namaa combines curated trusted Morocco sources with live Gemini Google Search citations. Exact numbers must still be checked in the original source before legal, financial or investment decisions.' : 'Namaa separates verified/source-backed context from strategic recommendations. Exact numbers must be checked in the original official source before legal, financial or investment decisions.')
+      : (hasLive ? 'Namaa دار research بمصادر موثوقة + live citations. الأرقام الدقيقة خاصها verification من المصدر الأصلي.' : 'Namaa يفرّق بين facts والمقترحات. الأرقام الدقيقة خاصها verification من المصدر الرسمي.');
+    return '<section class="namaa-sources-panel '+(mode==='print'?'is-print':'')+'"><div class="namaa-sources-head"><span>🔐</span><div><h3>'+title+'</h3><p>'+utils.escapeHtml(note)+'</p></div></div><ol>'+cards+'</ol></section>';
+  }
+
   function renderStrategyPreview(payload){
     payload=payload || {};
     var brief=payload.brief || {};
     var doc=pdfDocConfig(payload.documentType || payload.deliverableType || payload.action);
+    var sources=normalizeSources(payload.sources || payload.trustedSources || payload.sourceList);
     var strategyHtml=cleanStrategyHtml(payload.strategyHtml,payload.strategyText);
     var title=brief.projectName || 'Projet Namaa';
-    return '<article class="namaa-pdf-preview namaa-pdf-preview-branded" data-pdf-type="'+utils.escapeHtml(doc.key)+'">'+
-      '<header class="namaa-pdf-preview-cover">'+
-        '<div class="namaa-pdf-preview-brand"><img src="/assets/images/logo-e-blue.png" alt="Namaa logo"><div><strong>Namaa AI</strong><small>by Elboubakry Abdessamad</small></div></div>'+ 
-        '<span>'+utils.escapeHtml(doc.tag)+'</span>'+
+    return '<article class="namaa-pdf-preview namaa-pdf-preview-v2" data-pdf-type="'+utils.escapeHtml(doc.key)+'">'+
+      '<header class="namaa-pdf-v2-cover">'+
+        '<div class="namaa-pdf-v2-brandline"><div class="namaa-mark"><b>N</b></div><div><strong>Namaa AI</strong><small>Project Factory by Elboubakry Abdessamad</small></div><img src="/assets/images/logo-e-blue.png" alt="Elboubakry logo"></div>'+ 
+        '<div class="namaa-pdf-v2-kicker"><span>'+utils.escapeHtml(doc.badge)+'</span><em>'+utils.escapeHtml(doc.tag)+'</em></div>'+ 
         '<h2>'+utils.escapeHtml(title)+'</h2>'+ 
         '<p>'+utils.escapeHtml(doc.intro)+'</p>'+ 
+        '<div class="namaa-pdf-v2-pipeline">'+renderPdfPipeline(doc.key)+'</div>'+ 
       '</header>'+ 
-      '<section class="namaa-pdf-preview-meta">'+
-        '<div><small>Document</small><strong>'+utils.escapeHtml(doc.shortTitle)+'</strong></div>'+ 
-        '<div><small>Marché</small><strong>'+utils.escapeHtml(brief.market || 'Maroc')+'</strong></div>'+ 
-        '<div><small>Objectif</small><strong>'+utils.escapeHtml(brief.goal || 'Croissance')+'</strong></div>'+ 
+      '<section class="namaa-pdf-v2-meta">'+
+        '<div><small>Document</small><strong>'+safeMeta(doc.shortTitle,'Namaa PDF')+'</strong></div>'+ 
+        '<div><small>Marché</small><strong>'+safeMeta(brief.market,'Maroc')+'</strong></div>'+ 
+        '<div><small>Budget</small><strong>'+safeMeta(brief.budget,'À valider')+'</strong></div>'+ 
+        '<div><small>Langue</small><strong>'+utils.escapeHtml(documentLanguageHint(brief))+'</strong></div>'+ 
       '</section>'+ 
-      '<section class="namaa-pdf-preview-map"><h3>Structure du PDF</h3><div>'+renderSectionChips(doc.sections)+'</div></section>'+ 
-      '<section class="namaa-pdf-preview-brief"><h3>Brief projet</h3><table>'+makeBriefTable(brief)+'</table></section>'+ 
-      '<section class="namaa-pdf-preview-strategy"><h3>'+utils.escapeHtml(doc.sectionTitle)+'</h3>'+strategyHtml+'</section>'+ 
-      '<footer class="namaa-pdf-preview-footer"><strong>Prepared by Namaa AI — Elboubakry Abdessamad.</strong><br>'+utils.escapeHtml(doc.footer)+'</footer>'+ 
+      '<section class="namaa-pdf-v2-box namaa-pdf-preview-map"><h3>Document map</h3><div>'+renderSectionChips(doc.sections)+'</div></section>'+ 
+      '<section class="namaa-pdf-v2-box namaa-pdf-preview-brief"><h3>Project DNA</h3><table>'+makeBriefTable(brief)+'</table></section>'+ 
+      '<section class="namaa-pdf-v2-box namaa-pdf-preview-strategy"><h3>'+utils.escapeHtml(doc.sectionTitle)+'</h3>'+strategyHtml+'</section>'+ 
+      '<section class="namaa-pdf-v2-box namaa-pdf-v2-next"><h3>Next in Namaa Factory</h3><div>'+nextCardsHtml(doc)+'</div></section>'+ 
+      renderSourcesPanel(sources,'preview')+
+      '<footer class="namaa-pdf-preview-footer namaa-pdf-v2-footer"><strong>Namaa AI · Elboubakry Abdessamad</strong><br>Preview only. Download/print gives the branded PDF layout with cover, Project DNA, document map, CTA and footer.</footer>'+ 
     '</article>';
   }
   function openStrategyPdf(payload){
     payload=payload || {};
     var brief=payload.brief || {};
     var doc=pdfDocConfig(payload.documentType || payload.deliverableType || payload.action);
+    var sources=normalizeSources(payload.sources || payload.trustedSources || payload.sourceList);
     var strategyHtml=cleanStrategyHtml(payload.strategyHtml,payload.strategyText);
     var title='Namaa '+doc.shortTitle+' - '+(brief.projectName || 'Project');
     var date=new Date().toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
-    var nextCards=(doc.next || []).map(function(item){return '<div>'+utils.escapeHtml(item)+'</div>';}).join('');
+    var nextCards=nextCardsHtml(doc);
     var structure=(doc.sections || []).map(function(item,i){return '<li><b>'+String(i+1).padStart(2,'0')+'</b><span>'+utils.escapeHtml(item)+'</span></li>';}).join('');
     var safeTitle=utils.escapeHtml(brief.projectName || doc.title);
+    var langHint=documentLanguageHint(brief);
+    var brandLogo='/assets/images/logo-e-blue.png';
     var docHtml='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+utils.escapeHtml(title)+'</title><style>'+ 
-      '@page{size:A4;margin:15mm}*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:#07152f;background:#fff;line-height:1.55}.page{min-height:100vh}.cover{position:relative;overflow:hidden;border-radius:30px;padding:34px 34px 30px;background:radial-gradient(circle at 82% 12%,#bfdbfe,transparent 34%),linear-gradient(135deg,#07152f 0%,#0f2f6d 47%,#2563eb 100%);color:#fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}.cover:before{content:"";position:absolute;left:-80px;top:-110px;width:270px;height:270px;border-radius:999px;background:rgba(255,255,255,.08)}.cover:after{content:"";position:absolute;right:-92px;bottom:-120px;width:300px;height:300px;border-radius:999px;background:rgba(255,255,255,.11)}.brand{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:34px}.brand-main{display:flex;align-items:center;gap:12px}.brand img{width:48px;height:48px;border-radius:16px;background:#fff;padding:6px;box-shadow:0 12px 34px rgba(0,0,0,.16)}.brand strong{display:block;font-size:18px;letter-spacing:-.02em}.brand small{display:block;color:#bfdbfe;font-size:12px;font-weight:800}.brand-code{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.14);font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#dbeafe}.tag{position:relative;z-index:1;display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.cover h1{position:relative;z-index:1;max-width:760px;margin:13px 0 12px;font-size:44px;line-height:.98;letter-spacing:-.055em}.cover p{position:relative;z-index:1;max-width:660px;margin:0;color:#dbeafe;font-size:16px}.meta{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px}.meta div{padding:13px;border-radius:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}.meta small{display:block;color:#bfdbfe;text-transform:uppercase;font-size:9px;font-weight:900;letter-spacing:.1em}.meta b{display:block;margin-top:4px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}section{margin-top:22px}.section-title{display:flex;align-items:center;gap:10px;margin:0 0 12px}.section-title span{display:grid;place-items:center;width:31px;height:31px;border-radius:11px;background:#dbeafe;color:#2563eb;font-size:12px;font-weight:900}.section-title h2{margin:0;font-size:23px;line-height:1.1;letter-spacing:-.035em;color:#0b255d}.doc-map{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0;padding:0;list-style:none}.doc-map li{display:flex;gap:9px;align-items:center;padding:10px 11px;border-radius:15px;background:#f8fbff;border:1px solid #dbeafe;color:#334155;font-size:12px;font-weight:800}.doc-map b{display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#eaf2ff;color:#1d4ed8;font-size:10px;flex:0 0 auto}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #dbeafe;border-radius:18px}th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #e7f0ff;vertical-align:top}tr:last-child th,tr:last-child td{border-bottom:0}th{width:30%;background:#eff6ff;color:#1d4ed8;font-size:11px;text-transform:uppercase;letter-spacing:.06em}td{color:#1f3557;font-weight:700}.content{border:1px solid #dbeafe;border-radius:22px;padding:22px;background:linear-gradient(180deg,#fbfdff,#fff)}.content h1,.content h2,.content h3{break-after:avoid;color:#0b255d;letter-spacing:-.035em}.content h1{font-size:24px}.content h2{font-size:21px;margin:18px 0 9px}.content h3{font-size:17px;margin:15px 0 8px}.content p{color:#334155;margin:8px 0}.content ul,.content ol{padding-left:20px;color:#334155}.content li{margin:6px 0}.next{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}.next div{padding:14px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#0b255d;font-weight:800}.footer{margin-top:26px;padding-top:14px;border-top:1px solid #dbeafe;display:flex;justify-content:space-between;gap:14px;color:#64748b;font-size:12px}.footer b{color:#1d4ed8}.print-button{position:fixed;right:18px;bottom:18px;z-index:10;border:0;border-radius:999px;background:#2563eb;color:#fff;font-weight:900;padding:14px 18px;box-shadow:0 16px 40px rgba(37,99,235,.28);cursor:pointer}@media(max-width:720px){.cover h1{font-size:34px}.meta{grid-template-columns:1fr 1fr}.doc-map{grid-template-columns:1fr}.next{grid-template-columns:1fr}}@media print{.print-button{display:none}.cover{break-inside:avoid}.content{break-inside:auto}.doc-map li,.next div{break-inside:avoid}}'+
-      '</style></head><body><button class="print-button" onclick="window.print()">Save / Print PDF</button><main class="page"><section class="cover"><div class="brand"><div class="brand-main"><img src="/assets/images/logo-e-blue.png" alt="Namaa logo"><div><strong>Namaa AI</strong><small>by Elboubakry Abdessamad · elboubakry.com</small></div></div><div class="brand-code">'+utils.escapeHtml(doc.badge)+'</div></div><span class="tag">'+utils.escapeHtml(doc.tag)+'</span><h1>'+safeTitle+'</h1><p>'+utils.escapeHtml(doc.intro)+'</p><div class="meta"><div><small>Date</small><b>'+utils.escapeHtml(date)+'</b></div><div><small>Document</small><b>'+utils.escapeHtml(doc.shortTitle)+'</b></div><div><small>Marché</small><b>'+utils.escapeHtml(brief.market || 'Maroc')+'</b></div><div><small>Objectif</small><b>'+utils.escapeHtml(brief.goal || 'Croissance')+'</b></div></div></section><section><div class="section-title"><span>01</span><h2>Brief projet</h2></div><table>'+makeBriefTable(brief)+'</table></section><section><div class="section-title"><span>02</span><h2>Structure du document</h2></div><ul class="doc-map">'+structure+'</ul></section><section><div class="section-title"><span>03</span><h2>'+utils.escapeHtml(doc.sectionTitle)+'</h2></div><div class="content">'+strategyHtml+'</div></section><section><div class="section-title"><span>04</span><h2>Suite recommandée</h2></div><div class="next">'+nextCards+'</div></section><p class="footer"><span><b>Namaa AI</b> · Prepared by Elboubakry Abdessamad</span><span>'+utils.escapeHtml(doc.footer)+'</span></p></main><script>window.onload=function(){setTimeout(function(){window.print()},420)}<\/script></body></html>';
+      '@page{size:A4;margin:13mm}*{box-sizing:border-box}html{background:#eaf2ff}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:#07152f;background:#fff;line-height:1.55}.page{max-width:980px;margin:0 auto;padding:0 0 26px}.cover{position:relative;min-height:420px;overflow:hidden;border-radius:34px;padding:34px;background:radial-gradient(circle at 82% 10%,rgba(147,197,253,.98),transparent 32%),radial-gradient(circle at 8% 85%,rgba(59,130,246,.34),transparent 34%),linear-gradient(135deg,#06142f 0%,#0f2f6d 48%,#2563eb 100%);color:#fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}.cover:before{content:"";position:absolute;inset:18px;border:1px solid rgba(255,255,255,.12);border-radius:26px;pointer-events:none}.cover:after{content:"";position:absolute;right:-92px;bottom:-118px;width:310px;height:310px;border-radius:999px;background:rgba(255,255,255,.12)}.brand{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:34px}.brand-main{display:flex;align-items:center;gap:12px}.namaa-mark{display:grid;place-items:center;width:54px;height:54px;border-radius:19px;background:#fff;color:#1d4ed8;box-shadow:0 16px 44px rgba(0,0,0,.18);font-size:24px;font-weight:1000;letter-spacing:-.08em}.brand img{width:46px;height:46px;border-radius:16px;background:#fff;padding:6px;box-shadow:0 12px 34px rgba(0,0,0,.16)}.brand strong{display:block;font-size:18px;letter-spacing:-.02em}.brand small{display:block;color:#bfdbfe;font-size:12px;font-weight:800}.brand-code{padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.14);font-size:10px;font-weight:950;letter-spacing:.12em;text-transform:uppercase;color:#dbeafe}.tag{position:relative;z-index:1;display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:950;letter-spacing:.11em;text-transform:uppercase}.cover h1{position:relative;z-index:1;max-width:790px;margin:13px 0 12px;font-size:48px;line-height:.96;letter-spacing:-.06em}.cover p{position:relative;z-index:1;max-width:700px;margin:0;color:#dbeafe;font-size:16px;font-weight:760}.pipeline{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:28px}.pipeline span{padding:12px;border-radius:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);font-size:11px;font-weight:900;color:#dbeafe}.pipeline b{display:block;color:#fff;font-size:13px;margin-bottom:4px}.meta{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 0}.meta div{padding:13px;border-radius:18px;background:#f8fbff;border:1px solid #dbeafe}.meta small{display:block;color:#2563eb;text-transform:uppercase;font-size:9px;font-weight:950;letter-spacing:.1em}.meta b{display:block;margin-top:4px;font-size:12px;color:#0b255d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}section{margin-top:22px}.section-title{display:flex;align-items:center;gap:10px;margin:0 0 12px}.section-title span{display:grid;place-items:center;width:31px;height:31px;border-radius:11px;background:#dbeafe;color:#2563eb;font-size:12px;font-weight:950}.section-title h2{margin:0;font-size:23px;line-height:1.1;letter-spacing:-.035em;color:#0b255d}.doc-map{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0;padding:0;list-style:none}.doc-map li{display:flex;gap:9px;align-items:center;padding:10px 11px;border-radius:15px;background:#f8fbff;border:1px solid #dbeafe;color:#334155;font-size:12px;font-weight:850}.doc-map b{display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#eaf2ff;color:#1d4ed8;font-size:10px;flex:0 0 auto}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #dbeafe;border-radius:18px}th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #e7f0ff;vertical-align:top}tr:last-child th,tr:last-child td{border-bottom:0}th{width:30%;background:#eff6ff;color:#1d4ed8;font-size:11px;text-transform:uppercase;letter-spacing:.06em}td{color:#1f3557;font-weight:750}.content{border:1px solid #dbeafe;border-radius:24px;padding:22px;background:linear-gradient(180deg,#fbfdff,#fff);box-shadow:0 18px 60px rgba(37,99,235,.06)}.content h1,.content h2,.content h3{break-after:avoid;color:#0b255d;letter-spacing:-.035em}.content h1{font-size:24px}.content h2{font-size:21px;margin:18px 0 9px}.content h3{font-size:17px;margin:15px 0 8px}.content p{color:#334155;margin:8px 0}.content ul,.content ol{padding-left:20px;color:#334155}.content li{margin:6px 0}.next{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}.next div{padding:14px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#0b255d;font-weight:850}.namaa-sources-panel{margin-top:22px;border:1px solid #dbeafe;border-radius:24px;padding:18px;background:#f8fbff}.namaa-sources-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}.namaa-sources-head span{display:grid;place-items:center;width:38px;height:38px;border-radius:14px;background:#dbeafe}.namaa-sources-head h3{margin:0;color:#0b255d;font-size:22px;letter-spacing:-.035em}.namaa-sources-head p{margin:4px 0 0;color:#52657f;font-size:12px}.namaa-sources-panel ol{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;list-style:none;margin:0;padding:0}.namaa-sources-panel li{padding:12px;border-radius:16px;background:#fff;border:1px solid #dbeafe;break-inside:avoid}.namaa-sources-panel strong{display:block;color:#0b255d}.namaa-sources-panel span{display:inline-flex;margin-top:3px;color:#2563eb;font-size:11px;font-weight:900}.namaa-sources-panel em{display:inline-flex;margin-left:6px;color:#0f766e;font-size:10px;font-style:normal;font-weight:950;text-transform:uppercase}.namaa-sources-panel small{display:block;margin-top:6px;color:#52657f;font-size:11px;line-height:1.35}.cta{margin-top:22px;border-radius:26px;padding:20px;background:linear-gradient(135deg,#07152f,#123a85);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;print-color-adjust:exact;-webkit-print-color-adjust:exact}.cta strong{display:block;font-size:20px;letter-spacing:-.035em}.cta p{margin:5px 0 0;color:#dbeafe}.cta a{display:inline-flex;text-decoration:none;color:#07152f;background:#fff;border-radius:999px;padding:12px 15px;font-weight:950;white-space:nowrap}.footer{margin-top:20px;padding-top:14px;border-top:1px solid #dbeafe;display:flex;justify-content:space-between;gap:14px;color:#64748b;font-size:12px}.footer b{color:#1d4ed8}.print-button{position:fixed;right:18px;bottom:18px;z-index:10;border:0;border-radius:999px;background:#2563eb;color:#fff;font-weight:950;padding:14px 18px;box-shadow:0 16px 40px rgba(37,99,235,.28);cursor:pointer}.watermark{position:fixed;right:18mm;bottom:12mm;color:#dbeafe;font-size:10px;font-weight:950;letter-spacing:.11em;text-transform:uppercase}@media(max-width:720px){.page{padding:0}.cover{border-radius:0}.cover h1{font-size:34px}.meta{grid-template-columns:1fr 1fr}.pipeline{grid-template-columns:1fr 1fr}.doc-map{grid-template-columns:1fr}.next{grid-template-columns:1fr}.cta{display:block}.cta a{margin-top:12px}}@media print{html{background:#fff}body{background:#fff}.print-button{display:none}.cover{break-inside:avoid}.content{break-inside:auto}.doc-map li,.next div,.cta{break-inside:avoid}.page{max-width:none}.watermark{display:block}}'+
+      '</style></head><body><button class="print-button" onclick="window.print()">Save / Print PDF</button><main class="page"><section class="cover"><div class="brand"><div class="brand-main"><div class="namaa-mark">N</div><div><strong>Namaa AI</strong><small>Project Factory · by Elboubakry Abdessamad</small></div></div><img src="'+brandLogo+'" alt="Elboubakry logo"><div class="brand-code">'+utils.escapeHtml(doc.badge)+'</div></div><span class="tag">'+utils.escapeHtml(doc.tag)+'</span><h1>'+safeTitle+'</h1><p>'+utils.escapeHtml(doc.intro)+'</p><div class="pipeline">'+renderPdfPipeline(doc.key)+'</div></section><section class="meta"><div><small>Date</small><b>'+utils.escapeHtml(date)+'</b></div><div><small>Document</small><b>'+utils.escapeHtml(doc.shortTitle)+'</b></div><div><small>Marché</small><b>'+utils.escapeHtml(brief.market || 'Maroc')+'</b></div><div><small>Objectif</small><b>'+utils.escapeHtml(brief.goal || 'Croissance')+'</b></div><div><small>Langue</small><b>'+utils.escapeHtml(langHint)+'</b></div></section><section><div class="section-title"><span>01</span><h2>Project DNA</h2></div><table>'+makeBriefTable(brief)+'</table></section><section><div class="section-title"><span>02</span><h2>Document map</h2></div><ul class="doc-map">'+structure+'</ul></section><section><div class="section-title"><span>03</span><h2>'+utils.escapeHtml(doc.sectionTitle)+'</h2></div><div class="content">'+strategyHtml+'</div></section><section><div class="section-title"><span>04</span><h2>Suite recommandée</h2></div><div class="next">'+nextCards+'</div></section>'+sourcesHtml+'<section class="cta"><div><strong>Besoin d’appliquer cette stratégie ?</strong><p>Namaa peut préparer la vision. Abdessamad Elboubakry peut vous accompagner sur l’exécution: landing page, tracking, contenu, ads, WhatsApp et leads.</p></div><a href="https://elboubakry.com/reserver-diagnostic/">Réserver un diagnostic</a></section><p class="footer"><span><b>Namaa AI</b> · Prepared by Elboubakry Abdessamad · elboubakry.com</span><span>'+utils.escapeHtml(doc.footer)+'</span></p><div class="watermark">Namaa AI · Project Factory</div></main><script>window.onload=function(){setTimeout(function(){window.print()},420)}<\/script></body></html>';
     var win=window.open('','_blank','noopener,noreferrer');
     if(win){win.document.open();win.document.write(docHtml);win.document.close();}
     return stripHtml(strategyHtml);
   }
+
   function uploadPlaceholder(files){
     var count=files && files.length ? files.length : 0;
     return '<h2>Files received.</h2><p>'+count+' file(s) selected. Namaa will use uploaded files for context when file analysis is enabled.</p>';
@@ -286,6 +355,16 @@
   function packChips(items){
     return (items || []).map(function(item,i){return '<span><b>'+utils.pad2(i+1)+'</b>'+utils.escapeHtml(item)+'</span>';}).join('');
   }
+  function renderDesignStages(pack){
+    var flow=pack.assetFlow || ['Logo first','Brand board','Category mockups','Launch visuals'];
+    var stages=pack.stages || [];
+    return '<div class="namaa-logo-workflow">'+flow.map(function(item,i){
+      return '<div><span>'+utils.pad2(i+1)+'</span><strong>'+utils.escapeHtml(item)+'</strong><small>'+utils.escapeHtml(stages[i] || '')+'</small></div>';
+    }).join('')+'</div>';
+  }
+  function renderOutputPack(pack){
+    return '<div class="namaa-category-output">'+(pack.outputs || pack.assets || []).slice(0,7).map(function(item){return '<span>'+utils.escapeHtml(item)+'</span>';}).join('')+'</div>';
+  }
   function renderImageResult(apiResult,question,brief){
     var dataUrl=apiResult && apiResult.image && apiResult.image.dataUrl;
     var aspect=(apiResult && apiResult.aspectRatio) || (apiResult && apiResult.pack && apiResult.pack.ratio) || '16:9';
@@ -294,12 +373,13 @@
       return null;
     }
     return '<div class="namaa-image-result namaa-image-result-live namaa-image-result-pack">'+
-      '<div class="namaa-image-status"><span>🎨 Mockup pack généré</span><small>'+utils.escapeHtml(pack.label || aspect)+'</small></div>'+ 
+      '<div class="namaa-image-status"><span>🎨 Logo + mockup pack généré</span><small>'+utils.escapeHtml(pack.label || aspect)+'</small></div>'+ 
+      '<div class="namaa-design-system-card"><h3>Logo-first workflow</h3>'+renderDesignStages(pack)+'<p>'+utils.escapeHtml(pack.logoPrompt || pack.logoIdea || 'Logo concept first, then mockups adapted to the project category.')+'</p></div>'+ 
       '<figure class="namaa-live-image-card namaa-live-image-card-pack">'+
         '<img src="'+utils.escapeHtml(dataUrl)+'" alt="Namaa Images generated business mockup pack">'+
-        '<figcaption><strong>'+utils.escapeHtml(pack.primaryAsset || 'Namaa Images')+'</strong><span>'+utils.escapeHtml(aspect)+' · Gemini image</span></figcaption>'+ 
+        '<figcaption><strong>'+utils.escapeHtml(pack.primaryAsset || 'Namaa Images')+'</strong><span>'+utils.escapeHtml(aspect)+' · Namaa Image Lab</span></figcaption>'+ 
       '</figure>'+ 
-      '<div class="namaa-mock-assets"><h3>Creative package</h3><div class="namaa-layout-chips namaa-asset-chips">'+packChips(pack.assets || [])+'</div></div>'+
+      '<div class="namaa-mock-assets"><h3>Category output pack</h3>'+renderOutputPack(pack)+'<div class="namaa-layout-chips namaa-asset-chips">'+packChips(pack.assets || [])+'</div></div>'+
       '<div class="namaa-image-spec">'+
         '<h3>Design request</h3>'+ 
         '<dl>'+ 
@@ -310,7 +390,7 @@
         '</dl>'+ 
       '</div>'+ 
       '<div class="namaa-copy-angles"><h3>Suggested messages</h3><div>'+packChips(pack.copyAngles || [])+'</div></div>'+
-      '<p class="namaa-preview-note">Image générée dans le panneau droit avec logo + mockups adaptés à la catégorie. Utilisez-la comme direction avant design final.</p>'+ 
+      '<p class="namaa-preview-note">'+utils.escapeHtml(pack.downloadNote || 'Preview only: Namaa shows the creative direction before final export.')+'</p>'+ 
     '</div>';
   }
   function imagesApi(question,history,options){
@@ -374,6 +454,10 @@
       if(data.brief){state.projectBrief=data.brief;}
       if(data.briefPatch){state.projectBriefPatch=data.briefPatch;}
       if(data.briefStatus){state.briefStatus=data.briefStatus;}
+      if(data.sources){state.lastSources=data.sources;}
+      if(data.liveSources){state.lastLiveSources=data.liveSources;}
+      if(data.liveSearch){state.liveSearch=data.liveSearch;}
+      if(data.sourcePolicy){state.sourcePolicy=data.sourcePolicy;}
       state.lastDeliverableType=data.shortMode ? '' : (data.action || '');
       return {
         answerHtml:html,

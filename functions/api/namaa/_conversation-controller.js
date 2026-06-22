@@ -8,6 +8,7 @@ import {
   getSmartBriefStatus,
   smartBriefAnswer,
 } from './_smart-brief-builder.js';
+import { MARKET_CITIES, MARKET_CATEGORY_RULES, detectMarketCity, detectMarketCategory } from './_market-taxonomy.js';
 
 export const NAMAA_SCOPE = [
   'business', 'startup', 'startups', 'project', 'projet', 'مشروع', 'مشاريع', 'بيزنس', 'تجارة', 'commerce',
@@ -17,20 +18,11 @@ export const NAMAA_SCOPE = [
   'restaurant', 'clinic', 'clinique', 'medical', 'formation', 'real estate', 'immobilier', 'agency', 'agence',
   'technology', 'technologie', 'tech', 'it', 'software', 'logiciel', 'programming', 'programmation', 'code', 'coding', 'developer', 'dev', 'automation', 'automatisation', 'digital', 'branding', 'brand',
   'فكرة', 'افكار', 'فلوس', 'ربح', 'متجر', 'موقع', 'تطبيق', 'زبناء', 'عملاء', 'إعلان', 'اعلان',
+  'marketplace','tourism','tourisme','hotel','riad','beauty','beaute','beauté','industrie','b2b','association','media','podcast','newsletter',
 ];
 
-const CITIES = ['casablanca','casa','rabat','marrakech','tanger','agadir','fes','fès','meknes','meknès','kenitra','kénitra','oujda','taroudant','maroc','morocco'];
-const CATEGORIES = [
-  { value: 'E-commerce / vente de produits', words: ['ecommerce','e-commerce','commerce','produit','product','sell','vente','بيع','cosmetic','fashion','shop'] },
-  { value: 'Restaurant / food', words: ['restaurant','food','café','cafe','coffee','patisserie','fast food','dark kitchen','اكل','مطعم'] },
-  { value: 'Clinique / médical', words: ['clinic','clinique','medical','médical','dentiste','doctor','derma','esthetic','esthétique','عيادة','طبيب'] },
-  { value: 'SaaS / application', words: ['saas','application','app','software','logiciel','platform','plateforme','dashboard','mobile app'] },
-  { value: 'Agence / service pro', words: ['agency','agence','service pro','consulting','marketing agency','studio','freelance'] },
-  { value: 'Service local', words: ['cleaning','nettoyage','déménagement','service local','repair','coaching','livraison'] },
-  { value: 'Formation / cours', words: ['formation','cours','school','école','education','edtech','learn','training'] },
-  { value: 'Immobilier', words: ['real estate','immobilier','airbnb','location','appartement','property'] },
-  { value: 'AI business / automation', words: ['ai business','ia business','automation','automatisation','agent ai','chatbot','bot'] },
-];
+const CITIES = MARKET_CITIES;
+const CATEGORIES = MARKET_CATEGORY_RULES;
 
 export const REQUIRED_BRIEF_FIELDS = [
   { key: 'projectName', label: 'nom du projet' },
@@ -99,11 +91,11 @@ export function inferBriefPatch(message = {}) {
   const n = normalize(text);
   const patch = {};
 
-  const city = CITIES.find((item) => n.includes(normalize(item)));
-  if (city) patch.market = city === 'casa' ? 'Casablanca' : city.charAt(0).toUpperCase() + city.slice(1);
+  const city = detectMarketCity(text);
+  if (city) patch.market = city;
 
-  const category = CATEGORIES.find((item) => includesAny(text, item.words));
-  if (category) patch.category = category.value;
+  const category = detectMarketCategory(text) || (CATEGORIES.find((item) => includesAny(text, item.words))?.value || '');
+  if (category) patch.category = category;
 
   const budgetMatch = text.match(/(?:budget\s*)?(\d{3,6})\s*(?:dh|mad|dhs|درهم|درهما)/i);
   if (budgetMatch) patch.budget = budgetMatch[1] + ' DH';

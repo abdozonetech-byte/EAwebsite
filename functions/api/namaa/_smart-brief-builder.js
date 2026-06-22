@@ -1,5 +1,7 @@
 // Namaa Smart Brief Builder
-// Update 25: extracts clean project info, scores readiness, and asks only the missing questions.
+// Update 39: extracts clean project info with Morocco categories/cities taxonomy.
+
+import { MARKET_CITIES, MARKET_CATEGORY_RULES, detectMarketCategory } from './_market-taxonomy.js';
 
 const FIELD_PRIORITY = [
   'projectName',
@@ -30,8 +32,8 @@ export const SMART_BRIEF_FIELDS = {
     label: 'type de projet',
     shortLabel: 'Type',
     question: {
-      fr: 'Dans quelle catégorie entre le projet : ecommerce, restaurant, SaaS/app, clinique, service local, formation, immobilier, ou autre ?',
-      en: 'What category is it: ecommerce, restaurant, SaaS/app, clinic, local service, education, real estate, or something else?',
+      fr: 'Dans quelle catégorie entre le projet : ecommerce, restaurant, SaaS/app, clinique, service local, formation, immobilier, AI/IT, marketplace, tourisme, beauté, B2B ou autre ?',
+      en: 'What category is it: ecommerce, restaurant, SaaS/app, clinic, local service, education, real estate, AI/IT, marketplace, tourism, beauty, B2B, or something else?',
       ar: 'شنو نوع المشروع: ecommerce، restaurant، SaaS/app، clinic، service local، formation، immobilier، ولا شي حاجة أخرى؟',
     },
   },
@@ -50,8 +52,8 @@ export const SMART_BRIEF_FIELDS = {
     label: 'ville ou marché',
     shortLabel: 'Marché',
     question: {
-      fr: 'Le projet cible quelle ville ou marché : Casablanca, Rabat, Marrakech, tout le Maroc, ou autre ?',
-      en: 'Which city or market are you targeting: Casablanca, Rabat, Marrakech, all Morocco, or another market?',
+      fr: 'Le projet cible quelle ville ou marché : Casablanca, Rabat, Marrakech, Tanger, Agadir, tout le Maroc, online/international ou autre ?',
+      en: 'Which city or market are you targeting: Casablanca, Rabat, Marrakech, Tangier, Agadir, all Morocco, online/international, or another market?',
       ar: 'فين غادي يبدا المشروع؟ Casablanca، Rabat، Marrakech، المغرب كامل، ولا مدينة أخرى؟',
     },
   },
@@ -117,29 +119,9 @@ export const SMART_BRIEF_FIELDS = {
   },
 };
 
-const CITIES = [
-  ['casablanca', 'Casablanca'], ['casa', 'Casablanca'], ['الدار البيضاء', 'Casablanca'],
-  ['rabat', 'Rabat'], ['marrakech', 'Marrakech'], ['marrakesh', 'Marrakech'],
-  ['tanger', 'Tanger'], ['tangier', 'Tanger'], ['agadir', 'Agadir'], ['fes', 'Fès'], ['fès', 'Fès'],
-  ['meknes', 'Meknès'], ['meknès', 'Meknès'], ['kenitra', 'Kénitra'], ['kénitra', 'Kénitra'],
-  ['oujda', 'Oujda'], ['tetouan', 'Tétouan'], ['tétouan', 'Tétouan'], ['taroudant', 'Taroudant'],
-  ['maroc entier', 'Maroc entier'], ['tout le maroc', 'Maroc entier'], ['all morocco', 'Maroc entier'],
-  ['morocco', 'Maroc entier'], ['maroc', 'Maroc entier'], ['المغرب كامل', 'Maroc entier'],
-];
+const CITIES = MARKET_CITIES;
 
-const CATEGORY_RULES = [
-  { value: 'E-commerce / vente de produits', words: ['ecommerce','e-commerce','e commerce','shop','store','boutique','produit','products','vente de produits','cod','cash on delivery','cosmetic','cosmetics','beauty products','fashion','clothes','shoes','accessoires','بيع منتجات'] },
-  { value: 'Restaurant / food', words: ['restaurant','food','cafe','café','coffee','patisserie','pâtisserie','fast food','dark kitchen','snack','menu','مطعم','اكل','ماكلة'] },
-  { value: 'Clinique / médical', words: ['clinic','clinique','medical','médical','dentiste','dental','doctor','derma','dermatologie','esthetic','esthétique','aesthetic','عيادة','طبيب','أسنان'] },
-  { value: 'SaaS / application', words: ['saas','application','app','mobile app','software','logiciel','platform','plateforme','dashboard','subscription','abonnement','تطبيق','منصة'] },
-  { value: 'Agence / service pro', words: ['agency','agence','consulting','cabinet','service pro','freelance','studio','marketing agency','b2b','consultant'] },
-  { value: 'Service local', words: ['cleaning','nettoyage','demenagement','déménagement','plombier','electricien','électricien','repair','réparation','livraison','service local','home service'] },
-  { value: 'Formation / cours', words: ['formation','cours','school','ecole','école','education','edtech','training','coaching','academy','apprendre','تعليم','دروس'] },
-  { value: 'Immobilier', words: ['real estate','immobilier','airbnb','location','appartement','property','villa','terrain','عقار','كراء'] },
-  { value: 'Beauté / lifestyle', words: ['beauty','beaute','beauté','salon','coiffure','spa','cosmetique','cosmétique','makeup','maquillage','lifestyle'] },
-  { value: 'Tourisme / hébergement', words: ['tourisme','tourism','hotel','hôtel','riad','hostel','voyage','travel','booking','hébergement'] },
-  { value: 'AI business / automation', words: ['ai business','ia business','automation','automatisation','agent ai','chatbot','bot','ia','ai tool','outil ia'] },
-];
+const CATEGORY_RULES = MARKET_CATEGORY_RULES;
 
 const CHANNELS = [
   ['instagram', 'Instagram'], ['insta', 'Instagram'], ['tiktok', 'TikTok'], ['facebook', 'Facebook'], ['meta ads', 'Meta Ads'],
@@ -175,7 +157,7 @@ function detectLanguage(text = '', brief = {}) {
 }
 
 function detectCategory(text = '') {
-  return CATEGORY_RULES.find((rule) => hasAny(text, rule.words))?.value || '';
+  return detectMarketCategory(text) || CATEGORY_RULES.find((rule) => hasAny(text, rule.words))?.value || '';
 }
 
 function detectMarket(text = '') {

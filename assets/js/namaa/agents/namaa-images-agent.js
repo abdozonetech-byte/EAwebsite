@@ -9,6 +9,16 @@
       return '<span><b>'+utils.pad2(i+1)+'</b>'+utils.escapeHtml(item)+'</span>';
     }).join('');
   }
+  function stageCards(pack){
+    return '<div class="namaa-logo-workflow">'+(pack.assetFlow || []).map(function(step,i){
+      return '<div><span>'+utils.pad2(i+1)+'</span><strong>'+utils.escapeHtml(step)+'</strong><small>'+utils.escapeHtml((pack.stages || [])[i] || '')+'</small></div>';
+    }).join('')+'</div>';
+  }
+  function outputCards(pack){
+    return '<div class="namaa-category-output">'+(pack.outputs || pack.assets || []).slice(0,6).map(function(item){
+      return '<span>'+utils.escapeHtml(item)+'</span>';
+    }).join('')+'</div>';
+  }
 
   function previewHtml(question,brief){
     var d=brain.inferMockupDirection(question,brief);
@@ -25,7 +35,8 @@
           '</div>'+ 
         '</div>'+ 
       '</div>'+ 
-      '<div class="namaa-mock-assets"><h3>Mockup package</h3><div class="namaa-layout-chips namaa-asset-chips" aria-label="Mockup package assets">'+chips(pack.assets)+'</div></div>'+ 
+      '<div class="namaa-design-system-card"><h3>Logo-first workflow</h3>'+stageCards(pack)+'<p>'+utils.escapeHtml(pack.logoPrompt || pack.logoIdea)+'</p></div>'+ 
+      '<div class="namaa-mock-assets"><h3>Category output pack</h3>'+outputCards(pack)+'<div class="namaa-layout-chips namaa-asset-chips" aria-label="Mockup package assets">'+chips(pack.assets)+'</div></div>'+ 
       '<div class="namaa-image-spec">'+
         '<h3>Design direction</h3>'+ 
         '<dl>'+ 
@@ -36,14 +47,14 @@
         '</dl>'+ 
       '</div>'+ 
       '<div class="namaa-copy-angles"><h3>Copy angles</h3><div>'+chips(pack.copyAngles)+'</div></div>'+ 
-      '<p class="namaa-preview-note">Namaa Images prépare un seul board premium avec logo + mockups adaptés à la catégorie, au lieu d’un visuel générique.</p>'+ 
+      '<p class="namaa-preview-note">'+utils.escapeHtml(pack.downloadNote || 'Preview only: Namaa shows the logo and mockup direction before final export.')+'</p>'+ 
     '</div>';
   }
   function answerHtml(question,brief){
     var pack=brain.getMockupPack(question,brief);
     return '<div class="namaa-answer-head"><span>Namaa Images</span><strong>Creative pack</strong></div>'+ 
-      '<h2>Je prépare un pack visuel adapté à la catégorie.</h2>'+ 
-      '<p><strong>Type détecté :</strong> '+utils.escapeHtml(pack.label)+'. Namaa va créer un board avec '+utils.escapeHtml(pack.primaryAsset)+'.</p>'+ 
+      '<h2>Je prépare d’abord le logo, puis le pack mockup adapté.</h2>'+ 
+      '<p><strong>Type détecté :</strong> '+utils.escapeHtml(pack.label)+'. Namaa suit un workflow logo → brand board → mockups → launch visuals.</p>'+ 
       '<ul class="namaa-compact-list">'+
         '<li><span class="namaa-compact-index">1</span><span><strong>Logo :</strong> '+utils.escapeHtml(pack.logoIdea)+'</span></li>'+ 
         '<li><span class="namaa-compact-index">2</span><span><strong>Mockups :</strong> '+utils.escapeHtml(pack.assets.slice(0,4).join(', '))+'</span></li>'+ 

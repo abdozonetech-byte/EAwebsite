@@ -5,6 +5,9 @@
   var services=window.NamaaServices || {};
   var agents=window.NamaaAgents || {};
   var brain=window.NamaaBrain || {};
+  var taxonomy=window.NamaaMarketTaxonomy || {};
+  var taxonomyCategories=taxonomy.categoryOptions || null;
+  var taxonomyCities=taxonomy.cityOptions || null;
 
   var form=document.getElementById('namaaForm');
   var input=document.getElementById('namaaInput');
@@ -31,7 +34,15 @@
 
   var currentAgent='talk';
   var history=[];
-  var appState={lastTalkQuestion:'',lastDevFiles:null,projectBrief:null,lastStrategyText:'',lastStrategyHtml:'',flowStage:'intake',lastMockupQuestion:'',lastDevQuestion:'',lastDeliverableType:'',createdDocuments:{}};
+  var appState={lastTalkQuestion:'',lastDevFiles:null,projectBrief:null,lastStrategyText:'',lastStrategyHtml:'',flowStage:'intake',lastMockupQuestion:'',lastDevQuestion:'',lastDeliverableType:'',createdDocuments:{},lastSources:[],sourcePolicy:''};
+  window.NamaaRuntime=window.NamaaRuntime || {};
+  window.NamaaRuntime.getState=function(){return Object.assign({},appState,{currentAgent:currentAgent});};
+  function setFlowStage(stage){
+    appState.flowStage=stage || 'intake';
+    document.body.setAttribute('data-namaa-flow-stage',appState.flowStage);
+    try{window.dispatchEvent(new CustomEvent('namaa:flow-stage',{detail:{stage:appState.flowStage,state:window.NamaaRuntime.getState()}}));}catch(error){}
+  }
+  setFlowStage(appState.flowStage);
 
   if(!form || !input || !thread)return;
 
@@ -121,15 +132,39 @@
       return '<button type="button" data-prompt="'+utils.escapeHtml(chip.prompt)+'"><span>'+utils.escapeHtml(chip.index)+'</span> '+utils.escapeHtml(chip.label)+'</button>';
     }).join('');
   }
-  function guidedCtaHtml(){
-    return '<div class="namaa-factory-strip" aria-label="Namaa project factory steps">'+
-      '<span><b>01</b> Brief</span><span><b>02</b> Strategy PDF</span><span><b>03</b> Logo + mockups</span><span><b>04</b> Landing page</span>'+
-    '</div>'+
-    '<div class="namaa-guided-card namaa-guided-card-premium">'+
-      '<div><span class="namaa-guided-pill">Project Factory</span><h2>Commencez par un brief guidé</h2><p>Namaa collecte فقط المعلومات المهمة، ومن بعد يخرج لك strategy واضحة ومنظمة.</p></div>'+ 
-      '<button class="namaa-mini-button" type="button" data-flow-action="guided-intake">Lancer la création</button>'+ 
+  function factoryEntryHtml(){
+    return '<div class="namaa-entry-grid" aria-label="Choisir le mode Namaa">'+
+      '<button class="namaa-entry-card namaa-entry-talk" type="button" data-flow-action="free-talk-mode"><span>💬</span><strong>Free Talk</strong><small>Business, AI, IT, startups, marketing. Conversation libre, rapide et friendly.</small></button>'+ 
+      '<button class="namaa-entry-card namaa-entry-build" type="button" data-flow-action="build-project-flow"><span>🏗️</span><strong>Build My Project</strong><small>Brief guidé → PDF strategy → logo/mockups → landing page.</small></button>'+ 
     '</div>';
   }
+  function agentMapHtml(){
+    return '<div class="namaa-agent-map" aria-label="Namaa agent map">'+
+      '<article><i>🧠</i><b>Namaa Talk</b><small>Free talk + project direction</small></article>'+ 
+      '<article><i>📊</i><b>Strategy Agent</b><small>Market research / roadmap / PDF</small></article>'+ 
+      '<article><i>🎨</i><b>Design Agent</b><small>Logo + category mockups</small></article>'+ 
+      '<article><i>💻</i><b>Web Agent</b><small>Real HTML/CSS/JS preview</small></article>'+ 
+    '</div>';
+  }
+  function entryChoiceHeroHtml(){
+    return '<div class="namaa-choice-stage" aria-label="Namaa entry choice">'+
+      '<div class="namaa-choice-badge"><span>✨</span><strong>Namaa Project Factory</strong><small>Free talk + project build</small></div>'+
+      '<h2>شنو بغيتي نديرو اليوم؟</h2>'+
+      '<p>اختار الطريقة اللي مريحة ليك: نهضرو بحرية على AI, business, IT, startups وmarketing، أو نبنيو مشروعك step by step مع Strategy, Design وWeb agents.</p>'+
+      '<div class="namaa-entry-grid namaa-entry-grid-premium" aria-label="Choisir le mode Namaa">'+
+        '<button class="namaa-entry-card namaa-entry-talk" type="button" data-flow-action="free-talk-mode"><span>💬</span><strong>Free Talk</strong><small>Hder m3a Namaa b Darija Latin, العربية, Français ola English. Quick, friendly, business-aware.</small><em>Conversation libre</em></button>'+ 
+        '<button class="namaa-entry-card namaa-entry-build" type="button" data-flow-action="build-project-flow"><span>🏗️</span><strong>Build My Project</strong><small>اختيارات سهلة → brief واضح → PDF strategy → logo/mockups → landing page.</small><em>Guided factory</em></button>'+ 
+      '</div>'+
+      '<div class="namaa-language-strip" aria-label="Supported languages"><span>Darija Latin</span><span>العربية</span><span>Français</span><span>English</span></div>'+
+    '</div>';
+  }
+  function guidedCtaHtml(){
+    return entryChoiceHeroHtml()+
+    '<div class="namaa-factory-strip" aria-label="Namaa project factory steps">'+
+      '<span><b>01</b> Brief</span><span><b>02</b> Strategy Agent</span><span><b>03</b> Design Agent</span><span><b>04</b> Web Agent</span>'+
+    '</div>'+agentMapHtml();
+  }
+
 
   function flowProgressHtml(active){
     var order=['brief','strategy','images','dev'];
@@ -180,36 +215,75 @@
     return flowProgressHtml('dev')+
       '<div class="namaa-flow-card namaa-next-step namaa-final-card"><div><span>✅</span><strong>Pack projet prêt.</strong><p>Vous avez maintenant la stratégie, le mockup et une landing page simple. Prochaine étape : tester l’offre, brancher WhatsApp/lead form, puis lancer un petit test ads.</p></div><div class="namaa-flow-actions"><a class="namaa-mini-button" href="/reserver-diagnostic/">Demander l’aide d’Abdessamad</a><button class="namaa-mini-button secondary" type="button" data-flow-action="new-project-flow">Nouveau projet</button></div></div>';
   }
+  var intakeStepIcons={
+    projectName:'✨',stage:'🚦',category:'🏷️',branch:'🧩',market:'🇲🇦',budget:'💰',goal:'🎯',target:'👥',offer:'🎁',channels:'📣',language:'🌍'
+  };
+  var optionIconMap={
+    'Nouveau projet à lancer':'🚀','Idée initiale à transformer en projet':'💡','Projet existant à relancer':'🔁',
+    'E-commerce / vente de produits':'🛒','Clinique / médical':'🏥','Restaurant / food':'🍽️','SaaS / application':'🤖','Agence / service pro':'💼','Service local':'🛠️','Formation / cours':'🎓','Immobilier':'🏠','Beauté / lifestyle':'✨','Tourisme / hébergement':'🏨','AI automation / IT':'⚙️','Marketplace':'🏪','Mobile app':'📱',
+    'Maroc entier':'🇲🇦','Casablanca':'🏙️','Rabat':'🏛️','Marrakech':'🌴','Tanger':'🌊','Agadir':'☀️','Fès':'🕌','Meknès':'🏰','Kénitra':'🌿','Oujda':'🧭','Taroudant':'🌵','Tétouan':'🏔️','El Jadida':'🌊','Safi':'⚓','Béni Mellal':'⛰️','Nador':'🌊','Laâyoune':'🏜️','Autre ville / région':'✍️',
+    'Moins de 1000 DH':'💸','1000 - 3000 DH':'💰','3000 - 7000 DH':'💰','7000 - 15000 DH':'💎','Plus de 15000 DH':'🏦','Pas encore défini':'❔',
+    'Trouver les premiers clients':'🧲','Générer des leads WhatsApp':'🟢','Vendre plus en ligne':'🛒','Lancer une offre claire':'🎁','Créer une landing page':'💻','Améliorer la visibilité':'📣','Structurer le marketing':'📊','Trouver une idée rentable':'💡',
+    'Aucun canal':'🧊','Instagram':'📸','TikTok':'🎵','Facebook':'f','WhatsApp':'🟢','Site web':'🌐','Google Maps':'📍','Publicité déjà lancée':'📢',
+    'Français professionnel':'FR','Darija Latin':'DA','Français + Darija':'FR+DA','العربية':'AR','English':'EN'
+  };
   var intakeSteps=[
-    {key:'projectName',type:'input',maxLength:60,label:'Quel est le nom de votre projet ?',hint:'Écrivez le nom exactement comme vous voulez l’utiliser.',placeholder:'Exemple : Namaa Kids',footer:'Nom du projet'},
-    {key:'stage',label:'Où en est le projet ?',hint:'Choisissez l’étape la plus proche pour préparer le bon pack.',footer:'Étape du projet',options:['Nouveau projet à lancer','Idée initiale à transformer en projet','Projet existant à relancer']},
-    {key:'category',label:'Dans quel type entre votre projet ?',hint:'Choisissez la catégorie principale. Namaa affichera ensuite des choix plus précis.',footer:'Type de projet',options:['E-commerce / vente de produits','Clinique / médical','Restaurant / food','SaaS / application','Agence / service pro','Service local','Formation / cours','Immobilier','Beauté / lifestyle','Tourisme / hébergement']},
-    {key:'branch',label:'Choisissez la branche',hint:'Sélectionnez la branche qui correspond le mieux au projet.',footer:'Branche',dynamic:true},
-    {key:'market',label:'Où le projet démarre-t-il au Maroc ?',hint:'Choisissez tout le Maroc ou une ville précise. Namaa l’utilise pour l’analyse locale et la concurrence.',footer:'Marché',options:['Maroc entier','Casablanca','Rabat','Marrakech','Tanger','Agadir','Fès','Meknès','Kénitra','Oujda','Taroudant']},
-    {key:'budget',label:'Quel budget mensuel marketing ?',hint:'Sélectionnez une fourchette réaliste en MAD pour éviter les réponses trop générales.',footer:'Budget',options:['Moins de 1000 DH','1000 - 3000 DH','3000 - 7000 DH','7000 - 15000 DH','Plus de 15000 DH','Pas encore défini']},
-    {key:'goal',label:'Quel est l’objectif principal ?',hint:'Choisissez le résultat prioritaire. Namaa va construire la stratégie autour de cet objectif.',footer:'Objectif',options:['Trouver les premiers clients','Générer des leads WhatsApp','Vendre plus en ligne','Lancer une offre claire','Créer une landing page','Améliorer la visibilité','Structurer le marketing']},
-    {key:'target',label:'Qui est le client cible ?',hint:'Choisissez la cible principale pour que le message soit précis.',footer:'Cible',options:['Clients locaux proches','PME / professionnels','Familles','Jeunes / étudiants','Femmes intéressées beauté','Acheteurs Instagram/TikTok','Touristes / visiteurs','Pas encore défini']},
-    {key:'offer',type:'input',maxLength:180,label:'Quelle est l’offre principale ?',hint:'Une phrase courte suffit. Exemple : diagnostic gratuit, livraison rapide, pack mensuel, réservation WhatsApp...',placeholder:'Exemple : consultation gratuite + plan marketing 30 jours',footer:'Offre'},
-    {key:'channels',label:'Quels canaux avez-vous déjà ?',hint:'Vous pouvez choisir plusieurs canaux. Cliquez Suivant quand c’est bon.',footer:'Canaux',multi:true,options:['Aucun canal','Instagram','TikTok','Facebook','WhatsApp','Site web','Google Maps','Publicité déjà lancée']},
-    {key:'language',label:'Dans quel style Namaa doit répondre ?',hint:'Choisissez la langue principale du PDF et de la conversation.',footer:'Langue',options:['Français professionnel','Darija simple','Français + Darija','العربية','English']}
+    {key:'projectName',type:'input',maxLength:60,label:'Smiya dyal project?',hint:'Ktib smiya b tariqa بسيطة. Ila mazal ma 3andkch smiya, ktib idea dyalek.',placeholder:'Exemple : Namaa Kids',footer:'Nom du projet',micro:'Namaa ghadi يبني الهوية ديال المشروع على هاد الاسم.'},
+    {key:'stage',label:'Fin وصل المشروع دابا؟',hint:'اختار المرحلة الأقرب باش Namaa يعرف واش يخدم launch, relance ولا validation.',footer:'Étape du projet',options:['Nouveau projet à lancer','Idée initiale à transformer en projet','Projet existant à relancer']},
+    {key:'category',label:'Chno type dyal project?',hint:'اختار الكاتيجوري الرئيسية. من بعد نعطيك branches أدق.',footer:'Type de projet',options:(taxonomyCategories || ['SaaS / application','E-commerce / vente de produits','Clinique / médical','Restaurant / food','Agence / service pro','Service local','Formation / cours','Immobilier','Beauté / lifestyle','Tourisme / hébergement','AI automation / IT','Marketplace','Mobile app'])},
+    {key:'branch',label:'شنو الفرع الأقرب؟',hint:'هاد الاختيار كيعاون Strategy, Design وWeb Agent يختارو template وmockups المناسبين.',footer:'Branche',dynamic:true},
+    {key:'market',label:'Fin غادي تخدم؟',hint:'اختار المغرب كامل أو مدينة باش market research يكون محلي ومفيد.',footer:'Marché',options:(taxonomyCities || ['Maroc entier','Casablanca','Rabat','Marrakech','Tanger','Agadir','Fès','Meknès','Kénitra','Oujda','Taroudant','Tétouan','El Jadida','Safi','Béni Mellal','Nador','Laâyoune','Autre ville / région'])},
+    {key:'budget',label:'Ch7al budget marketing?',hint:'ميزانية تقريبية كافية. Namaa غادي يقترح plan واقعي بلا تضخيم.',footer:'Budget',options:['Moins de 1000 DH','1000 - 3000 DH','3000 - 7000 DH','7000 - 15000 DH','Plus de 15000 DH','Pas encore défini']},
+    {key:'goal',label:'شنو الهدف الأول؟',hint:'اختار النتيجة اللي باغيها دابا، ماشي كلشي مرة وحدة.',footer:'Objectif',options:['Trouver les premiers clients','Générer des leads WhatsApp','Vendre plus en ligne','Lancer une offre claire','Créer une landing page','Améliorer la visibilité','Structurer le marketing','Trouver une idée rentable']},
+    {key:'target',label:'شكون أول client?',hint:'حدد أول فئة من الناس اللي باغي توصل ليها. هادي كتقوي الرسائل والإعلانات.',footer:'Cible',options:['Clients locaux proches','PME / professionnels','Familles','Jeunes / étudiants','Femmes intéressées beauté','Acheteurs Instagram/TikTok','Touristes / visiteurs','Entrepreneurs / startups','Pas encore défini']},
+    {key:'offer',type:'input',maxLength:180,label:'شنو العرض أو الخدمة؟',hint:'جملة وحدة كافية: شنو غادي تبيع أو تقدم، وشنو الميزة الرئيسية؟',placeholder:'Exemple : consultation gratuite + plan marketing 30 jours',footer:'Offre',micro:'Namaa ghadi يحولها ل positioning ورسائل بيع.'},
+    {key:'channels',label:'شنو عندك دابا من قنوات؟',hint:'يمكن تختار أكثر من قناة. إذا ما عندك والو، اختار Aucun canal.',footer:'Canaux',multi:true,options:['Aucun canal','Instagram','TikTok','Facebook','WhatsApp','Site web','Google Maps','Publicité déjà lancée']},
+    {key:'language',label:'بأي لغة يخرج Namaa النتيجة؟',hint:'اختار اللغة الرئيسية للPDF والمحادثة. Darija = Latin letters إلا طلبتي العربية.',footer:'Langue',options:['Darija Latin','Français professionnel','Français + Darija','العربية','English']}
   ];
   var branchMap={
-    'Clinique / médical':['Dentiste','Clinique esthétique','Dermatologie','Kinésithérapie','Centre ophtalmologique','Laboratoire','Médecin spécialiste'],
-    'E-commerce / vente de produits':['Mode / vêtements','Cosmétiques','Produits alimentaires','Électronique','Maison / déco','Produit artisanal','Produit unique à tester'],
-    'Restaurant / food':['Restaurant','Café','Fast food','Pâtisserie','Traiteur','Dark kitchen','Food truck'],
-    'SaaS / application':['Application mobile','SaaS B2B','Marketplace','IA / automatisation','EdTech','FinTech','Outil interne'],
-    'Agence / service pro':['Marketing digital','Design / branding','Développement web','Consulting','Comptabilité','Architecture','Photographie / vidéo'],
-    'Service local':['Nettoyage','Déménagement','Réparation','Beauté à domicile','Coaching','Livraison','Maintenance'],
-    'Formation / cours':['École privée','Cours de langue','Formation digitale','Coaching professionnel','Centre de soutien','Formation IA'],
-    'Immobilier':['Agence immobilière','Projet locatif','Promotion immobilière','Gestion Airbnb','Courtier','Bureau de vente'],
-    'Beauté / lifestyle':['Salon de beauté','Barbershop','Spa / bien-être','Coach lifestyle','Cosmétiques locaux','Personal brand beauté'],
-    'Tourisme / hébergement':['Riad','Hôtel boutique','Agence voyage','Expérience locale','Restaurant touristique','Airbnb premium']
+    'Clinique / médical':['Dentiste','Clinique esthétique','Dermatologie','Kinésithérapie','Centre ophtalmologique','Laboratoire','Médecin spécialiste','Centre laser','Nutrition / coaching santé'],
+    'E-commerce / vente de produits':['Mode / vêtements','Cosmétiques','Produits alimentaires','Électronique','Maison / déco','Produit artisanal','Produit unique à tester','Accessoires mobile','Parapharmacie'],
+    'Restaurant / food':['Restaurant','Café','Fast food','Pâtisserie','Traiteur','Dark kitchen','Food truck','Glacier / dessert','Healthy food'],
+    'SaaS / application':['Application mobile','SaaS B2B','Marketplace','IA / automatisation','EdTech','FinTech','Outil interne','CRM / dashboard','Booking system'],
+    'Agence / service pro':['Marketing digital','Design / branding','Développement web','Consulting','Comptabilité','Architecture','Photographie / vidéo','RH / recrutement','Business consulting'],
+    'Service local':['Nettoyage','Déménagement','Réparation','Beauté à domicile','Coaching','Livraison','Maintenance','Sécurité','Jardinage'],
+    'Formation / cours':['École privée','Cours de langue','Formation digitale','Coaching professionnel','Centre de soutien','Formation IA','Bootcamp tech','Cours en ligne'],
+    'Immobilier':['Agence immobilière','Projet locatif','Promotion immobilière','Gestion Airbnb','Courtier','Bureau de vente','Coliving','Conciergerie'],
+    'Beauté / lifestyle':['Salon de beauté','Barbershop','Spa / bien-être','Coach lifestyle','Cosmétiques locaux','Personal brand beauté','Studio makeup','Nails / lashes'],
+    'Tourisme / hébergement':['Riad','Hôtel boutique','Agence voyage','Expérience locale','Restaurant touristique','Airbnb premium','Guide local','Excursions'],
+    'AI automation / IT':['AI assistant','Chatbot business','Automation WhatsApp','Internal tool','Data dashboard','IT support','Cybersecurity service','AI agency'],
+    'Marketplace':['Marketplace services','Marketplace produits','Marketplace talents','Booking marketplace','Delivery marketplace','B2B marketplace'],
+    'Mobile app':['App services locaux','App livraison','App éducation','App finance','App santé','App communauté','App productivité']
   };
+  function intakeIcon(value,key){return optionIconMap[value] || (taxonomy.iconFor ? taxonomy.iconFor(value) : '') || intakeStepIcons[key] || '•';}
+  function intakeBriefPreviewHtml(currentIndex){
+    var draft=appState.projectBriefDraft || {};
+    var keys=['projectName','stage','category','branch','market','budget','goal','target','offer','channels','language'];
+    var filled=keys.filter(function(k){return briefValue(draft[k]);}).length;
+    var score=Math.round((filled/keys.length)*100);
+    var rows=keys.map(function(k){
+      var step=intakeSteps.find(function(item){return item.key===k;}) || {footer:k};
+      var value=briefValue(draft[k]);
+      return '<li class="'+(value?'is-filled':'')+'"><span>'+utils.escapeHtml(intakeStepIcons[k] || '•')+'</span><b>'+utils.escapeHtml(step.footer || k)+'</b><em>'+utils.escapeHtml(value || 'À remplir')+'</em></li>';
+    }).join('');
+    var categoryNote=draft.category && taxonomy.getCategoryNote ? taxonomy.getCategoryNote(draft.category) : '';
+    var cityNote=draft.market && taxonomy.getCityNote ? taxonomy.getCityNote(draft.market) : '';
+    var insight=(categoryNote || cityNote) ? '<div class="namaa-taxonomy-insight"><strong>Market intelligence</strong><span>'+utils.escapeHtml(categoryNote || cityNote)+'</span>'+(categoryNote && cityNote?'<small>'+utils.escapeHtml(cityNote)+'</small>':'')+'</div>' : '';
+    return '<aside class="namaa-intake-preview" aria-label="Project DNA preview"><div class="namaa-intake-preview-head"><span>Project DNA</span><strong>'+score+'%</strong></div><div class="namaa-intake-preview-ring" style="--brief-score:'+score+'"><i>'+score+'%</i></div><p>Namaa kayجمع brief صغير وواضح باش Strategy, Design وWeb Agent يخدمو بلا prompt معقد.</p>'+insight+'<ul>'+rows+'</ul></aside>';
+  }
+  function intakeStageRailHtml(currentIndex){
+    var groups=[['Brief','projectName'],['Type','category'],['Market','market'],['Goal','goal'],['Launch','language']];
+    return '<div class="namaa-intake-stage-rail">'+groups.map(function(item){
+      var relatedIndex=intakeSteps.findIndex(function(step){return step.key===item[1];});
+      var klass=currentIndex>=relatedIndex?'is-active':'';
+      return '<span class="'+klass+'"><b></b>'+utils.escapeHtml(item[0])+'</span>';
+    }).join('')+'</div>';
+  }
   function getIntakeStep(index){
     var step=intakeSteps[index];
     if(step && step.dynamic){
       var category=(appState.projectBriefDraft && appState.projectBriefDraft.category) || '';
-      step=Object.assign({},step,{options:branchMap[category] || ['Général','Premium','Low-cost','B2B','B2C']});
+      step=Object.assign({},step,{options:(taxonomy.getBranches ? taxonomy.getBranches(category) : null) || branchMap[category] || ['Général','Premium','Low-cost','B2B','B2C']});
     }
     return step;
   }
@@ -285,13 +359,17 @@
     var value=draft[step.key] || (step.multi?[]:'');
     var progress=Math.round(((index+1)/intakeSteps.length)*100);
     var modal=document.createElement('div');
-    modal.className='namaa-intake-modal';
+    modal.className='namaa-intake-modal namaa-intake-modal-v38';
     modal.innerHTML='<div class="namaa-intake-backdrop"></div>'+ 
-      '<section class="namaa-intake-card" role="dialog" aria-modal="true" aria-label="Lancer la création du projet">'+ 
-        '<header><div><span>Super Agent Namaa</span><h2>Lancer la création du projet</h2></div><button type="button" data-intake-close aria-label="Fermer">×</button></header>'+ 
+      '<section class="namaa-intake-card namaa-intake-card-v38" role="dialog" aria-modal="true" aria-label="Build My Project wizard">'+ 
+        '<header><div><span>🏗️ Build My Project</span><h2>Namaa Project Wizard</h2><p>اختيارات سهلة، brief واضح، وagents خدامين بلا ما المستخدم يعرف prompts.</p></div><button type="button" data-intake-close aria-label="Fermer">×</button></header>'+ 
+        intakeStageRailHtml(index)+
         '<div class="namaa-intake-progress"><i style="width:'+progress+'%"></i></div>'+ 
-        '<div class="namaa-intake-body"><h3>'+utils.escapeHtml(step.label)+'</h3><p>'+utils.escapeHtml(step.hint || '')+'</p>'+renderIntakeControl(step,value)+'</div>'+ 
-        '<footer><strong>'+utils.escapeHtml(step.footer || '')+' · '+(index+1)+'/'+intakeSteps.length+'</strong><div><button type="button" class="namaa-intake-back" data-intake-back '+(index===0?'disabled':'')+'>Retour</button><button type="button" class="namaa-intake-next" data-intake-next>'+(index===intakeSteps.length-1?'Créer la stratégie':'Suivant')+'</button></div></footer>'+ 
+        '<div class="namaa-intake-layout">'+
+          '<div class="namaa-intake-body"><div class="namaa-intake-step-badge"><span>'+utils.escapeHtml(intakeStepIcons[step.key] || '✨')+'</span><b>Step '+(index+1)+'/'+intakeSteps.length+'</b><em>'+progress+'% ready</em></div><h3>'+utils.escapeHtml(step.label)+'</h3><p>'+utils.escapeHtml(step.hint || '')+'</p>'+renderIntakeControl(step,value)+(step.micro?'<small class="namaa-intake-micro">'+utils.escapeHtml(step.micro)+'</small>':'')+'</div>'+
+          intakeBriefPreviewHtml(index)+
+        '</div>'+ 
+        '<footer><strong>'+utils.escapeHtml(step.footer || '')+' · '+(index+1)+'/'+intakeSteps.length+'</strong><div><button type="button" class="namaa-intake-back" data-intake-back '+(index===0?'disabled':'')+'>Retour</button><button type="button" class="namaa-intake-next" data-intake-next>'+(index===intakeSteps.length-1?'Créer le brief':'Suivant')+'</button></div></footer>'+ 
       '</section>';
     document.body.appendChild(modal);
     modal.dataset.step=String(index);
@@ -300,11 +378,11 @@
   }
   function renderIntakeControl(step,value){
     if(step.type==='input'){
-      return '<input class="namaa-intake-input" data-intake-input value="'+utils.escapeHtml(value)+'" placeholder="'+utils.escapeHtml(step.placeholder || '')+'" '+(step.maxLength?'maxlength="'+step.maxLength+'"':'')+'>'+ (step.maxLength?'<small class="namaa-token-note">Max '+step.maxLength+' caractères pour garder le brief précis.</small>':'');
+      return '<div class="namaa-intake-input-wrap"><input class="namaa-intake-input" data-intake-input value="'+utils.escapeHtml(value)+'" placeholder="'+utils.escapeHtml(step.placeholder || '')+'" '+(step.maxLength?'maxlength="'+step.maxLength+'"':'')+'>'+ (step.maxLength?'<small class="namaa-token-note">Max '+step.maxLength+' caractères pour garder le brief précis.</small>':'')+'</div>';
     }
     return '<div class="namaa-intake-options '+(step.multi?'is-multi':'')+'">'+(step.options || []).map(function(option){
       var active=step.multi ? (Array.isArray(value) && value.indexOf(option)>-1) : value===option;
-      return '<button type="button" data-intake-option="'+utils.escapeHtml(option)+'" class="'+(active?'is-selected':'')+'">'+utils.escapeHtml(option)+'</button>';
+      return '<button type="button" data-intake-option="'+utils.escapeHtml(option)+'" class="'+(active?'is-selected':'')+'"><span>'+utils.escapeHtml(intakeIcon(option,step.key))+'</span><strong>'+utils.escapeHtml(option)+'</strong></button>';
     }).join('')+'</div>';
   }
   function saveIntakeStep(index){
@@ -327,7 +405,7 @@
   }
   function finishIntake(){
     appState.projectBrief=Object.assign({},appState.projectBriefDraft || {});
-    appState.flowStage='brief-ready';
+    setFlowStage('brief-ready');
     closeIntakeWizard();
     setAgent('talk');
     document.body.classList.add('namaa-has-messages');
@@ -349,20 +427,23 @@
     appState.projectBrief=null;
     appState.lastStrategyText='';
     appState.lastStrategyHtml='';
-    appState.flowStage='intake';
+    setFlowStage('intake');
     appState.lastMockupQuestion='';
     appState.lastDevQuestion='';
     appState.lastDeliverableType='';
     appState.createdDocuments={};
+    appState.lastSources=[];
+    appState.sourcePolicy='';
     var meta=agentConfig(currentAgent);
     var welcome=document.createElement('div');
     welcome.className='namaa-welcome';
     welcome.id='namaaHero';
     welcome.innerHTML='<div class="namaa-orb" aria-hidden="true"><span>N</span></div>'+ 
       '<p class="namaa-kicker" id="namaaHeroKicker">'+utils.escapeHtml(meta.hero.kicker)+'</p>'+ 
-      '<h1 id="namaaHeroTitle">'+utils.escapeHtml(meta.hero.title)+'</h1>'+ 
-      '<p class="namaa-intro" id="namaaHeroIntro">'+utils.escapeHtml(meta.hero.intro)+'</p>'+ 
-      '<div class="namaa-chip-row" aria-label="Exemples de questions">'+promptButtonsHtml()+'</div>'+guidedCtaHtml();
+      '<h1 id="namaaHeroTitle">Namaa AI, choose your path.</h1>'+ 
+      '<p class="namaa-intro" id="namaaHeroIntro">Start with free business talk or build a complete project with Namaa agents.</p>'+ 
+      guidedCtaHtml()+
+      '<div class="namaa-chip-row namaa-quick-prompts" aria-label="Exemples de questions">'+promptButtonsHtml()+'</div>';
     thread.appendChild(welcome);
     hero=welcome;
     heroKicker=document.getElementById('namaaHeroKicker');
@@ -372,7 +453,7 @@
     input.value='';
     input.style.height='auto';
     closeSidebar();
-    setSidebarNote('＋','New project','Start a guided brief with token control before strategy, mockup and landing page.');
+    setSidebarNote('＋','New project','Choose Free Talk for business conversation or Build Project for the guided factory flow.');
     input.focus();
   }
   function applyResult(result){
@@ -481,31 +562,158 @@
     var win=window.open('','_blank','noopener,noreferrer');
     if(win){win.document.open();win.document.write(doc || '<!doctype html><title>NamaaDev</title><p>No preview available.</p>');win.document.close();}
   }
+  function startFreeTalkMode(){
+    setAgent('talk');
+    document.body.classList.add('namaa-has-messages');
+    if(hero){hero.remove();hero=null;}
+    var html='<div class="namaa-mode-start namaa-mode-free"><span>💬</span><strong>Free Talk ready</strong><p>Hani m3ak 👋 hder b tariqa 3adiya f AI, business, IT, startups, marketing, strategy w projects. Ila bghiti nbniw project step by step, ghir gol: build project.</p></div>';
+    addMessage('ai',html);
+    addHistory('assistant','Free Talk ready.');
+    setFlowStage('free-talk');
+    setSidebarNote('💬','Free Talk','Namaa will talk naturally but stays around AI, business, IT, startups, marketing and projects.');
+    input.placeholder='Hder m3a Namaa f business, AI, IT, startups, marketing...';
+    input.focus();
+  }
+  function startProjectFactoryMode(){
+    setAgent('talk');
+    setFlowStage('project-builder');
+    setSidebarNote('🏗️','Project Factory','Build Project Wizard: category, city, budget, goal, audience, channels and language.');
+    startIntakeWizard();
+  }
+
+  function strategyAgentDocMeta(type){
+    var docs={
+      market_research:{icon:'🔎',title:'Market Research Agent',label:'Market Research PDF',badge:'Research mode',verb:'kayحلل السوق',accent:'research',sections:['Brief cleanup','Morocco market context','Customer behavior','Alternatives/competitors','Opportunity gap','Validation plan'],note:'Namaa kayqra lbrief, kayرتب السوق, w kayخرج diagnostic واضح قبل أي strategy.'},
+      marketing_strategy:{icon:'📈',title:'Marketing Strategy Agent',label:'Marketing Strategy PDF',badge:'Strategy mode',verb:'kayبني plan marketing',accent:'strategy',sections:['Positioning','Offer message','Funnel map','30-day action plan','Budget split','WhatsApp/KPIs'],note:'Namaa kayحوّل المعطيات لخطة عملية: content, ads, WhatsApp, budget w KPIs.'},
+      roadmap:{icon:'🗺️',title:'Roadmap Agent',label:'Launch Roadmap PDF',badge:'Execution mode',verb:'kayوجد roadmap',accent:'roadmap',sections:['Launch objective','Week 1 setup','Week 2 content','Week 3 ads/leads','Week 4 optimization','Decision rules'],note:'Namaa kayقسم المشروع لخطوات أسبوعية باش التنفيذ يكون واضح وماشي عشوائي.'}
+    };
+    return docs[type] || docs.marketing_strategy;
+  }
+  function strategyBriefMiniHtml(brief){
+    brief=brief || {};
+    var rows=[
+      ['Project',brief.projectName || 'Projet Namaa'],
+      ['Category',brief.category || 'Business project'],
+      ['Market',brief.market || 'Morocco'],
+      ['Budget',brief.budget || 'To define'],
+      ['Goal',brief.goal || 'Growth'],
+      ['Audience',brief.target || 'Target customer']
+    ];
+    return rows.map(function(row){return '<span><small>'+utils.escapeHtml(row[0])+'</small><strong>'+utils.escapeHtml(row[1])+'</strong></span>';}).join('');
+  }
+  function strategyFactoryLoadingHtml(type,brief){
+    var meta=strategyAgentDocMeta(type);
+    var sections=meta.sections.map(function(item,index){return '<li><b>'+utils.escapeHtml(utils.pad2?utils.pad2(index+1):String(index+1).padStart(2,'0'))+'</b><span>'+utils.escapeHtml(item)+'</span><i></i></li>';}).join('');
+    return '<div class="namaa-strategy-agent-loader" data-strategy-type="'+utils.escapeHtml(type || 'marketing_strategy')+'">'+
+      '<div class="namaa-strategy-loader-head"><div class="namaa-agent-orbit"><span>'+utils.escapeHtml(meta.icon)+'</span><i></i><i></i></div><div><em>'+utils.escapeHtml(meta.badge)+'</em><strong>'+utils.escapeHtml(meta.title)+' is working</strong><p>'+utils.escapeHtml(meta.verb)+'… Namaa kayوجد document بطريقة منظمة، ماشي جواب عشوائي.</p></div></div>'+ 
+      '<div class="namaa-strategy-live-brief">'+strategyBriefMiniHtml(brief)+'</div>'+ 
+      '<ol class="namaa-strategy-build-steps">'+sections+'</ol>'+ 
+      '<div class="namaa-strategy-loader-bar"><span></span></div>'+ 
+      '<p class="namaa-strategy-loader-note">خد نفس صغير ☕ Strategy Agent kayخدم على '+utils.escapeHtml(meta.label)+' باش تكون النتيجة clean وPDF-ready.</p>'+ 
+    '</div>';
+  }
+  function strategyFactoryPreviewHtml(type,brief,phase){
+    var meta=strategyAgentDocMeta(type);
+    var isDone=phase==='done';
+    var sections=meta.sections.map(function(item,index){return '<li class="'+(isDone?'is-done':index<2?'is-active':'')+'"><b>'+utils.escapeHtml(utils.pad2?utils.pad2(index+1):String(index+1).padStart(2,'0'))+'</b><span>'+utils.escapeHtml(item)+'</span></li>';}).join('');
+    return '<section class="namaa-strategy-agent-preview '+(isDone?'is-done':'is-working')+'" data-strategy-type="'+utils.escapeHtml(type || 'marketing_strategy')+'">'+
+      '<header><div class="namaa-agent-orbit"><span>'+utils.escapeHtml(meta.icon)+'</span><i></i><i></i></div><div><small>'+utils.escapeHtml(meta.badge)+'</small><h3>'+utils.escapeHtml(meta.label)+'</h3><p>'+utils.escapeHtml(meta.note)+'</p></div></header>'+ 
+      '<div class="namaa-strategy-preview-status"><span>'+utils.escapeHtml(isDone?'Document ready':'Agent working')+'</span><strong>'+utils.escapeHtml(isDone?'100%':'AI factory in progress')+'</strong></div>'+ 
+      '<div class="namaa-strategy-preview-meter"><i style="width:'+(isDone?'100':'62')+'%"></i></div>'+ 
+      '<div class="namaa-strategy-preview-brief"><h4>Project DNA</h4><div>'+strategyBriefMiniHtml(brief)+'</div></div>'+ 
+      '<div class="namaa-strategy-preview-sections"><h4>Document sections</h4><ol>'+sections+'</ol></div>'+ 
+      '<p class="namaa-preview-note">Right panel kayوريك شنو كيدير Strategy Agent. ملي يسالي، غادي يبان PDF preview هنا.</p>'+ 
+    '</section>';
+  }
+  function strategyFactoryDoneCardHtml(type,brief){
+    var meta=strategyAgentDocMeta(type);
+    return flowProgressHtml('strategy')+
+      '<div class="namaa-strategy-done-card namaa-flow-card"><div><span>'+utils.escapeHtml(meta.icon)+'</span><strong>'+utils.escapeHtml(meta.label)+' generated</strong><p>Strategy Agent سالا المرحلة الأولى. دابا تقدر تشوف PDF preview ولا download document brandé Namaa + Elboubakry.</p></div></div>';
+  }
+
+
+  function designAgentPack(question,brief){
+    if(brain && brain.getMockupPack){return brain.getMockupPack(question || '',brief || appState.projectBrief || {});}
+    return {label:'Business Maroc',primaryAsset:'Landing page + social mockup',assets:['Logo concept','Landing page mockup','Social post','WhatsApp CTA'],visuals:['brand board','landing page','social ad'],copyAngles:['Launch clearly','Get clients','Build trust'],style:'Premium blue/white business direction',logoIdea:'Simple premium logo mark'};
+  }
+  function designMiniBriefHtml(brief){
+    brief=brief || {};
+    var rows=[
+      ['Project',brief.projectName || 'Projet Namaa'],
+      ['Category',brief.category || 'Business'],
+      ['Market',brief.market || 'Morocco'],
+      ['Goal',brief.goal || 'Launch / growth']
+    ];
+    return rows.map(function(row){return '<span><small>'+utils.escapeHtml(row[0])+'</small><strong>'+utils.escapeHtml(row[1])+'</strong></span>';}).join('');
+  }
+  function designAssetChipsHtml(pack){
+    return (pack.assets || []).slice(0,6).map(function(asset,index){return '<span><b>'+utils.escapeHtml(utils.pad2?utils.pad2(index+1):String(index+1).padStart(2,'0'))+'</b>'+utils.escapeHtml(asset)+'</span>';}).join('');
+  }
+  function designFactoryLoadingHtml(question,brief){
+    var pack=designAgentPack(question,brief);
+    return '<div class="namaa-design-agent-loader" data-pack="'+utils.escapeHtml(pack.label || 'Business Maroc')+'">'+
+      '<div class="namaa-design-loader-head"><div class="namaa-agent-orbit namaa-design-orbit"><span>🎨</span><i></i><i></i></div><div><em>Design Agent</em><strong>Namaa kayصاوب logo + mockups</strong><p>Kanqra lbrief, kanختار visual direction, w kanحضّر board adapté lcategory.</p></div></div>'+ 
+      '<div class="namaa-design-live-brief">'+designMiniBriefHtml(brief)+'</div>'+ 
+      '<div class="namaa-design-canvas-skeleton"><div class="namaa-design-logo-skel"><i></i><strong>Logo concept</strong><small>'+utils.escapeHtml(pack.logoIdea || 'Premium mark')+'</small></div><div class="namaa-design-device-skel"><span></span><span></span><span></span><b>'+utils.escapeHtml(pack.primaryAsset || 'Mockup board')+'</b></div></div>'+ 
+      '<ol class="namaa-design-build-steps"><li class="is-active"><b>01</b><span>Reading Project DNA</span><i></i></li><li><b>02</b><span>Generating logo direction</span><i></i></li><li><b>03</b><span>Preparing category mockups</span><i></i></li><li><b>04</b><span>Rendering preview board</span><i></i></li></ol>'+ 
+      '<div class="namaa-design-loader-bar"><span></span></div>'+ 
+      '<p class="namaa-design-loader-note">Sna chwya 🎨 Design Agent kayخدم بحال atelier: logo, mockup, social/print assets حسب المشروع.</p>'+ 
+    '</div>';
+  }
+  function designFactoryPreviewHtml(question,brief,phase){
+    var pack=designAgentPack(question,brief);
+    var done=phase==='done';
+    return '<section class="namaa-design-agent-preview '+(done?'is-done':'is-working')+'">'+
+      '<header><div class="namaa-agent-orbit namaa-design-orbit"><span>🎨</span><i></i><i></i></div><div><small>'+utils.escapeHtml(done?'Creative board ready':'Design Agent working')+'</small><h3>'+utils.escapeHtml(pack.label || 'Logo + mockup pack')+'</h3><p>'+utils.escapeHtml(pack.style || 'Premium business visual direction')+'</p></div></header>'+ 
+      '<div class="namaa-design-preview-status"><span>'+utils.escapeHtml(done?'Ready':'Factory in progress')+'</span><strong>'+utils.escapeHtml(done?'100%':'Logo → Mockup → Board')+'</strong></div>'+ 
+      '<div class="namaa-design-preview-meter"><i style="width:'+(done?'100':'68')+'%"></i></div>'+ 
+      '<div class="namaa-design-preview-board"><div class="namaa-design-preview-logo"><b>N</b><span>Logo</span></div><div class="namaa-design-preview-device"><i></i><i></i><i></i><strong>'+utils.escapeHtml(pack.primaryAsset || 'Main mockup')+'</strong></div></div>'+ 
+      '<div class="namaa-design-preview-brief"><h4>Project DNA</h4><div>'+designMiniBriefHtml(brief)+'</div></div>'+ 
+      '<div class="namaa-design-preview-assets"><h4>Assets prepared</h4><div class="namaa-layout-chips">'+designAssetChipsHtml(pack)+'</div></div>'+ 
+      '<p class="namaa-preview-note">Right panel kayوريك Design Agent وهو خدام. ملي يسالي غادي يبان logo/mockup board هنا.</p>'+ 
+    '</section>';
+  }
+  function designFactoryDoneCardHtml(question,brief){
+    var pack=designAgentPack(question,brief);
+    return flowProgressHtml('images')+
+      '<div class="namaa-flow-card namaa-design-done-card"><div><span>🎨</span><strong>Design Agent salat lmockup pack.</strong><p>'+utils.escapeHtml(pack.label || 'Creative pack')+' واجد ف right panel: logo direction, mockup board, assets w style. Daba nقدر ندوزو ل Web Agent.</p></div></div>';
+  }
+
   function generateTalkDeliverable(action){
     var labels={market_research:'Market Research PDF',marketing_strategy:'Marketing Strategy PDF',roadmap:'Launch Roadmap'};
     var brief=appState.projectBrief || {};
     var label=labels[action] || 'Namaa PDF';
+    var meta=strategyAgentDocMeta(action);
     appState.lastDeliverableType=action;
     appState.createdDocuments=appState.createdDocuments || {};
     setAgent('talk');
+    setFlowStage('strategy-generating');
     document.body.classList.add('namaa-has-messages');
     if(hero){hero.remove();hero=null;}
     var prompt='Créer '+label+' pour '+(brief.projectName || 'ce projet');
     addMessage('user',utils.escapeHtml(prompt));
     addHistory('user',prompt);
-    var loading=addMessage('ai','<div class="namaa-typing"><span></span><span></span><span></span><em>Namaa prépare '+utils.escapeHtml(label)+'...</em></div>');
+    openPreview('Strategy Agent',meta.label,strategyFactoryPreviewHtml(action,brief,'working'));
+    var loading=addMessage('ai',strategyFactoryLoadingHtml(action,brief));
     loading.classList.add('is-loading');
     answerAsync(prompt,{brief:brief,history:[],action:action}).then(function(html){
-      appState.flowStage='pdf-ready';
+      setFlowStage('pdf-ready');
       appState.lastDeliverableType=action;
       appState.createdDocuments=appState.createdDocuments || {};
       appState.createdDocuments[action]=true;
       appState.lastStrategyHtml=html;
       appState.lastStrategyText=html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
-      updateAiMessage(loading,html+pdfReadyCardHtml());
+      updateAiMessage(loading,strategyFactoryDoneCardHtml(action,brief)+html+pdfReadyCardHtml());
+      if(services.pdf && services.pdf.renderStrategyPreview){
+        openPreview('Namaa PDF',pdfDocLabel(action),services.pdf.renderStrategyPreview({brief:brief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:action,sources:appState.lastSources}));
+      }else{
+        openPreview('Strategy Agent',meta.label,strategyFactoryPreviewHtml(action,brief,'done'));
+      }
       addHistory('assistant',appState.lastStrategyText);
     }).catch(function(error){
+      setFlowStage('strategy-error');
       updateAiMessage(loading,'<p>Namaa had a temporary problem: '+utils.escapeHtml(error.message || 'Unknown error')+'</p>');
+      openPreview('Strategy Agent','Temporary issue','<div class="namaa-strategy-agent-preview is-error"><header><div class="namaa-agent-orbit"><span>⚠️</span></div><div><small>Retry available</small><h3>Strategy Agent stopped</h3><p>'+utils.escapeHtml(error.message || 'Unknown error')+'</p></div></header></div>');
     });
   }
 
@@ -532,17 +740,24 @@
     closePlusMenu();
     var loading=addMessage('ai',typingLoadingHtml(submittedAgent));
     loading.classList.add('is-loading');
+    if(submittedAgent==='images'){
+      setFlowStage('images-generating');
+      openPreview('Design Agent','Logo + mockup factory',designFactoryPreviewHtml(q,appState.projectBrief || null,'working'));
+      var loadingBubble=loading.querySelector('.namaa-bubble');
+      if(loadingBubble)loadingBubble.innerHTML=designFactoryLoadingHtml(q,appState.projectBrief || null);
+      loading.classList.add('is-design-loading');
+    }
     var startedAt=Date.now();
     answerAsync(q,{brief:appState.projectBrief || null}).then(function(html){
       return waitForHumanTyping(startedAt,submittedAgent).then(function(){return html;});
     }).then(function(html){
       if(submittedAgent==='images' && appState.projectBrief){
-        appState.flowStage='dev-offer';
+        setFlowStage('dev-offer');
         appState.lastMockupQuestion=q;
-        html+=imageNextStepHtml();
+        html=designFactoryDoneCardHtml(q,appState.projectBrief)+html+imageNextStepHtml();
       }
       if(submittedAgent==='dev' && appState.projectBrief){
-        appState.flowStage='complete';
+        setFlowStage('complete');
         appState.lastDevQuestion=q;
         html+=devFinishHtml();
       }
@@ -624,7 +839,7 @@
     var pdfPreviewBtn=event.target.closest('[data-namaa-pdf-preview]');
     if(pdfPreviewBtn){
       var currentPdfType=appState.lastDeliverableType || 'marketing_strategy';
-      var previewHtml=services.pdf && services.pdf.renderStrategyPreview ? services.pdf.renderStrategyPreview({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:currentPdfType}) : '<p>PDF preview is not ready yet.</p>';
+      var previewHtml=services.pdf && services.pdf.renderStrategyPreview ? services.pdf.renderStrategyPreview({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:currentPdfType,sources:appState.lastSources}) : '<p>PDF preview is not ready yet.</p>';
       openPreview('Namaa PDF',pdfDocLabel(currentPdfType),previewHtml);
       return;
     }
@@ -633,19 +848,19 @@
       pdfBtn.disabled=true;
       pdfBtn.textContent='PDF téléchargé';
       var downloadedType=appState.lastDeliverableType || 'marketing_strategy';
-      if(services.pdf && services.pdf.openStrategy){services.pdf.openStrategy({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:downloadedType});}
+      if(services.pdf && services.pdf.openStrategy){services.pdf.openStrategy({brief:appState.projectBrief,strategyHtml:appState.lastStrategyHtml,strategyText:appState.lastStrategyText,documentType:downloadedType,sources:appState.lastSources});}
       appState.createdDocuments=appState.createdDocuments || {};
       appState.createdDocuments[downloadedType]=true;
       if(downloadedType==='market_research'){
-        appState.flowStage='strategy-offer';
+        setFlowStage('strategy-offer');
         setAgent('talk');
         addMessage('ai',marketToStrategyCardHtml());
       }else if(downloadedType==='roadmap'){
-        appState.flowStage='strategy-or-images';
+        setFlowStage('strategy-or-images');
         setAgent('talk');
         addMessage('ai',roadmapToNextCardHtml());
       }else{
-        appState.flowStage='images-offer';
+        setFlowStage('images-offer');
         setAgent('images');
         addMessage('ai',strategyToImagesCardHtml());
       }
@@ -654,19 +869,21 @@
     var flowBtn=event.target.closest('[data-flow-action]');
     if(flowBtn){
       var action=flowBtn.getAttribute('data-flow-action');
-      if(action==='guided-intake'){startIntakeWizard();return;}
+      if(action==='free-talk-mode'){startFreeTalkMode();return;}
+      if(action==='build-project-flow'){startProjectFactoryMode();return;}
+      if(action==='guided-intake'){startProjectFactoryMode();return;}
       if(action==='create-marketing-strategy'){
         generateTalkDeliverable('marketing_strategy');
         return;
       }
       if(action==='skip-to-images'){
-        appState.flowStage='images-offer';
+        setFlowStage('images-offer');
         setAgent('images');
         addMessage('ai',strategyToImagesCardHtml());
         return;
       }
       if(action==='creative-mockup'){
-        appState.flowStage='images-generating';
+        setFlowStage('images-generating');
         setAgent('images');
         input.value=buildMockupPrompt(appState.projectBrief || {},'');
         input.dispatchEvent(new Event('input'));
@@ -674,7 +891,7 @@
         return;
       }
       if(action==='custom-mockup'){
-        appState.flowStage='images-custom';
+        setFlowStage('images-custom');
         setAgent('images');
         input.value='';
         input.placeholder='Décrivez votre idée de mockup pour '+((appState.projectBrief && appState.projectBrief.projectName) || 'votre projet')+'...';
@@ -683,7 +900,7 @@
         return;
       }
       if(action==='start-dev'){
-        appState.flowStage='dev-generating';
+        setFlowStage('dev-generating');
         setAgent('dev');
         input.value=buildDevPrompt(appState.projectBrief || {});
         input.dispatchEvent(new Event('input'));
@@ -752,7 +969,7 @@
       }else if(action==='search'){
         setSidebarNote('⌕','Search projects','This feature will help find saved project briefs later.');
       }else if(action==='library'){
-        setSidebarNote('▥','Factory Library','NamaaDev now includes templates for SaaS, restaurant, ecommerce, clinic, agency, local service, education, real estate, beauty, tourism and AI business.');
+        setSidebarNote('▥','Factory Library','Factory Library: Morocco categories, city market notes, strategy prompts, design packs and NamaaDev templates are organized here.');
       }else if(action==='more'){
         var status=services.api && services.api.status ? services.api.status() : {model:'gpt-5.4-nano'};
         setSidebarNote('•••','More','More Namaa workspace actions will appear here later.');

@@ -2,6 +2,8 @@ import {
   NAMAA_API_CONFIG,
   callGemini,
   jsonResponse,
+  getModel,
+  shouldEnableGrounding,
   normalizeHistory,
   optionsResponse,
   readJson,
@@ -24,6 +26,12 @@ import {
   buildNamaaVoicePrompt,
   buildDeliverablePrompt,
 } from './prompts/index.js';
+
+import {
+  selectTrustedSourcesForBrief,
+  compactSourcesForClient,
+  mergeTrustedAndLiveSources,
+} from './sources/source-registry.js';
 
 const SYSTEM_PROMPT = NAMAA_TALK_SYSTEM_PROMPT;
 const CONVERSATION_PROMPT = NAMAA_VOICE_LAYER_SYSTEM_PROMPT || NAMAA_CONVERSATION_SYSTEM_PROMPT;
@@ -131,7 +139,9 @@ export async function onRequestPost(context) {
   }
 
   const action = decision.action || requestedAction || 'marketing_strategy';
-  const prompt = buildDeliverablePrompt(action, decision.brief || brief || {}, decision.language);
+  const deliverableBrief = decision.brief || brief || {};
+  const selectedSources = selectTrustedSourcesForBrief(deliverableBrief, action);
+  const prompt = buildDeliverablePrompt(action, deliverableBrief, decision.language, selectedSources);
   const contents = [
     // Keep history tiny for deliverables to save tokens and avoid messy outputs.
     ...normalizeHistory(body.history).slice(-2),
@@ -141,10 +151,13 @@ export async function onRequestPost(context) {
     },
   ];
 
+  const groundingEnabled = shouldEnableGrounding(context.env, NAMAA_API_CONFIG.talk);
+  const groundedModel = (context.env?.[NAMAA_API_CONFIG.talk.groundingModelEnv] || NAMAA_API_CONFIG.talk.groundingFallbackModel || getModel(context.env, NAMAA_API_CONFIG.talk));
   const deliverableConfig = {
     ...NAMAA_API_CONFIG.talk,
     maxOutputTokens: NAMAA_API_CONFIG.talk.deliverableMaxOutputTokens || 2200,
-    temperature: 0.36,
+    temperature: 0.34,
+    requestTimeoutMs: Math.max(NAMAA_API_CONFIG.talk.requestTimeoutMs || 25000, groundingEnabled ? 34000 : 25000),
   };
 
   const result = await callGemini({
@@ -152,6 +165,8 @@ export async function onRequestPost(context) {
     config: deliverableConfig,
     systemInstruction: SYSTEM_PROMPT,
     contents,
+    modelOverride: groundingEnabled ? groundedModel : undefined,
+    tools: groundingEnabled ? [{ google_search: {} }] : undefined,
   });
 
   if (!result.ok) {
@@ -167,6 +182,9 @@ export async function onRequestPost(context) {
     }, result.status || 500);
   }
 
+  const liveSources = result.grounding?.sources || [];
+  const mergedSources = mergeTrustedAndLiveSources(selectedSources, liveSources);
+
   return jsonResponse({
     ok: true,
     route: 'namaa-talk',
@@ -175,6 +193,17 @@ export async function onRequestPost(context) {
     model: result.model,
     intent: decision.intent,
     action,
+    sources: compactSourcesForClient(mergedSources),
+    trustedSources: compactSourcesForClient(selectedSources),
+    liveSources: compactSourcesForClient(liveSources),
+    liveSearch: {
+      enabled: groundingEnabled,
+      grounded: Boolean(result.grounding?.grounded),
+      model: groundingEnabled ? groundedModel : '',
+      queries: result.grounding?.queries || [],
+      supportsCount: result.grounding?.supportsCount || 0,
+    },
+    sourcePolicy: groundingEnabled ? 'Namaa uses curated Morocco trusted sources and Gemini Google Search grounding for fresh citations. Exact figures still need official-source verification before legal, financial or investment decisions.' : 'Namaa uses a curated trusted-source registry. Exact numbers must be verified from official sources; recommendations are separated from facts.',
     deliverableLabel: ACTION_LABELS[action] || 'Namaa PDF',
     answer: result.text || 'Namaa generated the deliverable, but Gemini returned an empty answer.',
     briefPatch: decision.briefPatch || {},
@@ -197,7 +226,8 @@ export async function onRequestGet(context) {
     connected: hasSecret,
     expectedSecret: config.apiKeyEnv,
     model,
-    update: '33-namaa-voice-layer',
+    update: '45-live-sources-grounding',
+    sourcesEngine: 'Curated Morocco source registry + optional Gemini Google Search grounding for confirmed research/PDF deliverables',
     behavior: 'Gemini powers the intelligence, then Namaa Voice Layer shapes the final answer so it feels Moroccan, friendly, short and limited to AI/business/IT/startups/marketing/technology/programming; controlled deliverables use optimized prompts and branded PDFs',
   });
 }

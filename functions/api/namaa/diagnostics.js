@@ -1,6 +1,7 @@
 import { NAMAA_API_CONFIG, jsonResponse, optionsResponse, readJson, safeText } from './_api-config.js';
 import { controlTalk, getMissingBriefFields } from './_conversation-controller.js';
 import { getSmartBriefStatus } from './_smart-brief-builder.js';
+import { selectTrustedSourcesForBrief, compactSourcesForClient } from './sources/source-registry.js';
 
 const READY_BRIEF = {
   projectName: 'Namaa Test Restaurant',
@@ -21,6 +22,8 @@ const TEST_CASES = [
   { id: 'short_command', message: 'jawb', expectGenerate: false, expectIntent: 'casual_conversation' },
   { id: 'football_bridge', message: 'chkon ghadi yrba7 match lyoum?', expectGenerate: false, expectIntent: 'friendly_off_topic_bridge' },
   { id: 'brief_needed', message: 'bghit ndir projet ecommerce f casa budget 3000dh', expectGenerate: false },
+  { id: 'taxonomy_city', message: 'bghit marketplace f Tanger budget 5000dh', expectGenerate: false },
+  { id: 'taxonomy_ai_it', message: 'bghit AI automation agency f Rabat', expectGenerate: false },
   { id: 'deliverable_blocked_until_brief', message: 'create market research pdf', expectGenerate: false, expectIntent: 'brief_required' },
   { id: 'deliverable_ready', message: 'create market research pdf', brief: READY_BRIEF, expectGenerate: true, expectIntent: 'market_research' },
 ];
@@ -35,6 +38,7 @@ function summarizeDecision(decision) {
     shortMode: !decision.generate,
     answerPreview: decision.answer ? String(decision.answer).slice(0, 180) : '',
     briefReadiness: briefStatus.score,
+    taxonomyAware: true,
     missingBriefFields: getMissingBriefFields(brief).map((field) => field.key),
     nextQuestions: briefStatus.nextQuestions || [],
   };
@@ -67,12 +71,19 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: allPassed,
     service: 'Namaa Diagnostics',
-    update: '33-namaa-voice-layer',
+    update: '45-live-sources-grounding',
     note: 'This endpoint tests Namaa routing logic without calling Gemini. Live chat uses Gemini through Namaa Voice Layer so replies feel like Namaa, not a generic model.',
     geminiConfigured: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
     activeTextModel: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
     activeImageModel: env[NAMAA_API_CONFIG.images.modelEnv] || NAMAA_API_CONFIG.images.fallbackModel,
+    trustedSourcesPreview: compactSourcesForClient(selectTrustedSourcesForBrief(READY_BRIEF,'market_research')).map((source) => ({ shortName: source.shortName, domain: source.domain, quality: source.quality })),
     liveConversationMode: 'Gemini handles reasoning; Namaa Voice Layer shapes the final short Moroccan/friendly answer.',
+    liveSourcesGrounding: {
+      enabledByDefault: true,
+      disableWith: NAMAA_API_CONFIG.talk.enableGroundingEnv + '=false',
+      groundedModel: env[NAMAA_API_CONFIG.talk.groundingModelEnv] || NAMAA_API_CONFIG.talk.groundingFallbackModel,
+      note: 'Diagnostics does not call Gemini or consume live search quota. Confirmed PDFs call /api/namaa/talk with google_search grounding.',
+    },
     checks: cases,
   }, allPassed ? 200 : 500);
 }
@@ -87,9 +98,10 @@ export async function onRequestPost(context) {
   return jsonResponse({
     ok: true,
     service: 'Namaa Diagnostics',
-    update: '33-namaa-voice-layer',
+    update: '45-live-sources-grounding',
     note: 'Controller preview only. No Gemini call was made here. Live /talk uses Gemini plus Namaa Voice Layer to keep replies natural, short and on-brand while keeping scope safe.',
     input: { message, action, hasBrief: Boolean(brief) },
     decision: summarizeDecision(decision),
+    sourcesPreview: compactSourcesForClient(selectTrustedSourcesForBrief(decision.brief || brief || {}, action || decision.action || 'market_research')),
   });
 }

@@ -63,10 +63,36 @@
     ai_business:{label:'AI Business / Automation',style:'AI product workspace, workflow, agent UI and B2B trust',primaryAsset:'AI agent dashboard + workflow mockup',ratio:'16:9',logoIdea:'Futuristic but simple AI mark, blue/cyan, app icon ready',assets:['Logo concept','AI dashboard mockup','Workflow graphic','Landing hero','LinkedIn post','Demo CTA visual'],visuals:['chat agent card','workflow nodes','ROI metrics','automation panel'],copyAngles:['Automate replies','Save time','Turn leads into actions']},
     generic:{label:'Business Maroc',style:'Clean business factory board, landing + social + logo basics',primaryAsset:'Landing page + social creative + logo concept',ratio:'16:9',logoIdea:'Simple professional mark, blue trust, Moroccan business ready',assets:['Logo concept','Landing page mockup','Social post','Offer card','WhatsApp CTA','Brand mini-board'],visuals:['hero layout','proof cards','CTA section','brand board'],copyAngles:['Launch clearly','Get clients','Build trust']}
   };
+  function enrichMockupPack(key,pack){
+    pack=pack || packs.generic;
+    var projectSpecific={
+      saas:{logoStage:'App icon + wordmark',brandStage:'Blue/cyan tech tokens',mockupStage:'Desktop dashboard + mobile app',launchStage:'Pitch cover + LinkedIn post',downloadNote:'SaaS pack preview only: logo, dashboard and app mockups appear together before final design export.',outputs:['Logo lockup','Dashboard mockup','Mobile app screen','Landing hero','Pitch cover']},
+      restaurant:{logoStage:'Signage-ready food mark',brandStage:'Warm food palette + menu typography',mockupStage:'Menu, flyer and roll-up',launchStage:'Instagram offer + WhatsApp reservation',downloadNote:'Restaurant pack preview only: menu/flyer/roll-up are shown for validation before export.',outputs:['Logo lockup','Menu cover','Flyer','Roll-up/storefront','Instagram post']},
+      ecommerce:{logoStage:'Packaging-friendly commerce mark',brandStage:'Product colors + COD trust badges',mockupStage:'Product page, packaging and ad',launchStage:'WhatsApp order + social proof',downloadNote:'Ecommerce pack preview only: product page, packaging and ad direction are generated together.',outputs:['Logo lockup','Product page','Packaging','Ad creative','Order card']},
+      clinic:{logoStage:'Medical trust monogram',brandStage:'Calm blue/white medical system',mockupStage:'Appointment page + trust ad',launchStage:'Booking CTA + FAQ trust visual',downloadNote:'Clinic pack preview only: appointment page and trust visuals stay business-safe, no medical claims.',outputs:['Logo lockup','Appointment page','Trust ad','Service cards','Booking visual']},
+      agency:{logoStage:'Consulting wordmark/badge',brandStage:'Authority blue + case-study style',mockupStage:'Landing page + LinkedIn carousel',launchStage:'Proposal cover + diagnostic CTA',downloadNote:'Agency pack preview only: service, proposal and LinkedIn assets are aligned before final export.',outputs:['Logo lockup','Landing hero','Service cards','LinkedIn cover','Proposal cover']},
+      local_service:{logoStage:'Reliable local service badge',brandStage:'Trust palette + booking UI',mockupStage:'Flyer + Google Maps + WhatsApp CTA',launchStage:'Before/after proof card',downloadNote:'Local service pack preview only: booking and proof assets appear in one validation board.',outputs:['Logo lockup','Service flyer','Booking page','Map card','WhatsApp visual']},
+      education:{logoStage:'Education trust symbol',brandStage:'Learning palette + module cards',mockupStage:'Course page + certificate',launchStage:'Enrollment post + program CTA',downloadNote:'Education pack preview only: course/certificate assets are shown as concept direction.',outputs:['Logo lockup','Course page','Certificate','Program cards','Enrollment post']},
+      real_estate:{logoStage:'Premium property monogram',brandStage:'Elegant real-estate palette',mockupStage:'Property page + brochure',launchStage:'Visit booking + listing cards',downloadNote:'Real estate pack preview only: property and visit assets are generated as concept mockups.',outputs:['Logo lockup','Property page','Brochure','Listing card','Visit CTA']},
+      beauty:{logoStage:'Elegant salon monogram',brandStage:'Soft premium lifestyle palette',mockupStage:'Social pack + booking page',launchStage:'Story ad + service price card',downloadNote:'Beauty pack preview only: social/booking assets are previewed before final brand export.',outputs:['Logo lockup','Instagram post','Booking page','Story ad','Price card']},
+      tourism:{logoStage:'Travel mark with Moroccan touch',brandStage:'Warm premium hospitality palette',mockupStage:'Booking page + travel flyer',launchStage:'Experience carousel + location card',downloadNote:'Tourism pack preview only: booking and experience assets are shown as a single board.',outputs:['Logo lockup','Booking page','Travel flyer','Experience cards','Map card']},
+      ai_business:{logoStage:'AI app icon + agent mark',brandStage:'Cyan/blue workflow identity',mockupStage:'AI agent dashboard + workflow',launchStage:'Demo CTA + LinkedIn post',downloadNote:'AI business pack preview only: agent UI and workflow graphics are generated as mockup direction.',outputs:['Logo lockup','AI dashboard','Workflow graphic','Landing hero','Demo CTA']},
+      generic:{logoStage:'Clean business mark',brandStage:'Blue trust identity',mockupStage:'Landing page + social creative',launchStage:'Offer card + WhatsApp CTA',downloadNote:'Business pack preview only: logo, landing and social assets are prepared as concept direction.',outputs:['Logo lockup','Landing page','Social post','Offer card','WhatsApp CTA']}
+    };
+    var spec=projectSpecific[key] || projectSpecific.generic;
+    return Object.assign({
+      key:key,
+      assetFlow:['Logo first','Brand board','Category mockups','Launch visuals'],
+      stages:[spec.logoStage,spec.brandStage,spec.mockupStage,spec.launchStage],
+      outputs:spec.outputs,
+      downloadNote:spec.downloadNote,
+      logoPrompt:'Generate a clear, memorable logo concept before any mockup: '+spec.logoStage+'. Keep it readable and suitable for website, social and print.'
+    },pack,{assets:pack.assets.slice(),visuals:pack.visuals.slice(),copyAngles:pack.copyAngles.slice()});
+  }
   function getMockupPack(input,brief){
     var key=inferProjectCategory(input,brief);
     var pack=packs[key] || packs.generic;
-    return Object.assign({key:key},pack,{assets:pack.assets.slice(),visuals:pack.visuals.slice(),copyAngles:pack.copyAngles.slice()});
+    return enrichMockupPack(key,pack);
   }
   function inferObjective(text){
     var t=normalize(text);

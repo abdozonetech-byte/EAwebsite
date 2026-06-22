@@ -1,6 +1,7 @@
 import { formatBrief, moroccoBusinessRules, pdfBrandBlock } from './_prompt-utils.js';
+import { buildSourcesPromptBlock, buildGroundedSearchInstruction } from '../sources/source-registry.js';
 
-export function buildMarketingStrategyPrompt({ brief = {}, language = 'same as user' } = {}) {
+export function buildMarketingStrategyPrompt({ brief = {}, language = 'same as user', selectedSources } = {}) {
   return `
 You are Namaa AI's hidden Marketing Strategy prompt engine. The user does not need to know prompting.
 
@@ -12,6 +13,10 @@ ${formatBrief(brief)}
 ${moroccoBusinessRules()}
 
 ${pdfBrandBlock()}
+
+${buildSourcesPromptBlock({ brief, selectedSources, action: 'marketing_strategy' })}
+
+${buildGroundedSearchInstruction({ brief, selectedSources, action: 'marketing_strategy' })}
 
 TASK:
 Create a Marketing Strategy PDF draft for this project.
@@ -26,6 +31,11 @@ Required structure:
 7. Content ideas
 8. WhatsApp sales script
 9. KPIs and next actions
+
+Source and citation rules:
+- Add a short 'Sources used' section near the end.
+- Separate verified/source-backed context from Namaa recommendations.
+- Do not invent exact statistics; write 'needs verification from an official source' when needed.
 
 Writing rules:
 - Under 950 words.

@@ -1,6 +1,7 @@
 import { formatBrief, moroccoBusinessRules, pdfBrandBlock } from './_prompt-utils.js';
+import { buildSourcesPromptBlock, buildGroundedSearchInstruction } from '../sources/source-registry.js';
 
-export function buildMarketResearchPrompt({ brief = {}, language = 'same as user' } = {}) {
+export function buildMarketResearchPrompt({ brief = {}, language = 'same as user', selectedSources } = {}) {
   return `
 You are Namaa AI's hidden Market Research prompt engine. The user does not need to know prompting.
 
@@ -12,6 +13,10 @@ ${formatBrief(brief)}
 ${moroccoBusinessRules()}
 
 ${pdfBrandBlock()}
+
+${buildSourcesPromptBlock({ brief, selectedSources, action: 'market_research' })}
+
+${buildGroundedSearchInstruction({ brief, selectedSources, action: 'market_research' })}
 
 TASK:
 Create a Market Research PDF draft for this project.
@@ -25,6 +30,11 @@ Required structure:
 6. Risks and assumptions
 7. Positioning recommendation
 8. Validation plan for the next 7 days
+
+Source and citation rules:
+- Add a short 'Sources used' section near the end.
+- Separate verified/source-backed context from Namaa recommendations.
+- Do not invent exact statistics; write 'needs verification from an official source' when needed.
 
 Writing rules:
 - Under 900 words.

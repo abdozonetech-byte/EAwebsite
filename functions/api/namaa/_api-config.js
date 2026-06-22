@@ -1,5 +1,5 @@
 // Namaa API configuration
-// Update 33: Namaa Voice Layer over Gemini Free Talk, plus controlled deliverables, smart brief builder, prompt library, diagnostics, and reliability tuning.
+// Update 45: live source grounding for trusted Morocco research.
 // Keep API keys outside frontend JavaScript. Add GEMINI_API_KEY in Cloudflare Pages Secrets.
 
 export const NAMAA_API_CONFIG = {
@@ -13,6 +13,10 @@ export const NAMAA_API_CONFIG = {
     conversationMaxOutputTokens: 170,
     conversationTimeoutMs: 8000,
     deliverableMaxOutputTokens: 2400,
+    // Update 45: optional Google Search grounding for confirmed research/PDF deliverables.
+    groundingModelEnv: 'GEMINI_GROUNDED_MODEL',
+    groundingFallbackModel: 'gemini-2.5-flash',
+    enableGroundingEnv: 'NAMAA_ENABLE_LIVE_SOURCES',
     temperature: 0.38,
     requestTimeoutMs: 25000,
     retryAttempts: 1,
@@ -99,6 +103,53 @@ export function extractGeminiText(data) {
   return parts.map((part) => part.text || '').join('\n').trim();
 }
 
+export function extractGeminiGrounding(data) {
+  const candidate = data?.candidates?.[0] || {};
+  const metadata = candidate.groundingMetadata || candidate.grounding_metadata || {};
+  const chunks = metadata.groundingChunks || metadata.grounding_chunks || [];
+  const supports = metadata.groundingSupports || metadata.grounding_supports || [];
+  const queries = metadata.webSearchQueries || metadata.web_search_queries || [];
+
+  const sources = chunks
+    .map((chunk, index) => {
+      const web = chunk.web || chunk.retrievedContext || chunk.retrieved_context || {};
+      const uri = web.uri || web.url || '';
+      const title = web.title || web.name || '';
+      if (!uri && !title) return null;
+      let domain = '';
+      try { domain = uri ? new URL(uri).hostname.replace(/^www\./, '') : ''; } catch (error) { domain = ''; }
+      return {
+        id: `live_${index + 1}`,
+        shortName: title || domain || `Live source ${index + 1}`,
+        name: title || domain || `Live source ${index + 1}`,
+        title: title || domain || `Live source ${index + 1}`,
+        url: uri,
+        uri,
+        domain,
+        type: 'live_google_search',
+        trustLevel: domain && /\b(gov|ma|org|int|worldbank|anrt|hcp|bkam|indh|datareportal|gsma)\b/i.test(domain) ? 2 : 3,
+        quality: 'Live grounded source',
+        note: 'Live Google Search grounding source returned by Gemini.',
+      };
+    })
+    .filter(Boolean)
+    .filter((source, index, list) => list.findIndex((item) => (item.uri || item.title) === (source.uri || source.title)) === index)
+    .slice(0, 8);
+
+  return {
+    grounded: Boolean(sources.length || queries.length || supports.length),
+    sources,
+    queries: Array.isArray(queries) ? queries.slice(0, 8) : [],
+    supportsCount: Array.isArray(supports) ? supports.length : 0,
+  };
+}
+
+export function shouldEnableGrounding(env, config) {
+  const flagName = config?.enableGroundingEnv || 'NAMAA_ENABLE_LIVE_SOURCES';
+  const value = env && flagName ? String(env[flagName] || '').trim().toLowerCase() : '';
+  return !['0', 'false', 'off', 'no'].includes(value);
+}
+
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -151,9 +202,9 @@ export function extractGeminiImage(data) {
   };
 }
 
-export async function callGemini({ env, config, systemInstruction, contents }) {
+export async function callGemini({ env, config, systemInstruction, contents, tools, modelOverride }) {
   const apiKey = getSecret(env, config.apiKeyEnv);
-  const model = getModel(env, config);
+  const model = modelOverride || getModel(env, config);
 
   if (!apiKey) {
     return {
@@ -184,6 +235,10 @@ export async function callGemini({ env, config, systemInstruction, contents }) {
       maxOutputTokens: config.maxOutputTokens || 900,
     },
   };
+
+  if (Array.isArray(tools) && tools.length) {
+    payload.tools = tools;
+  }
 
   let response;
   let data;
@@ -216,6 +271,7 @@ export async function callGemini({ env, config, systemInstruction, contents }) {
     ok: true,
     status: 200,
     text: extractGeminiText(data),
+    grounding: extractGeminiGrounding(data),
     model,
     provider: 'gemini',
   };

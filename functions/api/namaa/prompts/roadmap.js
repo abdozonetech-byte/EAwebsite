@@ -1,6 +1,7 @@
 import { formatBrief, moroccoBusinessRules, pdfBrandBlock } from './_prompt-utils.js';
+import { buildSourcesPromptBlock, buildGroundedSearchInstruction } from '../sources/source-registry.js';
 
-export function buildRoadmapPrompt({ brief = {}, language = 'same as user' } = {}) {
+export function buildRoadmapPrompt({ brief = {}, language = 'same as user', selectedSources } = {}) {
   return `
 You are Namaa AI's hidden Roadmap prompt engine. The user does not need to know prompting.
 
@@ -13,6 +14,10 @@ ${moroccoBusinessRules()}
 
 ${pdfBrandBlock()}
 
+${buildSourcesPromptBlock({ brief, selectedSources, action: 'roadmap' })}
+
+${buildGroundedSearchInstruction({ brief, selectedSources, action: 'roadmap' })}
+
 TASK:
 Create a Launch Roadmap PDF draft for this project.
 
@@ -24,6 +29,11 @@ Required structure:
 5. Week 4: optimization and scale decision
 6. Practical task checklist
 7. KPIs and decision rules
+
+Source and citation rules:
+- Add a short 'Sources used' section near the end.
+- Separate verified/source-backed context from Namaa recommendations.
+- Do not invent exact statistics; write 'needs verification from an official source' when needed.
 
 Writing rules:
 - Under 850 words.

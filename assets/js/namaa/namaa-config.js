@@ -1,7 +1,7 @@
 (function(window){
   'use strict';
   window.NamaaConfig={
-    version:'20260622-u28-testing-gemini-optimization',
+    version:'20260622-u42-design-agent-factory',
     api:{
       enabled:true,
       provider:'gemini',
@@ -20,7 +20,8 @@
       normalChatMaxWords:100,
       smartBriefBuilder:true,
       deliverableRequiresConfirmation:true,
-      imagePackEngine:'category-based-logo-mockup-board',
+      imagePackEngine:'category-based-logo-mockup-board-v42-factory-animation',
+      marketTaxonomy:'morocco-categories-cities-v39',
       keysLocation:'server-environment-only'
     },
     agents:{
@@ -31,8 +32,8 @@
         placeholder:'Talk to Namaa about your project, AI, startup, marketing in Morocco...',
         hero:{
           kicker:'Namaa Talk',
-          title:'Parlez naturellement, Namaa organise votre projet.',
-          intro:'Un advisor friendly et professionnel : business, IA, startup, marketing, mockups et landing pages pour le marché marocain.'
+          title:'Free Talk ou Project Factory : choisissez votre chemin.',
+          intro:'Parlez librement business/AI/IT, ou lancez un parcours guidé avec Strategy Agent, Design Agent et Web Agent.'
         }
       },
       images:{
@@ -59,10 +60,10 @@
       }
     },
     promptChips:[
-      {index:'01',label:'Lancer le brief',prompt:'Lancer le brief projet'},
-      {index:'02',label:'Food / Restaurant',prompt:'J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?'},
-      {index:'03',label:'E-commerce',prompt:'Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?'},
-      {index:'04',label:'Clinique / médical',prompt:'Quelle stratégie marketing pour une clinique esthétique au Maroc ?'}
+      {index:'01',label:'Free Talk',prompt:'Salam Namaa, bghit nhder 3la business idea'},
+      {index:'02',label:'Build Project',prompt:'Lancer le brief projet avec catégorie, ville, budget et objectif'},
+      {index:'03',label:'Strategy Agent',prompt:'Je veux préparer une market research PDF pour mon projet'},
+      {index:'04',label:'Design Agent',prompt:'Je veux créer un logo et des mockups pour mon projet'}
     ],
     ui:{
       apiBadgeText:'Namaa modes',

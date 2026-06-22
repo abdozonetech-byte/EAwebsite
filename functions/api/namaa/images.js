@@ -131,6 +131,34 @@ const PACKS = {
   },
 };
 
+
+function enrichPack(key, pack = {}) {
+  const specs = {
+    saas: { logoStage: 'App icon + wordmark', brandStage: 'Blue/cyan tech tokens', mockupStage: 'Desktop dashboard + mobile app', launchStage: 'Pitch cover + LinkedIn launch', outputs: ['Logo lockup','Desktop dashboard','Mobile app screen','Landing hero','Pitch cover'], downloadNote: 'Preview only: SaaS logo, dashboard and app mockups are shown for validation before final export.' },
+    restaurant: { logoStage: 'Signage-ready food mark', brandStage: 'Warm food palette + menu typography', mockupStage: 'Menu, flyer and roll-up', launchStage: 'Instagram offer + WhatsApp reservation', outputs: ['Logo lockup','Menu cover','Flyer','Roll-up/storefront','Instagram post'], downloadNote: 'Preview only: restaurant menu, flyer and signage direction are generated before final export.' },
+    ecommerce: { logoStage: 'Packaging-friendly commerce mark', brandStage: 'Product colors + COD trust badges', mockupStage: 'Product page, packaging and ad', launchStage: 'WhatsApp order + social proof', outputs: ['Logo lockup','Product page','Packaging','Ad creative','Order card'], downloadNote: 'Preview only: ecommerce product page, packaging and ad direction are generated together.' },
+    clinic: { logoStage: 'Medical trust monogram', brandStage: 'Calm medical blue/white system', mockupStage: 'Appointment page + trust ad', launchStage: 'Booking CTA + FAQ trust visual', outputs: ['Logo lockup','Appointment page','Trust ad','Service cards','Booking visual'], downloadNote: 'Preview only: clinic visuals stay trust-focused and business-safe, without medical claims.' },
+    agency: { logoStage: 'Consulting wordmark/badge', brandStage: 'Authority blue + case-study style', mockupStage: 'Landing page + LinkedIn carousel', launchStage: 'Proposal cover + diagnostic CTA', outputs: ['Logo lockup','Landing hero','Service cards','LinkedIn cover','Proposal cover'], downloadNote: 'Preview only: service, proposal and LinkedIn assets are aligned before final export.' },
+    local_service: { logoStage: 'Reliable local service badge', brandStage: 'Trust palette + booking UI', mockupStage: 'Flyer + Google Maps + WhatsApp CTA', launchStage: 'Before/after proof card', outputs: ['Logo lockup','Service flyer','Booking page','Map card','WhatsApp visual'], downloadNote: 'Preview only: local booking and proof assets appear in one validation board.' },
+    education: { logoStage: 'Education trust symbol', brandStage: 'Learning palette + module cards', mockupStage: 'Course page + certificate', launchStage: 'Enrollment post + program CTA', outputs: ['Logo lockup','Course page','Certificate','Program cards','Enrollment post'], downloadNote: 'Preview only: course and certificate assets are shown as concept direction.' },
+    real_estate: { logoStage: 'Premium property monogram', brandStage: 'Elegant real-estate palette', mockupStage: 'Property page + brochure', launchStage: 'Visit booking + listing cards', outputs: ['Logo lockup','Property page','Brochure','Listing card','Visit CTA'], downloadNote: 'Preview only: property and visit assets are generated as concept mockups.' },
+    beauty: { logoStage: 'Elegant salon monogram', brandStage: 'Soft premium lifestyle palette', mockupStage: 'Social pack + booking page', launchStage: 'Story ad + service price card', outputs: ['Logo lockup','Instagram post','Booking page','Story ad','Price card'], downloadNote: 'Preview only: social and booking assets are previewed before final brand export.' },
+    tourism: { logoStage: 'Travel mark with Moroccan touch', brandStage: 'Warm hospitality palette', mockupStage: 'Booking page + travel flyer', launchStage: 'Experience carousel + location card', outputs: ['Logo lockup','Booking page','Travel flyer','Experience cards','Map card'], downloadNote: 'Preview only: booking and experience assets are shown as one premium board.' },
+    ai_business: { logoStage: 'AI app icon + agent mark', brandStage: 'Cyan/blue workflow identity', mockupStage: 'AI agent dashboard + workflow', launchStage: 'Demo CTA + LinkedIn post', outputs: ['Logo lockup','AI dashboard','Workflow graphic','Landing hero','Demo CTA'], downloadNote: 'Preview only: AI agent UI and workflow graphics are generated as mockup direction.' },
+    generic: { logoStage: 'Clean business mark', brandStage: 'Blue trust identity', mockupStage: 'Landing page + social creative', launchStage: 'Offer card + WhatsApp CTA', outputs: ['Logo lockup','Landing page','Social post','Offer card','WhatsApp CTA'], downloadNote: 'Preview only: logo, landing and social assets are prepared as concept direction.' },
+  };
+  const spec = specs[key] || specs.generic;
+  return {
+    key,
+    ...pack,
+    assetFlow: ['Logo first','Brand board','Category mockups','Launch visuals'],
+    stages: [spec.logoStage, spec.brandStage, spec.mockupStage, spec.launchStage],
+    outputs: spec.outputs,
+    downloadNote: spec.downloadNote,
+    logoPrompt: `Generate a clear, memorable logo concept before any mockup: ${spec.logoStage}. Keep it readable and suitable for website, social media and print.`
+  };
+}
+
 function formatBrief(brief = {}) {
   if (!brief || typeof brief !== 'object') return '';
   const rows = [
@@ -150,21 +178,21 @@ function briefText(brief) {
 
 function detectPack(prompt, brief = null, requestedPack = null) {
   if (requestedPack?.key && PACKS[requestedPack.key]) {
-    return { key: requestedPack.key, ...PACKS[requestedPack.key] };
+    return enrichPack(requestedPack.key, PACKS[requestedPack.key]);
   }
   const value = `${prompt || ''} ${briefText(brief)}`.toLowerCase();
-  if (/saas|application|mobile app|dashboard|marketplace|software|logiciel|\bapp\b/.test(value)) return { key: 'saas', ...PACKS.saas };
-  if (/restaurant|café|cafe|food|snack|pâtisserie|traiteur|dark kitchen|food truck/.test(value)) return { key: 'restaurant', ...PACKS.restaurant };
-  if (/ecommerce|e-commerce|boutique|store|shop|product|produit|cod|packaging|cosmétique|vêtement/.test(value)) return { key: 'ecommerce', ...PACKS.ecommerce };
-  if (/clinique|clinic|dentiste|dermato|doctor|médecin|medecin|laboratoire|kiné|medical|santé|sante/.test(value)) return { key: 'clinic', ...PACKS.clinic };
-  if (/immobilier|real estate|airbnb|courtier|promotion immobilière/.test(value)) return { key: 'real_estate', ...PACKS.real_estate };
-  if (/formation|école|ecole|cours|coaching|edtech|centre de soutien/.test(value)) return { key: 'education', ...PACKS.education };
-  if (/barber|barbershop|beauté|beauty|spa|lifestyle|salon/.test(value)) return { key: 'beauty', ...PACKS.beauty };
-  if (/tourisme|riad|hôtel|hotel|voyage|travel|hébergement|hebergement/.test(value)) return { key: 'tourism', ...PACKS.tourism };
-  if (/nettoyage|déménagement|demenagement|réparation|maintenance|livraison|service local/.test(value)) return { key: 'local_service', ...PACKS.local_service };
-  if (/agence|agency|consulting|consultant|marketing digital|branding|design|photographie|video/.test(value)) return { key: 'agency', ...PACKS.agency };
-  if (/ai|ia|automation|automatisation|agent|chatbot/.test(value)) return { key: 'ai_business', ...PACKS.ai_business };
-  return { key: 'generic', ...PACKS.generic };
+  if (/saas|application|mobile app|dashboard|marketplace|software|logiciel|\bapp\b/.test(value)) return enrichPack('saas', PACKS.saas);
+  if (/restaurant|café|cafe|food|snack|pâtisserie|traiteur|dark kitchen|food truck/.test(value)) return enrichPack('restaurant', PACKS.restaurant);
+  if (/ecommerce|e-commerce|boutique|store|shop|product|produit|cod|packaging|cosmétique|vêtement/.test(value)) return enrichPack('ecommerce', PACKS.ecommerce);
+  if (/clinique|clinic|dentiste|dermato|doctor|médecin|medecin|laboratoire|kiné|medical|santé|sante/.test(value)) return enrichPack('clinic', PACKS.clinic);
+  if (/immobilier|real estate|airbnb|courtier|promotion immobilière/.test(value)) return enrichPack('real_estate', PACKS.real_estate);
+  if (/formation|école|ecole|cours|coaching|edtech|centre de soutien/.test(value)) return enrichPack('education', PACKS.education);
+  if (/barber|barbershop|beauté|beauty|spa|lifestyle|salon/.test(value)) return enrichPack('beauty', PACKS.beauty);
+  if (/tourisme|riad|hôtel|hotel|voyage|travel|hébergement|hebergement/.test(value)) return enrichPack('tourism', PACKS.tourism);
+  if (/nettoyage|déménagement|demenagement|réparation|maintenance|livraison|service local/.test(value)) return enrichPack('local_service', PACKS.local_service);
+  if (/agence|agency|consulting|consultant|marketing digital|branding|design|photographie|video/.test(value)) return enrichPack('agency', PACKS.agency);
+  if (/ai|ia|automation|automatisation|agent|chatbot/.test(value)) return enrichPack('ai_business', PACKS.ai_business);
+  return enrichPack('generic', PACKS.generic);
 }
 
 function seemsInScope(prompt) {

@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Namaa AI | Assistant Business Maroc par Elboubakry</title>
-  <meta name="description" content="Namaa AI transforme une idée de projet au Maroc en brief, stratégie, mockups, identité visuelle et landing page avec Gemini, Namaa Talk, Namaa Images et NamaaDev.">
+  <meta name="description" content="Namaa AI offre deux expériences: Free Talk pour discuter business/AI/IT et Build My Project pour créer brief, stratégie PDF, mockups et landing page avec agents Namaa.">
   <meta name="application-name" content="Namaa AI">
   <meta name="keywords" content="assistant IA Maroc, AI business Maroc, startup Maroc, stratégie marketing Maroc, Namaa AI, Elboubakry">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://elboubakry.com/assistant-ia-maroc/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Namaa AI | Assistant Business Maroc">
-  <meta property="og:description" content="Transformez une idée business au Maroc en stratégie, mockups, PDF et landing page avec Namaa AI.">
+  <meta property="og:description" content="Choisissez Free Talk ou Build My Project et transformez une idée business en stratégie, mockups, PDF et landing page avec Namaa AI.">
   <meta property="og:url" content="https://elboubakry.com/assistant-ia-maroc/">
   <meta property="og:site_name" content="Elboubakry">
   <meta property="og:locale" content="fr_MA">
@@ -23,7 +23,8 @@
   <link rel="preconnect" href="https://esm.sh" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800;900&display=swap"></noscript>
-  <link rel="stylesheet" href="/assets/css/namaa-ai-chat.css?v=20260622-u22">
+  <link rel="stylesheet" href="/assets/css/namaa-ai-chat.css?v=20260622-u39">
+  <link rel="stylesheet" href="/assets/css/namaa-mui-base.css?v=20260622-u39">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -65,13 +66,13 @@
         </button>
         <button class="namaa-nav-item" type="button" data-sidebar-action="search">
           <span class="namaa-nav-icon" aria-hidden="true">⌕</span>
-          <span>Search projects</span>
+          <span>Search workspace</span>
           <small>Soon</small>
         </button>
         <button class="namaa-nav-item" type="button" data-sidebar-action="library">
           <span class="namaa-nav-icon" aria-hidden="true">▥</span>
           <span>Factory Library</span>
-          <small>Templates</small>
+          <small>Agents + templates</small>
         </button>
         <button class="namaa-nav-item" type="button" data-sidebar-action="more">
           <span class="namaa-nav-icon" aria-hidden="true">•••</span>
@@ -79,20 +80,48 @@
         </button>
       </nav>
 
+      <section class="namaa-sidebar-cockpit" aria-label="Namaa Project Factory cockpit">
+        <div class="namaa-cockpit-topline">
+          <span class="namaa-cockpit-live" aria-hidden="true"></span>
+          <strong>Factory cockpit</strong>
+          <small>Premium agent flow</small>
+        </div>
+        <div class="namaa-cockpit-meter" aria-label="Progression du projet">
+          <span style="--value:25%"></span>
+        </div>
+        <div class="namaa-cockpit-grid" aria-label="Statut rapide Namaa">
+          <span><b>01</b><small>Brief</small></span>
+          <span><b>02</b><small>Strategy</small></span>
+          <span><b>03</b><small>Design</small></span>
+          <span><b>04</b><small>Web</small></span>
+        </div>
+        <div class="namaa-cockpit-actions">
+          <button type="button" data-flow-action="free-talk-mode">Free Talk</button>
+          <button type="button" data-flow-action="build-project-flow">Build Project</button>
+        </div>
+      </section>
+
       <section class="namaa-sidebar-section" aria-label="Agents Namaa">
-        <p>Pinned agents</p>
+        <p>Agent Hub</p>
         <button class="namaa-agent-link is-active" type="button" data-agent="talk" aria-label="Activer Namaa Talk">
           <span class="namaa-agent-emoji">🧠</span>
-          <span class="namaa-agent-copy"><strong>Namaa Talk</strong><small>Friend advisor + strategy PDF</small></span>
+          <span class="namaa-agent-copy"><strong>Namaa Talk</strong><small>Free Talk · business / AI / IT</small><em>Ready now</em></span>
         </button>
         <button class="namaa-agent-link" type="button" data-agent="images" aria-label="Activer Namaa Images">
           <span class="namaa-agent-emoji">🎨</span>
-          <span class="namaa-agent-copy"><strong>Namaa Images</strong><small>Logo, mockups, creative pack</small></span>
+          <span class="namaa-agent-copy"><strong>Namaa Images</strong><small>Logo · brand · category mockups</small><em>After strategy</em></span>
         </button>
         <button class="namaa-agent-link" type="button" data-agent="dev" aria-label="Activer NamaaDev">
           <span class="namaa-agent-emoji">💻</span>
-          <span class="namaa-agent-copy"><strong>NamaaDev</strong><small>Template website preview</small></span>
+          <span class="namaa-agent-copy"><strong>NamaaDev</strong><small>HTML/CSS/JS landing preview</small><em>After design</em></span>
         </button>
+      
+        <div class="namaa-sidebar-flow-map" aria-label="Namaa factory route">
+          <span class="is-ready"><b>1</b> Talk</span>
+          <span><b>2</b> Strategy</span>
+          <span><b>3</b> Design</span>
+          <span><b>4</b> Web</span>
+        </div>
       </section>
 
       <div class="namaa-sidebar-footer">
@@ -136,20 +165,36 @@
             <div class="namaa-welcome" id="namaaHero">
               <div class="namaa-orb" aria-hidden="true"><span>N</span></div>
               <p class="namaa-kicker" id="namaaHeroKicker">Namaa Talk</p>
-              <h1 id="namaaHeroTitle">Transformez votre idée en projet prêt à tester.</h1>
-              <p class="namaa-intro" id="namaaHeroIntro">Namaa collecte les bonnes informations, crée une stratégie PDF, génère des mockups puis prépare une landing page simple pour votre projet au Maroc.</p>
-              <div class="namaa-chip-row" aria-label="Exemples de questions">
-                <button type="button" data-prompt="Lancer le brief projet"><span>01</span> Lancer le brief</button>
-                <button type="button" data-prompt="J’ai un restaurant à Casablanca. Comment attirer mes premiers clients ?"><span>02</span> Food / Restaurant</button>
-                <button type="button" data-prompt="Je veux lancer un e-commerce au Maroc. Quelles sont les premières étapes ?"><span>03</span> E-commerce</button>
-                <button type="button" data-prompt="Quelle stratégie marketing pour une clinique esthétique au Maroc ?"><span>04</span> Clinique / médical</button>
+              <h1 id="namaaHeroTitle">Namaa AI, choose your path.</h1>
+              <p class="namaa-intro" id="namaaHeroIntro">Start with free business talk or build a complete project with Namaa agents.</p>
+              <div class="namaa-choice-stage" aria-label="Namaa entry choice">
+                <div class="namaa-choice-badge"><span>✨</span><strong>Namaa Project Factory</strong><small>Free talk + project build</small></div>
+                <h2>شنو بغيتي نديرو اليوم؟</h2>
+                <p>اختار الطريقة اللي مريحة ليك: نهضرو بحرية على AI, business, IT, startups وmarketing، أو نبنيو مشروعك step by step مع Strategy, Design وWeb agents.</p>
+                <div class="namaa-entry-grid namaa-entry-grid-premium" aria-label="Choisir le mode Namaa">
+                  <button class="namaa-entry-card namaa-entry-talk" type="button" data-flow-action="free-talk-mode">
+                    <span>💬</span><strong>Free Talk</strong><small>Hder m3a Namaa b Darija Latin, العربية, Français ola English. Quick, friendly, business-aware.</small><em>Conversation libre</em>
+                  </button>
+                  <button class="namaa-entry-card namaa-entry-build" type="button" data-flow-action="build-project-flow">
+                    <span>🏗️</span><strong>Build My Project</strong><small>اختيارات سهلة → brief واضح → PDF strategy → logo/mockups → landing page.</small><em>Guided factory</em>
+                  </button>
+                </div>
+                <div class="namaa-language-strip" aria-label="Supported languages"><span>Darija Latin</span><span>العربية</span><span>Français</span><span>English</span></div>
               </div>
               <div class="namaa-factory-strip" aria-label="Namaa project factory steps">
-                <span><b>01</b> Brief</span><span><b>02</b> Strategy PDF</span><span><b>03</b> Logo + mockups</span><span><b>04</b> Landing page</span>
+                <span><b>01</b> Brief</span><span><b>02</b> Strategy Agent</span><span><b>03</b> Design Agent</span><span><b>04</b> Web Agent</span>
               </div>
-              <div class="namaa-guided-card namaa-guided-card-premium">
-                <div><span class="namaa-guided-pill">Project Factory</span><h2>Commencez par un brief guidé</h2><p>Une expérience simple pour transformer votre idée en stratégie, mockup et landing page cohérents.</p></div>
-                <button class="namaa-mini-button" type="button" data-flow-action="guided-intake">Lancer la création</button>
+              <div class="namaa-agent-map" aria-label="Namaa agent map">
+                <article><i>🧠</i><b>Namaa Talk</b><small>Free talk + project direction</small></article>
+                <article><i>📊</i><b>Strategy Agent</b><small>Market research / roadmap / PDF</small></article>
+                <article><i>🎨</i><b>Design Agent</b><small>Logo + category mockups</small></article>
+                <article><i>💻</i><b>Web Agent</b><small>Real HTML/CSS/JS preview</small></article>
+              </div>
+              <div class="namaa-chip-row namaa-quick-prompts" aria-label="Exemples de questions">
+                <button type="button" data-prompt="Salam Namaa, bghit nhder 3la business idea"><span>01</span> Free Talk</button>
+                <button type="button" data-prompt="Lancer le brief projet"><span>02</span> Build Project</button>
+                <button type="button" data-prompt="Je veux préparer une market research PDF pour mon projet"><span>03</span> Strategy Agent</button>
+                <button type="button" data-prompt="Je veux créer un logo et des mockups pour mon projet"><span>04</span> Design Agent</button>
               </div>
             </div>
           </div>
@@ -195,15 +240,16 @@
     </section>
   </main>
 
-  <script src="/assets/js/namaa/namaa-utils.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/namaa-config.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/brain/namaa-business-brain.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/templates/namaa-dev-templates.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/services/namaa-service-bridge.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/agents/namaa-talk-agent.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/agents/namaa-images-agent.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/agents/namaa-dev-agent.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa/namaa-mui-enhancer.js?v=20260622-u22" defer></script>
-  <script src="/assets/js/namaa-ai-chat.js?v=20260622-u22" defer></script>
+  <script src="/assets/js/namaa/namaa-utils.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/namaa-config.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/brain/namaa-market-taxonomy.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/brain/namaa-business-brain.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/templates/namaa-dev-templates.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/services/namaa-service-bridge.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/agents/namaa-talk-agent.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/agents/namaa-images-agent.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/agents/namaa-dev-agent.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa/namaa-mui-enhancer.js?v=20260622-u39" defer></script>
+  <script src="/assets/js/namaa-ai-chat.js?v=20260622-u39" defer></script>
 </body>
 </html>
