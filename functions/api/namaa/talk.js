@@ -58,20 +58,25 @@ export async function onRequestPost(context) {
   const decision = controlTalk({ message, brief, action: requestedAction || null });
   const briefStatus = decision.briefStatus || getSmartBriefStatus(decision.brief || brief || {}, decision.language);
 
-  // Update 30: natural conversation mode.
-  // Short everyday chat is now rewritten by Gemini in a tiny, low-token mode so Namaa feels alive,
-  // while the controller still protects scope and keeps big deliverables controlled.
+  // Update 31: premium fast conversation mode.
+  // Very small talk/language switches are answered by the controller instantly.
+  // Gemini micro-conversation is reserved for business-ish natural chat that needs nuance.
   if (!decision.generate) {
     const hasGemini = Boolean(context.env?.[NAMAA_API_CONFIG.talk.apiKeyEnv]);
     let naturalAnswer = decision.answer;
     let provider = hasGemini ? 'gemini-conversation' : 'namaa-controller';
     let model = hasGemini ? (context.env?.[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel) : 'conversation-controller-v30';
 
-    if (hasGemini) {
+    const fastLocalIntents = new Set(['small_talk', 'language_switch', 'casual_conversation', 'friendly_off_topic_bridge', 'out_of_scope', 'about_elboubakry']);
+    const shouldUseGeminiConversation = hasGemini && !fastLocalIntents.has(decision.intent);
+
+    if (shouldUseGeminiConversation) {
       const chatConfig = {
         ...NAMAA_API_CONFIG.talk,
-        maxOutputTokens: NAMAA_API_CONFIG.talk.conversationMaxOutputTokens || 220,
-        temperature: 0.78,
+        maxOutputTokens: NAMAA_API_CONFIG.talk.conversationMaxOutputTokens || 130,
+        temperature: 0.62,
+        requestTimeoutMs: NAMAA_API_CONFIG.talk.conversationTimeoutMs || 8000,
+        retryAttempts: 0,
       };
       const conversationPrompt = buildConversationPrompt({
         message,
@@ -84,7 +89,7 @@ export async function onRequestPost(context) {
         config: chatConfig,
         systemInstruction: CONVERSATION_PROMPT,
         contents: [
-          ...normalizeHistory(body.history).slice(-4),
+          ...normalizeHistory(body.history).slice(-3),
           { role: 'user', parts: [{ text: conversationPrompt }] },
         ],
       });
@@ -186,7 +191,7 @@ export async function onRequestGet(context) {
     connected: hasSecret,
     expectedSecret: config.apiKeyEnv,
     model,
-    update: '30-human-conversation-mode',
-    behavior: 'Gemini micro-conversation for natural short replies; soft topic bridge; controlled deliverables use optimized prompts and branded PDFs',
+    update: '31-premium-fast-conversation',
+    behavior: 'Fast controller replies for small talk and Darija Latin; Gemini micro-conversation for nuanced business chat; controlled deliverables use optimized prompts and branded PDFs',
   });
 }

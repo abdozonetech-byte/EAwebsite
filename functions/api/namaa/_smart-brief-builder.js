@@ -167,9 +167,9 @@ function detectLanguage(text = '', brief = {}) {
   const n = normalize(raw);
   if (/english|anglais|بالانجليزية|in english/.test(n)) return 'English';
   if (/francais|français|french|بالفرنسية/.test(n)) return 'Français professionnel';
-  if (/darija|darija simple|بدارجة|بالدارجة/.test(n)) return 'Darija simple';
-  if (/[\u0600-\u06FF]/.test(raw)) return 'العربية / Darija';
-  if (/\b(wach|bghit|kifach|chno|3lach|3ndi|akoya|mzyan|daba|dyal|f casa|n9der|n3ref)\b/.test(n)) return 'Darija simple';
+  if (/darija|darija simple|بدارجة|بالدارجة/.test(n)) return 'Darija Latin';
+  if (/[\u0600-\u06FF]/.test(raw)) return 'Arabic';
+  if (/\b(wach|bghit|kifach|chno|3lach|3ndi|akoya|mzyan|daba|dyal|f casa|n9der|n3ref)\b/.test(n)) return 'Darija Latin';
   if (/bonjour|projet|stratégie|strategie|marché|marche|client|budget/.test(n)) return 'Français professionnel';
   return 'English';
 }
@@ -266,6 +266,14 @@ function detectProjectName(text = '') {
   return '';
 }
 
+
+function isDarijaLatin(language = '') {
+  return /darija latin|darija simple|francais \+ darija|français \+ darija/i.test(String(language || ''));
+}
+
+function isArabicLanguage(language = '') {
+  return /^arabic$/i.test(String(language || '')) || /العربية/.test(String(language || ''));
+}
 export function inferSmartBriefPatch(message = '', currentBrief = {}) {
   const text = String(message || '');
   const category = detectCategory(text);
@@ -331,9 +339,23 @@ export function mergeSmartBrief(brief = {}, patch = {}) {
 function chooseLang(language = '') {
   const l = normalize(language);
   if (/english/.test(l)) return 'en';
-  if (/darija|arab|العربية/.test(l)) return 'ar';
+  if (/darija/.test(l)) return 'dr';
+  if (/arab|العربية/.test(l)) return 'ar';
   return 'fr';
 }
+
+const DARIJA_LATIN_QUESTIONS = {
+  projectName: 'Chno smit l-projet? Ila mazal ma 3ndekch smiya, kteb "mazal".',
+  category: 'Chno no3 l-projet: ecommerce, restaurant, SaaS/app, clinic, service local, formation, immobilier, ola chi haja okhra?',
+  offer: 'Chno ghadi tbi3 exactement? Produit, service, pack ola abonnement?',
+  market: 'Fin ghadi ybda l-projet: Casa, Rabat, Marrakech, Maroc kamel, ola mdina okhra?',
+  budget: 'Ch7al budget li t9der ttesti bih f lbidaya? Ghir ta9riban: 1000dh, 3000dh, 10000dh...',
+  target: 'Chkon howa client cible? 3tini profile bsit dyalo.',
+  goal: 'Chno objectif lwel: ttesti l-fikra, tbi3, tjib leads WhatsApp, tl9a clients, ola tbni brand?',
+  stage: 'Fin wasel l-projet: ghir fikra, lancement jdid, projet kayn, ola relance?',
+  channels: 'Chno channels li 3ndek daba: Instagram, TikTok, WhatsApp, site web, Google Maps, ads, ola mazal walo?',
+  language: 'B ach style bghiti nجاوبك: français, Darija Latin, English, Arabic, ola français + darija?',
+};
 
 export function getSmartMissingFields(brief = {}) {
   return FIELD_PRIORITY
@@ -355,7 +377,7 @@ export function getSmartBriefStatus(brief = {}, language = '') {
   const requiredTotal = FIELD_PRIORITY.length - 1;
   const score = Math.round(Math.min(100, (filled.filter((key) => key !== 'language').length / requiredTotal) * 100));
   const mustAsk = missing.slice(0, 2);
-  const nextQuestions = mustAsk.map((field) => field.question[lang] || field.question.fr);
+  const nextQuestions = mustAsk.map((field) => lang === 'dr' ? (DARIJA_LATIN_QUESTIONS[field.key] || field.question.fr) : (field.question[lang] || field.question.fr));
   const isReady = missing.length <= 1;
   const level = score >= 90 ? 'ready' : score >= 55 ? 'almost' : score >= 25 ? 'discovery' : 'start';
   const summary = Object.entries(brief || {})
@@ -377,14 +399,27 @@ export function getSmartBriefStatus(brief = {}, language = '') {
 
 export function smartBriefAnswer({ brief = {}, language = '' } = {}) {
   const status = getSmartBriefStatus(brief, language);
-  const lang = chooseLang(language || brief?.language || '');
+  const questions = (status.nextQuestions || []).slice(0, 2);
+  const score = status.score || 0;
+  const firstQuestion = questions[0] || '';
+  const secondQuestion = questions[1] || '';
+
   if (status.isReady) {
-    if (lang === 'ar') return 'دابا عندي brief كافي. شنو بغيتي نوجد ليك الأول: Market Research PDF، Marketing Strategy PDF، ولا Roadmap؟';
-    if (lang === 'en') return 'Great, I have enough brief information. What should I create first: Market Research PDF, Marketing Strategy PDF, or Launch Roadmap?';
-    return 'Parfait, j’ai assez d’informations. Que voulez-vous créer en premier : Market Research PDF, Marketing Strategy PDF, ou Launch Roadmap ?';
+    if (isDarijaLatin(language)) return 'Top ✅ daba l-brief wla clear. Bghiti nwjed lik Market Research PDF, Marketing Strategy PDF, ola Roadmap dyal launch?';
+    if (isArabicLanguage(language)) return 'ممتاز ✅ أصبح الـ brief واضحاً. هل تريد Market Research PDF، Marketing Strategy PDF، أم Roadmap للإطلاق؟';
+    if (/english/i.test(language)) return 'Great ✅ the brief is clear now. Should I create Market Research PDF, Marketing Strategy PDF, or a Launch Roadmap?';
+    return 'Parfait ✅ le brief est clair. Voulez-vous créer un Market Research PDF, une Marketing Strategy PDF ou une Roadmap de lancement ?';
   }
-  const questions = status.nextQuestions;
-  if (lang === 'ar') return `مزيان، فهمت الاتجاه 😄 باش نعطيك نتيجة قوية وما نطولش عليك، جاوبني غير على هاد ${questions.length} سؤال: ${questions.join(' ')}`;
-  if (lang === 'en') return `Good, I understand the direction 😄 To give you a strong result without long random answers, answer these ${questions.length} question(s): ${questions.join(' ')}`;
-  return `Très bien, je comprends la direction 😄 Pour vous donner un résultat fort sans réponse trop longue, répondez juste à ces ${questions.length} question(s) : ${questions.join(' ')}`;
+
+  if (isDarijaLatin(language)) {
+    return `Mzyan, kanjme3 ghir l-info li mohimma bach nkhrej lik résultat qwi bla sda3 💡\n${firstQuestion ? '1) '+firstQuestion : '1) Chno katbi3 ola chno l-offre dyalek?'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
+  }
+  if (isArabicLanguage(language)) {
+    return `جيد، سأجمع فقط المعلومات المهمة حتى أخرج لك نتيجة قوية وواضحة 💡\n${firstQuestion ? '1) '+firstQuestion : '1) ما المنتج أو العرض الأساسي؟'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
+  }
+  if (/english/i.test(language)) {
+    return `Good, I’ll collect only the key info so the result comes out strong and clear 💡\n${firstQuestion ? '1) '+firstQuestion : '1) What exactly are you selling or offering?'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
+  }
+  return `Très bien, je collecte seulement les infos importantes pour préparer un résultat clair 💡\n${firstQuestion ? '1) '+firstQuestion : '1) Quelle est votre offre principale ?'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
+
 }

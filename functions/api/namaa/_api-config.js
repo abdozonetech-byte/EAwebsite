@@ -1,5 +1,5 @@
 // Namaa API configuration
-// Update 30: Gemini agents with human conversation mode, soft topic bridge, smart brief builder, prompt library, diagnostics, and reliability tuning.
+// Update 31: Gemini agents with premium fast conversation, Darija Latin mode, smart brief builder, prompt library, diagnostics, and reliability tuning.
 // Keep API keys outside frontend JavaScript. Add GEMINI_API_KEY in Cloudflare Pages Secrets.
 
 export const NAMAA_API_CONFIG = {
@@ -9,8 +9,9 @@ export const NAMAA_API_CONFIG = {
     fallbackModel: 'gemini-3.1-flash-lite',
     apiKeyEnv: 'GEMINI_API_KEY',
     // Normal chat uses a tiny Gemini micro-conversation mode; confirmed deliverables use bigger output.
-    maxOutputTokens: 560,
-    conversationMaxOutputTokens: 220,
+    maxOutputTokens: 420,
+    conversationMaxOutputTokens: 130,
+    conversationTimeoutMs: 8000,
     deliverableMaxOutputTokens: 2400,
     temperature: 0.38,
     requestTimeoutMs: 25000,

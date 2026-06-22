@@ -107,9 +107,9 @@
     var wrap=document.createElement('div');
     wrap.className='namaa-message '+role;
     if(role==='ai'){
-      wrap.innerHTML='<div class="namaa-avatar">N</div><div class="namaa-bubble">'+html+'</div>';
+      wrap.innerHTML='<div class="namaa-avatar">N</div><div class="namaa-bubble" dir="auto">'+html+'</div>';
     }else{
-      wrap.innerHTML='<div class="namaa-bubble">'+html+'</div>';
+      wrap.innerHTML='<div class="namaa-bubble" dir="auto">'+html+'</div>';
     }
     thread.appendChild(wrap);
     thread.scrollTop=thread.scrollHeight;
@@ -420,6 +420,7 @@
     var bubble=wrap.querySelector('.namaa-bubble');
     if(bubble)bubble.innerHTML=html;
     wrap.classList.remove('is-loading');
+    wrap.classList.add('is-complete');
     thread.scrollTop=thread.scrollHeight;
   }
 
@@ -509,11 +510,11 @@
   }
 
   function typingLoadingHtml(agent){
-    var labels={talk:'Namaa kayفكر شوية...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
+    var labels={talk:'Namaa kaykteb...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
     return '<div class="namaa-typing"><span></span><span></span><span></span><em>'+utils.escapeHtml(labels[agent] || 'Namaa kayكتب...')+'</em></div>';
   }
   function waitForHumanTyping(started,agent){
-    var minimum=agent==='talk'?760:520;
+    var minimum=agent==='talk'?180:520;
     var elapsed=Date.now()-started;
     var delay=Math.max(0,minimum-elapsed);
     return new Promise(function(resolve){setTimeout(resolve,delay);});

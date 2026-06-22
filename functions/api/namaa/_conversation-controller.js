@@ -1,6 +1,6 @@
 // Namaa Conversation Controller
-// Update 29: Natural Conversation Intelligence + Darija Smart Router.
-// Goal: Namaa feels like a friendly Moroccan business advisor, not a long generic chatbot.
+// Update 31: Premium Fast Conversation + Darija Latin mode.
+// Goal: Namaa feels fast, premium, friendly and natural while keeping the business/AI scope.
 
 import {
   inferSmartBriefPatch,
@@ -63,13 +63,24 @@ function isVeryShort(message = '') {
 }
 
 function detectExplicitLanguage(message = '') {
+  const raw = String(message || '').toLowerCase();
   const n = normalize(message);
-  if (/(darija|dariija|derija|ddarija|maghribi|moroccan arabic|بدارجة|بالدارجة|داريجة|دارجة)/.test(n)) return 'Darija simple';
-  if (/(arabic|arabe|العربية|بالعربية|عربي)/.test(n)) return 'العربية / Darija';
+  // In Morocco, when the user says "Darija", Namaa must write Darija with Latin/French letters.
+  // Arabic script is used only when the user explicitly asks for Arabic / Arabic letters.
+  if (/(arabic letters|arabic script|الحروف العربية|بحروف عربية|بالحروف العربية|العربية|بالعربية|عربي|fusha|فصحى)/.test(n)) return 'Arabic';
+  if (/(darija|dariija|derija|ddarija|maghribi|moroccan arabic|بدارجة|بالدارجة|داريجة|دارجة)/.test(n)) return 'Darija Latin';
   if (/(english|anglais|in english|بالانجليزية|بالإنجليزية|englizi)/.test(n)) return 'English';
-  if (/(francais|français|french|en francais|en français|بالفرنسية)/.test(n)) return 'Français professionnel';
-  if (/(francais darija|français darija|mix|fr darija)/.test(n)) return 'Français + Darija';
+  if (/(francais darija|français darija|mix|fr darija)/.test(raw) || /(francais darija|mix|fr darija)/.test(n)) return 'Français + Darija';
+  if (/(francais|français|french|en francais|en français|بالفرنسية)/.test(raw) || /(francais|french|en francais)/.test(n)) return 'Français professionnel';
   return '';
+}
+
+function isDarijaLatin(language = '') {
+  return /darija latin|darija simple|francais \+ darija|français \+ darija/i.test(String(language || ''));
+}
+
+function isArabicLanguage(language = '') {
+  return /^arabic$/i.test(String(language || '')) || /العربية/.test(String(language || ''));
 }
 
 function detectLanguage(message, brief) {
@@ -77,8 +88,8 @@ function detectLanguage(message, brief) {
   if (explicit) return explicit;
   const text = String(message || '');
   if (brief?.language) return brief.language;
-  if (/\b(salam|salaam|labas|labass|kifach|chno|chkon|wach|bghit|3ndi|3and|akoya|khouya|mzyan|daba|dyal|casa|flous|flouss|malk|jawb|nta|ana|ghadi|yrba7|katchouf|lmountakhab)\b/i.test(text)) return 'Darija simple';
-  if (/[\u0600-\u06FF]/.test(text)) return 'العربية / Darija';
+  if (/\b(salam|salaam|labas|labass|kifach|chno|chkon|wach|bghit|3ndi|3and|akoya|khouya|mzyan|daba|dyal|casa|flous|flouss|malk|jawb|nta|ana|ghadi|yrba7|katchouf|lmountakhab)\b/i.test(text)) return 'Darija Latin';
+  if (/[\u0600-\u06FF]/.test(text)) return 'Arabic';
   if (/(bonjour|je veux|strategie|stratégie|projet|marche|marché|client|budget|entreprise)/i.test(text)) return 'Français professionnel';
   return 'English';
 }
@@ -157,7 +168,7 @@ function casualIntent(message = '') {
   if (/^(jawb|jawbni|جاوب|جاوبني|answer|reponds|réponds|red 3lia|رد عليا)$/.test(n)) return 'answer_what';
   if (/^(malk|مالك|chno malk|chno bik|اش مالك|علاش|why)$/.test(n)) return 'tease';
   if (/^(chkon nta|nta chkon|daba nta chkon|nta chkon daba|who are you|qui es tu|شنو انت|شكون انت|wach nta ai|wach nta robot)$/.test(n) || /\b(nta|nti|نتا|انت)\b.*\b(chkon|شكون|who)\b/.test(n)) return 'who_are_you';
-  if (/(jaw|weather|meteo|météo|الجو|طقس|shta|chta|الشمس|برد|سخون|حر|rain|pluie)/.test(n)) return 'weather';
+  if (/(\bjaw\b|jaw lyoum|jaw daba|weather|meteo|météo|الجو|طقس|shta|chta|الشمس|برد|سخون|حر|rain|pluie)/.test(n)) return 'weather';
   if (/^(chno katdir|شنو كتدير|what can you do|wach t9dr t3awni|شنو تقدر دير)$/.test(n)) return 'what_do';
   return '';
 }
@@ -169,7 +180,7 @@ function isFriendlyOffTopicBridge(message = '') {
 
 function isWeatherOrDailySmallTalk(message = '') {
   const n = normalize(message);
-  return /(jaw|weather|meteo|météo|الجو|طقس|shta|chta|الشمس|برد|سخون|حر|rain|pluie)/.test(n) && isVeryShort(message);
+  return /(\bjaw\b|jaw lyoum|jaw daba|weather|meteo|météo|الجو|طقس|shta|chta|الشمس|برد|سخون|حر|rain|pluie)/.test(n) && isVeryShort(message);
 }
 
 function emojiForMessage(message = '', brief = {}) {
@@ -186,57 +197,70 @@ function emojiForMessage(message = '', brief = {}) {
 }
 
 function languageSwitchReply(language) {
-  if (/english/i.test(language)) return 'Sure, we continue in English 👍 Tell me your project idea or business problem, and I’ll keep it short.';
-  if (/darija|arab/i.test(language)) return 'واخا، نكملو بالدارجة 😄 عطيني الفكرة ديال المشروع ولا المشكل اللي باغي نحلّو.';
-  return 'Parfait, on continue en français 👍 Donnez-moi votre idée de projet ou votre problème business.';
+  if (isDarijaLatin(language)) return 'Wakha asahbi, nkemlo b Darija b 7rof fransawiya 😄 Chno lfikra ola l-projet li f rask lyoum? 💡';
+  if (isArabicLanguage(language)) return 'حاضر، نكمل بالعربية الواضحة. ما هي فكرة المشروع أو المشكل الذي تريد الاشتغال عليه اليوم؟ 💡';
+  if (/english/i.test(language)) return 'Sure, we’ll continue in English 👍 What project, AI idea, or business problem are we working on today?';
+  return 'Parfait, on continue en français 👍 Quelle idée de projet ou quel problème business voulez-vous travailler aujourd’hui ?';
 }
 
 function greetingReply(language) {
-  if (/darija|arab/i.test(language)) return 'الحمد لله بخير 😄 واجد نخدم معاك. شنو المشروع ولا الفكرة اللي باغي نوضحوها اليوم؟';
+  if (isDarijaLatin(language)) return 'Wa 3alaykom salam 👋 labas 3lik? Ana mzyan w wajed nkhdem m3ak. Chno lfikra li dayra f rask lyoum? 💡';
+  if (isArabicLanguage(language)) return 'وعليكم السلام 👋 الحمد لله بخير. ما هي فكرة المشروع أو الهدف الذي تريد العمل عليه اليوم؟';
   if (/english/i.test(language)) return 'Hi 👋 I’m good and ready to help. What project, AI idea, startup, or marketing problem are we working on today?';
-  return 'Bonjour 👋 Ça va très bien. Sur quel projet, idée IA, startup ou problème marketing voulez-vous avancer aujourd’hui ?';
+  return 'Bonjour 👋 Ça va très bien. Sur quelle idée, projet IA, startup ou problème marketing voulez-vous avancer aujourd’hui ?';
 }
 
 function casualReply(intent, language) {
-  if (/darija|arab/i.test(language)) {
-    if (intent === 'ack') return 'مزيان 😄 عطيني غير الفكرة ديالك ولا المشكل التجاري ونبداو خطوة بخطوة.';
-    if (intent === 'answer_what') return 'جاوبك على شنو بالضبط؟ 😄 عطيني السؤال ولا الفكرة ديال المشروع، ونخلي الجواب قصير وواضح.';
-    if (intent === 'tease') return 'هههه والو، غير كنحاول نبقى مركز معاك 😄 أرا الفكرة ديال المشروع ونخدموها مزيان.';
-    if (intent === 'who_are_you') return 'أنا Namaa AI 🤖 صاحبك فالأفكار والمشاريع: AI, business, marketing, IT و startups. كنعاونك من الفكرة حتى strategy, mockup و landing page.';
-    if (intent === 'weather') return 'الجو؟ إلا كان زوين نحتاجو حتى فكرة زوينة بحالو 😄☀️ ما عنديش météo live، ولكن نقدر نعاونك نخلق مشروع يطلع الجو ديالو مزيان 💼';
-    if (intent === 'what_do') return 'نقدر نعاونك فـ 4 حوايج: نفهم الفكرة 💡، نوجد PDF strategy 📄، نصاوب mockup/logo 🎨، ونخرج landing page بسيطة 💻. شنو المشروع؟';
+  if (isDarijaLatin(language)) {
+    if (intent === 'ack') return 'Mzyan 😄 nkhlliha simple. Ila 3ndek chi fikra, projet, marketing problem ola AI tool bghiti tfhamo, golha lia.';
+    if (intent === 'answer_what') return 'Njawebk b kol wodou7 😄 3la chno bghiti l-jawab? 3tini su2al ola fikra dyal projet.';
+    if (intent === 'tease') return 'Hhh walo asahbi, ghi kan7awel nb9a m3ak f l-flow 😄 chno lfikra li bghiti nkhdmo 3liha?';
+    if (intent === 'who_are_you') return 'Ana Namaa AI 🤖 sa7bek f AI, business, startups, IT, marketing w projects. Kat-hder 3adi, w ana nretteb lik l-fikra w nkhrej lik plan/PDF/mockup ila bghiti 💼';
+    if (intent === 'weather') return 'L-jaw ila kan zwin, khasna hta l-fikra tkoun zwina bhalo 😄☀️ Ma 3ndich météo live, walakin n9der n3awnek nwde7o chi projet ytla3 mzyan 💡';
+    if (intent === 'what_do') return 'N9der n3awnek f 4 7wayj: nwde7o l-fikra 💡, nwjed PDF strategy 📄, nkhleq logo/mockup 🎨, w nkhrej landing page bsita 💻. Chno bghiti?';
+  }
+  if (isArabicLanguage(language)) {
+    if (intent === 'ack') return 'ممتاز 😄 أعطني فكرة المشروع أو المشكل التجاري وسنرتبه خطوة بخطوة.';
+    if (intent === 'answer_what') return 'أجيبك على ماذا بالضبط؟ أعطني السؤال أو فكرة المشروع وسأبقي الجواب واضحاً ومختصراً.';
+    if (intent === 'tease') return 'لا شيء 😄 فقط أحاول أن أبقى معك في المسار الصحيح. ما هي فكرة المشروع؟';
+    if (intent === 'who_are_you') return 'أنا Namaa AI 🤖 مساعدك في AI و business و startups و marketing و IT. أساعدك من الفكرة إلى الخطة والموكاب والصفحة.';
+    if (intent === 'weather') return 'الجو إذا كان جميلاً نحتاج فكرة مشروع جميلة مثله 😄 لا أملك طقساً مباشراً، لكن أستطيع مساعدتك في مشروعك.';
+    if (intent === 'what_do') return 'أساعدك في توضيح الفكرة، إنشاء PDF استراتيجية، موكاب/لوغو، وصفحة هبوط بسيطة. ما المشروع؟';
   }
   if (/english/i.test(language)) {
-    if (intent === 'ack') return 'Great 😄 Give me your project idea or business problem and we’ll build it step by step.';
+    if (intent === 'ack') return 'Great 😄 Keep it simple: send me your idea, project, AI tool question, or business problem.';
     if (intent === 'answer_what') return 'Answer what exactly? 😄 Send me the question or project idea and I’ll keep it short.';
-    if (intent === 'tease') return 'Haha nothing, I’m just staying focused 😄 Bring me the project idea and we’ll make it strong.';
-    if (intent === 'who_are_you') return 'I’m Namaa AI 🤖 your friendly assistant for AI, business, startups, marketing, IT, and Moroccan project building.';
-    if (intent === 'weather') return 'Weather talk is always welcome 😄 I do not have live météo here, but I can help make your project forecast look sunny 💼';
+    if (intent === 'tease') return 'Haha nothing, I’m just keeping the flow alive 😄 What idea or project should we shape?';
+    if (intent === 'who_are_you') return 'I’m Namaa AI 🤖 your friendly assistant for AI, business, startups, marketing, IT, and project building.';
+    if (intent === 'weather') return 'If the weather is nice, let’s make the project idea nice too 😄☀️ I don’t have live weather, but I can help with the business forecast 💼';
     if (intent === 'what_do') return 'I can help with 4 things: clarify the idea 💡, create a strategy PDF 📄, generate mockups/logo 🎨, and build a simple landing page 💻. What’s the project?';
   }
-  if (intent === 'ack') return 'Parfait 😄 Donnez-moi l’idée du projet ou le problème business, et on avance étape par étape.';
-  if (intent === 'answer_what') return 'Répondre à quoi exactement ? 😄 Envoyez-moi la question ou l’idée du projet, je garde ça court.';
-  if (intent === 'tease') return 'Haha rien, je reste juste focus 😄 Donnez-moi l’idée du projet et on la structure proprement.';
+  if (intent === 'ack') return 'Parfait 😄 Envoyez-moi l’idée, le projet, l’outil IA ou le problème business.';
+  if (intent === 'answer_what') return 'Répondre à quoi exactement ? 😄 Envoyez-moi la question ou l’idée du projet, je garde ça clair.';
+  if (intent === 'tease') return 'Haha rien, je garde juste le flow vivant 😄 Quelle idée ou projet voulez-vous structurer ?';
   if (intent === 'who_are_you') return 'Je suis Namaa AI 🤖 votre assistant friendly pour IA, business, startups, marketing, IT et projets au Maroc.';
-  if (intent === 'weather') return 'La météo ? J’aime bien quand le ciel est clair 😄 Je n’ai pas la météo live ici, mais on peut éclaircir votre projet 💼';
+  if (intent === 'weather') return 'Si la météo est bonne, on peut rendre l’idée du projet encore meilleure 😄☀️ Je n’ai pas la météo live, mais je peux aider côté business 💼';
   if (intent === 'what_do') return 'Je peux aider sur 4 choses : clarifier l’idée 💡, créer un PDF stratégie 📄, générer logo/mockups 🎨, et créer une landing page simple 💻. Quel est le projet ?';
   return '';
 }
 
 function friendlyOffTopicBridge(language) {
-  if (/darija|arab/i.test(language)) return 'الكرة زوينة والمنتخب ديما فالقلب 🇲🇦⚽ إن شاء الله يفرحونا. ولكن أنا هنا باش نربحو حتى المشروع ديالك 😄 أرا الفكرة ونبني ليك plan بحال خطة الماتش.';
-  if (/english/i.test(language)) return 'Football is fun 🇲🇦⚽ but I won’t go deep there. I’m here to help your project win too 😄 Tell me the business idea and we’ll build the game plan.';
-  return 'Le foot c’est sympa 🇲🇦⚽, mais je ne vais pas aller loin là-dessus. Je suis là pour faire gagner votre projet aussi 😄 Donnez-moi l’idée et on construit le plan.';
+  if (isDarijaLatin(language)) return 'L-kora zwina w l-mountakhab dima f l9alb 🇲🇦⚽ Nkhlli l-analyse l terrain, w nrj3o l match dyal projet dyalek 😄 chno l-fikra li bghiti nreb7o biha?';
+  if (isArabicLanguage(language)) return 'الكرة جميلة والمنتخب دائماً في القلب 🇲🇦⚽ لكن نعود لمباراة مشروعك 😄 ما هي الفكرة التي تريد أن نربح بها؟';
+  if (/english/i.test(language)) return 'Football is fun 🇲🇦⚽ but I won’t go deep there. Let’s win the project match too 😄 What’s the idea?';
+  return 'Le foot c’est sympa 🇲🇦⚽, mais je ne vais pas aller loin là-dessus. Revenons au match de votre projet 😄 Quelle est l’idée ?';
 }
 
 function shortScopeRedirect(language) {
-  if (/darija|arab/i.test(language)) return 'نقدر ندير معاك هضرة خفيفة 😄 ولكن خدمتي الأساسية هي AI, business, startups, IT, marketing والمشاريع. رجعني لفكرة مشروعك ونخدموها بطريقة عملية 💼';
-  if (/english/i.test(language)) return 'I can keep the chat friendly 😄 but my real focus is AI, business, startups, IT, marketing, and projects. Bring me back to your idea and I’ll help clearly 💼';
-  return 'Je peux garder la discussion simple 😄 mais mon vrai focus reste IA, business, startups, IT, marketing et projets. Revenons à votre idée et je vous aide clairement 💼';
+  if (isDarijaLatin(language)) return 'N9der ndir m3ak hadra khfifa 😄 walakin focus dyali huwa AI, business, startups, IT, marketing w projects. Ila 3ndek fikra, n9der n3awnek nwde7oha 💼';
+  if (isArabicLanguage(language)) return 'أستطيع محادثتك بخفة 😄 لكن تركيزي هو AI و business و startups و IT و marketing والمشاريع. أعطني فكرة مشروعك ونرتبها.';
+  if (/english/i.test(language)) return 'I can keep the chat friendly 😄 but my real focus is AI, business, startups, IT, marketing, and projects. Got an idea we can shape? 💼';
+  return 'Je peux garder la discussion légère 😄 mais mon vrai focus reste IA, business, startups, IT, marketing et projets. Quelle idée voulez-vous structurer ? 💼';
 }
 
 function elboubakryReply(language) {
-  if (/darija|arab/i.test(language)) return 'إييه، Elboubakry Abdessamad هو صاحب Namaa AI 💼 كيركز على marketing digital، AI tools، landing pages و lead generation فالمغرب. Namaa معمول باش يحول الفكرة ديالك ل brief، PDF strategy، mockup ومن بعد landing page. شنو المشروع اللي بغيتي نخدمو عليه؟';
+  if (isDarijaLatin(language)) return 'Elboubakry Abdessamad huwa li mora Namaa AI 💼 kaykhdem 3la marketing digital, AI tools, landing pages w lead generation f Morocco. Namaa msayb bach y7ewwel l-fikra dyalek l brief, PDF strategy, mockup w landing page. Chno projet li bghiti nbdaw bih?';
+  if (isArabicLanguage(language)) return 'Elboubakry Abdessamad هو صاحب Namaa AI 💼 يركز على التسويق الرقمي، أدوات AI، صفحات الهبوط وتوليد العملاء في المغرب. ما المشروع الذي تريد بناءه؟';
   if (/english/i.test(language)) return 'Yes. Elboubakry Abdessamad is behind Namaa AI 💼 focused on digital marketing, AI tools, landing pages, leads, and Moroccan business projects. What project should we build?';
   return 'Oui. Elboubakry Abdessamad est derrière Namaa AI 💼 avec un focus sur marketing digital, IA business, landing pages, leads et projets au Maroc. Quel projet voulez-vous construire ?';
 }
@@ -246,7 +270,8 @@ function askMissingQuestions(brief, language) {
 }
 
 function readyChoiceReply(language) {
-  if (/darija|arab/i.test(language)) return 'دابا عندي brief كافي ✅ شنو بغيتي نوجد ليك الأول: Market Research PDF 🔎، Marketing Strategy PDF 📣، ولا Roadmap ديال الإطلاق 🚀؟';
+  if (isDarijaLatin(language)) return 'Daba 3ndi brief kafi ✅ chno bghiti nwjed lik lwl: Market Research PDF 🔎, Marketing Strategy PDF 📣, ola Roadmap dyal launch 🚀?';
+  if (isArabicLanguage(language)) return 'الآن لدي brief كافٍ ✅ ماذا تريد أولاً: Market Research PDF 🔎، Marketing Strategy PDF 📣، أم Roadmap للإطلاق 🚀؟';
   if (/english/i.test(language)) return 'Great, I have enough brief information ✅ What should I prepare first: Market Research PDF 🔎, Marketing Strategy PDF 📣, or Launch Roadmap 🚀?';
   return 'Parfait, j’ai assez d’informations ✅ Que voulez-vous préparer d’abord : Market Research PDF 🔎, Marketing Strategy PDF 📣, ou Roadmap de lancement 🚀 ?';
 }
@@ -254,10 +279,15 @@ function readyChoiceReply(language) {
 function simpleDomainReply(message, language) {
   const n = normalize(message);
   const emoji = emojiForMessage(message);
-  if (/darija|arab/i.test(language)) {
-    if (/(ai|ia|ذكاء)/.test(n)) return `${emoji} AI فالبزنس كيعني نستعملو أدوات ذكية باش نربحو الوقت، نحسنو التسويق، وننظمو العملاء. باش نطبقوها صح، شنو نوع المشروع ديالك؟`;
-    if (/(prompt|برومبت|prompts)/.test(n)) return 'بالضبط 💡 المشكل غالباً ماشي فالأداة، المشكل فكيفاش نشرحو الفكرة. هضر عادي وNamaa ينظمها ليك. شنو بغيتي تخلق؟';
-    return `${emoji} نقدر نجاوبك باختصار، ولكن الأفضل نربطها بمشروع حقيقي. شنو المجال والهدف ديالك؟`;
+  if (isDarijaLatin(language)) {
+    if (/(ai|ia|ذكاء)/.test(n)) return `${emoji} AI f business kay3ni nsta3mlo tools dkiya bach nreb7o lweqt, n7ssno marketing, w nndmo leads. Ila bghina ntb9oha s7i7: chno no3 projet dyalek?`;
+    if (/(prompt|برومبت|prompts)/.test(n)) return 'Exactly 💡 lmochkil ghaliban machi f tool, lmochkil f kifach nchr7o l-fikra. Hder 3adi w Namaa yrettebha lik. Chno bghiti tkhleq?';
+    return `${emoji} N9der njawbk bikhtisar, walakin ila rbetnaha b projet 7aqiqi ghadi tkoun natija aqwa. Chno lmajal w lhadaf dyalek?`;
+  }
+  if (isArabicLanguage(language)) {
+    if (/(ai|ia|ذكاء)/.test(n)) return `${emoji} AI في البزنس يعني استعمال أدوات ذكية لتوفير الوقت، تحسين التسويق وتنظيم العملاء. ما نوع مشروعك؟`;
+    if (/(prompt|برومبت|prompts)/.test(n)) return 'بالضبط 💡 المشكل ghaliban ليس في الأداة، بل في طريقة شرح الفكرة. تحدث بشكل عادي وNamaa يرتبها لك. ماذا تريد أن تنشئ؟';
+    return `${emoji} أستطيع أن أجيبك باختصار، لكن الأفضل ربط الجواب بمشروع حقيقي. ما المجال والهدف؟`;
   }
   if (/english/i.test(language)) {
     if (/(ai|ia)/.test(n)) return `${emoji} AI in business means using smart tools to save time, improve marketing, and organize leads. To apply it well, what project are you working on?`;
@@ -272,7 +302,8 @@ function simpleDomainReply(message, language) {
 function businessChatReply(message, brief, language) {
   const emoji = emojiForMessage(message, brief);
   if (!briefIsReady(brief)) return askMissingQuestions(brief, language);
-  if (/darija|arab/i.test(language)) return `${emoji} مزيان، عندي معلومات كافية على المشروع. ما غاديش نعطيك نتيجة طويلة بلا ما تطلبها. واش نوجد Market Research PDF، Marketing Strategy PDF، ولا Roadmap؟`;
+  if (isDarijaLatin(language)) return `${emoji} Mzyan, 3ndi info kafya 3la projet. Ma ghadich nkhrej résultat twil bla mowafaqtek. Bghiti Market Research PDF, Marketing Strategy PDF, ola Roadmap?`;
+  if (isArabicLanguage(language)) return `${emoji} جيد، لدي معلومات كافية عن المشروع. لن أُخرج نتيجة طويلة بدون موافقتك. هل تريد Market Research PDF، Marketing Strategy PDF، أم Roadmap؟`;
   if (/english/i.test(language)) return `${emoji} Good, I have enough project info. I won’t generate a long result unless you ask. Do you want Market Research PDF, Marketing Strategy PDF, or Roadmap?`;
   return `${emoji} Très bien, j’ai assez d’informations. Je ne génère pas un long résultat sans votre accord. Voulez-vous Market Research PDF, Marketing Strategy PDF ou Roadmap ?`;
 }

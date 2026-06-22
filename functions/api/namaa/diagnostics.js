@@ -12,7 +12,7 @@ const READY_BRIEF = {
   goal: 'Generate WhatsApp orders',
   stage: 'Nouveau projet à lancer',
   channels: 'Instagram, WhatsApp',
-  language: 'Darija simple',
+  language: 'Darija Latin',
 };
 
 const TEST_CASES = [
@@ -67,8 +67,8 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: allPassed,
     service: 'Namaa Diagnostics',
-    update: '30-human-conversation-mode',
-    note: 'This endpoint tests Namaa routing logic without calling Gemini. Live chat uses a tiny Gemini micro-conversation mode for more human replies.',
+    update: '31-premium-fast-conversation',
+    note: 'This endpoint tests Namaa routing logic without calling Gemini. Live chat uses a tiny fast local small-talk + Gemini micro-conversation mode for more human replies.',
     geminiConfigured: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
     activeTextModel: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
     activeImageModel: env[NAMAA_API_CONFIG.images.modelEnv] || NAMAA_API_CONFIG.images.fallbackModel,
@@ -86,8 +86,8 @@ export async function onRequestPost(context) {
   return jsonResponse({
     ok: true,
     service: 'Namaa Diagnostics',
-    update: '30-human-conversation-mode',
-    note: 'Controller preview only. No Gemini call was made here. Live /talk uses Gemini micro-conversation mode to rewrite short replies naturally while keeping scope safe.',
+    update: '31-premium-fast-conversation',
+    note: 'Controller preview only. No Gemini call was made here. Live /talk uses fast local small-talk + Gemini micro-conversation mode to rewrite short replies naturally while keeping scope safe.',
     input: { message, action, hasBrief: Boolean(brief) },
     decision: summarizeDecision(decision),
   });
