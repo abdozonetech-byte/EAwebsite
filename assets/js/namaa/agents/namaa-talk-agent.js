@@ -17,10 +17,10 @@
 
   function localBriefCard(question){
     var sector=brain.inferSector ? brain.inferSector(question) : 'Business Maroc';
-    return '<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Conversation courte</strong></div>'+ 
+    return '<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Namaa kayhder m3ak</strong></div>'+ 
       '<p>Mzyan, فهمت الاتجاه العام: <strong>'+utils.escapeHtml(sector)+'</strong>.</p>'+ 
       '<p>باش ما نعطيكش جواب عام، خاصني غير جوج معلومات: شنو بالضبط غادي تبيع؟ وشحال budget الأول؟</p>'+ 
-      '<div class="namaa-action-card namaa-controller-card"><div><span>🧭</span><strong>أفضل طريقة</strong><p>استعمل brief guidé باش Namaa يبني prompt قوي ف backend ويخرج PDF منظم.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-flow-action="guided-intake">Lancer le brief</button></div></div>';
+      '<div class="namaa-action-card namaa-controller-card"><div><span>🧭</span><strong>أفضل طريقة</strong><p>استعمل brief guidé باش Namaa يجمع غير المعلومات المهمة ويخرج PDF منظم.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-flow-action="guided-intake">Lancer le brief</button></div></div>';
   }
 
   function strategyAnswer(question){

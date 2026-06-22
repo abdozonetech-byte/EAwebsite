@@ -67,8 +67,8 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: allPassed,
     service: 'Namaa Diagnostics',
-    update: '29-natural-conversation-intelligence',
-    note: 'This endpoint tests Namaa natural conversation controller logic without calling Gemini, so it costs 0 tokens.',
+    update: '30-human-conversation-mode',
+    note: 'This endpoint tests Namaa routing logic without calling Gemini. Live chat uses a tiny Gemini micro-conversation mode for more human replies.',
     geminiConfigured: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
     activeTextModel: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
     activeImageModel: env[NAMAA_API_CONFIG.images.modelEnv] || NAMAA_API_CONFIG.images.fallbackModel,
@@ -86,8 +86,8 @@ export async function onRequestPost(context) {
   return jsonResponse({
     ok: true,
     service: 'Namaa Diagnostics',
-    update: '29-natural-conversation-intelligence',
-    note: 'Controller preview only. No Gemini call was made. v29 includes Darija small talk, emojis, friendly off-topic bridge, and strict domain return.',
+    update: '30-human-conversation-mode',
+    note: 'Controller preview only. No Gemini call was made here. Live /talk uses Gemini micro-conversation mode to rewrite short replies naturally while keeping scope safe.',
     input: { message, action, hasBrief: Boolean(brief) },
     decision: summarizeDecision(decision),
   });

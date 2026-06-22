@@ -126,7 +126,7 @@
       '<span><b>01</b> Brief</span><span><b>02</b> Strategy PDF</span><span><b>03</b> Logo + mockups</span><span><b>04</b> Landing page</span>'+
     '</div>'+
     '<div class="namaa-guided-card namaa-guided-card-premium">'+
-      '<div><span class="namaa-guided-pill">Project Factory</span><h2>Commencez par un brief guidé</h2><p>Namaa collecte seulement les informations utiles, puis génère une stratégie claire sans gaspiller les tokens.</p></div>'+ 
+      '<div><span class="namaa-guided-pill">Project Factory</span><h2>Commencez par un brief guidé</h2><p>Namaa collecte فقط المعلومات المهمة، ومن بعد يخرج لك strategy واضحة ومنظمة.</p></div>'+ 
       '<button class="namaa-mini-button" type="button" data-flow-action="guided-intake">Lancer la création</button>'+ 
     '</div>';
   }
@@ -154,7 +154,7 @@
   }
   function documentChoiceCardHtml(){
     return flowProgressHtml('strategy')+
-      '<div class="namaa-action-card namaa-controller-card namaa-document-choice"><div><span>🧠</span><strong>Brief prêt. On choisit le bon document.</strong><p>Namaa ne génère pas un long résultat sans votre accord. Chaque choix lance un prompt fort Gemini en backend et un PDF brandé Namaa + Elboubakry.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-talk-action="market_research"><span>🔎</span>Market Research PDF</button><button class="namaa-mini-button" type="button" data-talk-action="marketing_strategy"><span>📈</span>Marketing Strategy PDF</button><button class="namaa-mini-button secondary" type="button" data-talk-action="roadmap"><span>🗺️</span>Roadmap PDF</button></div></div>';
+      '<div class="namaa-action-card namaa-controller-card namaa-document-choice"><div><span>🧠</span><strong>Brief prêt. On choisit le bon document.</strong><p>Namaa ما غاديش يخرج وثيقة طويلة بلا موافقتك. اختار شنو بغيتي نوجد ليك ونمشي خطوة بخطوة.</p></div><div class="namaa-flow-actions"><button class="namaa-mini-button" type="button" data-talk-action="market_research"><span>🔎</span>Market Research PDF</button><button class="namaa-mini-button" type="button" data-talk-action="marketing_strategy"><span>📈</span>Marketing Strategy PDF</button><button class="namaa-mini-button secondary" type="button" data-talk-action="roadmap"><span>🗺️</span>Roadmap PDF</button></div></div>';
   }
   function imagesEntryCardHtml(){
     return flowProgressHtml('images')+
@@ -253,7 +253,7 @@
   }
   function briefSummaryHtml(brief){
     var rows=briefRows(brief).map(function(row){return '<div><dt>'+utils.escapeHtml(row[0])+'</dt><dd>'+utils.escapeHtml(briefValue(row[1]))+'</dd></div>';}).join('');
-    return '<div class="namaa-brief-summary namaa-brief-summary-v17"><span>Brief projet contrôlé</span><strong>'+utils.escapeHtml(brief.projectName || 'Projet sans nom')+'</strong><em class="namaa-brief-score">'+briefScore(brief)+'% prêt · tokens optimisés</em><dl>'+rows+'</dl></div>';
+    return '<div class="namaa-brief-summary namaa-brief-summary-v17"><span>Brief projet contrôlé</span><strong>'+utils.escapeHtml(brief.projectName || 'Projet sans nom')+'</strong><em class="namaa-brief-score">'+briefScore(brief)+'% prêt</em><dl>'+rows+'</dl></div>';
   }
   function buildStrategyPrompt(brief){
     return 'Create the Namaa Market Search + Strategy PDF draft from this compact structured brief.\n'+compactBrief(brief)+'\n\nRules: Morocco-focused, practical, short paragraphs, no generic theory, no fake statistics, no extra questions unless a critical field is missing. Use the requested language style. Required sections: Résumé exécutif, Mini market search Maroc, Cible et positionnement, Offre et message, Plan marketing 30 jours, Budget recommandé, Scripts WhatsApp + contenu, KPI et prochaine étape. Output max 820 words.';
@@ -335,7 +335,7 @@
     var summary=briefSummaryHtml(appState.projectBrief);
     addMessage('user',summary);
     addHistory('user',formatBrief(appState.projectBrief));
-    var ready='<p>Parfait. J’ai maintenant un brief clair. Je ne vais pas générer un long document sans votre accord.</p><p>Choisissez le document que Namaa doit créer avec un prompt backend optimisé pour Gemini.</p>'+documentChoiceCardHtml();
+    var ready='<p>Parfait. J’ai maintenant un brief clair. Je ne vais pas générer un long document sans votre accord.</p><p>اختار الوثيقة اللي بغيتي Namaa يوجّدها ليك دابا.</p>'+documentChoiceCardHtml();
     addMessage('ai','<div class="namaa-answer-head"><span>Namaa Talk</span><strong>Brief contrôlé</strong></div>'+ready);
     addHistory('assistant','Brief prêt. Choisissez Market Research, Marketing Strategy ou Roadmap.');
   }
@@ -509,8 +509,14 @@
   }
 
   function typingLoadingHtml(agent){
-    var labels={talk:'Namaa kaykteb...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
-    return '<div class="namaa-typing"><span></span><span></span><span></span><em>'+utils.escapeHtml(labels[agent] || 'Namaa kaykteb...')+'</em></div>';
+    var labels={talk:'Namaa kayفكر شوية...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
+    return '<div class="namaa-typing"><span></span><span></span><span></span><em>'+utils.escapeHtml(labels[agent] || 'Namaa kayكتب...')+'</em></div>';
+  }
+  function waitForHumanTyping(started,agent){
+    var minimum=agent==='talk'?760:520;
+    var elapsed=Date.now()-started;
+    var delay=Math.max(0,minimum-elapsed);
+    return new Promise(function(resolve){setTimeout(resolve,delay);});
   }
   function submit(){
     var q=input.value.trim();
@@ -525,7 +531,10 @@
     closePlusMenu();
     var loading=addMessage('ai',typingLoadingHtml(submittedAgent));
     loading.classList.add('is-loading');
+    var startedAt=Date.now();
     answerAsync(q,{brief:appState.projectBrief || null}).then(function(html){
+      return waitForHumanTyping(startedAt,submittedAgent).then(function(){return html;});
+    }).then(function(html){
       if(submittedAgent==='images' && appState.projectBrief){
         appState.flowStage='dev-offer';
         appState.lastMockupQuestion=q;

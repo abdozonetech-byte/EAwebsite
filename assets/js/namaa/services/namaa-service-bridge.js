@@ -333,7 +333,7 @@
 
   function renderSmartBriefCoach(data){
     var status=data && data.briefStatus;
-    if(!status || !data.shortMode || status.isReady)return '';
+    if(!data.showBriefCoach || !status || !data.shortMode || status.isReady)return '';
     var missing=Array.isArray(status.missingFields)?status.missingFields:[];
     var questions=Array.isArray(status.nextQuestions)?status.nextQuestions:[];
     if(!missing.length && !questions.length)return '';
@@ -345,7 +345,7 @@
       '<div class="namaa-brief-meter"><i style="width:'+Math.max(8,Math.min(100,score))+'%"></i></div>'+ 
       '<div class="namaa-brief-missing">'+chips+'</div>'+ 
       (qs?'<ol>'+qs+'</ol>':'')+ 
-      '<p>Namaa garde la discussion courte, puis construit le prompt fort en backend quand le brief est prêt.</p>'+ 
+      '<p>Namaa غادي يسولك غير على المعلومات المهمة باش يخرج نتيجة واضحة بلا صداع.</p>'+ 
     '</div>';
   }
 
@@ -359,14 +359,14 @@
       var attr=id==='guided_brief'?'data-flow-action="guided-intake"':'data-talk-action="'+utils.escapeHtml(id)+'"';
       return '<button class="namaa-mini-button '+(id==='guided_brief'?'secondary':'')+'" type="button" '+attr+'><span>'+icon+'</span>'+utils.escapeHtml(label)+'</button>';
     }).join('');
-    return '<div class="namaa-action-card namaa-controller-card"><div><span>⚡</span><strong>Namaa peut préparer la suite</strong><p>Choisissez le document à générer. Le prompt fort est construit automatiquement dans le backend.</p></div><div class="namaa-flow-actions">'+buttons+'</div></div>';
+    return '<div class="namaa-action-card namaa-controller-card"><div><span>⚡</span><strong>شنو بغيتي نوجد ليك دابا؟</strong><p>اختار الوثيقة اللي محتاج، وNamaa غادي يحول brief ديالك لنتيجة منظمة.</p></div><div class="namaa-flow-actions">'+buttons+'</div></div>';
   }
 
   function talkApi(question,history,options){
     options=options || {};
     var endpoint=(window.NamaaConfig && window.NamaaConfig.api && window.NamaaConfig.api.textEndpoint) || '/api/namaa/talk';
     return postJson(endpoint,{message:question,history:history || [],brief:options.brief || null,action:options.action || null,controlled:!!options.brief,mode:'talk'}).then(function(data){
-      var label=data.deliverableLabel || (data.shortMode ? 'Conversation courte' : 'Document business');
+      var label=data.deliverableLabel || data.conversationLabel || (data.shortMode ? 'Namaa kayhder m3ak' : 'Document business');
       var html='<div class="namaa-answer-head"><span>Namaa Talk</span><strong>'+utils.escapeHtml(label)+'</strong></div>'+textToHtml(data.answer || '');
       html+=renderSmartBriefCoach(data);
       html+=renderTalkActions(data.actions || [],data);

@@ -156,7 +156,8 @@ function casualIntent(message = '') {
   if (/^(ok|okay|mzyan|mezian|tamam|d accord|daccord|bien|nice|شكرا|merci|thanks|thx|lah yhafdk|safi|صافي)$/.test(n)) return 'ack';
   if (/^(jawb|jawbni|جاوب|جاوبني|answer|reponds|réponds|red 3lia|رد عليا)$/.test(n)) return 'answer_what';
   if (/^(malk|مالك|chno malk|chno bik|اش مالك|علاش|why)$/.test(n)) return 'tease';
-  if (/^(chkon nta|nta chkon|who are you|qui es tu|شنو انت|شكون انت|wach nta ai|wach nta robot)$/.test(n)) return 'who_are_you';
+  if (/^(chkon nta|nta chkon|daba nta chkon|nta chkon daba|who are you|qui es tu|شنو انت|شكون انت|wach nta ai|wach nta robot)$/.test(n) || /\b(nta|nti|نتا|انت)\b.*\b(chkon|شكون|who)\b/.test(n)) return 'who_are_you';
+  if (/(jaw|weather|meteo|météo|الجو|طقس|shta|chta|الشمس|برد|سخون|حر|rain|pluie)/.test(n)) return 'weather';
   if (/^(chno katdir|شنو كتدير|what can you do|wach t9dr t3awni|شنو تقدر دير)$/.test(n)) return 'what_do';
   return '';
 }
@@ -164,6 +165,11 @@ function casualIntent(message = '') {
 function isFriendlyOffTopicBridge(message = '') {
   const n = normalize(message);
   return /(football|foot|match|kora|lkora|كرة|ماتش|المنتخب|mountakhab|lmountakhab|world cup|coupe du monde|كاس العالم|barca|real madrid|ronaldo|messi|fifa|botola)/.test(n);
+}
+
+function isWeatherOrDailySmallTalk(message = '') {
+  const n = normalize(message);
+  return /(jaw|weather|meteo|météo|الجو|طقس|shta|chta|الشمس|برد|سخون|حر|rain|pluie)/.test(n) && isVeryShort(message);
 }
 
 function emojiForMessage(message = '', brief = {}) {
@@ -196,20 +202,23 @@ function casualReply(intent, language) {
     if (intent === 'ack') return 'مزيان 😄 عطيني غير الفكرة ديالك ولا المشكل التجاري ونبداو خطوة بخطوة.';
     if (intent === 'answer_what') return 'جاوبك على شنو بالضبط؟ 😄 عطيني السؤال ولا الفكرة ديال المشروع، ونخلي الجواب قصير وواضح.';
     if (intent === 'tease') return 'هههه والو، غير كنحاول نبقى مركز معاك 😄 أرا الفكرة ديال المشروع ونخدموها مزيان.';
-    if (intent === 'who_are_you') return 'أنا Namaa AI 🤖 مساعد ديالك فـ AI, business, startups, marketing والمشاريع فالمغرب. كنعاونك من الفكرة حتى strategy, mockup و landing page.';
+    if (intent === 'who_are_you') return 'أنا Namaa AI 🤖 صاحبك فالأفكار والمشاريع: AI, business, marketing, IT و startups. كنعاونك من الفكرة حتى strategy, mockup و landing page.';
+    if (intent === 'weather') return 'الجو؟ إلا كان زوين نحتاجو حتى فكرة زوينة بحالو 😄☀️ ما عنديش météo live، ولكن نقدر نعاونك نخلق مشروع يطلع الجو ديالو مزيان 💼';
     if (intent === 'what_do') return 'نقدر نعاونك فـ 4 حوايج: نفهم الفكرة 💡، نوجد PDF strategy 📄، نصاوب mockup/logo 🎨، ونخرج landing page بسيطة 💻. شنو المشروع؟';
   }
   if (/english/i.test(language)) {
     if (intent === 'ack') return 'Great 😄 Give me your project idea or business problem and we’ll build it step by step.';
     if (intent === 'answer_what') return 'Answer what exactly? 😄 Send me the question or project idea and I’ll keep it short.';
     if (intent === 'tease') return 'Haha nothing, I’m just staying focused 😄 Bring me the project idea and we’ll make it strong.';
-    if (intent === 'who_are_you') return 'I’m Namaa AI 🤖 your assistant for AI, business, startups, marketing, and Moroccan projects.';
+    if (intent === 'who_are_you') return 'I’m Namaa AI 🤖 your friendly assistant for AI, business, startups, marketing, IT, and Moroccan project building.';
+    if (intent === 'weather') return 'Weather talk is always welcome 😄 I do not have live météo here, but I can help make your project forecast look sunny 💼';
     if (intent === 'what_do') return 'I can help with 4 things: clarify the idea 💡, create a strategy PDF 📄, generate mockups/logo 🎨, and build a simple landing page 💻. What’s the project?';
   }
   if (intent === 'ack') return 'Parfait 😄 Donnez-moi l’idée du projet ou le problème business, et on avance étape par étape.';
   if (intent === 'answer_what') return 'Répondre à quoi exactement ? 😄 Envoyez-moi la question ou l’idée du projet, je garde ça court.';
   if (intent === 'tease') return 'Haha rien, je reste juste focus 😄 Donnez-moi l’idée du projet et on la structure proprement.';
-  if (intent === 'who_are_you') return 'Je suis Namaa AI 🤖 votre assistant pour l’IA, business, startups, marketing et projets au Maroc.';
+  if (intent === 'who_are_you') return 'Je suis Namaa AI 🤖 votre assistant friendly pour IA, business, startups, marketing, IT et projets au Maroc.';
+  if (intent === 'weather') return 'La météo ? J’aime bien quand le ciel est clair 😄 Je n’ai pas la météo live ici, mais on peut éclaircir votre projet 💼';
   if (intent === 'what_do') return 'Je peux aider sur 4 choses : clarifier l’idée 💡, créer un PDF stratégie 📄, générer logo/mockups 🎨, et créer une landing page simple 💻. Quel est le projet ?';
   return '';
 }
@@ -247,16 +256,16 @@ function simpleDomainReply(message, language) {
   const emoji = emojiForMessage(message);
   if (/darija|arab/i.test(language)) {
     if (/(ai|ia|ذكاء)/.test(n)) return `${emoji} AI فالبزنس كيعني نستعملو أدوات ذكية باش نربحو الوقت، نحسنو التسويق، وننظمو العملاء. باش نطبقوها صح، شنو نوع المشروع ديالك؟`;
-    if (/(prompt|برومبت|prompts)/.test(n)) return 'بالضبط 💡 المشكل غالباً ماشي فالأداة، المشكل فـ prompt. Namaa غادي يبني prompt قوي فالباكند، وانت غير جاوب بشكل عادي. شنو بغيتي تخلق؟';
+    if (/(prompt|برومبت|prompts)/.test(n)) return 'بالضبط 💡 المشكل غالباً ماشي فالأداة، المشكل فكيفاش نشرحو الفكرة. هضر عادي وNamaa ينظمها ليك. شنو بغيتي تخلق؟';
     return `${emoji} نقدر نجاوبك باختصار، ولكن الأفضل نربطها بمشروع حقيقي. شنو المجال والهدف ديالك؟`;
   }
   if (/english/i.test(language)) {
     if (/(ai|ia)/.test(n)) return `${emoji} AI in business means using smart tools to save time, improve marketing, and organize leads. To apply it well, what project are you working on?`;
-    if (/(prompt|prompts)/.test(n)) return 'Exactly 💡 Most people struggle with prompts. Namaa builds the strong backend prompt for you. What do you want to create?';
+    if (/(prompt|prompts)/.test(n)) return 'Exactly 💡 Most people struggle to explain the idea clearly. You talk normally, and Namaa structures it for you. What do you want to create?';
     return `${emoji} I can answer shortly, but Namaa works best when we connect the answer to a real project. What field and goal do you have?`;
   }
   if (/(ia|ai)/.test(n)) return `${emoji} L’IA business sert à gagner du temps, mieux vendre, automatiser des tâches et organiser les leads. Pour l’appliquer concrètement, quel est votre projet ?`;
-  if (/(prompt|prompts)/.test(n)) return 'Exactement 💡 Beaucoup bloquent sur le prompt. Namaa construit le prompt fort en backend pour vous. Qu’est-ce que vous voulez créer ?';
+  if (/(prompt|prompts)/.test(n)) return 'Exactement 💡 Beaucoup bloquent parce que l’idée n’est pas encore claire. Vous parlez normalement, et Namaa la structure pour vous. Qu’est-ce que vous voulez créer ?';
   return `${emoji} Je peux répondre simplement, mais Namaa devient vraiment utile quand on relie la réponse à un projet réel. Quel est le domaine et l’objectif ?`;
 }
 
@@ -281,6 +290,10 @@ export function controlTalk({ message = '', brief = null, action = null }) {
   const language = detectLanguage(message, mergedBrief);
   const deliverable = action || wantsDeliverable(message);
   const casual = casualIntent(message);
+
+  if (isWeatherOrDailySmallTalk(message)) {
+    return { generate: false, intent: 'casual_conversation', language, briefPatch: patch, brief: mergedBrief, briefStatus: getSmartBriefStatus(mergedBrief, language), answer: casualReply('weather', language) };
+  }
 
   if (isGreeting(message)) {
     return { generate: false, intent: 'small_talk', language, briefPatch: patch, brief: mergedBrief, briefStatus: getSmartBriefStatus(mergedBrief, language), answer: greetingReply(language) };

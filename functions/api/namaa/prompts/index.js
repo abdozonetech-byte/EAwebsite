@@ -16,3 +16,5 @@ export function buildDeliverablePrompt(action, brief, language) {
   if (normalized === 'roadmap') return buildRoadmapPrompt({ brief, language });
   return buildMarketingStrategyPrompt({ brief, language });
 }
+
+export { NAMAA_CONVERSATION_SYSTEM_PROMPT, buildConversationPrompt } from './conversation.js';

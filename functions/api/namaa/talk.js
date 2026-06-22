@@ -19,10 +19,13 @@ import {
 
 import {
   NAMAA_TALK_SYSTEM_PROMPT,
+  NAMAA_CONVERSATION_SYSTEM_PROMPT,
+  buildConversationPrompt,
   buildDeliverablePrompt,
 } from './prompts/index.js';
 
 const SYSTEM_PROMPT = NAMAA_TALK_SYSTEM_PROMPT;
+const CONVERSATION_PROMPT = NAMAA_CONVERSATION_SYSTEM_PROMPT;
 
 const ACTION_LABELS = {
   market_research: 'Market Research PDF',
@@ -55,17 +58,54 @@ export async function onRequestPost(context) {
   const decision = controlTalk({ message, brief, action: requestedAction || null });
   const briefStatus = decision.briefStatus || getSmartBriefStatus(decision.brief || brief || {}, decision.language);
 
-  // Most Namaa Talk messages are intentionally short and do not call Gemini.
-  // The v29 controller handles small talk, Darija, emojis, light jokes and smart redirects before any long output.
+  // Update 30: natural conversation mode.
+  // Short everyday chat is now rewritten by Gemini in a tiny, low-token mode so Namaa feels alive,
+  // while the controller still protects scope and keeps big deliverables controlled.
   if (!decision.generate) {
+    const hasGemini = Boolean(context.env?.[NAMAA_API_CONFIG.talk.apiKeyEnv]);
+    let naturalAnswer = decision.answer;
+    let provider = hasGemini ? 'gemini-conversation' : 'namaa-controller';
+    let model = hasGemini ? (context.env?.[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel) : 'conversation-controller-v30';
+
+    if (hasGemini) {
+      const chatConfig = {
+        ...NAMAA_API_CONFIG.talk,
+        maxOutputTokens: NAMAA_API_CONFIG.talk.conversationMaxOutputTokens || 220,
+        temperature: 0.78,
+      };
+      const conversationPrompt = buildConversationPrompt({
+        message,
+        decision,
+        brief: decision.brief || brief || {},
+        draftAnswer: decision.answer || '',
+      });
+      const result = await callGemini({
+        env: context.env,
+        config: chatConfig,
+        systemInstruction: CONVERSATION_PROMPT,
+        contents: [
+          ...normalizeHistory(body.history).slice(-4),
+          { role: 'user', parts: [{ text: conversationPrompt }] },
+        ],
+      });
+      if (result.ok && result.text) {
+        naturalAnswer = result.text;
+        provider = result.provider + '-conversation';
+        model = result.model;
+      }
+    }
+
+    const showBriefCoach = ['business_chat', 'brief_required', 'pdf_choice'].includes(decision.intent) && Boolean(briefStatus?.missingFields?.length);
+
     return jsonResponse({
       ok: true,
       route: 'namaa-talk',
-      connected: true,
-      provider: 'namaa-controller',
-      model: 'conversation-controller-v29 + natural-darija-router + smart-brief-builder + prompt-library',
+      connected: hasGemini,
+      provider,
+      model,
       intent: decision.intent,
-      answer: decision.answer,
+      answer: naturalAnswer,
+      fallbackAnswer: decision.answer,
       briefPatch: decision.briefPatch || {},
       brief: decision.brief || brief || null,
       missingBriefFields: getMissingBriefFields(decision.brief || brief || {}).map((field) => field.key),
@@ -74,6 +114,8 @@ export async function onRequestPost(context) {
       briefReadiness: briefStatus.score,
       actions: htmlActionHint(decision.actions || []),
       shortMode: true,
+      showBriefCoach,
+      conversationLabel: decision.intent === 'out_of_scope' ? 'Conversation légère' : 'Namaa kayhder m3ak',
     });
   }
 
@@ -144,7 +186,7 @@ export async function onRequestGet(context) {
     connected: hasSecret,
     expectedSecret: config.apiKeyEnv,
     model,
-    update: '29-natural-conversation-intelligence',
-    behavior: 'natural short conversation first; Darija smart router; emoji-aware replies; confirmed deliverables use optimized Gemini prompts and branded PDFs',
+    update: '30-human-conversation-mode',
+    behavior: 'Gemini micro-conversation for natural short replies; soft topic bridge; controlled deliverables use optimized prompts and branded PDFs',
   });
 }
