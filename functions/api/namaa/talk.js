@@ -58,24 +58,23 @@ export async function onRequestPost(context) {
   const decision = controlTalk({ message, brief, action: requestedAction || null });
   const briefStatus = decision.briefStatus || getSmartBriefStatus(decision.brief || brief || {}, decision.language);
 
-  // Update 31: premium fast conversation mode.
-  // Very small talk/language switches are answered by the controller instantly.
-  // Gemini micro-conversation is reserved for business-ish natural chat that needs nuance.
+  // Update 32: Gemini Free Talk mode.
+  // Namaa uses Gemini for daily/free conversation whenever the key is available.
+  // The controller only routes intent, keeps the project brief clean, and provides a fallback if Gemini is unavailable.
   if (!decision.generate) {
     const hasGemini = Boolean(context.env?.[NAMAA_API_CONFIG.talk.apiKeyEnv]);
     let naturalAnswer = decision.answer;
-    let provider = hasGemini ? 'gemini-conversation' : 'namaa-controller';
-    let model = hasGemini ? (context.env?.[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel) : 'conversation-controller-v30';
+    let provider = hasGemini ? 'gemini-free-talk' : 'namaa-controller-fallback';
+    let model = hasGemini ? (context.env?.[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel) : 'conversation-controller-v32';
 
-    const fastLocalIntents = new Set(['small_talk', 'language_switch', 'casual_conversation', 'friendly_off_topic_bridge', 'out_of_scope', 'about_elboubakry']);
-    const shouldUseGeminiConversation = hasGemini && !fastLocalIntents.has(decision.intent);
+    const shouldUseGeminiConversation = hasGemini;
 
     if (shouldUseGeminiConversation) {
       const chatConfig = {
         ...NAMAA_API_CONFIG.talk,
-        maxOutputTokens: NAMAA_API_CONFIG.talk.conversationMaxOutputTokens || 130,
-        temperature: 0.62,
-        requestTimeoutMs: NAMAA_API_CONFIG.talk.conversationTimeoutMs || 8000,
+        maxOutputTokens: NAMAA_API_CONFIG.talk.conversationMaxOutputTokens || 180,
+        temperature: 0.74,
+        requestTimeoutMs: NAMAA_API_CONFIG.talk.conversationTimeoutMs || 9000,
         retryAttempts: 0,
       };
       const conversationPrompt = buildConversationPrompt({
@@ -89,13 +88,13 @@ export async function onRequestPost(context) {
         config: chatConfig,
         systemInstruction: CONVERSATION_PROMPT,
         contents: [
-          ...normalizeHistory(body.history).slice(-3),
+          ...normalizeHistory(body.history).slice(-6),
           { role: 'user', parts: [{ text: conversationPrompt }] },
         ],
       });
       if (result.ok && result.text) {
         naturalAnswer = result.text;
-        provider = result.provider + '-conversation';
+        provider = result.provider + '-free-talk';
         model = result.model;
       }
     }
@@ -120,7 +119,7 @@ export async function onRequestPost(context) {
       actions: htmlActionHint(decision.actions || []),
       shortMode: true,
       showBriefCoach,
-      conversationLabel: decision.intent === 'out_of_scope' ? 'Conversation légère' : 'Namaa kayhder m3ak',
+      conversationLabel: hasGemini ? 'AI Talk · Free Talk' : (decision.intent === 'out_of_scope' ? 'Conversation légère' : 'Namaa kayhder m3ak'),
     });
   }
 
@@ -187,11 +186,11 @@ export async function onRequestGet(context) {
   return jsonResponse({
     ok: true,
     route: 'namaa-talk',
-    provider: 'gemini + namaa-controller',
+    provider: 'gemini + namaa-free-talk-controller',
     connected: hasSecret,
     expectedSecret: config.apiKeyEnv,
     model,
-    update: '31-premium-fast-conversation',
-    behavior: 'Fast controller replies for small talk and Darija Latin; Gemini micro-conversation for nuanced business chat; controlled deliverables use optimized prompts and branded PDFs',
+    update: '32-gemini-free-talk',
+    behavior: 'Gemini Free Talk for daily conversation, limited to AI/business/IT/startups/marketing/technology/programming; controlled deliverables use optimized prompts and branded PDFs',
   });
 }

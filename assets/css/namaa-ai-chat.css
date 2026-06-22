@@ -1035,7 +1035,7 @@ body{
 .namaa-message.is-loading .namaa-bubble:has(.namaa-typing){background:linear-gradient(135deg,#ffffff,#f3f8ff)}
 
 
-/* Namaa Update 31 — Premium fast chat bubbles + Darija Latin friendly mode */
+/* Namaa Update 32 — Premium fast chat bubbles + Darija Latin friendly mode */
 .namaa-thread{scroll-padding-bottom:18px}
 .namaa-message{max-width:920px;animation:namaaMessageIn .24s cubic-bezier(.22,1,.36,1) both;transform-origin:bottom left}
 .namaa-message.user{transform-origin:bottom right}

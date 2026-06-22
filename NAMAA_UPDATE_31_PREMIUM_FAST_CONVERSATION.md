@@ -1,4 +1,4 @@
-# Namaa AI Update 31 — Premium Fast Conversation + Darija Latin
+# Namaa AI Update 32 — Premium Fast Conversation + Darija Latin
 
 - Darija mode now writes Moroccan Darija using Latin/French letters by default.
 - Arabic script is used only when the user explicitly asks for Arabic.

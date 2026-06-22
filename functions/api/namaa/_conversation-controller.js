@@ -1,6 +1,6 @@
 // Namaa Conversation Controller
-// Update 31: Premium Fast Conversation + Darija Latin mode.
-// Goal: Namaa feels fast, premium, friendly and natural while keeping the business/AI scope.
+// Update 32: Gemini Free Talk mode.
+// Goal: controller routes intent and fallback only; Gemini handles daily/free conversation while Namaa stays focused on AI/business/IT/startups/marketing/technology/programming.
 
 import {
   inferSmartBriefPatch,
@@ -15,7 +15,7 @@ export const NAMAA_SCOPE = [
   'ai', 'ia', 'ذكاء', 'intelligence artificielle', 'artificial intelligence', 'ecommerce', 'e-commerce', 'saas', 'app', 'application',
   'landing', 'website', 'site', 'web', 'whatsapp', 'lead', 'leads', 'client', 'clients', 'sales', 'vente', 'sell', 'بيع',
   'restaurant', 'clinic', 'clinique', 'medical', 'formation', 'real estate', 'immobilier', 'agency', 'agence',
-  'technology', 'technologie', 'tech', 'it', 'software', 'logiciel', 'automation', 'automatisation', 'digital', 'branding', 'brand',
+  'technology', 'technologie', 'tech', 'it', 'software', 'logiciel', 'programming', 'programmation', 'code', 'coding', 'developer', 'dev', 'automation', 'automatisation', 'digital', 'branding', 'brand',
   'فكرة', 'افكار', 'فلوس', 'ربح', 'متجر', 'موقع', 'تطبيق', 'زبناء', 'عملاء', 'إعلان', 'اعلان',
 ];
 
@@ -347,7 +347,7 @@ export function controlTalk({ message = '', brief = null, action = null }) {
   }
 
   if (!hasScope(message) && !deliverable) {
-    return { generate: false, intent: 'out_of_scope', language, briefPatch: patch, brief: mergedBrief, briefStatus: getSmartBriefStatus(mergedBrief, language), answer: shortScopeRedirect(language) };
+    return { generate: false, intent: 'free_conversation', language, briefPatch: patch, brief: mergedBrief, briefStatus: getSmartBriefStatus(mergedBrief, language), answer: shortScopeRedirect(language) };
   }
 
   if (deliverable && !['pdf_choice'].includes(deliverable)) {

@@ -510,11 +510,11 @@
   }
 
   function typingLoadingHtml(agent){
-    var labels={talk:'Namaa kaykteb...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
+    var labels={talk:'Namaa kayjawb...',images:'Namaa kayوجد mockup...',dev:'NamaaDev kayبني preview...'};
     return '<div class="namaa-typing"><span></span><span></span><span></span><em>'+utils.escapeHtml(labels[agent] || 'Namaa kayكتب...')+'</em></div>';
   }
   function waitForHumanTyping(started,agent){
-    var minimum=agent==='talk'?180:520;
+    var minimum=agent==='talk'?240:520;
     var elapsed=Date.now()-started;
     var delay=Math.max(0,minimum-elapsed);
     return new Promise(function(resolve){setTimeout(resolve,delay);});
