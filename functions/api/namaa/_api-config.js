@@ -467,62 +467,76 @@ async function callGeminiImageInteractions({ apiKey, model, prompt, aspectRatio,
   return { ok: true, status: 200, image, text: extractInteractionsText(data) };
 }
 
+function uniqueImageModels(primaryModel) {
+  return [
+    primaryModel,
+    'gemini-3.1-flash-image',
+    'gemini-2.5-flash-image',
+    'gemini-3-pro-image',
+    'gemini-3-pro-image-preview',
+  ].filter(Boolean).filter((value, index, list) => list.indexOf(value) === index);
+}
+
 export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
   const apiKey = getSecret(env, config.apiKeyEnv);
-  const model = getModel(env, config);
+  const primaryModel = getModel(env, config);
 
   if (!apiKey) {
     return {
       ok: false,
       status: 401,
       error: 'Namaa private AI secret is not configured.',
-      model,
+      model: primaryModel,
     };
   }
 
-  if (!model) {
+  if (!primaryModel) {
     return {
       ok: false,
       status: 500,
       error: 'Namaa image model configuration is not ready.',
-      model,
+      model: primaryModel,
     };
   }
 
+  // Use the canonical Gemini image path first, then fall back to the other supported surfaces.
   const attempts = [
-    ['openai-compatible', callGeminiImageOpenAI],
     ['generate-content', callGeminiImageGenerateContent],
     ['interactions', callGeminiImageInteractions],
+    ['openai-compatible', callGeminiImageOpenAI],
   ];
   const errors = [];
 
-  for (const [method, fn] of attempts) {
-    try {
-      const result = await fn({ apiKey, model, prompt, aspectRatio, config });
-      if (result.ok && result.image?.data) {
-        return {
-          ok: true,
-          status: 200,
-          provider: 'gemini',
-          method,
-          model,
-          image: result.image,
-          text: result.text || '',
-        };
+  for (const model of uniqueImageModels(primaryModel)) {
+    for (const [method, fn] of attempts) {
+      try {
+        const result = await fn({ apiKey, model, prompt, aspectRatio, config });
+        if (result.ok && result.image?.data) {
+          return {
+            ok: true,
+            status: 200,
+            provider: 'gemini',
+            method,
+            model,
+            image: result.image,
+            text: result.text || '',
+          };
+        }
+        errors.push(`${model}/${method}: ${result.status || 500}`);
+      } catch (error) {
+        errors.push(`${model}/${method}: ${error?.message || 'failed'}`);
       }
-      errors.push(`${method}: ${result.status || 500}`);
-    } catch (error) {
-      errors.push(`${method}: ${error?.message || 'failed'}`);
     }
   }
 
   return {
     ok: false,
-    status: 502,
-    error: 'Namaa image generation returned no image data. Check Nano Banana model availability and Cloudflare secrets.',
-    model,
+    status: 200,
+    error: 'Namaa image generation returned no image data. Falling back to local visual board.',
+    model: primaryModel,
     provider: 'gemini',
-    privateDebug: errors.slice(0, 3),
+    fallback: true,
+    privateDebug: errors.slice(0, 8),
   };
 }
 

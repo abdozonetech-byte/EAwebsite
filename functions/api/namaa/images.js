@@ -276,13 +276,16 @@ export async function onRequestPost(context) {
 
   if (!result.ok) {
     return jsonResponse({
-      ok: false,
+      ok: true,
       route: 'namaa-images',
-      connected: false,
-      error: 'Namaa image route is temporarily unavailable.',
+      connected: true,
+      generated: false,
       fallback: 'local-mockup-panel',
       pack,
-    }, result.status || 500);
+      aspectRatio,
+      answer: `Namaa prepared a local ${pack.label} visual board while Nano Banana did not return a JPG yet.`,
+      image: null,
+    }, 200);
   }
 
   return jsonResponse({

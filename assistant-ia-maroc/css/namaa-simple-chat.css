@@ -3811,3 +3811,81 @@ body.strategy-modal-open { overflow: hidden; }
   .message-bubble{font-size:13.5px;padding:12px 14px}
   .namaa-composer button{min-width:62px;font-size:12px}
 }
+
+/* Update 90.1: premium local visual fallback when Nano Banana returns no image */
+.chat-visual-board.is-premium-fallback {
+  padding: 18px;
+  border-radius: 28px;
+  border: 1px solid rgba(24, 88, 242, .16);
+  background: radial-gradient(circle at 20% 10%, rgba(24, 88, 242, .12), transparent 34%), linear-gradient(135deg, #f8fbff 0%, #ffffff 52%, #eef5ff 100%);
+  box-shadow: 0 26px 60px rgba(15, 23, 42, .10);
+}
+.visual-mockup-scene {
+  position: relative;
+  min-height: 310px;
+  margin: 16px 0;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #eaf2ff 0%, #f8fbff 50%, #ffffff 100%);
+  overflow: hidden;
+  border: 1px solid rgba(24, 88, 242, .12);
+}
+.mockup-laptop {
+  position: absolute;
+  left: 22px; top: 42px;
+  width: min(68%, 520px); height: 220px;
+  border-radius: 18px;
+  background: #0b1730;
+  padding: 12px;
+  box-shadow: 0 26px 50px rgba(15, 23, 42, .20);
+}
+.mockup-bar { height: 28px; display: flex; align-items: center; gap: 7px; color: #9fb3d9; font-size: 11px; }
+.mockup-bar i { width: 9px; height: 9px; border-radius: 99px; background: #ff6b6b; display: inline-block; }
+.mockup-bar i:nth-child(2) { background: #f7c948; }
+.mockup-bar i:nth-child(3) { background: #2dd4bf; }
+.mockup-bar span { margin-left: auto; margin-right: 8px; opacity: .8; }
+.mockup-hero {
+  height: calc(100% - 34px);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1858f2, #00d1b2);
+  color: #fff;
+  padding: 24px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.mockup-hero b { font-size: clamp(22px, 3vw, 40px); line-height: .95; max-width: 70%; }
+.mockup-hero small { margin-top: 8px; opacity: .8; }
+.mockup-hero em { margin-top: 16px; width: fit-content; padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,.18); font-style: normal; font-weight: 800; }
+.mockup-phone {
+  position: absolute;
+  right: 48px; top: 58px;
+  width: 132px; height: 238px;
+  border-radius: 30px;
+  background: #071225;
+  padding: 16px;
+  box-shadow: 0 22px 45px rgba(15, 23, 42, .24);
+  color: #fff; text-align: center;
+}
+.phone-notch { width: 48px; height: 6px; background: rgba(255,255,255,.16); border-radius: 99px; margin: 0 auto 24px; }
+.phone-logo { width: 54px; height: 54px; border-radius: 16px; background: linear-gradient(135deg, #1858f2, #00d1b2); display: grid; place-items: center; font-weight: 900; margin: 0 auto 16px; }
+.mockup-phone p { font-weight: 900; line-height: 1.1; margin: 0; font-size: 14px; }
+.mockup-phone span { display: block; margin-top: 14px; opacity: .72; font-size: 11px; }
+.mockup-brand-card {
+  position: absolute;
+  right: 28px; bottom: 26px;
+  min-width: 170px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.86);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(24,88,242,.14);
+  padding: 16px;
+  box-shadow: 0 18px 34px rgba(15,23,42,.12);
+}
+.mockup-brand-card strong { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #1858f2; color: #fff; font-size: 22px; }
+.mockup-brand-card span { display:block; margin-top: 10px; font-weight: 900; color: #0f172a; }
+.chat-visual-grid.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 700px) {
+  .visual-mockup-scene { min-height: 420px; }
+  .mockup-laptop { left: 12px; right: 12px; width: auto; height: 190px; }
+  .mockup-phone { right: 18px; top: 210px; }
+  .mockup-brand-card { left: 18px; right: auto; bottom: 22px; }
+  .chat-visual-grid.compact { grid-template-columns: 1fr 1fr; }
+}

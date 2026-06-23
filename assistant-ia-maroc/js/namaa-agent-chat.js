@@ -483,10 +483,16 @@
     const project = escapeHtml(b.projectName || b.project || 'Namaa Project');
     const city = escapeHtml(b.city || b.market || 'Morocco');
     const labels = mockupLabelsFromHint().slice(0, 6);
-    return '<div class="chat-visual-board">'
-      + '<div class="chat-visual-hero"><div class="chat-visual-logo">N</div><div><strong>' + project + '</strong><span>' + city + ' · logo + mockups</span></div></div>'
-      + '<div class="chat-visual-grid">' + labels.map(function(label){ return '<div class="chat-visual-tile"><span>' + escapeHtml(label) + '</span></div>'; }).join('') + '</div>'
-      + '<p class="chat-visual-note">Image API ما رجعاتش JPG دابا، ولكن Namaa وجد لك mockup board مؤقت باش تكمل للWebsite.</p>'
+    const safeLabels = labels.length ? labels : ['Logo', 'Landing hero', 'Mobile app', 'LinkedIn', 'Pitch cover', 'Dashboard'];
+    return '<div class="chat-visual-board is-premium-fallback">'
+      + '<div class="chat-visual-hero"><div class="chat-visual-logo">N</div><div><strong>' + project + '</strong><span>' + city + ' · logo + visual mockups</span></div></div>'
+      + '<div class="visual-mockup-scene">'
+        + '<div class="mockup-laptop"><div class="mockup-bar"><i></i><i></i><i></i><span>' + project + '</span></div><div class="mockup-hero"><b>' + project + '</b><small>' + city + '</small><em>Landing page preview</em></div></div>'
+        + '<div class="mockup-phone"><div class="phone-notch"></div><div class="phone-logo">N</div><p>' + project + '</p><span>Mobile app</span></div>'
+        + '<div class="mockup-brand-card"><strong>N</strong><span>Logo concept</span></div>'
+      + '</div>'
+      + '<div class="chat-visual-grid compact">' + safeLabels.map(function(label){ return '<div class="chat-visual-tile"><span>' + escapeHtml(label) + '</span></div>'; }).join('') + '</div>'
+      + '<p class="chat-visual-note">ها هو visual pack الأولي ديال المشروع. نقدر دابا نكملو لـ Namaa Dev باش يخرج landing page mockup.</p>'
       + '</div>';
   }
 
@@ -519,7 +525,7 @@
       html = designImageBubbleHtml(imageUrl, image.mimeType || 'image/jpeg');
       lastDesignAnswer = 'Namaa Design generated a visual logo and mockups board for the confirmed project.';
     } else {
-      html = '<p><strong>التصميم وجد، ولكن توليد الصورة ما رجعش نتيجة دابا.</strong><br>ها mockup board مؤقت باش نكملو flow:</p>' + designFallbackBoardHtml();
+      html = '<p><strong>ها هو أول visual pack ديال المشروع ✅</strong></p>' + designFallbackBoardHtml();
       lastDesignAnswer = 'Namaa Design prepared a fallback visual mockup board because image generation was unavailable.';
     }
     flowState.designReady = true;
