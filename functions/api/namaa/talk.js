@@ -2,6 +2,7 @@ import {
   NAMAA_API_CONFIG,
   callGemini,
   jsonResponse,
+  publicRouteStatus,
   getModel,
   shouldEnableGrounding,
   normalizeHistory,
@@ -120,8 +121,6 @@ export async function onRequestPost(context) {
       ok: true,
       route: 'namaa-talk',
       connected: hasGemini,
-      provider,
-      model,
       intent: decision.intent,
       answer: naturalAnswer,
       fallbackAnswer: decision.answer,
@@ -174,8 +173,6 @@ export async function onRequestPost(context) {
       ok: false,
       route: 'namaa-talk',
       connected: false,
-      provider: 'gemini',
-      model: result.model,
       intent: decision.intent,
       action,
       error: result.error,
@@ -199,7 +196,6 @@ export async function onRequestPost(context) {
     liveSearch: {
       enabled: groundingEnabled,
       grounded: Boolean(result.grounding?.grounded),
-      model: groundingEnabled ? groundedModel : '',
       queries: result.grounding?.queries || [],
       supportsCount: result.grounding?.supportsCount || 0,
     },
@@ -218,16 +214,5 @@ export async function onRequestPost(context) {
 export async function onRequestGet(context) {
   const config = NAMAA_API_CONFIG.talk;
   const hasSecret = Boolean(context.env?.[config.apiKeyEnv]);
-  const model = context.env?.[config.modelEnv] || config.fallbackModel;
-  return jsonResponse({
-    ok: true,
-    route: 'namaa-talk',
-    provider: 'gemini + namaa-voice-layer',
-    connected: hasSecret,
-    expectedSecret: config.apiKeyEnv,
-    model,
-    update: '45-live-sources-grounding',
-    sourcesEngine: 'Curated Morocco source registry + optional Gemini Google Search grounding for confirmed research/PDF deliverables',
-    behavior: 'Gemini powers the intelligence, then Namaa Voice Layer shapes the final answer so it feels Moroccan, friendly, short and limited to AI/business/IT/startups/marketing/technology/programming; controlled deliverables use optimized prompts and branded PDFs',
-  });
+  return jsonResponse(publicRouteStatus('namaa-talk', hasSecret, { service: 'Namaa Business Talk', update: '79-security-speed-clean' }));
 }

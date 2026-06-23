@@ -31,7 +31,8 @@ export const NAMAA_API_CONFIG = {
     connected: true,
     aspectRatio: '16:9',
     imageSize: '1K',
-    requestTimeoutMs: 45000,
+    imageMimeType: 'image/jpeg',
+    requestTimeoutMs: 60000,
     retryAttempts: 1,
   },
   dev: {
@@ -77,6 +78,38 @@ export function optionsResponse() {
       'access-control-max-age': '86400',
     },
   });
+}
+
+
+export function isDebugRequest(context) {
+  try {
+    const request = context?.request;
+    const env = context?.env || {};
+    const url = request?.url ? new URL(request.url) : null;
+    const token = request?.headers?.get('x-namaa-debug-token') || url?.searchParams?.get('token') || '';
+    return Boolean(env.NAMAA_DEBUG_TOKEN && token && token === env.NAMAA_DEBUG_TOKEN);
+  } catch (error) {
+    return false;
+  }
+}
+
+export function publicRouteStatus(route, connected, extra = {}) {
+  return {
+    ok: true,
+    route,
+    connected: Boolean(connected),
+    status: connected ? 'ready' : 'configuration_needed',
+    ...extra,
+  };
+}
+
+export function safeApiError(message = 'Namaa route temporarily unavailable.') {
+  const value = String(message || '').trim();
+  if (!value) return 'Namaa route temporarily unavailable.';
+  if (/api key|secret|token|GEMINI|model|generativelanguage|googleapis|stack|trace/i.test(value)) {
+    return 'Namaa route temporarily unavailable. Check private Cloudflare configuration and redeploy.';
+  }
+  return value.slice(0, 220);
 }
 
 export async function readJson(request) {
@@ -210,7 +243,7 @@ export async function callGemini({ env, config, systemInstruction, contents, too
     return {
       ok: false,
       status: 401,
-      error: `Missing Cloudflare secret: ${config.apiKeyEnv}`,
+      error: 'Namaa private AI secret is not configured.',
       model,
     };
   }
@@ -219,7 +252,7 @@ export async function callGemini({ env, config, systemInstruction, contents, too
     return {
       ok: false,
       status: 500,
-      error: 'Missing Gemini model. Add GEMINI_TEXT_MODEL or keep fallback model in _api-config.js.',
+      error: 'Namaa AI model configuration is not ready.',
       model,
     };
   }
@@ -252,7 +285,7 @@ export async function callGemini({ env, config, systemInstruction, contents, too
     return {
       ok: false,
       status: 504,
-      error: error?.message || 'Gemini API request timed out.',
+      error: safeApiError(error?.message || 'Namaa AI request timed out.'),
       model,
       provider: 'gemini',
     };
@@ -261,7 +294,7 @@ export async function callGemini({ env, config, systemInstruction, contents, too
     return {
       ok: false,
       status: response.status,
-      error: data?.error?.message || 'Gemini API request failed.',
+      error: safeApiError(data?.error?.message || 'Namaa AI request failed.'),
       model,
       provider: 'gemini',
     };
@@ -324,7 +357,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     return {
       ok: false,
       status: 401,
-      error: `Missing Cloudflare secret: ${config.apiKeyEnv}`,
+      error: 'Namaa private AI secret is not configured.',
       model,
     };
   }
@@ -333,7 +366,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     return {
       ok: false,
       status: 500,
-      error: 'Missing Gemini image model. Add GEMINI_IMAGE_MODEL or keep fallback model in _api-config.js.',
+      error: 'Namaa image model configuration is not ready.',
       model,
     };
   }
@@ -341,6 +374,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
   const endpoint = 'https://generativelanguage.googleapis.com/v1beta/interactions';
   const responseFormat = {
     type: 'image',
+    mime_type: config.imageMimeType || 'image/jpeg',
     aspect_ratio: aspectRatio || config.aspectRatio || '16:9',
     image_size: config.imageSize || '1K',
   };
@@ -367,7 +401,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     return {
       ok: false,
       status: 504,
-      error: error?.message || 'Gemini image request timed out.',
+      error: safeApiError(error?.message || 'Namaa image request timed out.'),
       model,
       provider: 'gemini',
     };
@@ -376,7 +410,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     return {
       ok: false,
       status: response.status,
-      error: data?.error?.message || 'Gemini image request failed.',
+      error: safeApiError(data?.error?.message || 'Namaa image request failed.'),
       model,
       provider: 'gemini',
     };
@@ -389,7 +423,7 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     return {
       ok: false,
       status: 502,
-      error: text || 'Gemini returned no image data. Try a simpler visual prompt or a different GEMINI_IMAGE_MODEL.',
+      error: safeApiError(text || 'Namaa image generation returned no image data. Try a simpler visual prompt.'),
       model,
       provider: 'gemini',
     };

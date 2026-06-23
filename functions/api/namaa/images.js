@@ -4,6 +4,7 @@ import {
   getModel,
   getSecret,
   jsonResponse,
+  publicRouteStatus,
   optionsResponse,
   readJson,
   safeText,
@@ -278,9 +279,7 @@ export async function onRequestPost(context) {
       ok: false,
       route: 'namaa-images',
       connected: false,
-      provider: 'gemini',
-      model: result.model,
-      error: result.error,
+      error: 'Namaa image route is temporarily unavailable.',
       fallback: 'local-mockup-panel',
       pack,
     }, result.status || 500);
@@ -290,8 +289,6 @@ export async function onRequestPost(context) {
     ok: true,
     route: 'namaa-images',
     connected: true,
-    provider: result.provider,
-    model: result.model,
     purpose: config.purpose,
     aspectRatio,
     pack,
@@ -307,17 +304,5 @@ export async function onRequestPost(context) {
 export async function onRequestGet(context) {
   const config = NAMAA_API_CONFIG.images;
   const hasSecret = Boolean(getSecret(context.env, config.apiKeyEnv));
-  const model = getModel(context.env, config);
-  return jsonResponse({
-    ok: true,
-    route: 'namaa-images',
-    provider: 'gemini',
-    connected: hasSecret,
-    expectedSecret: config.apiKeyEnv,
-    model,
-    purpose: config.purpose,
-    aspectRatio: config.aspectRatio,
-    packs: Object.keys(PACKS),
-    status: hasSecret ? 'ready' : 'missing-gemini-secret',
-  });
+  return jsonResponse(publicRouteStatus('namaa-images', hasSecret, { service: 'Namaa Design Images', purpose: config.purpose }));
 }

@@ -1,4 +1,4 @@
-import { NAMAA_API_CONFIG, jsonResponse, optionsResponse, readJson, safeText } from './_api-config.js';
+import { isDebugRequest, jsonResponse, optionsResponse, readJson, safeText } from './_api-config.js';
 import { controlTalk, getMissingBriefFields } from './_conversation-controller.js';
 import { getSmartBriefStatus } from './_smart-brief-builder.js';
 import { selectTrustedSourcesForBrief, compactSourcesForClient } from './sources/source-registry.js';
@@ -65,30 +65,24 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestGet(context) {
-  const env = context.env || {};
+  if (!isDebugRequest(context)) {
+    return jsonResponse({ ok: true, service: 'Namaa Diagnostics', status: 'private', message: 'Diagnostics require a private debug token.' }, 200);
+  }
   const cases = TEST_CASES.map(runCase);
   const allPassed = cases.every((item) => item.passed);
   return jsonResponse({
     ok: allPassed,
     service: 'Namaa Diagnostics',
-    update: '46-mui-template-rebuild',
-    note: 'This endpoint tests Namaa routing logic without calling Gemini. Live chat uses Gemini through Namaa Voice Layer so replies feel like Namaa, not a generic model.',
-    geminiConfigured: Boolean(env[NAMAA_API_CONFIG.talk.apiKeyEnv]),
-    activeTextModel: env[NAMAA_API_CONFIG.talk.modelEnv] || NAMAA_API_CONFIG.talk.fallbackModel,
-    activeImageModel: env[NAMAA_API_CONFIG.images.modelEnv] || NAMAA_API_CONFIG.images.fallbackModel,
-    trustedSourcesPreview: compactSourcesForClient(selectTrustedSourcesForBrief(READY_BRIEF,'market_research')).map((source) => ({ shortName: source.shortName, domain: source.domain, quality: source.quality })),
-    liveConversationMode: 'Gemini handles reasoning; Namaa Voice Layer shapes the final short Moroccan/friendly answer.',
-    liveSourcesGrounding: {
-      enabledByDefault: true,
-      disableWith: NAMAA_API_CONFIG.talk.enableGroundingEnv + '=false',
-      groundedModel: env[NAMAA_API_CONFIG.talk.groundingModelEnv] || NAMAA_API_CONFIG.talk.groundingFallbackModel,
-      note: 'Diagnostics does not call Gemini or consume live search quota. Confirmed PDFs call /api/namaa/talk with google_search grounding.',
-    },
+    update: '79-security-speed-clean',
+    debug: true,
     checks: cases,
   }, allPassed ? 200 : 500);
 }
 
 export async function onRequestPost(context) {
+  if (!isDebugRequest(context)) {
+    return jsonResponse({ ok: false, service: 'Namaa Diagnostics', status: 'private', error: 'Diagnostics POST require a private debug token.' }, 403);
+  }
   const body = await readJson(context.request);
   const message = safeText(body.message || body.prompt || body.question, 1200);
   const brief = body.brief && typeof body.brief === 'object' ? body.brief : null;
