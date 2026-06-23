@@ -1,0 +1,466 @@
+
+:root {
+  --namaa-blue: #1858f2;
+  --namaa-blue-dark: #0a2a8f;
+  --namaa-ink: #111827;
+  --namaa-muted: #7a8497;
+  --namaa-border: rgba(15, 23, 42, 0.08);
+  --namaa-soft: #f6f8fc;
+  --namaa-sidebar: #061126;
+  --namaa-sidebar-2: #0c1d3d;
+  --namaa-card: #ffffff;
+  --namaa-shadow: 0 28px 80px rgba(15, 23, 42, 0.08);
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--namaa-ink);
+  background:
+    radial-gradient(circle at 70% 0%, rgba(24, 88, 242, 0.08), transparent 32%),
+    linear-gradient(180deg, #fbfcff 0%, #f3f6fb 100%);
+  overflow: hidden;
+}
+
+button, textarea, a { font: inherit; }
+button { cursor: pointer; }
+a { text-decoration: none; }
+
+.namaa-shell {
+  display: grid;
+  grid-template-columns: 354px minmax(0, 1fr);
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.namaa-sidebar {
+  background: linear-gradient(180deg, #061126 0%, #020816 100%);
+  color: #fff;
+  padding: 30px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 20px 0 70px rgba(2, 8, 22, 0.18);
+  position: relative;
+  z-index: 20;
+}
+
+.namaa-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 8px 14px;
+  animation: fadeUp .55s ease both;
+}
+.namaa-logo,
+.owner-avatar,
+.namaa-orb {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, #1ab7ff 0%, #1438d4 100%);
+  font-weight: 800;
+  box-shadow: 0 18px 40px rgba(24, 88, 242, 0.28);
+}
+.namaa-logo { width: 58px; height: 58px; border-radius: 18px; font-size: 22px; }
+.namaa-brand strong { display: block; font-size: 24px; letter-spacing: -0.04em; line-height: 1.05; }
+.namaa-brand span { display: block; margin-top: 5px; font-size: 11px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: rgba(255, 255, 255, .66); }
+
+.namaa-new-chat {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(24, 88, 242, 0.14);
+  color: #fff;
+  min-height: 64px;
+  border-radius: 18px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 800;
+  font-size: 18px;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  animation: fadeUp .55s .05s ease both;
+}
+.namaa-new-chat span {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.1);
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 300;
+}
+.namaa-new-chat:hover { transform: translateY(-2px); background: rgba(24, 88, 242, 0.22); border-color: rgba(255,255,255,.16); }
+
+.namaa-side-title {
+  margin: 0 0 -12px 12px;
+  color: rgba(255,255,255,.52);
+  text-transform: uppercase;
+  letter-spacing: .38em;
+  font-size: 12px;
+  font-weight: 800;
+  animation: fadeUp .55s .1s ease both;
+}
+
+.namaa-agent-list { display: grid; gap: 12px; }
+.namaa-agent {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,.9);
+  border-radius: 20px;
+  padding: 14px 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  animation: fadeUp .55s ease both;
+}
+.namaa-agent:nth-child(1) { animation-delay: .14s; }
+.namaa-agent:nth-child(2) { animation-delay: .18s; }
+.namaa-agent:nth-child(3) { animation-delay: .22s; }
+.namaa-agent:nth-child(4) { animation-delay: .26s; }
+.namaa-agent:hover,
+.namaa-agent.active {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.08);
+  transform: translateX(3px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.agent-icon {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.08);
+  font-size: 20px;
+}
+.namaa-agent strong { display: block; font-size: 16px; line-height: 1.25; letter-spacing: -0.02em; }
+.namaa-agent small { display: block; margin-top: 5px; color: rgba(255,255,255,.56); font-weight: 700; font-size: 12px; line-height: 1.35; }
+
+.namaa-sidebar-footer {
+  margin-top: auto;
+  min-height: 46px;
+  padding: 13px 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.76);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: #22c995; box-shadow: 0 0 0 7px rgba(34, 201, 149, .12); }
+
+.namaa-main {
+  min-width: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 86px minmax(0, 1fr);
+}
+.namaa-topbar {
+  height: 86px;
+  padding: 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(255,255,255,.86);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--namaa-border);
+  position: relative;
+  z-index: 5;
+}
+.namaa-owner { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.owner-avatar { width: 50px; height: 50px; border-radius: 15px; font-size: 23px; }
+.namaa-owner strong { display: block; font-size: 18px; letter-spacing: -0.03em; }
+.namaa-owner span { display: block; color: var(--namaa-muted); font-size: 13px; font-weight: 700; }
+.namaa-top-actions { display: flex; align-items: center; gap: 16px; }
+.namaa-ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #08725d;
+  font-weight: 800;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, .06);
+}
+.namaa-ready i { width: 12px; height: 12px; border-radius: 50%; background: #27c79a; box-shadow: 0 0 0 7px rgba(39, 199, 154, .14); }
+.namaa-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  background: var(--namaa-blue);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 18px 42px rgba(24, 88, 242, .22);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.namaa-return:hover { transform: translateY(-2px); box-shadow: 0 22px 55px rgba(24, 88, 242, .28); }
+
+.namaa-chat-home {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  padding: 26px 36px 20px;
+}
+.namaa-chat-stage {
+  min-height: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 16px 0 22px;
+}
+.namaa-empty {
+  width: min(920px, 100%);
+  margin: auto;
+  text-align: center;
+  animation: fadeUp .7s ease both;
+}
+.namaa-orb {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 20px;
+  border-radius: 26px;
+  font-size: 36px;
+  animation: floatOrb 4.6s ease-in-out infinite;
+  position: relative;
+}
+.namaa-orb:after {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border: 1px solid rgba(24, 88, 242, .15);
+  border-radius: 34px;
+  animation: softPulse 3.2s ease-in-out infinite;
+}
+.namaa-kicker {
+  margin: 0 0 8px;
+  color: var(--namaa-blue);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.namaa-empty h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.07em;
+  font-weight: 800;
+}
+.namaa-subtitle {
+  margin: 18px auto 0;
+  color: var(--namaa-muted);
+  max-width: 710px;
+  line-height: 1.75;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.namaa-messages {
+  width: min(980px, 100%);
+  display: none;
+  flex-direction: column;
+  gap: 22px;
+  align-self: stretch;
+  margin: 0 auto;
+  padding: 4px 0 30px;
+}
+.namaa-chat-stage.has-messages { place-items: stretch; }
+.namaa-chat-stage.has-messages .namaa-empty { display: none; }
+.namaa-chat-stage.has-messages .namaa-messages { display: flex; }
+.namaa-message {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  animation: messageIn .28s ease both;
+}
+.namaa-message.user { justify-content: flex-end; }
+.namaa-message.assistant { justify-content: flex-start; }
+.message-avatar {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: var(--namaa-blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 12px 28px rgba(24, 88, 242, .16);
+}
+.namaa-message.user .message-avatar { display: none; }
+.message-bubble {
+  max-width: min(760px, 78%);
+  border-radius: 26px;
+  padding: 18px 22px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 15px;
+  font-weight: 500;
+}
+.namaa-message.assistant .message-bubble {
+  background: #fff;
+  color: #1f2937;
+  border-top-left-radius: 10px;
+  box-shadow: var(--namaa-shadow);
+  border: 1px solid rgba(15, 23, 42, .04);
+}
+.namaa-message.user .message-bubble {
+  background: var(--namaa-blue);
+  color: #fff;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0 16px 42px rgba(24, 88, 242, .22);
+}
+.namaa-message.loading .message-bubble:after {
+  content: '  ● ● ●';
+  letter-spacing: .12em;
+  animation: blinkDots 1.1s ease-in-out infinite;
+}
+
+.namaa-handoffs { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+.handoff-button {
+  border: 0;
+  border-radius: 999px;
+  background: rgba(24, 88, 242, .08);
+  color: var(--namaa-blue-dark);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.namaa-composer {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(24, 88, 242, .16);
+  border-radius: 28px;
+  box-shadow: 0 24px 75px rgba(15, 23, 42, .1);
+  padding: 10px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  animation: slideComposer .65s ease both;
+}
+.namaa-composer textarea {
+  flex: 1;
+  height: 52px;
+  max-height: 180px;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: var(--namaa-ink);
+  padding: 15px 14px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.namaa-composer textarea::placeholder { color: #98a2b3; font-weight: 700; }
+.namaa-composer button {
+  flex: 0 0 auto;
+  min-width: 92px;
+  height: 52px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--namaa-blue);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 14px 35px rgba(24, 88, 242, .22);
+  transition: transform .2s ease, opacity .2s ease;
+}
+.namaa-composer button:hover { transform: translateY(-1px); }
+.namaa-composer button:disabled { opacity: .62; cursor: not-allowed; transform: none; }
+.namaa-credit {
+  margin: 10px auto 0;
+  text-align: center;
+  color: #8a94a8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.namaa-mobile-menu { display: none; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes messageIn { from { opacity: 0; transform: translateY(10px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes floatOrb { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes softPulse { 0%,100% { transform: scale(.95); opacity: .4; } 50% { transform: scale(1.08); opacity: .9; } }
+@keyframes blinkDots { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes slideComposer { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 1100px) {
+  .namaa-shell { grid-template-columns: 300px minmax(0, 1fr); }
+  .namaa-sidebar { padding: 24px 16px; }
+  .namaa-chat-home { padding-left: 22px; padding-right: 22px; }
+}
+
+@media (max-width: 860px) {
+  body { overflow: hidden; }
+  .namaa-shell { grid-template-columns: 1fr; }
+  .namaa-mobile-menu {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 50;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 14px;
+    background: #071226;
+    color: #fff;
+    box-shadow: 0 15px 40px rgba(2, 8, 22, .22);
+  }
+  .namaa-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(86vw, 330px);
+    transform: translateX(-102%);
+    transition: transform .28s ease;
+  }
+  .sidebar-open .namaa-sidebar { transform: translateX(0); }
+  .namaa-main { grid-template-rows: 78px minmax(0, 1fr); }
+  .namaa-topbar { height: 78px; padding: 0 16px 0 72px; }
+  .namaa-owner span { display: none; }
+  .owner-avatar { width: 44px; height: 44px; }
+  .namaa-ready { display: none; }
+  .namaa-return { min-height: 44px; padding: 0 16px; font-size: 13px; }
+  .namaa-chat-home { padding: 16px 14px 14px; }
+  .namaa-empty h1 { font-size: clamp(30px, 10vw, 46px); }
+  .namaa-subtitle { font-size: 13px; }
+  .message-bubble { max-width: 84%; font-size: 14px; padding: 15px 17px; }
+  .namaa-composer { border-radius: 22px; }
+  .namaa-composer button { min-width: 72px; border-radius: 16px; }
+}
+
+@media (max-width: 520px) {
+  .namaa-logo { width: 52px; height: 52px; }
+  .namaa-brand strong { font-size: 21px; }
+  .namaa-topbar { padding-left: 68px; }
+  .namaa-owner strong { font-size: 15px; }
+  .namaa-return { padding: 0 12px; }
+  .namaa-orb { width: 70px; height: 70px; border-radius: 22px; }
+  .namaa-composer textarea { font-size: 14px; }
+  .namaa-credit { font-size: 11px; }
+}
