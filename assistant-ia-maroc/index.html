@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="css/namaa-simple-chat.css?v=79" rel="stylesheet" />
+  <link href="css/namaa-simple-chat.css?v=82" rel="stylesheet" />
 </head>
 <body>
   <div class="namaa-shell" data-agent="business">
@@ -107,85 +107,80 @@
 
 
         <section class="namaa-design-workspace" id="namaaDesignWorkspace" aria-label="Namaa Design workspace">
-          <div class="design-hero-card">
+          <div class="design-hero-card design-lab-hero">
             <div>
-              <p class="design-kicker">Namaa Design Workspace</p>
-              <h2>Logo, mockups and visual pack — organized before website.</h2>
-              <p id="namaaDesignIntro">Namaa Design uses the confirmed project brief to prepare the brand direction, logo ideas, mockup plan and real JPG visual preview before sending everything to Namaa Website.</p>
+              <p class="design-kicker">Namaa Design Lab</p>
+              <h2>Logo + real mockups for your project.</h2>
+              <p id="namaaDesignIntro">Mli brief ykon confirmed, Namaa Design kaykhdem f les coulisses: logo first, b3dha mockups li kaynassbo category dyal project. Bla ktaba bzaf.</p>
             </div>
             <div class="design-actions">
-              <button type="button" id="namaaDesignGenerate">Generate visual pack</button>
+              <button type="button" id="namaaDesignGenerate">Generate logo + mockups</button>
               <button type="button" id="namaaDesignBackTalk">Back to Namaa Talk</button>
             </div>
           </div>
 
           <div class="design-flow-progress" id="namaaDesignProgress" aria-label="Namaa Design progress">
-            <div class="design-flow-step is-active" data-design-step="brief"><span>1</span><strong>Brief</strong><small>Project understood</small></div>
-            <div class="design-flow-step" data-design-step="logo"><span>2</span><strong>Logo</strong><small>Direction</small></div>
-            <div class="design-flow-step" data-design-step="mockups"><span>3</span><strong>Mockups</strong><small>Visual pack</small></div>
-            <div class="design-flow-step" data-design-step="visual"><span>4</span><strong>JPG</strong><small>Preview</small></div>
-            <div class="design-flow-step" data-design-step="website"><span>5</span><strong>Website</strong><small>Next step</small></div>
+            <div class="design-flow-step is-active" data-design-step="brief"><span>1</span><strong>Brief</strong><small>Understood</small></div>
+            <div class="design-flow-step" data-design-step="logo"><span>2</span><strong>Logo</strong><small>First</small></div>
+            <div class="design-flow-step" data-design-step="mockups"><span>3</span><strong>Mockups</strong><small>Category pack</small></div>
+            <div class="design-flow-step" data-design-step="visual"><span>4</span><strong>Visual</strong><small>Preview board</small></div>
+            <div class="design-flow-step" data-design-step="website"><span>5</span><strong>Website</strong><small>Next</small></div>
           </div>
 
-          <div class="design-grid" id="namaaDesignGrid">
-            <article class="design-card wide" data-design-slot="brief">
+          <div class="design-grid design-lab-grid" id="namaaDesignGrid">
+            <article class="design-card design-lab-brief" data-design-slot="brief">
               <span class="design-card-label">01 / Brief</span>
-              <h3>Project brief</h3>
-              <p class="design-card-hint">The base that Namaa Design uses before creating visuals.</p>
-              <div class="design-card-body">No confirmed brief yet. Start with Namaa Business Talk, describe your project, confirm it, then open Namaa Design.</div>
+              <h3>Project understood</h3>
+              <div class="design-card-body">Start with Namaa Talk, confirm the brief, then open Namaa Design.</div>
             </article>
-            <article class="design-card" data-design-slot="logo">
+
+            <article class="design-card design-visual-card" data-design-slot="logo">
               <span class="design-card-label">02 / Logo</span>
-              <h3>Logo directions</h3>
-              <p class="design-card-hint">3 practical concepts with symbol, type mood and usage logic.</p>
-              <div class="design-card-body">Logo concepts will appear here.</div>
-            </article>
-            <article class="design-card" data-design-slot="brand">
-              <span class="design-card-label">03 / Brand</span>
-              <h3>Brand system</h3>
-              <p class="design-card-hint">Colors, typography mood, spacing and visual rules.</p>
-              <div class="design-card-body">Colors, typography mood, icons and visual style will appear here.</div>
-            </article>
-            <article class="design-card" data-design-slot="mockups">
-              <span class="design-card-label">04 / Mockups</span>
-              <h3>Mockup pack</h3>
-              <p class="design-card-hint">Website, mobile, social and business preview assets.</p>
-              <div class="design-card-body">Website, mobile, social and business mockups will appear here.</div>
-            </article>
-            <article class="design-card visual" data-design-slot="image">
-              <span class="design-card-label">05 / JPG result area</span>
-              <h3>Visual preview</h3>
-              <p class="design-card-hint">A presentation-style image generated from the design direction.</p>
-              <div class="design-image-frame" id="namaaDesignImageFrame">
-                <div class="design-preview-mark">N</div>
-                <p>JPG preview will appear here after Namaa generates the design image.</p>
+              <h3>Logo preview</h3>
+              <div class="design-card-body design-logo-lab" id="namaaLogoLab">
+                <div class="logo-lab-mark">N</div>
+                <p>Logo concept ghadi yban hna.</p>
               </div>
             </article>
-            <article class="design-card wide" data-design-slot="prompts">
-              <span class="design-card-label">06 / Nano Banana</span>
-              <h3>Image prompts</h3>
-              <p class="design-card-hint">Clean prompts for Nano Banana / Gemini visual generation.</p>
-              <div class="design-card-body">Copy-ready prompts for logo presentation, website mockup and social/ad creative will appear here.</div>
+
+            <article class="design-card design-visual-card" data-design-slot="mockups">
+              <span class="design-card-label">03 / Mockups</span>
+              <h3>Mockup pack</h3>
+              <div class="design-card-body design-mockup-lab" id="namaaMockupLab">
+                <div class="mockup-tile">Website</div>
+                <div class="mockup-tile">Mobile</div>
+                <div class="mockup-tile">Social</div>
+                <div class="mockup-tile">Business</div>
+              </div>
             </article>
-            <article class="design-card wide" data-design-slot="handoff">
-              <span class="design-card-label">07 / Handoff</span>
+
+            <article class="design-card visual design-board-card" data-design-slot="image">
+              <span class="design-card-label">04 / Visual board</span>
+              <h3>Generated logo + mockups</h3>
+              <div class="design-image-frame" id="namaaDesignImageFrame">
+                <div class="design-preview-mark">N</div>
+                <p>Logo + mockups board ghadi yban hna.</p>
+              </div>
+            </article>
+
+            <article class="design-card design-lab-next" data-design-slot="handoff">
+              <span class="design-card-label">05 / Next</span>
               <h3>Send to Namaa Website</h3>
-              <p class="design-card-hint">When the visual direction is ready, continue to the live website preview.</p>
-              <div class="design-card-body">Website handoff will appear here after the design is generated.</div>
+              <div class="design-card-body">Ila visual pack 3jbk, dوز لـ Namaa Website bach ybni landing page preview.</div>
               <button type="button" class="design-handoff-button" id="namaaDesignToWebsite">Open Namaa Website with this design</button>
             </article>
           </div>
         </section>
 
         <section class="namaa-website-workspace" id="namaaWebsiteWorkspace" aria-label="Namaa Website workspace">
-          <div class="website-hero-card">
+          <div class="website-hero-card dev-hero-card">
             <div>
-              <p class="website-kicker">Namaa Website Preview</p>
-              <h2>Real landing page inside a mini browser.</h2>
-              <p id="namaaWebsiteIntro">Open this after Namaa Design. Namaa Website turns the brief + design direction into a working landing page preview, not source code.</p>
+              <p class="website-kicker">Namaa Dev Workspace</p>
+              <h2>Landing page mockup inside desktop and mobile devices.</h2>
+              <p id="namaaWebsiteIntro">Open this after Namaa Design. Namaa Dev builds the landing page internally, then shows it as a real visual mockup in desktop and mobile frames. No source code is shown.</p>
             </div>
             <div class="website-actions">
-              <button type="button" id="namaaWebsiteGenerate">Generate / regenerate preview</button>
+              <button type="button" id="namaaWebsiteGenerate">Generate / regenerate website mockup</button>
               <button type="button" id="namaaWebsiteToStrategy">Open final Namaa Strategy</button>
               <button type="button" id="namaaWebsiteBackTalk">Back to Namaa Talk</button>
             </div>
@@ -197,34 +192,47 @@
               <h3>Project brief</h3>
               <div class="website-card-body">No confirmed brief yet. Start with Namaa Business Talk, confirm the brief, then open Namaa Design before Namaa Website.</div>
             </article>
-            <article class="website-card wide browser" data-website-slot="preview">
-              <span class="website-card-label">02 / Browser Preview</span>
+            <article class="website-card wide browser website-mockup-lab" data-website-slot="preview">
+              <span class="website-card-label">02 / Website Mockup Lab</span>
               <div class="website-browser-headline">
                 <div>
-                  <h3>Your landing page opens here</h3>
-                  <p>Namaa Dev builds the page internally and shows only the working result inside this browser space.</p>
+                  <h3>Your landing page appears as a mockup</h3>
+                  <p>Namaa Dev creates the page in the background and places the result inside a desktop browser and a scrollable phone preview.</p>
                 </div>
-                <div class="website-browser-controls" aria-label="Preview device controls">
-                  <button type="button" class="active" id="namaaPreviewDesktop">Desktop</button>
-                  <button type="button" id="namaaPreviewMobile">Mobile</button>
-                </div>
+                <div class="website-mockup-badge">Desktop + Mobile</div>
               </div>
-              <div class="website-browser-shell">
-                <div class="website-browser-chrome" aria-hidden="true">
-                  <span class="browser-dots"><i></i><i></i><i></i></span>
-                  <span class="browser-url" id="namaaWebsiteBrowserUrl">namaa.preview/landing-page</span>
-                  <span class="browser-status">Live preview</span>
+
+              <div class="website-mockup-stage" id="namaaWebsitePreviewFrame" aria-live="polite">
+                <div class="website-device desktop-device">
+                  <div class="device-label">Desktop landing page</div>
+                  <div class="desktop-screen">
+                    <div class="desktop-topbar">
+                      <span class="browser-dots"><i></i><i></i><i></i></span>
+                      <span class="browser-url" id="namaaWebsiteBrowserUrl">namaa.preview/landing-page</span>
+                      <span class="browser-status">Live mockup</span>
+                    </div>
+                    <div class="device-scroll desktop-scroll">
+                      <iframe id="namaaWebsiteDesktopFrame" title="Namaa desktop landing page mockup" sandbox="allow-forms allow-scripts"></iframe>
+                    </div>
+                  </div>
+                  <div class="desktop-base" aria-hidden="true"></div>
                 </div>
-                <div class="website-preview-frame" id="namaaWebsitePreviewFrame">
-                  <div class="website-preview-mark">W</div>
-                  <p>The landing page will open here as a mini browser after you click Generate / regenerate preview.</p>
+
+                <div class="website-device mobile-device">
+                  <div class="device-label">Mobile scroll preview</div>
+                  <div class="phone-shell">
+                    <div class="phone-speaker" aria-hidden="true"></div>
+                    <div class="device-scroll phone-scroll">
+                      <iframe id="namaaWebsiteMobileFrame" title="Namaa mobile landing page mockup" sandbox="allow-forms allow-scripts"></iframe>
+                    </div>
+                  </div>
                 </div>
               </div>
             </article>
             <article class="website-card wide website-note" data-website-slot="resultNote">
               <span class="website-card-label">03 / Result</span>
-              <h3>Preview ready for Strategy</h3>
-              <div class="website-card-body">Review the working preview above. When it feels correct, open final Namaa Strategy to generate market research, digital strategy and roadmap boards.</div>
+              <h3>Website mockup ready for Strategy</h3>
+              <div class="website-card-body">Review the desktop and mobile mockups above. When the direction feels correct, open final Namaa Strategy to generate market research, digital strategy and roadmap boards.</div>
             </article>
           </div>
         </section>
@@ -232,11 +240,11 @@
 
 
         <section class="namaa-strategy-workspace" id="namaaStrategyWorkspace" aria-label="Namaa Strategy workspace">
-          <div class="strategy-hero-card">
+          <div class="strategy-hero-card strategy-final-hero">
             <div>
               <p class="strategy-kicker">Namaa Strategy Workspace</p>
-              <h2>3 picture-style strategy boards for your project.</h2>
-              <p id="namaaStrategyIntro">Final step after Namaa Talk → Namaa Design → Namaa Website. Namaa Strategy creates 3 branded picture boards: market research, digital marketing strategy and 30/60/90 roadmap.</p>
+              <h2>Final strategy boards ready for your project.</h2>
+              <p id="namaaStrategyIntro">Final step after Namaa Talk → Namaa Design → Namaa Website. Namaa Strategy creates three clean visual diagrams: Market Research, Digital Marketing Strategy and Roadmap.</p>
             </div>
             <div class="strategy-brand-reference" aria-label="Namaa strategy reference">
               <img src="images/logo.png" alt="Namaa AI logo">
@@ -247,74 +255,48 @@
               </div>
             </div>
             <div class="strategy-actions">
-              <button type="button" id="namaaStrategyGenerate">Generate 3 strategy pictures</button>
+              <button type="button" id="namaaStrategyGenerate">Generate strategy boards</button>
               <button type="button" id="namaaStrategyBackTalk">Back to Namaa Talk</button>
             </div>
           </div>
 
-          <div class="strategy-grid" id="namaaStrategyGrid">
-            <article class="strategy-brief-card" data-strategy-slot="brief">
-              <span class="strategy-card-label">00 / Brief</span>
-              <h3>Project brief</h3>
-              <div class="strategy-card-body">No confirmed brief yet. Best flow: Namaa Talk → Namaa Design → Namaa Website → Namaa Strategy final boards.</div>
+          <div class="strategy-brief-strip" data-strategy-slot="brief">
+            <span class="strategy-card-label">Project brief</span>
+            <div class="strategy-card-body">No confirmed brief yet. Best flow: Namaa Talk → Namaa Design → Namaa Website → Namaa Strategy.</div>
+          </div>
+
+          <div class="strategy-board-tabs" aria-label="Namaa strategy board buttons">
+            <button type="button" class="strategy-tab active" data-strategy-open="market"><span>01</span> Market Research</button>
+            <button type="button" class="strategy-tab" data-strategy-open="digital"><span>02</span> Digital Marketing Strategy</button>
+            <button type="button" class="strategy-tab" data-strategy-open="roadmap"><span>03</span> Roadmap</button>
+          </div>
+
+          <div class="strategy-visual-grid" id="namaaStrategyGrid">
+            <article class="strategy-picture-board market strategy-clickable-board" data-strategy-slot="market" data-strategy-open="market" tabindex="0" role="button" aria-label="Open Market Research board">
+              <div class="strategy-board-body">Market Research diagram will appear here: audience, demand, competitors, customer pains and opportunity.</div>
             </article>
 
-            <article class="strategy-picture-board market" data-strategy-slot="market">
-              <div class="strategy-board-brand">
-                <span class="strategy-logo-mark"><img src="images/logo.png" alt="Namaa"></span>
-                <span class="strategy-brand-name">Namaa AI</span>
-                <span class="strategy-created-by">Created by Elboubakry Abdessamad</span>
-              </div>
-              <div class="strategy-board-top">
-                <span>Picture 01</span>
-                <strong>Market Research</strong>
-              </div>
-              <h3>Morocco market map</h3>
-              <div class="strategy-board-body">Market research board will appear here: audience, demand signals, competitors, opportunity, objections and trust signals.</div>
+            <article class="strategy-picture-board digital strategy-clickable-board" data-strategy-slot="digital" data-strategy-open="digital" tabindex="0" role="button" aria-label="Open Digital Marketing Strategy board">
+              <div class="strategy-board-body">Digital Marketing Strategy diagram will appear here: offer, funnel, channels, content pillars and conversion logic.</div>
             </article>
 
-            <article class="strategy-picture-board digital" data-strategy-slot="digital">
-              <div class="strategy-board-brand">
-                <span class="strategy-logo-mark"><img src="images/logo.png" alt="Namaa"></span>
-                <span class="strategy-brand-name">Namaa AI</span>
-                <span class="strategy-created-by">Created by Elboubakry Abdessamad</span>
-              </div>
-              <div class="strategy-board-top">
-                <span>Picture 02</span>
-                <strong>Digital Strategy</strong>
-              </div>
-              <h3>Marketing system</h3>
-              <div class="strategy-board-body">Digital marketing strategy board will appear here: offer, funnel, channels, content pillars, ads, WhatsApp/CRM and conversion logic.</div>
-            </article>
-
-            <article class="strategy-picture-board roadmap" data-strategy-slot="roadmap">
-              <div class="strategy-board-brand">
-                <span class="strategy-logo-mark"><img src="images/logo.png" alt="Namaa"></span>
-                <span class="strategy-brand-name">Namaa AI</span>
-                <span class="strategy-created-by">Created by Elboubakry Abdessamad</span>
-              </div>
-              <div class="strategy-board-top">
-                <span>Picture 03</span>
-                <strong>Roadmap</strong>
-              </div>
-              <h3>30 / 60 / 90 days</h3>
-              <div class="strategy-board-body">Roadmap board will appear here: weekly actions, priorities, budget logic, KPIs, risks and what to do next.</div>
-            </article>
-
-            <article class="strategy-brief-card" data-strategy-slot="kpi">
-              <span class="strategy-card-label">04 / KPIs</span>
-              <h3>Performance dashboard</h3>
-              <div class="strategy-card-body">KPIs and budget logic will appear here.</div>
-            </article>
-
-            <article class="strategy-brief-card" data-strategy-slot="handoff">
-              <span class="strategy-card-label">05 / Handoff</span>
-              <h3>Final Namaa output</h3>
-              <div class="strategy-card-body">This is the final step. Review the market research, marketing strategy and roadmap boards. CRM/email pack link will be activated in the final update.</div>
-              <div class="strategy-handoff-actions final-flow-note">Namaa flow: Talk → Design → Website → Strategy</div>
-              <button type="button" class="strategy-pack-button" id="namaaOpenPackPopup" hidden disabled>Send full pack by email</button>
+            <article class="strategy-picture-board roadmap strategy-clickable-board" data-strategy-slot="roadmap" data-strategy-open="roadmap" tabindex="0" role="button" aria-label="Open Roadmap board">
+              <div class="strategy-board-body">Roadmap diagram will appear here: 30/60/90 days, actions, priorities, risks and KPIs.</div>
             </article>
           </div>
+
+          <article class="strategy-founder-cta" data-strategy-slot="handoff">
+            <div class="strategy-founder-avatar"><img src="images/logo.png" alt="Namaa"></div>
+            <div class="strategy-founder-copy strategy-card-body">
+              <h3>رسالة من Namaa لصاحب المشروع</h3>
+              <p>Project ديالك فيه potential مزيان. إلا بغيتي founder system واضح، digital marketing مرتب، و execution ماشي عشوائي، تواصل مع Elboubakry Abdessamad وخذ free consultation.</p>
+            </div>
+            <div class="strategy-founder-actions">
+              <a href="https://wa.me/212600000000" target="_blank" rel="noopener">WhatsApp</a>
+              <a href="https://www.linkedin.com/in/elboubakry-abdessamad" target="_blank" rel="noopener">LinkedIn</a>
+              <a href="/reserver-diagnostic/">Free consultation</a>
+            </div>
+          </article>
         </section>
 
         <form class="namaa-composer" id="namaaChatForm">
@@ -345,6 +327,22 @@
     </div>
   </div>
 
-  <script src="js/namaa-agent-chat.js?v=79" defer></script>
+  <div class="strategy-board-modal" id="namaaStrategyModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="namaaStrategyModalTitle">
+    <div class="strategy-modal-backdrop" data-strategy-modal-close></div>
+    <div class="strategy-modal-panel">
+      <button class="strategy-modal-close" type="button" aria-label="Close strategy board" data-strategy-modal-close>×</button>
+      <div class="strategy-modal-head">
+        <span class="strategy-modal-logo"><img src="images/logo.png" alt="Namaa"></span>
+        <div>
+          <p>Namaa AI Strategy Board</p>
+          <h2 id="namaaStrategyModalTitle">Strategy Board</h2>
+          <small>Created by Elboubakry Abdessamad</small>
+        </div>
+      </div>
+      <div class="strategy-modal-content" id="namaaStrategyModalContent"></div>
+    </div>
+  </div>
+
+  <script src="js/namaa-agent-chat.js?v=83" defer></script>
 </body>
 </html>

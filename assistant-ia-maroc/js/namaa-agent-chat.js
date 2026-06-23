@@ -3,30 +3,30 @@
 
   const AGENTS = {
     business: {
-      title: 'How can Namaa help your project?',
+      title: 'Namaa Talk: free talk or build project?',
       kicker: 'Namaa Business Talk',
-      subtitle: 'Free talk about AI, business, IT, marketing, startups, websites, WhatsApp/CRM and the Moroccan market.',
-      placeholder: 'Message Namaa Business Talk...',
+      subtitle: 'Bda b free talk, ola 3tih smit project + description + city bach Namaa yfhmk bla bzaf dyal questions.',
+      placeholder: 'كتب لـ Namaa: Free Talk ولا Build Project...',
       context: 'Namaa Business Talk = free talk about AI, business, IT, marketing, startups, websites, WhatsApp/CRM and Morocco-first execution.'
     },
     design: {
-      title: 'Namaa Design workspace.',
+      title: 'Namaa Design Lab.',
       kicker: 'Namaa Design',
-      subtitle: 'Logo directions, mockup pack, brand system and Nano Banana / Gemini prompts in a clean workspace.',
-      placeholder: 'Namaa Design is a workspace. Generate visual pack from the confirmed brief...',
-      context: 'Namaa Design = workspace for logo directions, mockups, brand system, Nano Banana/Gemini image prompts and design-to-website handoff.'
+      subtitle: 'Logo first, then category mockups. No long text — just a visual pack ready for Website.',
+      placeholder: 'Namaa Design generates logo + mockups from the confirmed brief...',
+      context: 'Namaa Design = visual lab for logo + category mockups only. It generates a real visual board from the confirmed brief, then hands it to Namaa Website.'
     },
     website: {
-      title: 'Namaa Website live preview.',
-      kicker: 'Namaa Website',
-      subtitle: 'Namaa Dev creates a real landing page and opens it as a live browser preview — no source code shown.',
-      placeholder: 'Namaa Website opens a live landing page preview, not source code...',
-      context: 'Namaa Website = Namaa Dev workspace. Gemini creates a real standalone HTML/CSS/JS landing page internally and the UI shows only the working browser preview, not source code.'
+      title: 'Namaa Dev: website mockup preview.',
+      kicker: 'Namaa Website / Dev',
+      subtitle: 'Namaa Dev creates the landing page internally and shows it as desktop + mobile mockups. No code, no blank iframe.',
+      placeholder: 'Namaa Dev opens a website mockup preview, not source code...',
+      context: 'Namaa Website = Namaa Dev workspace. Gemini creates a real standalone HTML/CSS/JS landing page internally and the UI shows only desktop and mobile visual mockups, not source code.'
     },
     strategy: {
       title: 'Build your first serious strategy.',
       kicker: 'Namaa Strategy',
-      subtitle: 'Final step: market research, digital marketing strategy, 30/60/90 roadmap and KPIs after the website preview.',
+      subtitle: 'Final step: market research, digital marketing strategy and roadmap after the website preview.',
       placeholder: 'Namaa Strategy is the final step after Design and Website...',
       context: 'Namaa Strategy = final step after Namaa Talk, Namaa Design and Namaa Website. It creates market research, digital marketing strategy and roadmap as branded boards.'
     }
@@ -62,6 +62,8 @@
   const websiteDownloadCode = document.getElementById('namaaDownloadWebsiteCode');
   const websitePreviewFrame = document.getElementById('namaaWebsitePreviewFrame');
   const websiteBrowserUrl = document.getElementById('namaaWebsiteBrowserUrl');
+  const websiteDesktopFrame = document.getElementById('namaaWebsiteDesktopFrame');
+  const websiteMobileFrame = document.getElementById('namaaWebsiteMobileFrame');
   const websitePreviewDesktop = document.getElementById('namaaPreviewDesktop');
   const websitePreviewMobile = document.getElementById('namaaPreviewMobile');
 
@@ -71,6 +73,11 @@
   const strategyBackTalk = document.getElementById('namaaStrategyBackTalk');
   const strategyToDesign = document.getElementById('namaaStrategyToDesign');
   const strategyToWebsite = document.getElementById('namaaStrategyToWebsite');
+  const strategyModal = document.getElementById('namaaStrategyModal');
+  const strategyModalTitle = document.getElementById('namaaStrategyModalTitle');
+  const strategyModalContent = document.getElementById('namaaStrategyModalContent');
+  const strategyModalCloseButtons = Array.from(document.querySelectorAll('[data-strategy-modal-close]'));
+  const strategyOpenButtons = Array.from(document.querySelectorAll('[data-strategy-open]'));
 
   const packModal = document.getElementById('namaaPackModal');
   const packForm = document.getElementById('namaaPackForm');
@@ -93,12 +100,19 @@
   let projectBriefStatus = null;
   let projectBriefConfirmed = false;
   let strategyPackPopupShown = false;
+  let designAutoStarted = false;
   const flowState = { designReady: false, websiteReady: false, strategyReady: false, packRequested: false };
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function (char) {
       return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
     });
+  }
+
+  function formatMessageHtml(value) {
+    return escapeHtml(value)
+      .replace(/\*\*([^*]{1,80})\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
   }
 
   function formatStrategyText(value, options) {
@@ -127,19 +141,56 @@
     return chunks.join('') || '<p>' + escapeHtml(text.slice(0, 600)) + '</p>';
   }
 
-  function boardHtml(slot, text, loading) {
+  function strategyIcon(slot) {
+    return slot === 'market' ? '⌁' : slot === 'digital' ? '◎' : '↗';
+  }
+
+  function strategyBoardMeta(slot) {
     const labels = {
-      market: ['01', 'Market Research', 'Audience • demand • competitors'],
-      digital: ['02', 'Digital Strategy', 'Offer • funnel • channels'],
-      roadmap: ['03', 'Roadmap', '30 • 60 • 90 days']
+      market: ['01', 'Market Research', 'Understand demand, audience and opportunity'],
+      digital: ['02', 'Digital Marketing Strategy', 'Turn attention into qualified leads'],
+      roadmap: ['03', 'Roadmap', '30/60/90 days execution plan']
     };
-    const meta = labels[slot] || ['00', 'Namaa Strategy', 'Final board'];
+    return labels[slot] || ['00', 'Namaa Strategy', 'Final visual board'];
+  }
+
+  function strategyBulletItems(value, limit) {
+    const text = String(value || '').replace(/\r/g, '').trim();
+    const lines = text.split('\n').map(function (line) { return line.trim(); }).filter(Boolean);
+    const items = [];
+    lines.forEach(function (line) {
+      const cleaned = line
+        .replace(/^#{1,6}\s*/, '')
+        .replace(/^[-•*\d.)\s]+/, '')
+        .replace(/\*\*/g, '')
+        .trim();
+      if (!cleaned) return;
+      if (/^(PICTURE|STRATEGY SNAPSHOT|KPI DASHBOARD|FINAL ACTION)/i.test(cleaned)) return;
+      items.push(cleaned);
+    });
+    return items.slice(0, limit || 7);
+  }
+
+  function boardHtml(slot, text, loading) {
+    const meta = strategyBoardMeta(slot);
+    const items = strategyBulletItems(text, 7);
     const loadingClass = loading ? ' is-loading' : '';
-    return '<div class="strategy-board-inner' + loadingClass + '">'
-      + '<div class="strategy-board-watermark">Namaa</div>'
-      + '<div class="strategy-board-meta"><span>Picture ' + meta[0] + '</span><strong>' + escapeHtml(meta[1]) + '</strong><small>' + escapeHtml(meta[2]) + '</small></div>'
-      + '<div class="strategy-board-content">' + formatStrategyText(text, { maxLines: 24 }) + '</div>'
-      + '<div class="strategy-board-footer"><span>Namaa AI</span><span>Created by Elboubakry Abdessamad</span></div>'
+    const fallback = {
+      market: ['Audience and demand', 'Competitor logic', 'Customer pains', 'Trust signals', 'Key opportunity'],
+      digital: ['Offer positioning', 'Funnel steps', 'Content pillars', 'WhatsApp/CRM flow', 'Conversion logic'],
+      roadmap: ['30 days launch', '60 days growth', '90 days scale', 'Priority actions', 'KPIs to watch']
+    }[slot] || ['Namaa board will appear here'];
+    const finalItems = (items.length ? items : fallback);
+    return '<div class="strategy-diagram-board' + loadingClass + '" data-board-kind="' + escapeHtml(slot) + '">'
+      + '<div class="strategy-diagram-bg">Namaa</div>'
+      + '<div class="strategy-diagram-head">'
+        + '<span class="strategy-diagram-icon">' + strategyIcon(slot) + '</span>'
+        + '<div><small>' + meta[0] + ' / ' + escapeHtml(meta[1]).toUpperCase() + '</small><h3>' + escapeHtml(meta[1]) + '</h3><p>' + escapeHtml(meta[2]) + '</p></div>'
+      + '</div>'
+      + '<div class="strategy-diagram-flow">' + finalItems.map(function (item, index) {
+          return '<div class="strategy-diagram-step"><span>' + String(index + 1).padStart(2, '0') + '</span><p>' + escapeHtml(item) + '</p></div>';
+        }).join('') + '</div>'
+      + '<div class="strategy-diagram-footer"><span>Namaa AI</span><strong>Created by Elboubakry Abdessamad</strong></div>'
       + '</div>';
   }
 
@@ -189,6 +240,18 @@
     return false;
   }
 
+  function startDesignAutoIfReady() {
+    if (activeAgent !== 'design') return;
+    if (!hasReadyBrief()) return;
+    if (designAutoStarted || flowState.designReady || isSending) return;
+    designAutoStarted = true;
+    window.setTimeout(function () {
+      if (activeAgent !== 'design' || flowState.designReady || isSending) return;
+      const prompt = 'Use the confirmed project brief. Generate ONLY a visual design pack: one logo concept first, then category-specific mockups. No long explanation, no color section, no strategy. The final result must guide Gemini image generation for a single premium mockup board like a design lab: logo + relevant mockups for this project category.';
+      sendDesignPrompt(prompt, { handoffFrom: 'auto-design-lab' });
+    }, 350);
+  }
+
   function normalizeReply(data) {
     if (!data) return '';
     if (typeof data === 'string') return data;
@@ -208,7 +271,7 @@
     document.body.classList.remove('sidebar-open');
     if (next === 'design') {
       refreshDesignBriefCard();
-      ensureFlowStep('design');
+      if (ensureFlowStep('design')) startDesignAutoIfReady();
     } else if (next === 'website') {
       refreshWebsiteBriefCard();
       ensureFlowStep('website');
@@ -238,6 +301,7 @@
     flowState.websiteReady = false;
     flowState.strategyReady = false;
     flowState.packRequested = false;
+    designAutoStarted = false;
     resetDesignWorkspace();
     resetWebsiteWorkspace();
     resetStrategyWorkspace();
@@ -255,7 +319,7 @@
     const item = document.createElement('div');
     item.className = 'namaa-message ' + (role === 'user' ? 'user' : 'assistant') + (options && options.loading ? ' loading' : '');
     const avatar = role === 'user' ? '' : '<div class="message-avatar">N</div>';
-    item.innerHTML = avatar + '<div><div class="message-bubble">' + escapeHtml(text) + '</div></div>';
+    item.innerHTML = avatar + '<div><div class="message-bubble">' + formatMessageHtml(text) + '</div></div>';
     messages.appendChild(item);
     requestAnimationFrame(scrollToBottom);
     return item;
@@ -364,7 +428,7 @@
         label: 'Open final Namaa Strategy',
         agentLabel: 'Namaa Strategy',
         displayMessage: 'Open final Namaa Strategy with this website preview',
-        prompt: 'Use the confirmed project brief, previous Namaa Design output, and current Namaa Website landing page preview. Generate the final Namaa Strategy boards: market research, digital marketing strategy, 30/60/90 roadmap, KPIs and final action notes. This is the final step after Talk → Design → Website.'
+        prompt: 'Use the confirmed project brief, previous Namaa Design output, and current Namaa Website landing page preview. Generate the final Namaa Strategy boards: market research, digital marketing strategy, roadmap and a short founder message. This is the final step after Talk → Design → Website.'
       }];
     }
     return [];
@@ -523,6 +587,35 @@
     card.textContent = text || 'Waiting for Namaa Design output.';
   }
 
+  function designBody(slot) {
+    return designWorkspace && designWorkspace.querySelector('[data-design-slot="' + slot + '"] .design-card-body');
+  }
+
+  function mockupLabelsFromHint() {
+    const hint = designCategoryHint ? designCategoryHint() : '';
+    if (/SaaS|app/i.test(hint)) return ['Logo', 'Dashboard', 'Mobile app', 'Landing hero', 'Pitch cover', 'LinkedIn'];
+    if (/E-commerce/i.test(hint)) return ['Logo', 'Packaging', 'Product page', 'Mobile store', 'Instagram ad', 'COD card'];
+    if (/Clinic|beauty/i.test(hint)) return ['Logo', 'Booking page', 'Service card', 'Instagram post', 'Signage', 'Appointment'];
+    if (/Restaurant/i.test(hint)) return ['Logo', 'Menu', 'Flyer', 'Storefront', 'Instagram', 'Reservation'];
+    if (/Real estate/i.test(hint)) return ['Logo', 'Listing page', 'Brochure', 'Visit card', 'Social post', 'Map card'];
+    if (/Education/i.test(hint)) return ['Logo', 'Course page', 'Certificate', 'Program cards', 'Social post', 'Enrollment'];
+    if (/Agency|service/i.test(hint)) return ['Logo', 'Landing hero', 'Service cards', 'Proposal', 'LinkedIn', 'WhatsApp'];
+    return ['Logo', 'Website', 'Mobile', 'Social', 'Business card', 'WhatsApp'];
+  }
+
+  function renderDesignLabCards(state) {
+    const logo = designBody('logo');
+    if (logo) {
+      logo.className = 'design-card-body design-logo-lab' + (state === 'loading' ? ' is-loading' : '');
+      logo.innerHTML = '<div class="logo-lab-mark">N</div><p>' + escapeHtml(state === 'done' ? 'Logo concept ready in visual board.' : state === 'loading' ? 'Namaa kayوجد logo...' : 'Logo concept ghadi yban hna.') + '</p>';
+    }
+    const mockups = designBody('mockups');
+    if (mockups) {
+      mockups.className = 'design-card-body design-mockup-lab' + (state === 'loading' ? ' is-loading' : '');
+      mockups.innerHTML = mockupLabelsFromHint().slice(0, 6).map(function (label) { return '<div class="mockup-tile">' + escapeHtml(label) + '</div>'; }).join('');
+    }
+  }
+
   function imageExtension(mimeType) {
     const mime = String(mimeType || '').toLowerCase();
     if (mime.includes('jpeg') || mime.includes('jpg')) return 'jpg';
@@ -544,18 +637,39 @@
     return prefix + '-' + base + '.' + imageExtension(mimeType);
   }
 
+  function designCategoryHint() {
+    const b = projectBrief && typeof projectBrief === 'object' ? projectBrief : {};
+    const value = Object.values(b).flat().join(' ').toLowerCase() + ' ' + String(lastUserPrompt || '').toLowerCase();
+    if (/saas|application|app|logiciel|software|dashboard|marketplace/.test(value)) return 'SaaS/app mockups: app logo, desktop dashboard, mobile app screen, landing hero, pitch cover, LinkedIn launch post.';
+    if (/ecommerce|e-commerce|boutique|store|shop|produit|product|cod|packaging|vêtement|vetement|hwayej|l7wayej/.test(value)) return 'E-commerce mockups: logo, product packaging, product page, Instagram ad, mobile store screen, delivery/COD card.';
+    if (/clinic|clinique|medical|médecin|medecin|beauty|beauté|aesthetic|laser|salon|spa/.test(value)) return 'Clinic/beauty mockups: logo, appointment page, service card, Instagram post, booking card, reception/signage card.';
+    if (/restaurant|cafe|café|food|snack|patisserie|pâtisserie/.test(value)) return 'Restaurant mockups: logo, menu, flyer, storefront/roll-up, Instagram post, delivery/reservation card.';
+    if (/immobilier|real estate|property|airbnb/.test(value)) return 'Real estate mockups: logo, property listing page, brochure cover, visit booking card, social post, map/location card.';
+    if (/formation|school|école|ecole|cours|education|coaching/.test(value)) return 'Education mockups: logo, course landing page, certificate, program cards, Instagram post, enrollment CTA.';
+    if (/agence|agency|consulting|consultant|marketing|service/.test(value)) return 'Agency/service mockups: logo, landing hero, service cards, proposal cover, LinkedIn cover, WhatsApp lead card.';
+    return 'Moroccan business mockups: logo, landing page hero, mobile preview, social post, business card or service card, WhatsApp CTA card.';
+  }
+
   function imagePromptFromDesign(text) {
-    const promptSection = sectionFrom(String(text || ''), ['NANO BANANA / GEMINI PROMPTS', 'NANO BANANA', 'GEMINI PROMPTS', 'Image prompts'], ['CONTENT NOTES', 'NAMAA WEBSITE HANDOFF']);
     return [
-      'Generate the final Namaa Design JPG preview board for this project.',
-      'Use the confirmed project brief and the design direction below.',
-      'The result must be a premium, organized presentation board with logo first, brand tokens, and category mockups.',
+      'Create ONE premium realistic design-lab mockup board for Namaa Design.',
+      'The image must look like a professional branding/mockup presentation, similar to a clean portfolio mockup board.',
+      'Show only visual assets, not long explanations.',
+      'Required composition:',
+      '1. Main logo concept first, large and clear.',
+      '2. Category-specific mockups around it, based on the project type.',
+      '3. Realistic devices, papers, cards, packaging, social screens or business assets depending on category.',
+      '4. Clean white/soft background, premium lighting, strong hierarchy, Moroccan business-ready style.',
+      '5. Minimal readable labels only: project name, Namaa, and short asset labels if needed. Avoid paragraphs and tiny text.',
+      '',
+      'CATEGORY MOCKUP HINT:',
+      designCategoryHint(),
       '',
       'PROJECT BRIEF:',
       briefSummary(),
       '',
-      'DESIGN DIRECTION:',
-      cleanText(promptSection || text, 2200)
+      'DESIGN NOTES FOR IMAGE MODEL:',
+      cleanText(text, 1300)
     ].join('\n');
   }
 
@@ -568,21 +682,21 @@
       frame.innerHTML = '<div class="generated-image-wrap">'
         + '<img src="' + escapeHtml(imageUrl) + '" alt="Namaa Design generated JPG visual" />'
         + '<div class="generated-image-actions">'
-        + '<span class="generated-image-note">Visual ready. Full pack will be sent by email at the final step.</span>'
-        + '<button type="button" id="namaaRegenerateImage">Regenerate visual</button>'
+        + '<span class="generated-image-note">Logo + mockups ready. Review the visual, then continue to Website.</span>'
+        + '<button type="button" id="namaaRegenerateImage">Regenerate mockups</button>'
         + '</div>'
         + '</div>';
       const retry = document.getElementById('namaaRegenerateImage');
       if (retry) retry.addEventListener('click', function () { generateDesignImage(lastDesignAnswer || briefSummary()); });
       return;
     }
-    frame.innerHTML = '<div><div class="design-preview-mark">N</div><p>' + escapeHtml(text || 'JPG preview will appear here after Namaa generates the design image.') + '</p></div>';
+    frame.innerHTML = '<div><div class="design-preview-mark">N</div><p>' + escapeHtml(text || 'Logo + mockups board ghadi yban hna.') + '</p></div>';
   }
 
   function setImageLoading(text) {
     const frame = document.getElementById('namaaDesignImageFrame');
     if (!frame) return;
-    frame.innerHTML = '<div class="image-loading"><div class="design-preview-mark">N</div><p>' + escapeHtml(text || 'Namaa is generating the JPG visual preview with Gemini / Nano Banana...') + '</p><span>● ● ●</span></div>';
+    frame.innerHTML = '<div class="image-loading"><div class="design-preview-mark">N</div><p>' + escapeHtml(text || 'Namaa Design kay9ad logo + mockups daba...') + '</p><span>● ● ●</span></div>';
   }
 
   async function callImageGeneration(prompt) {
@@ -614,7 +728,7 @@
 
   async function generateDesignImage(designText) {
     const prompt = imagePromptFromDesign(designText);
-    setImageLoading('Namaa is generating a real JPG preview from this logo + mockup direction. This can take a little time.');
+    setImageLoading('Namaa Design kay9ad logo + mockups f board wa7da. لحظة صغيرة...');
     const result = await callImageGeneration(prompt);
     const data = result.data || {};
     const image = data.image || {};
@@ -626,7 +740,7 @@
     }
     const message = (data && (data.error || data.message)) || 'Gemini image generation did not return a JPG yet. The text design is ready; check GEMINI_IMAGE_MODEL or try Regenerate visual.';
     updateDesignProgress('website');
-    setImagePlaceholder('Text design is ready, but real JPG generation failed: ' + message);
+    setImagePlaceholder('Image generation ma jawbatch دابا. جرّب Regenerate mockups من بعد.');
     return false;
   }
 
@@ -724,13 +838,27 @@
   }
 
   function renderWebsitePreview(code) {
-    if (!websitePreviewFrame) return;
+    const hasDeviceFrames = Boolean(websiteDesktopFrame && websiteMobileFrame);
+    if (!websitePreviewFrame && !hasDeviceFrames) return;
     if (!code || String(code).indexOf('<') < 0) {
+      const placeholderHtml = fallbackLandingPageHtml('Namaa Dev will replace this temporary mockup with the generated landing page after you click Generate website mockup.');
+      if (hasDeviceFrames) {
+        websiteDesktopFrame.srcdoc = placeholderHtml;
+        websiteMobileFrame.srcdoc = placeholderHtml;
+        updateWebsiteBrowserUrl(false);
+        return;
+      }
       updateWebsiteBrowserUrl(false);
-      websitePreviewFrame.innerHTML = '<div><div class="website-preview-mark">W</div><p>The landing page will open here as a working mini website after Namaa Website generates it.</p></div>';
+      if (websitePreviewFrame) websitePreviewFrame.innerHTML = '<div><div class="website-preview-mark">W</div><p>The landing page mockup will appear here after Namaa Dev generates it.</p></div>';
       return;
     }
     const safe = String(code || '');
+    if (hasDeviceFrames) {
+      websiteDesktopFrame.srcdoc = safe;
+      websiteMobileFrame.srcdoc = safe;
+      updateWebsiteBrowserUrl(true);
+      return;
+    }
     const iframe = document.createElement('iframe');
     iframe.setAttribute('title', 'Namaa Website landing page browser preview');
     iframe.setAttribute('sandbox', 'allow-forms allow-scripts');
@@ -763,32 +891,32 @@
 
   function resetWebsiteWorkspace() {
     setWebsiteSlot('brief', 'No confirmed brief yet. Start with Namaa Business Talk, then Design, then open Namaa Website.');
-    setWebsiteSlot('blueprint', 'Namaa will generate the working page directly in the browser preview.');
-    setWebsiteSlot('hero', 'Hero, offer and CTA will appear inside the live page preview.');
-    setWebsiteSlot('sections', 'Page sections will appear inside the live page preview.');
-    setWebsiteSlot('leadflow', 'WhatsApp/form lead flow will appear inside the live page preview.');
-    setWebsiteSlot('checklist', 'Preview is ready to test visually inside Namaa Website.');
+    setWebsiteSlot('blueprint', 'Namaa Dev will generate the landing page and display it as desktop + mobile mockups.');
+    setWebsiteSlot('hero', 'Hero, offer and CTA will appear inside the desktop and mobile mockups.');
+    setWebsiteSlot('sections', 'Page sections will appear inside the scrollable mockups.');
+    setWebsiteSlot('leadflow', 'WhatsApp/form lead flow will appear inside the generated page mockup.');
+    setWebsiteSlot('checklist', 'Mockup is ready to review visually inside Namaa Dev.');
     setWebsiteCode('');
-    if (websiteIntro) websiteIntro.textContent = 'Open this workspace after Namaa Design. Namaa Website builds the real landing page preview from the confirmed brief + design direction. After review, open Namaa Strategy as the final step.';
+    if (websiteIntro) websiteIntro.textContent = 'Open this workspace after Namaa Design. Namaa Dev builds the landing page internally and shows desktop + mobile mockups. After review, open Namaa Strategy as the final step.';
   }
 
   function refreshWebsiteBriefCard() {
     setWebsiteSlot('brief', websiteBriefSummary());
     if (websiteIntro) {
       websiteIntro.textContent = Object.keys(projectBrief || {}).length
-        ? 'Current brief detected. Generate a real landing page and open it as a live preview. Source code will stay hidden.'
+        ? 'Current brief detected. Generate the website mockup: desktop browser + scrollable mobile preview. Source code stays hidden.'
         : 'No brief detected yet. Go back to Namaa Talk, confirm the project brief, then open Namaa Design before Website.';
     }
   }
 
   function renderWebsiteLoading() {
     refreshWebsiteBriefCard();
-    setWebsiteSlot('blueprint', 'Namaa Website is preparing the landing page structure', true);
-    setWebsiteSlot('hero', 'Namaa Website is writing the hero, offer and CTA', true);
-    setWebsiteSlot('sections', 'Namaa Website is organizing section-by-section copy', true);
-    setWebsiteSlot('leadflow', 'Namaa Website is preparing WhatsApp/form lead flow', true);
-    setWebsiteSlot('checklist', 'Namaa Website is preparing the integration checklist', true);
-    if (websiteCodeBlock) websiteCodeBlock.textContent = 'Generating live landing page preview. Source code hidden.';
+    setWebsiteSlot('blueprint', 'Namaa Dev is preparing the landing page structure', true);
+    setWebsiteSlot('hero', 'Namaa Dev is writing the hero, offer and CTA', true);
+    setWebsiteSlot('sections', 'Namaa Dev is organizing the page sections', true);
+    setWebsiteSlot('leadflow', 'Namaa Dev is preparing WhatsApp/form lead flow', true);
+    setWebsiteSlot('checklist', 'Namaa Dev is preparing the desktop and mobile mockups', true);
+    if (websiteCodeBlock) websiteCodeBlock.textContent = 'Generating desktop + mobile website mockup. Source code hidden.';
     lastWebsiteCode = '';
     renderWebsitePreview(fallbackLandingPageHtml('Namaa is preparing the final Gemini landing page preview. This temporary preview keeps the browser area active while generation runs.'));
   }
@@ -806,7 +934,7 @@
     const livePage = code || fallbackLandingPageHtml('Gemini returned planning text instead of a full HTML document, so Namaa opened a clean live preview from the confirmed brief. Click Generate again for a richer visual version.');
     setWebsiteCode(livePage);
     updateFlowState('websiteReady', true);
-    if (websiteIntro) websiteIntro.textContent = code ? 'Landing page generated. Review the working page inside the browser preview. Source code stays hidden. Next: open final Namaa Strategy.' : 'Namaa opened a working preview from the brief. You can regenerate for a richer Gemini visual version, or continue to final Namaa Strategy.';
+    if (websiteIntro) websiteIntro.textContent = code ? 'Website mockup generated. Review desktop and mobile scroll previews. Source code stays hidden. Next: open final Namaa Strategy.' : 'Namaa opened a working website mockup from the brief. You can regenerate for a richer Gemini visual version, or continue to final Namaa Strategy.';
   }
 
   async function sendWebsitePrompt(raw, extra) {
@@ -819,7 +947,7 @@
     if (websiteGenerate) websiteGenerate.disabled = true;
     renderWebsiteLoading();
     const result = await callAgent(message, extra || {});
-    const fallback = 'Namaa Website preview is ready, but the Gemini route did not answer yet. Check GEMINI_API_KEY and redeploy, then generate the live landing page again.';
+    const fallback = 'Namaa Dev mockup is ready, but the Gemini route did not answer yet. Check GEMINI_API_KEY and redeploy, then generate the website mockup again.';
     const reply = result.reply || fallback;
     renderWebsiteWorkspace(reply);
     lastAgentAnswer = reply;
@@ -845,53 +973,76 @@
 
   function resetDesignWorkspace() {
     updateDesignProgress('brief');
-    setSlot('brief', 'No confirmed brief yet. Start with Namaa Business Talk, confirm the brief, then open Namaa Design.');
-    setSlot('logo', 'Logo concepts will appear here.');
-    setSlot('brand', 'Colors, typography mood, icons and visual style will appear here.');
-    setSlot('mockups', 'Website, mobile, social and business mockups will appear here.');
-    setSlot('prompts', 'Copy-ready prompts for logo presentation, website mockup and social/ad creative will appear here.');
-    setSlot('handoff', 'Website handoff will appear here after the design is generated.');
-    setImagePlaceholder('JPG preview will appear here after Namaa generates the design image.');
-    if (designIntro) designIntro.textContent = 'Open this workspace from Namaa Business Talk after confirming the project brief. Namaa Design will organize logo, mockups, visual preview and website handoff.';
+    setSlot('brief', 'Start with Namaa Talk, confirm the brief, then open Namaa Design.');
+    setSlot('logo', 'Logo concept ghadi yban hna.');
+    setSlot('mockups', 'Category mockups ghadi ybano hna.');
+    setSlot('handoff', 'Mli visual pack ykml, dوز لـ Namaa Website.');
+    renderDesignLabCards('idle');
+    setImagePlaceholder('Logo + mockups board ghadi yban hna.');
+    if (designIntro) designIntro.textContent = 'Mli brief ykon confirmed, Namaa Design kaykhdem logo + mockups automatically. Bla ktaba bzaf.';
   }
 
   function refreshDesignBriefCard() {
     setSlot('brief', briefSummary());
     if (designIntro) {
       designIntro.textContent = Object.keys(projectBrief || {}).length
-        ? 'Current brief detected. Generate the visual direction, logo concepts, mockup pack and Nano Banana prompts from this project.'
-        : 'No brief detected yet. Go back to Namaa Talk, describe your project, confirm it, then open Namaa Design.';
+        ? 'Brief detected. Namaa Design ghadi ykhdem logo first, b3dha mockups li kaynassbo project.'
+        : 'No brief yet. رجع لـ Namaa Talk، وصف المشروع، وأكد brief.';
     }
   }
 
   function renderDesignLoading() {
     updateDesignProgress('logo');
     refreshDesignBriefCard();
-    setSlot('logo', 'Namaa Design is preparing logo directions', true);
-    setSlot('brand', 'Namaa Design is preparing brand colors, typography mood and visual rules', true);
-    setSlot('mockups', 'Namaa Design is organizing the mockup pack', true);
-    setSlot('prompts', 'Namaa Design is writing Nano Banana / Gemini prompts', true);
-    setSlot('handoff', 'Namaa Design is preparing the handoff for Namaa Website', true);
+    setSlot('logo', 'Namaa kayوجد logo concept...', true);
+    setSlot('mockups', 'Namaa kayختار mockups حسب category ديال project...', true);
+    setSlot('handoff', 'Website handoff ghadi yban من بعد visual pack.', true);
+    renderDesignLabCards('loading');
     updateDesignProgress('visual');
-    setImagePlaceholder('Preparing visual preview area. Namaa will generate the real JPG after the design direction is ready.');
+    setImageLoading('Namaa Design kay9ad logo + mockups f board wa7da...');
   }
 
   function renderDesignWorkspace(reply, data) {
     const text = cleanText(reply);
     lastDesignAnswer = text;
     setSlot('brief', briefSummary());
-    setSlot('logo', sectionFrom(text, ['LOGO DIRECTIONS', '2) LOGO DIRECTIONS', 'Logo directions'], ['BRAND SYSTEM', 'MOCKUP PACK', 'NANO BANANA', 'CONTENT NOTES', 'NAMAA WEBSITE HANDOFF']) || text.slice(0, 900));
-    setSlot('brand', sectionFrom(text, ['BRAND SYSTEM', '3) BRAND SYSTEM', 'Brand system'], ['MOCKUP PACK', 'NANO BANANA', 'CONTENT NOTES', 'NAMAA WEBSITE HANDOFF']) || 'Brand system was not clearly separated. Review the full output in the prompts/handoff sections.');
-    setSlot('mockups', sectionFrom(text, ['MOCKUP PACK', '4) MOCKUP PACK', 'Mockup pack'], ['NANO BANANA', 'GEMINI PROMPTS', 'CONTENT NOTES', 'NAMAA WEBSITE HANDOFF']) || 'Mockup pack was not clearly separated. Ask Namaa Design to regenerate with mockup pack details.');
-    setSlot('prompts', sectionFrom(text, ['NANO BANANA / GEMINI PROMPTS', 'NANO BANANA', 'GEMINI PROMPTS', 'Image prompts'], ['CONTENT NOTES', 'NAMAA WEBSITE HANDOFF']) || 'Nano Banana / Gemini prompts were not clearly separated. Ask Namaa Design to regenerate prompts only.');
-    setSlot('handoff', sectionFrom(text, ['NAMAA WEBSITE HANDOFF', 'Website handoff'], []) || 'Design handoff ready. Open Namaa Website to convert this visual direction into a landing page.');
-    const imageUrl = data && data.imageUrl || data && data.image && (data.image.url || data.image.src);
+    setSlot('logo', 'Logo concept generated for this project. The real visual appears in the board.');
+    setSlot('mockups', 'Mockup pack selected by category: ' + designCategoryHint());
+    setSlot('handoff', 'Visual pack ready. If it looks good, open Namaa Website to turn it into a landing page preview.');
+    renderDesignLabCards('done');
+    const imageUrl = data && data.imageUrl || data && data.image && (data.image.url || data.image.src || data.image.dataUrl);
     updateDesignProgress('website');
-    setImagePlaceholder('JPG result area ready.', imageUrl);
+    setImagePlaceholder('Visual board ready.', imageUrl);
     updateFlowState('designReady', true);
-    if (designIntro) designIntro.textContent = 'Design generated. Review the sections below. If it looks good, open Namaa Website with this design.';
+    if (designIntro) designIntro.textContent = 'Logo + mockups wajdin. Ila 3jbk l direction, dوز لـ Namaa Website.';
   }
 
+
+  function strategyFounderMessage(notes) {
+    const clean = String(notes || '').replace(/\*\*/g, '').trim();
+    const extra = clean ? '<p>' + escapeHtml(clean).slice(0, 480) + '</p>' : '';
+    return '<h3>رسالة من Namaa لصاحب المشروع</h3>'
+      + '<p>Project ديالك باين فيه potential مزيان. إلا بغيتي تحول الفكرة لنظام واضح، landing page، content، ads و WhatsApp/CRM بطريقة منظمة، Namaa كيقترح تاخذ free consultation مع Elboubakry Abdessamad.</p>'
+      + extra
+      + '<div class="strategy-founder-actions"><a href="https://wa.me/212600000000" target="_blank" rel="noopener">WhatsApp</a><a href="https://www.linkedin.com/in/elboubakry-abdessamad" target="_blank" rel="noopener">LinkedIn</a><a href="/reserver-diagnostic/">Free consultation</a></div>';
+  }
+
+  function openStrategyBoard(slot) {
+    if (!strategyModal || !strategyModalContent) return;
+    const card = strategyWorkspace && strategyWorkspace.querySelector('[data-strategy-slot="' + slot + '"] .strategy-board-body');
+    if (!card) return;
+    const meta = strategyBoardMeta(slot);
+    if (strategyModalTitle) strategyModalTitle.textContent = meta[1];
+    strategyModalContent.innerHTML = card.innerHTML;
+    strategyModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('strategy-modal-open');
+  }
+
+  function closeStrategyBoard() {
+    if (!strategyModal) return;
+    strategyModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('strategy-modal-open');
+  }
 
   function strategyBriefSummary() {
     const base = briefSummary();
@@ -920,9 +1071,8 @@
     setStrategySlot('brief', 'No confirmed brief yet. Best flow: Namaa Talk → Design → Website → Strategy final boards.');
     setStrategySlot('market', 'Market research board will appear here: audience, demand signals, competitors, opportunity, objections and trust signals.');
     setStrategySlot('digital', 'Digital marketing strategy board will appear here: offer, funnel, channels, content pillars, ads, WhatsApp/CRM and conversion logic.');
-    setStrategySlot('roadmap', 'Roadmap board will appear here: weekly actions, priorities, budget logic, KPIs, risks and what to do next.');
-    setStrategySlot('kpi', 'KPIs and budget logic will appear here.');
-    setStrategySlot('handoff', 'Final strategy output will appear here. This is the last step after design and website preview. CRM/email capture will be connected in the final update.');
+    setStrategySlot('roadmap', 'Roadmap board will appear here: 30/60/90 actions, priorities, risks and what to do next.');
+    setStrategySlot('handoff', strategyFounderMessage());
     if (strategyIntro) strategyIntro.textContent = 'Final step after Namaa Talk → Namaa Design → Namaa Website. Namaa Strategy will create three branded visual boards: market research, digital marketing strategy and 30/60/90 roadmap.';
     if (openPackPopupButton) { openPackPopupButton.disabled = true; openPackPopupButton.hidden = true; }
   }
@@ -941,8 +1091,7 @@
     setStrategySlot('market', 'Namaa Strategy is building the Morocco market research board', true);
     setStrategySlot('digital', 'Namaa Strategy is building the digital marketing strategy board', true);
     setStrategySlot('roadmap', 'Namaa Strategy is building the 30/60/90 roadmap board', true);
-    setStrategySlot('kpi', 'Namaa Strategy is preparing KPIs, budget logic and risks', true);
-    setStrategySlot('handoff', 'Namaa Strategy is preparing the final output and KPI/action blocks', true);
+    setStrategySlot('handoff', 'Namaa is preparing the final friendly message and free consultation CTA.', true);
   }
 
   function renderStrategyWorkspace(reply) {
@@ -952,13 +1101,11 @@
     const market = strategySection(text, ['PICTURE 1 MARKET RESEARCH', 'PICTURE 01 MARKET RESEARCH', 'MARKET RESEARCH PICTURE', 'MARKET RESEARCH'], ['PICTURE 2 DIGITAL MARKETING STRATEGY', 'PICTURE 02 DIGITAL MARKETING STRATEGY', 'DIGITAL MARKETING STRATEGY', 'PICTURE 3 ROADMAP', 'KPI DASHBOARD', 'NAMAA DESIGN HANDOFF']);
     const digital = strategySection(text, ['PICTURE 2 DIGITAL MARKETING STRATEGY', 'PICTURE 02 DIGITAL MARKETING STRATEGY', 'DIGITAL MARKETING STRATEGY PICTURE', 'DIGITAL MARKETING STRATEGY'], ['PICTURE 3 ROADMAP', 'PICTURE 03 ROADMAP', 'ROADMAP', 'KPI DASHBOARD', 'NAMAA DESIGN HANDOFF']);
     const roadmap = strategySection(text, ['PICTURE 3 ROADMAP', 'PICTURE 03 ROADMAP', 'ROADMAP PICTURE', '30/60/90 ROADMAP', 'ROADMAP'], ['KPI DASHBOARD', 'NAMAA DESIGN HANDOFF', 'NAMAA WEBSITE STARTER HANDOFF']);
-    const kpi = strategySection(text, ['KPI DASHBOARD', 'BUDGET LOGIC AND KPIS', 'KPIS'], ['NAMAA DESIGN HANDOFF', 'NAMAA WEBSITE STARTER HANDOFF']);
-    const handoff = strategySection(text, ['FINAL ACTION NOTES', 'FINAL NOTES'], []);
+    const finalNotes = strategySection(text, ['FINAL ACTION NOTES', 'FINAL NOTES', 'FOUNDER MESSAGE'], []);
     setStrategySlot('market', market || text.slice(0, 1200));
     setStrategySlot('digital', digital || 'Digital strategy board was not clearly separated. Click Generate again and Namaa will structure it into picture 02.');
     setStrategySlot('roadmap', roadmap || 'Roadmap board was not clearly separated. Click Generate again and Namaa will structure it into picture 03.');
-    setStrategySlot('kpi', kpi || 'KPIs and budget logic will appear here when the strategy contains a KPI dashboard.');
-    setStrategySlot('handoff', handoff || 'Final strategy boards ready. Review the market research, digital strategy and 30/60/90 roadmap. CRM/email pack link will be activated in the final update.');
+    setStrategySlot('handoff', strategyFounderMessage(finalNotes));
     updateFlowState('strategyReady', true);
     if (strategyIntro) strategyIntro.textContent = 'Final strategy generated as three branded visual boards. Review them as the final Namaa project output. CRM/email pack link will be activated in the final update.';
     if (openPackPopupButton) { openPackPopupButton.disabled = true; openPackPopupButton.hidden = true; }
@@ -975,7 +1122,7 @@
     if (strategyGenerate) strategyGenerate.disabled = true;
     renderStrategyLoading();
     const result = await callAgent(message, extra || {});
-    const fallback = 'STRATEGY SNAPSHOT\nNamaa Strategy workspace is ready with Namaa logo and Created by Elboubakry Abdessamad branding, but the Gemini route did not answer yet. Check GEMINI_API_KEY and redeploy.\n\nPICTURE 1 MARKET RESEARCH\nSend project type, city, target and offer to build the market research board.\n\nPICTURE 2 DIGITAL MARKETING STRATEGY\nChannels, offer, funnel, content pillars and WhatsApp/CRM will appear here.\n\nPICTURE 3 ROADMAP\n30/60/90 actions, budget logic and KPIs will appear here.\n\nKPI DASHBOARD\nPerformance indicators will appear here.\n\nNAMAA DESIGN HANDOFF\nDesign handoff will appear here.\n\nNAMAA WEBSITE STARTER HANDOFF\nWebsite handoff will appear here.';
+    const fallback = 'STRATEGY SNAPSHOT\nNamaa Strategy workspace is ready with Namaa logo and Created by Elboubakry Abdessamad branding, but the Gemini route did not answer yet. Check GEMINI_API_KEY and redeploy.\n\nPICTURE 1 MARKET RESEARCH\nSend project type, city, target and offer to build the market research board.\n\nPICTURE 2 DIGITAL MARKETING STRATEGY\nChannels, offer, funnel, content pillars and WhatsApp/CRM will appear here.\n\nPICTURE 3 ROADMAP\n30/60/90 actions, priorities and risks will appear here.\n\nFINAL ACTION NOTES\nProject fih potential. Ila bghiti founder system, digital marketing execution, funnel w growth plan, tواصل m3a Elboubakry Abdessamad for free consultation.';
     const reply = result.reply || fallback;
     renderStrategyWorkspace(reply);
     lastAgentAnswer = reply;
@@ -1031,7 +1178,7 @@
     if (designGenerate) designGenerate.disabled = true;
     renderDesignLoading();
     const result = await callAgent(message, extra || {});
-    const fallback = 'DESIGN SNAPSHOT\nNamaa Design workspace is ready, but the Gemini route did not answer yet.\n\nLOGO DIRECTIONS\nSend brand name, category, target and style to prepare 3 logo directions.\n\nBRAND SYSTEM\nColors, typography mood and visual rules will appear here.\n\nMOCKUP PACK\nWebsite, mobile, social and business mockups will appear here.\n\nNANO BANANA / GEMINI PROMPTS\nCopy-ready image prompts will appear here once Gemini answers.\n\nNAMAA WEBSITE HANDOFF\nAfter the design is ready, open Namaa Website to build the landing page.';
+    const fallback = 'LOGO + MOCKUPS\nNamaa Design Lab is ready. Generate one logo concept and category mockups from the confirmed brief.';
     const reply = result.reply || fallback;
     renderDesignWorkspace(reply, result.data);
     await generateDesignImage(reply);
@@ -1066,15 +1213,15 @@
       resizeInput();
     }
     const localConfirmed = isAffirmationMessage(message) && hasProjectBrief() && (projectBriefStatus && (projectBriefStatus.isReady || projectBriefStatus.level === 'ready' || projectBriefStatus.score >= 75));
-    const loading = addMessage('assistant', 'Namaa is thinking', { loading: true });
+    const loading = addMessage('assistant', 'Namaa كايفهم الرسالة...', { loading: true });
     const result = await callAgent(message, extra || {});
     if (localConfirmed) projectBriefConfirmed = true;
-    const fallback = 'Namaa agents UI is ready. The live AI route did not answer yet. Check the private backend connection, then try again.';
+    const fallback = 'Namaa واجد، ولكن الرد الذكي ما جاوبش دابا. جرّب مرة أخرى بعد لحظات.';
     const reply = result.reply || fallback;
     if (loading) {
       loading.classList.remove('loading');
       const bubble = loading.querySelector('.message-bubble');
-      if (bubble) bubble.textContent = reply;
+      if (bubble) bubble.innerHTML = formatMessageHtml(reply);
       addHandoffs(loading, result.handoffs);
     } else {
       addMessage('assistant', reply);
@@ -1122,8 +1269,8 @@
     designGenerate.addEventListener('click', function () {
       if (!ensureFlowStep('design')) { setAgent('business'); return; }
       const prompt = Object.keys(projectBrief || {}).length
-        ? 'Use the current confirmed Namaa project brief and generate a polished Namaa Design workspace. Use exact headings: DESIGN SNAPSHOT, LOGO DIRECTIONS, BRAND SYSTEM, MOCKUP PACK, NANO BANANA / GEMINI PROMPTS, CONTENT NOTES, NAMAA WEBSITE HANDOFF. Keep it organized for dashboard cards: short bullets, clear decisions, 3 logo directions, practical mockups, clean color palette, mobile/website visual direction, and a direct handoff to Namaa Website.'
-        : 'Ask me only for the missing essentials to create a Namaa Design workspace: brand name, category, target, preferred style and main deliverable.';
+        ? 'Use the current confirmed Namaa project brief. Generate ONLY logo + category-specific mockups for Namaa Design Lab. No long text, no color section, no strategy, no website plan. Prepare one premium image-generation direction: logo first, then realistic mockups that match the project category, and a short handoff to Namaa Website.'
+        : 'Ask me only for the missing essentials: project name, short description, and city/market.';
       sendDesignPrompt(prompt, { handoffFrom: 'design-workspace-button' });
     });
   }
@@ -1132,7 +1279,7 @@
     designToWebsite.addEventListener('click', function () {
       if (!ensureFlowStep('website')) return;
       setAgent('website');
-      sendPrompt('Use the previous Namaa Design workspace output and current project brief. Generate a complete standalone one-file HTML/CSS/JS landing page and show it as a live browser preview. Do not show source code in the UI.', {
+      sendPrompt('Use the previous Namaa Design logo + mockups visual board and current project brief. Generate a complete standalone landing page and show it as a live browser preview. Do not show source code in the UI.', {
         handoffFrom: 'design',
         previousUserPrompt: lastUserPrompt,
         previousAgentAnswer: lastDesignAnswer || lastAgentAnswer,
@@ -1144,11 +1291,28 @@
 
 
 
+
+  strategyOpenButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      openStrategyBoard(button.dataset.strategyOpen);
+    });
+    button.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openStrategyBoard(button.dataset.strategyOpen);
+      }
+    });
+  });
+  strategyModalCloseButtons.forEach(function (button) { button.addEventListener('click', closeStrategyBoard); });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeStrategyBoard();
+  });
+
   if (strategyGenerate) {
     strategyGenerate.addEventListener('click', function () {
       if (!ensureFlowStep('strategy')) return;
       const prompt = Object.keys(projectBrief || {}).length || lastAgentAnswer
-        ? 'Use the confirmed Namaa project brief, previous Namaa Design direction and previous Namaa Website preview result. Create the FINAL Namaa Strategy workspace as 3 premium picture-style boards. Use exact headings: STRATEGY SNAPSHOT, PICTURE 1 MARKET RESEARCH, PICTURE 2 DIGITAL MARKETING STRATEGY, PICTURE 3 ROADMAP, KPI DASHBOARD, FINAL ACTION NOTES. For each picture board write compact label:value bullets, no long paragraphs, max 7 key bullets per board, practical Morocco-first logic, assumptions clearly marked, and board-ready wording. Every board must respect the visual reference: Namaa logo, Namaa AI branding, and Created by Elboubakry Abdessamad. This is the final step after Talk → Design → Website.'
+        ? 'Use the confirmed Namaa project brief, previous Namaa Design direction and previous Namaa Website preview result. Create the FINAL Namaa Strategy workspace as 3 premium picture-style boards. Use exact headings: STRATEGY SNAPSHOT, PICTURE 1 MARKET RESEARCH, PICTURE 2 DIGITAL MARKETING STRATEGY, PICTURE 3 ROADMAP, FINAL ACTION NOTES. For each picture board write compact label:value bullets, no long paragraphs, max 7 key bullets per board, practical Morocco-first logic, assumptions clearly marked, and board-ready wording. Every board must respect the visual reference: Namaa logo, Namaa AI branding, and Created by Elboubakry Abdessamad. This is the final step after Talk → Design → Website.'
         : 'Ask me only for the missing essentials to create Namaa Strategy: project/service, city/market, target customer, budget, goal, current stage and channels.';
       sendStrategyPrompt(prompt, { handoffFrom: 'strategy-workspace-button', previousAgentAnswer: lastAgentAnswer });
     });
@@ -1193,7 +1357,7 @@
     websiteToStrategy.addEventListener('click', function () {
       if (!ensureFlowStep('strategy')) return;
       setAgent('strategy');
-      sendPrompt('Use the confirmed project brief, previous Namaa Design output, and current Namaa Website landing page preview. Generate the final Namaa Strategy boards: market research, digital marketing strategy, 30/60/90 roadmap, KPIs and final action notes. This is the final step after Talk → Design → Website.', {
+      sendPrompt('Use the confirmed project brief, previous Namaa Design output, and current Namaa Website landing page preview. Generate the final Namaa Strategy boards: market research, digital marketing strategy, roadmap and a short founder message. This is the final step after Talk → Design → Website.', {
         handoffFrom: 'website',
         previousUserPrompt: lastUserPrompt,
         previousAgentAnswer: [lastDesignAnswer, lastWebsiteAnswer || lastAgentAnswer].filter(Boolean).join('\n\n--- WEBSITE / DESIGN CONTEXT ---\n\n'),

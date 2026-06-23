@@ -4,7 +4,7 @@
 export const MARKET_CITIES = [
   ['maroc entier', 'Maroc entier'], ['tout le maroc', 'Maroc entier'], ['all morocco', 'Maroc entier'], ['morocco', 'Maroc entier'], ['maroc', 'Maroc entier'], ['المغرب كامل', 'Maroc entier'],
   ['online', 'Online / International'], ['international', 'Online / International'], ['worldwide', 'Online / International'], ['global', 'Online / International'],
-  ['casablanca', 'Casablanca'], ['casa', 'Casablanca'], ['الدار البيضاء', 'Casablanca'],
+  ['casablanca', 'Casablanca'], ['casa', 'Casablanca'], ['كازا', 'Casablanca'], ['الدار البيضاء', 'Casablanca'],
   ['rabat', 'Rabat'], ['الرباط', 'Rabat'], ['sale', 'Salé'], ['salé', 'Salé'], ['سلا', 'Salé'],
   ['marrakech', 'Marrakech'], ['marrakesh', 'Marrakech'], ['مراكش', 'Marrakech'],
   ['tanger', 'Tanger'], ['tangier', 'Tanger'], ['طنجة', 'Tanger'],
@@ -25,7 +25,7 @@ export const MARKET_CITIES = [
 
 export const MARKET_CATEGORY_RULES = [
   { value: 'SaaS / application', words: ['saas','application','app','mobile app','software','logiciel','platform','plateforme','dashboard','subscription','abonnement','تطبيق','منصة','crm','booking system','fintech','edtech','healthtech','proptech'] },
-  { value: 'E-commerce / vente de produits', words: ['ecommerce','e-commerce','e commerce','shop','store','boutique','produit','products','vente de produits','cod','cash on delivery','cosmetic','cosmetics','beauty products','fashion','clothes','shoes','accessoires','بيع منتجات','متجر','منتج','منتجات','parapharmacie','packaging'] },
+  { value: 'E-commerce / vente de produits', words: ['ecommerce','e-commerce','e commerce','shop','store','boutique','produit','products','vente de produits','cod','cash on delivery','cosmetic','cosmetics','beauty products','fashion','clothes','l7wayej','7wayej','حوايج','ملابس','لباس','shoes','accessoires','بيع منتجات','متجر','منتج','منتجات','parapharmacie','packaging'] },
   { value: 'Restaurant / food', words: ['restaurant','food','cafe','café','coffee','patisserie','pâtisserie','fast food','dark kitchen','snack','menu','مطعم','اكل','ماكلة','traiteur','food truck','glacier','dessert'] },
   { value: 'Clinique / médical', words: ['clinic','clinique','medical','médical','dentiste','dental','doctor','derma','dermatologie','esthetic','esthétique','aesthetic','عيادة','طبيب','أسنان','laboratoire','kiné','kine','laser','nutrition','santé','sante'] },
   { value: 'Agence / service pro', words: ['agency','agence','consulting','cabinet','service pro','freelance','studio','marketing agency','b2b','consultant','branding','design','comptabilité','architecture','photographie','rh','recrutement','call center','bpo'] },

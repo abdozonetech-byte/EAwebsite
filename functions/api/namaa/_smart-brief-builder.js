@@ -5,16 +5,20 @@ import { MARKET_CITIES, MARKET_CATEGORY_RULES, detectMarketCategory } from './_m
 
 const FIELD_PRIORITY = [
   'projectName',
-  'category',
   'offer',
   'market',
-  'budget',
+  'category',
   'target',
   'goal',
   'stage',
   'channels',
+  'budget',
   'language',
 ];
+
+// Update 80: Namaa Talk must not interrogate users.
+// A project can move forward with only the essentials, then Gemini/agents infer the rest.
+const ESSENTIAL_BRIEF_FIELDS = ['projectName', 'offer', 'market'];
 
 export const SMART_BRIEF_FIELDS = {
   projectName: {
@@ -24,7 +28,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Quel est le nom du projet ? Si vous n’avez pas encore de nom, écrivez “pas encore”.',
       en: 'What is the project name? If you do not have one yet, write “not yet”.',
-      ar: 'شنو سميت المشروع؟ إلا مازال ما عندكش الاسم، كتب “مازال”.',
+      ar: 'شنو سميت المشروع؟ إلا مازال ما عندكش اسم، كتب غير “مازال”.',
     },
   },
   category: {
@@ -34,7 +38,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Dans quelle catégorie entre le projet : ecommerce, restaurant, SaaS/app, clinique, service local, formation, immobilier, AI/IT, marketplace, tourisme, beauté, B2B ou autre ?',
       en: 'What category is it: ecommerce, restaurant, SaaS/app, clinic, local service, education, real estate, AI/IT, marketplace, tourism, beauty, B2B, or something else?',
-      ar: 'شنو نوع المشروع: ecommerce، restaurant، SaaS/app، clinic، service local، formation، immobilier، ولا شي حاجة أخرى؟',
+      ar: 'شنو نوع المشروع باختصار؟ مثال: متجر، تطبيق، خدمة، عيادة، تعليم، مطعم، AI/IT...',
     },
   },
   offer: {
@@ -44,7 +48,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Qu’est-ce que vous allez vendre exactement ? Produit, service, pack ou abonnement ?',
       en: 'What exactly will you sell: product, service, package, or subscription?',
-      ar: 'شنو غادي تبيع بالضبط؟ منتج، خدمة، pack، ولا abonnement؟',
+      ar: 'وصف ليا المشروع ف جوج سطور: شنو كيدير وشنو غادي يبيع ولا يقدم؟',
     },
   },
   market: {
@@ -54,7 +58,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Le projet cible quelle ville ou marché : Casablanca, Rabat, Marrakech, Tanger, Agadir, tout le Maroc, online/international ou autre ?',
       en: 'Which city or market are you targeting: Casablanca, Rabat, Marrakech, Tangier, Agadir, all Morocco, online/international, or another market?',
-      ar: 'فين غادي يبدا المشروع؟ Casablanca، Rabat، Marrakech، المغرب كامل، ولا مدينة أخرى؟',
+      ar: 'فين غادي يخدم المشروع: مدينة معينة ولا المغرب كامل؟',
     },
   },
   budget: {
@@ -64,7 +68,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Quel budget pouvez-vous tester au début ? Même une estimation suffit, par exemple 1000 DH, 3000 DH ou 10000 DH.',
       en: 'What budget can you test first? An estimate is enough, like 1000 MAD, 3000 MAD, or 10000 MAD.',
-      ar: 'شحال الميزانية اللي تقدر تجرب بها فالبداية؟ غير تقريبية كافية: 1000dh، 3000dh، 10000dh...',
+      ar: 'إلا بغيتي، عطيني الميزانية التقريبية، وإذا ما بغيتيش دابا نكملو بلا بها.',
     },
   },
   target: {
@@ -74,7 +78,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Qui est le client cible principal ? Donnez-moi un profil simple.',
       en: 'Who is the main target customer? Give me a simple profile.',
-      ar: 'شكون هو الزبون المستهدف؟ عطيني profile بسيط ديالو.',
+      ar: 'شكون الناس اللي باغي توصل ليهم؟ غير وصف بسيط كافي.',
     },
   },
   goal: {
@@ -84,7 +88,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Quel est l’objectif numéro 1 : tester l’idée, vendre, générer des leads WhatsApp, trouver clients, ou créer une marque ?',
       en: 'What is the number one goal: test the idea, sell, generate WhatsApp leads, get clients, or build a brand?',
-      ar: 'شنو الهدف الأول: نجرب الفكرة، نبيع، نجيب leads ف WhatsApp، نلقى clients، ولا نبني brand؟',
+      ar: 'شنو بغيتي يتحقق أولاً: تجربة الفكرة، مبيعات، leads، ولا branding؟',
     },
   },
   stage: {
@@ -94,7 +98,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Le projet est à quelle étape : idée, nouveau lancement, projet existant, ou relance ?',
       en: 'What stage is the project in: idea, new launch, existing project, or relaunch?',
-      ar: 'فين واصل المشروع: غير فكرة، إطلاق جديد، مشروع موجود، ولا بغيت تعاود تطلقو؟',
+      ar: 'المشروع باقي فكرة ولا موجود وبغيتي تطورو؟',
     },
   },
   channels: {
@@ -104,7 +108,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Quels canaux avez-vous déjà : Instagram, TikTok, WhatsApp, site web, Google Maps, ads, ou rien pour l’instant ?',
       en: 'Which channels do you already have: Instagram, TikTok, WhatsApp, website, Google Maps, ads, or nothing yet?',
-      ar: 'شنو القنوات اللي عندك دابا: Instagram، TikTok، WhatsApp، site web، Google Maps، ads، ولا مازال والو؟',
+      ar: 'واش عندك شي قناة دابا: Instagram، WhatsApp، site web، ولا مازال والو؟',
     },
   },
   language: {
@@ -114,7 +118,7 @@ export const SMART_BRIEF_FIELDS = {
     question: {
       fr: 'Vous préférez le résultat en français, darija, anglais, arabe, ou mix français + darija ?',
       en: 'Do you prefer the result in French, Darija, English, Arabic, or French + Darija?',
-      ar: 'بأي لغة بغيتي النتيجة: français، darija، english، العربية، ولا français + darija؟',
+      ar: 'بغيتي نبقى نهضر معاك بالدارجة العربية ولا Darija Latin؟',
     },
   },
 };
@@ -225,7 +229,7 @@ function detectOffer(text = '', category = '') {
   const raw = cap(text, 260);
   const patterns = [
     /(?:sell|vendre|بيع|produit|product|service|offer|offre)\s*[:=-]?\s*([^.;\n]{3,150})/i,
-    /(?:dyal|de|of)\s+([^.;\n]{3,90})/i,
+    /(?:dyal|de|of|ديال)\s+([^.;\n]{3,90})/i,
   ];
   for (const pattern of patterns) {
     const m = raw.match(pattern);
@@ -238,7 +242,7 @@ function detectOffer(text = '', category = '') {
 function detectProjectName(text = '') {
   const raw = cap(text, 180);
   const patterns = [
-    /(?:project name|nom du projet|اسم المشروع|smit l projet|smit projet|smito|called|named|اسمها)\s*[:=-]?\s*([\p{L}\p{N}][\p{L}\p{N}\s&'.-]{1,60})/iu,
+    /(?:project name|nom du projet|اسم المشروع|smit l projet|smit projet|smito|سميتو|سميته|سميتها|called|named|اسمها)\s*[:=-]?\s*([\p{L}\p{N}][\p{L}\p{N}\s&'.-]{1,60})/iu,
     /(?:my project is|mon projet s'appelle|mon projet est)\s+([\p{L}\p{N}][\p{L}\p{N}\s&'.-]{1,60})/iu,
   ];
   for (const pattern of patterns) {
@@ -327,21 +331,20 @@ function chooseLang(language = '') {
 }
 
 const DARIJA_LATIN_QUESTIONS = {
-  projectName: 'Chno smit l-projet? Ila mazal ma 3ndekch smiya, kteb "mazal".',
-  category: 'Chno no3 l-projet: ecommerce, restaurant, SaaS/app, clinic, service local, formation, immobilier, ola chi haja okhra?',
-  offer: 'Chno ghadi tbi3 exactement? Produit, service, pack ola abonnement?',
-  market: 'Fin ghadi ybda l-projet: Casa, Rabat, Marrakech, Maroc kamel, ola mdina okhra?',
-  budget: 'Ch7al budget li t9der ttesti bih f lbidaya? Ghir ta9riban: 1000dh, 3000dh, 10000dh...',
-  target: 'Chkon howa client cible? 3tini profile bsit dyalo.',
-  goal: 'Chno objectif lwel: ttesti l-fikra, tbi3, tjib leads WhatsApp, tl9a clients, ola tbni brand?',
-  stage: 'Fin wasel l-projet: ghir fikra, lancement jdid, projet kayn, ola relance?',
-  channels: 'Chno channels li 3ndek daba: Instagram, TikTok, WhatsApp, site web, Google Maps, ads, ola mazal walo?',
-  language: 'B ach style bghiti nجاوبك: français, Darija Latin, English, Arabic, ola français + darija?',
+  projectName: 'شنو سميت المشروع؟ إلا مازال ما كايناش، كتب غير “مازال”.',
+  category: 'شنو نوع المشروع باختصار؟ متجر، تطبيق، خدمة، عيادة، مطعم، AI/IT ولا شي مجال آخر؟',
+  offer: 'وصف ليا المشروع ف جوج سطور: شنو كيدير وشنو غادي يقدم للناس؟',
+  market: 'فين غادي يخدم المشروع: مدينة معينة ولا المغرب كامل؟',
+  budget: 'الميزانية نقدر نخليوها من بعد. إلا بغيتي، عطيني غير رقم تقريبي.',
+  target: 'شكون الناس اللي باغي توصل ليهم؟ غير وصف بسيط كافي.',
+  goal: 'شنو باغي أول نتيجة: مبيعات، leads، تجربة الفكرة، ولا branding؟',
+  stage: 'المشروع باقي فكرة ولا موجود وبغيتي تطورو؟',
+  channels: 'واش عندك شي قناة دابا: Instagram، WhatsApp، site web، ولا مازال والو؟',
+  language: 'بغيتي نبقى نهضر معاك بالدارجة العربية ولا Darija Latin؟',
 };
 
 export function getSmartMissingFields(brief = {}) {
-  return FIELD_PRIORITY
-    .filter((key) => key !== 'language')
+  return ESSENTIAL_BRIEF_FIELDS
     .map((key) => SMART_BRIEF_FIELDS[key])
     .filter((field) => {
       const value = brief?.[field.key];
@@ -356,12 +359,16 @@ export function getSmartBriefStatus(brief = {}, language = '') {
     const value = brief?.[key];
     return value && (!Array.isArray(value) || value.length) && String(value).trim();
   });
-  const requiredTotal = FIELD_PRIORITY.length - 1;
-  const score = Math.round(Math.min(100, (filled.filter((key) => key !== 'language').length / requiredTotal) * 100));
-  const mustAsk = missing.slice(0, 2);
+  const requiredTotal = ESSENTIAL_BRIEF_FIELDS.length;
+  const filledEssential = ESSENTIAL_BRIEF_FIELDS.filter((key) => {
+    const value = brief?.[key];
+    return value && (!Array.isArray(value) || value.length) && String(value).trim();
+  });
+  const score = Math.round(Math.min(100, (filledEssential.length / requiredTotal) * 100));
+  const mustAsk = missing.slice(0, 1);
   const nextQuestions = mustAsk.map((field) => lang === 'dr' ? (DARIJA_LATIN_QUESTIONS[field.key] || field.question.fr) : (field.question[lang] || field.question.fr));
-  const isReady = missing.length <= 1;
-  const level = score >= 90 ? 'ready' : score >= 55 ? 'almost' : score >= 25 ? 'discovery' : 'start';
+  const isReady = missing.length === 0;
+  const level = score >= 100 ? 'ready' : score >= 67 ? 'almost' : score >= 34 ? 'discovery' : 'start';
   const summary = Object.entries(brief || {})
     .filter(([, value]) => value && (!Array.isArray(value) || value.length))
     .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : cap(value, 140)}`);
@@ -381,27 +388,20 @@ export function getSmartBriefStatus(brief = {}, language = '') {
 
 export function smartBriefAnswer({ brief = {}, language = '' } = {}) {
   const status = getSmartBriefStatus(brief, language);
-  const questions = (status.nextQuestions || []).slice(0, 2);
-  const score = status.score || 0;
+  const questions = (status.nextQuestions || []).slice(0, 1);
   const firstQuestion = questions[0] || '';
-  const secondQuestion = questions[1] || '';
 
   if (status.isReady) {
-    if (isDarijaLatin(language)) return 'Top ✅ daba l-brief wla clear. Bghiti nwjed lik Market Research PDF, Marketing Strategy PDF, ola Roadmap dyal launch?';
-    if (isArabicLanguage(language)) return 'ممتاز ✅ أصبح الـ brief واضحاً. هل تريد Market Research PDF، Marketing Strategy PDF، أم Roadmap للإطلاق؟';
-    if (/english/i.test(language)) return 'Great ✅ the brief is clear now. Should I create Market Research PDF, Marketing Strategy PDF, or a Launch Roadmap?';
-    return 'Parfait ✅ le brief est clair. Voulez-vous créer un Market Research PDF, une Marketing Strategy PDF ou une Roadmap de lancement ?';
+    if (isDarijaLatin(language) || isArabicLanguage(language)) return 'فهمت الفكرة الأساسية ✅ غادي نلخصها ليك دابا ونسولك واش الفهم صحيح. إذا قلتي نعم، نمشيو مباشرة لـ Namaa Design.';
+    if (/english/i.test(language)) return 'I have the essential brief ✅ I will summarize it now. If it is correct, we move directly to Namaa Design.';
+    return 'J’ai les infos essentielles ✅ Je résume maintenant. Si c’est correct, on passe directement à Namaa Design.';
   }
 
-  if (isDarijaLatin(language)) {
-    return `Mzyan, kanjme3 ghir l-info li mohimma bach nkhrej lik résultat qwi bla sda3 💡\n${firstQuestion ? '1) '+firstQuestion : '1) Chno katbi3 ola chno l-offre dyalek?'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
-  }
-  if (isArabicLanguage(language)) {
-    return `جيد، سأجمع فقط المعلومات المهمة حتى أخرج لك نتيجة قوية وواضحة 💡\n${firstQuestion ? '1) '+firstQuestion : '1) ما المنتج أو العرض الأساسي؟'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
+  if (isDarijaLatin(language) || isArabicLanguage(language)) {
+    return `مزيان، غادي ناخد غير الضروري بلا صداع 💡\n${firstQuestion ? firstQuestion : 'وصف ليا المشروع ف جوج سطور: شنو كيدير وشنو غادي يقدم للناس؟'}`;
   }
   if (/english/i.test(language)) {
-    return `Good, I’ll collect only the key info so the result comes out strong and clear 💡\n${firstQuestion ? '1) '+firstQuestion : '1) What exactly are you selling or offering?'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
+    return `Good, I only need the essentials 💡\n${firstQuestion ? firstQuestion : 'Describe the project in two lines: what does it do and what does it offer?'}`;
   }
-  return `Très bien, je collecte seulement les infos importantes pour préparer un résultat clair 💡\n${firstQuestion ? '1) '+firstQuestion : '1) Quelle est votre offre principale ?'}${secondQuestion ? '\n2) '+secondQuestion : ''}`;
-
+  return `Très bien, je prends seulement l’essentiel 💡\n${firstQuestion ? firstQuestion : 'Décrivez le projet en deux lignes : que fait-il et quelle offre propose-t-il ?'}`;
 }
