@@ -122,7 +122,7 @@ SECTIONS AND COPY
 CTA AND LEAD FLOW
 HTML CSS JS
 PREVIEW / INTEGRATION CHECKLIST
-- Under HTML CSS JS, include one complete standalone HTML document inside exactly one fenced code block using ```html.
+- Under HTML CSS JS, include one complete standalone HTML document inside exactly one fenced code block using an escaped fenced code block marker: `\`\`\`html`.
 - The code must be safe for static hosting: no unknown external scripts, no API keys, no trackers, no obfuscation, no eval, no document.write, and no hardcoded private endpoints.
 - The preview must work from srcdoc/iframe. The public UI must not show code or download buttons; it shows the live landing page preview only.
 `.trim();
@@ -420,7 +420,7 @@ Preferred structure for Namaa Website workspace:
 - CTA AND LEAD FLOW
 - HTML CSS JS
 - PREVIEW / INTEGRATION CHECKLIST
-- Complete HTML/CSS/JS in one ```html fenced code block when the workspace asks for code
+- Complete HTML/CSS/JS in one escaped html fenced code block when the workspace asks for code
 `.trim(),
   }};
 
