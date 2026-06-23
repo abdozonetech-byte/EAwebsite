@@ -349,6 +349,124 @@ function extractInteractionsText(data) {
     .trim() || extractGeminiText(data);
 }
 
+
+function extractOpenAIImage(data) {
+  const first = Array.isArray(data?.data) ? data.data[0] : null;
+  const b64 = first?.b64_json || first?.b64Json || first?.image?.b64_json || first?.image?.data;
+  if (!b64) return null;
+  return {
+    mimeType: 'image/png',
+    data: b64,
+  };
+}
+
+function sizeForAspectRatio(aspectRatio = '16:9') {
+  const ratio = String(aspectRatio || '16:9').trim();
+  const map = {
+    '1:1': '1024x1024',
+    '16:9': '1536x864',
+    '9:16': '864x1536',
+    '4:3': '1280x960',
+    '3:4': '960x1280',
+    '4:5': '1024x1280',
+    '5:4': '1280x1024',
+    '3:2': '1344x896',
+    '2:3': '896x1344',
+    '21:9': '1536x640',
+  };
+  return map[ratio] || map['16:9'];
+}
+
+async function callGeminiImageOpenAI({ apiKey, model, prompt, aspectRatio, config }) {
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/openai/images/generations';
+  const payload = {
+    model,
+    prompt,
+    response_format: 'b64_json',
+    n: 1,
+    size: sizeForAspectRatio(aspectRatio || config.aspectRatio || '16:9'),
+  };
+
+  const { response, data } = await fetchJsonWithRetry(endpoint, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(payload),
+  }, config);
+
+  if (!response.ok) {
+    return { ok: false, status: response.status, data, error: data?.error?.message || 'OpenAI-compatible image call failed.' };
+  }
+  const image = extractOpenAIImage(data);
+  if (!image?.data) {
+    return { ok: false, status: 502, data, error: 'OpenAI-compatible image call returned no image data.' };
+  }
+  return { ok: true, status: 200, image, text: data?.created ? 'Nano Banana image generated.' : '' };
+}
+
+async function callGeminiImageGenerateContent({ apiKey, model, prompt, aspectRatio, config }) {
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const payload = {
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: {
+      responseModalities: ['TEXT', 'IMAGE'],
+      temperature: 0.7,
+    },
+  };
+
+  const { response, data } = await fetchJsonWithRetry(endpoint, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(payload),
+  }, config);
+
+  if (!response.ok) {
+    return { ok: false, status: response.status, data, error: data?.error?.message || 'generateContent image call failed.' };
+  }
+  const image = extractGeminiImage(data);
+  if (!image?.data) {
+    return { ok: false, status: 502, data, error: extractGeminiText(data) || 'generateContent returned no image data.' };
+  }
+  return { ok: true, status: 200, image, text: extractGeminiText(data) };
+}
+
+async function callGeminiImageInteractions({ apiKey, model, prompt, aspectRatio, config }) {
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/interactions';
+  const responseFormat = {
+    type: 'image',
+    mime_type: config.imageMimeType || 'image/jpeg',
+    aspect_ratio: aspectRatio || config.aspectRatio || '16:9',
+    image_size: config.imageSize || '1K',
+  };
+
+  const payload = {
+    model,
+    input: [{ type: 'text', text: prompt }],
+    response_format: responseFormat,
+  };
+
+  const { response, data } = await fetchJsonWithRetry(endpoint, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-goog-api-key': apiKey,
+      'Api-Revision': '2026-05-20',
+    },
+    body: JSON.stringify(payload),
+  }, config);
+
+  if (!response.ok) {
+    return { ok: false, status: response.status, data, error: data?.error?.message || 'Interactions image call failed.' };
+  }
+  const image = extractInteractionsImage(data);
+  if (!image?.data) {
+    return { ok: false, status: 502, data, error: extractInteractionsText(data) || 'Interactions returned no image data.' };
+  }
+  return { ok: true, status: 200, image, text: extractInteractionsText(data) };
+}
+
 export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
   const apiKey = getSecret(env, config.apiKeyEnv);
   const model = getModel(env, config);
@@ -371,71 +489,40 @@ export async function callGeminiImage({ env, config, prompt, aspectRatio }) {
     };
   }
 
-  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/interactions';
-  const responseFormat = {
-    type: 'image',
-    mime_type: config.imageMimeType || 'image/jpeg',
-    aspect_ratio: aspectRatio || config.aspectRatio || '16:9',
-    image_size: config.imageSize || '1K',
-  };
+  const attempts = [
+    ['openai-compatible', callGeminiImageOpenAI],
+    ['generate-content', callGeminiImageGenerateContent],
+    ['interactions', callGeminiImageInteractions],
+  ];
+  const errors = [];
 
-  const payload = {
-    model,
-    input: [{ type: 'text', text: prompt }],
-    response_format: responseFormat,
-  };
-
-  let response;
-  let data;
-  try {
-    ({ response, data } = await fetchJsonWithRetry(endpoint, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-goog-api-key': apiKey,
-        'Api-Revision': '2026-05-20',
-      },
-      body: JSON.stringify(payload),
-    }, config));
-  } catch (error) {
-    return {
-      ok: false,
-      status: 504,
-      error: safeApiError(error?.message || 'Namaa image request timed out.'),
-      model,
-      provider: 'gemini',
-    };
-  }
-  if (!response.ok) {
-    return {
-      ok: false,
-      status: response.status,
-      error: safeApiError(data?.error?.message || 'Namaa image request failed.'),
-      model,
-      provider: 'gemini',
-    };
-  }
-
-  const image = extractInteractionsImage(data);
-  const text = extractInteractionsText(data);
-
-  if (!image?.data) {
-    return {
-      ok: false,
-      status: 502,
-      error: safeApiError(text || 'Namaa image generation returned no image data. Try a simpler visual prompt.'),
-      model,
-      provider: 'gemini',
-    };
+  for (const [method, fn] of attempts) {
+    try {
+      const result = await fn({ apiKey, model, prompt, aspectRatio, config });
+      if (result.ok && result.image?.data) {
+        return {
+          ok: true,
+          status: 200,
+          provider: 'gemini',
+          method,
+          model,
+          image: result.image,
+          text: result.text || '',
+        };
+      }
+      errors.push(`${method}: ${result.status || 500}`);
+    } catch (error) {
+      errors.push(`${method}: ${error?.message || 'failed'}`);
+    }
   }
 
   return {
-    ok: true,
-    status: 200,
-    provider: 'gemini',
+    ok: false,
+    status: 502,
+    error: 'Namaa image generation returned no image data. Check Nano Banana model availability and Cloudflare secrets.',
     model,
-    image,
-    text,
+    provider: 'gemini',
+    privateDebug: errors.slice(0, 3),
   };
 }
 
