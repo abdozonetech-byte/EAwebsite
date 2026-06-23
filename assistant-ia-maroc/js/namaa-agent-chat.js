@@ -3,10 +3,10 @@
 
   const AGENTS = {
     business: {
-      title: 'Namaa Talk: free talk or build project?',
-      kicker: 'Namaa Business Talk',
-      subtitle: 'Bda b free talk, ola 3tih smit project + description + city bach Namaa yfhmk bla bzaf dyal questions.',
-      placeholder: 'كتب لـ Namaa: Free Talk ولا Build Project...',
+      title: 'شنو بغيتي نديرو اليوم؟',
+      kicker: 'Namaa Talk',
+      subtitle: 'نهضرو عادي فـ business وAI، ولا نبنيو مشروعك خطوة بخطوة بلا أسئلة كثيرة.',
+      placeholder: 'كتب رسالتك هنا... مثلا: بغيت نبني مشروع',
       context: 'Namaa Business Talk = free talk about AI, business, IT, marketing, startups, websites, WhatsApp/CRM and Morocco-first execution.'
     },
     design: {
@@ -102,6 +102,161 @@
   let strategyPackPopupShown = false;
   let designAutoStarted = false;
   const flowState = { designReady: false, websiteReady: false, strategyReady: false, packRequested: false };
+
+  const talkUX = {
+    mode: 'start',
+    language: 'darija_ar',
+    askedBasics: false,
+    awaitingConfirmation: false,
+    basicsTries: 0
+  };
+
+  function looksLikeGreeting(value) {
+    const text = String(value || '').trim().toLowerCase();
+    return /^(hi|hello|hey|salam|salam alikom|salam alaikom|السلام|سلام|مرحبا|اهلا|أهلا|cv|slm|bonjour)$/i.test(text);
+  }
+
+  function wantsBuildProject(value) {
+    const text = String(value || '').toLowerCase();
+    return /(build\s*project|bni|nbni|n9ado|nqado|نقادو|نبنيو|مشروع|project|بروجي|projet|بناء مشروع)/i.test(text);
+  }
+
+  function wantsFreeTalk(value) {
+    const text = String(value || '').toLowerCase();
+    return /(free\s*talk|دردشة|نهضرو|نهضر|dwi|dwik|دوي|هضرة|سؤال عادي|business talk)/i.test(text);
+  }
+
+  function isTinyAgreement(value) {
+    const text = String(value || '').trim().toLowerCase();
+    return /^(oui|yes|ok|oki|okay|اه|ايه|نعم|واخا|سافي|safi|ah|iyah|yeh|تمام)$/i.test(text);
+  }
+
+  function extractProjectBasics(value) {
+    const raw = String(value || '').trim();
+    const lines = raw.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+    const joined = raw.replace(/\s+/g, ' ').trim();
+    const data = { name: '', description: '', city: '' };
+    lines.forEach((line) => {
+      const clean = line.replace(/^[-•*\d.)\s]+/, '').trim();
+      const lower = clean.toLowerCase();
+      if (!data.name && /(اسم|سميت|name|nom)/i.test(lower)) data.name = clean.replace(/^(اسم|سميت|سميتو|project name|name|nom)\s*[:：-]?\s*/i, '').trim();
+      else if (!data.description && /(وصف|فكرة|description|desc|شنو|كيدير|كتدير)/i.test(lower)) data.description = clean.replace(/^(وصف|فكرة|description|desc)\s*[:：-]?\s*/i, '').trim();
+      else if (!data.city && /(مدينة|المدينة|فين|city|market|casablanca|casa|rabat|marrakech|agadir|tanger|morocco|maroc|المغرب)/i.test(lower)) data.city = clean.replace(/^(المدينة|مدينة|city|market|فين غادي يخدم|فين)\s*[:：-]?\s*/i, '').trim();
+    });
+    if (!data.city) {
+      const m = joined.match(/(casablanca|casa|rabat|marrakech|agadir|tanger|fes|fès|meknes|kenitra|tetouan|oujda|المغرب كامل|المغرب|الدار البيضاء|كازا|الرباط|مراكش|اكادير|أكادير|طنجة)/i);
+      if (m) data.city = m[0];
+    }
+    if (!data.name) {
+      const m = joined.match(/(?:سميت(?:و| المشروع)?|اسم(?: المشروع)?|name|nom)\s*[:：-]?\s*([^،,.\n]{2,50})/i);
+      if (m) data.name = m[1].trim();
+    }
+    if (!data.description) {
+      const cleaned = joined.replace(/^(build project|بغيت نبني مشروع|بغيت نقاد مشروع|نبني مشروع|نقادو مشروع)\s*/i, '').trim();
+      if (cleaned.length > 18) data.description = cleaned.slice(0, 260);
+    }
+    if (!data.name && data.description) {
+      const firstWords = data.description.split(/\s+/).slice(0, 4).join(' ');
+      data.name = firstWords || 'مشروع جديد';
+    }
+    return data;
+  }
+
+  function mergeLocalBriefPatch(patch) {
+    projectBrief = Object.assign({}, projectBrief || {}, {
+      projectName: patch.name || projectBrief.projectName || projectBrief.project || '',
+      project: patch.name || projectBrief.project || projectBrief.projectName || '',
+      description: patch.description || projectBrief.description || projectBrief.offer || '',
+      offer: patch.description || projectBrief.offer || projectBrief.description || '',
+      city: patch.city || projectBrief.city || projectBrief.market || '',
+      market: patch.city || projectBrief.market || projectBrief.city || '',
+      source: 'Namaa Talk UX'
+    });
+    const hasName = Boolean(projectBrief.projectName || projectBrief.project);
+    const hasDesc = Boolean(projectBrief.description || projectBrief.offer);
+    const hasCity = Boolean(projectBrief.city || projectBrief.market);
+    const score = (hasName ? 35 : 0) + (hasDesc ? 40 : 0) + (hasCity ? 25 : 0);
+    projectBriefStatus = { score: score, level: score >= 75 ? 'ready' : 'collecting', isReady: score >= 75, missing: [!hasName && 'اسم المشروع', !hasDesc && 'وصف قصير', !hasCity && 'المدينة ولا المغرب كامل'].filter(Boolean) };
+  }
+
+  function darijaWelcome() {
+    return 'سلام، أنا Namaa ✨\n\nنقدر نعاونك بطريقتين:\n\n**Free Talk**: نهضرو عادي فـ business، AI، IT، marketing.\n**Build Project**: نبنيو مشروعك خطوة بخطوة.';
+  }
+
+  function darijaAskBasics() {
+    talkUX.askedBasics = true;
+    talkUX.basicsTries += 1;
+    return 'زوين، باش نبني معاك المشروع بلا ما نطول عليك، عطيني غير 3 معلومات فـ رسالة وحدة:\n\n1. **سميت المشروع**\n2. **وصف قصير**: شنو كيدير المشروع؟\n3. **فين غادي يخدم؟** مدينة معينة ولا المغرب كامل؟\n\nمثال: سميتو CasaFit، تطبيق كيربط الكوتشات مع الناس، فـ كازا.';
+  }
+
+  function darijaConfirmBrief() {
+    const name = projectBrief.projectName || projectBrief.project || 'مشروع جديد';
+    const desc = projectBrief.description || projectBrief.offer || 'فكرة مشروع';
+    const city = projectBrief.city || projectBrief.market || 'المغرب';
+    return 'واخا، فهمت عليك ✨\n\n**المشروع:** ' + name + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nواش هاد الفهم صحيح؟ إلا نعم، غادي نمشيو مباشرة لـ **Namaa Design** باش نخرجو logo و mockups.';
+  }
+
+  function addChoiceButtons(targetItem, choices) {
+    if (!targetItem || !Array.isArray(choices) || !choices.length) return;
+    const wrap = targetItem.querySelector('.message-wrap') || targetItem;
+    const actions = document.createElement('div');
+    actions.className = 'namaa-mode-actions';
+    choices.forEach((choice) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = choice.label;
+      button.addEventListener('click', function () {
+        sendPrompt(choice.value, { displayMessage: choice.label });
+      });
+      actions.appendChild(button);
+    });
+    wrap.appendChild(actions);
+  }
+
+  function localBusinessReplyFor(message) {
+    const raw = String(message || '').trim();
+    if (!raw) return null;
+    if (looksLikeGreeting(raw) && talkUX.mode === 'start') {
+      talkUX.mode = 'choice';
+      return { reply: darijaWelcome(), choices: [
+        { label: 'Free Talk', value: 'Free Talk' },
+        { label: 'Build Project', value: 'Build Project' }
+      ] };
+    }
+    if (wantsFreeTalk(raw)) {
+      talkUX.mode = 'free';
+      return { reply: 'واخا، نخليوها Free Talk 😊\nسولني على AI، business، IT، marketing ولا شي فكرة عندك، ونجاوبك بطريقة مباشرة.' };
+    }
+    if (wantsBuildProject(raw) && !hasReadyBrief()) {
+      talkUX.mode = 'collecting';
+      return { reply: darijaAskBasics() };
+    }
+    if (talkUX.mode === 'collecting' && !hasReadyBrief()) {
+      if (isTinyAgreement(raw)) {
+        return { reply: 'تمام، فهمت أنك موافق. باقي خاصني غير المعلومات ديال المشروع:\n\n**سميت المشروع + وصف قصير + المدينة ولا المغرب كامل**\n\nكتبهم فـ رسالة وحدة، وأنا نحللهم مباشرة.' };
+      }
+      const patch = extractProjectBasics(raw);
+      mergeLocalBriefPatch(patch);
+      if (hasReadyBrief()) {
+        talkUX.awaitingConfirmation = true;
+        return { reply: darijaConfirmBrief() };
+      }
+      const missing = (projectBriefStatus && projectBriefStatus.missing && projectBriefStatus.missing.length) ? projectBriefStatus.missing.join('، ') : 'وصف أوضح';
+      return { reply: 'قريب نفهمك مزيان. باقي خاصني: **' + missing + '**.\n\nعطينيها باختصار، وما نحتاجش تفاصيل كثيرة.' };
+    }
+    if (talkUX.awaitingConfirmation && isAffirmationMessage(raw) && hasReadyBrief()) {
+      projectBriefConfirmed = true;
+      talkUX.awaitingConfirmation = false;
+      return { reply: 'مزيان، دابا المشروع واضح ✅\nالخطوة الجاية هي **Namaa Design** باش نخرجو logo و mockups مناسبين للمشروع.', handoffs: [{
+        agent: 'design',
+        label: 'Open Namaa Design',
+        agentLabel: 'Namaa Design',
+        displayMessage: 'Open Namaa Design with this confirmed project brief',
+        prompt: 'Use the confirmed Namaa project brief from Business Talk. Create logo + category-specific mockups only. This is step 2 after Namaa Talk.'
+      }] };
+    }
+    return null;
+  }
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function (char) {
@@ -302,6 +457,11 @@
     flowState.strategyReady = false;
     flowState.packRequested = false;
     designAutoStarted = false;
+    talkUX.mode = 'start';
+    talkUX.language = 'darija_ar';
+    talkUX.askedBasics = false;
+    talkUX.awaitingConfirmation = false;
+    talkUX.basicsTries = 0;
     resetDesignWorkspace();
     resetWebsiteWorkspace();
     resetStrategyWorkspace();
@@ -319,7 +479,7 @@
     const item = document.createElement('div');
     item.className = 'namaa-message ' + (role === 'user' ? 'user' : 'assistant') + (options && options.loading ? ' loading' : '');
     const avatar = role === 'user' ? '' : '<div class="message-avatar">N</div>';
-    item.innerHTML = avatar + '<div><div class="message-bubble">' + formatMessageHtml(text) + '</div></div>';
+    item.innerHTML = avatar + '<div class="message-wrap"><div class="message-bubble" dir="auto">' + formatMessageHtml(text) + '</div></div>';
     messages.appendChild(item);
     requestAnimationFrame(scrollToBottom);
     return item;
@@ -1149,7 +1309,7 @@
           brief: projectBrief,
           briefStatus: projectBriefStatus,
           context: AGENTS[activeAgent].context,
-          source: 'namaa-simple-chat-update-79-security-speed-clean',
+          source: 'namaa-simple-chat-update-84-talk-ui-fix',
           handoffFrom: extra && extra.handoffFrom,
           previousUserPrompt: extra && extra.previousUserPrompt,
           previousAgentAnswer: extra && extra.previousAgentAnswer,
@@ -1211,6 +1371,20 @@
     if (input) {
       input.value = '';
       resizeInput();
+    }
+    const localFlow = localBusinessReplyFor(message);
+    if (activeAgent === 'business' && localFlow) {
+      const assistantItem = addMessage('assistant', localFlow.reply);
+      addChoiceButtons(assistantItem, localFlow.choices);
+      addHandoffs(assistantItem, localFlow.handoffs);
+      lastAgentAnswer = localFlow.reply;
+      chatHistory.push({ role: 'assistant', content: localFlow.reply });
+      if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+      isSending = false;
+      if (sendButton) sendButton.disabled = false;
+      if (input) input.focus();
+      scrollToBottom();
+      return;
     }
     const localConfirmed = isAffirmationMessage(message) && hasProjectBrief() && (projectBriefStatus && (projectBriefStatus.isReady || projectBriefStatus.level === 'ready' || projectBriefStatus.score >= 75));
     const loading = addMessage('assistant', 'Namaa كايفهم الرسالة...', { loading: true });

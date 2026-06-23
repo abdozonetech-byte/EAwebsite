@@ -3387,3 +3387,165 @@ body.strategy-modal-open { overflow: hidden; }
   .strategy-modal-content { padding: 16px; }
   .strategy-modal-content .strategy-diagram-board { min-height: auto; }
 }
+
+/* Update 84: Namaa Talk Arabic Darija + responsive chat UI polish */
+.namaa-chat-home {
+  background:
+    radial-gradient(circle at 70% 4%, rgba(24,88,242,.08), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.2), rgba(246,248,252,.88));
+}
+.namaa-chat-stage {
+  padding-left: clamp(10px, 2vw, 24px);
+  padding-right: clamp(10px, 2vw, 24px);
+}
+.namaa-messages {
+  width: min(1040px, 100%);
+  gap: 20px;
+  padding-bottom: 34px;
+}
+.namaa-message { width: 100%; }
+.namaa-message .message-wrap {
+  max-width: min(760px, 78%);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.namaa-message.user .message-wrap {
+  max-width: min(620px, 72%);
+  align-items: flex-end;
+}
+.message-bubble {
+  width: fit-content;
+  max-width: 100%;
+  min-width: 92px;
+  word-break: normal !important;
+  overflow-wrap: break-word;
+  hyphens: none;
+  white-space: pre-wrap;
+  letter-spacing: -.01em;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Arial, sans-serif;
+  text-wrap: pretty;
+}
+.namaa-message.assistant .message-bubble {
+  font-weight: 600;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(24,88,242,.07);
+  box-shadow: 0 20px 60px rgba(15,23,42,.08);
+}
+.namaa-message.user .message-bubble {
+  min-width: 108px;
+  text-align: right;
+  direction: auto;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1858f2 0%, #0d45d9 100%);
+}
+.namaa-mode-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  padding-inline-start: 2px;
+}
+.namaa-mode-actions button {
+  border: 1px solid rgba(24,88,242,.14);
+  background: #fff;
+  color: #0f2f99;
+  box-shadow: 0 10px 28px rgba(24,88,242,.08);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.namaa-mode-actions button:hover {
+  transform: translateY(-2px);
+  background: rgba(24,88,242,.07);
+  box-shadow: 0 14px 34px rgba(24,88,242,.13);
+}
+.namaa-composer {
+  width: min(1040px, 100%);
+  border-radius: 26px;
+  border-color: rgba(24,88,242,.22);
+  background: rgba(255,255,255,.97);
+}
+.namaa-composer textarea {
+  direction: auto;
+  unicode-bidi: plaintext;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.namaa-composer button {
+  font-size: 15px;
+}
+.namaa-credit {
+  color: #7b8498;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .namaa-chat-home {
+    padding: 12px 10px calc(10px + env(safe-area-inset-bottom));
+  }
+  .namaa-chat-stage {
+    padding: 8px 2px 12px;
+  }
+  .namaa-messages {
+    width: 100%;
+    gap: 14px;
+    padding-bottom: 18px;
+  }
+  .namaa-message .message-wrap,
+  .namaa-message.user .message-wrap {
+    max-width: 86vw;
+  }
+  .message-bubble {
+    min-width: 96px;
+    max-width: 86vw;
+    padding: 13px 15px;
+    font-size: 13.5px;
+    line-height: 1.62;
+    border-radius: 19px;
+  }
+  .namaa-message.user .message-bubble {
+    min-width: 104px;
+    max-width: 74vw;
+    text-align: right;
+    white-space: normal;
+  }
+  .namaa-mode-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .namaa-mode-actions button {
+    width: 100%;
+    padding: 11px 12px;
+  }
+  .namaa-composer {
+    border-radius: 24px;
+    padding: 8px;
+    gap: 8px;
+  }
+  .namaa-composer textarea {
+    min-width: 0;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .namaa-composer button {
+    min-width: 76px;
+    height: 48px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 430px) {
+  .namaa-message .message-wrap { max-width: 88vw; }
+  .namaa-message.user .message-wrap { max-width: 76vw; }
+  .namaa-message.user .message-bubble {
+    max-width: 76vw;
+    min-width: 110px;
+    padding-inline: 16px;
+  }
+}
