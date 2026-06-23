@@ -335,16 +335,17 @@
 
   function boardHtml(slot, text, loading) {
     const meta = strategyBoardMeta(slot);
-    const items = strategyBulletItems(text, 7);
+    const items = strategyBulletItems(text, 6);
     const loadingClass = loading ? ' is-loading' : '';
     const fallback = {
-      market: ['Audience and demand', 'Competitor logic', 'Customer pains', 'Trust signals', 'Key opportunity'],
-      digital: ['Offer positioning', 'Funnel steps', 'Content pillars', 'WhatsApp/CRM flow', 'Conversion logic'],
-      roadmap: ['30 days launch', '60 days growth', '90 days scale', 'Priority actions', 'KPIs to watch']
+      market: ['شنو كاين فالسوق؟', 'شكون هو الجمهور المناسب؟', 'فين كاينة الفرصة؟', 'شنو خاصنا نبينو باش نبنيو الثقة؟'],
+      digital: ['وعد واضح للعرض', 'قنوات التسويق الأولى', 'محتوى كيجيب الثقة', 'WhatsApp/CRM باش ما يضيع حتى lead'],
+      roadmap: ['30 يوم: إطلاق منظم', '60 يوم: تحسين وقياس', '90 يوم: توسيع اللي خدام', 'أهم KPI خاص يتراقب']
     }[slot] || ['Namaa board will appear here'];
-    const finalItems = (items.length ? items : fallback);
-    return '<div class="strategy-diagram-board' + loadingClass + '" data-board-kind="' + escapeHtml(slot) + '">'
+    const finalItems = (items.length ? items : fallback).slice(0, 6);
+    return '<div class="strategy-diagram-board strategy-board-modal-view' + loadingClass + '" data-board-kind="' + escapeHtml(slot) + '">'
       + '<div class="strategy-diagram-bg">Namaa</div>'
+      + '<div class="strategy-board-brand-mini"><span class="brand-n">N</span><div><strong>Namaa AI</strong><small>Created by Elboubakry Abdessamad</small></div></div>'
       + '<div class="strategy-diagram-head">'
         + '<span class="strategy-diagram-icon">' + strategyIcon(slot) + '</span>'
         + '<div><small>' + meta[0] + ' / ' + escapeHtml(meta[1]).toUpperCase() + '</small><h3>' + escapeHtml(meta[1]) + '</h3><p>' + escapeHtml(meta[2]) + '</p></div>'
@@ -352,7 +353,24 @@
       + '<div class="strategy-diagram-flow">' + finalItems.map(function (item, index) {
           return '<div class="strategy-diagram-step"><span>' + String(index + 1).padStart(2, '0') + '</span><p>' + escapeHtml(item) + '</p></div>';
         }).join('') + '</div>'
-      + '<div class="strategy-diagram-footer"><span>Namaa AI</span><strong>Created by Elboubakry Abdessamad</strong></div>'
+      + '<div class="strategy-diagram-footer"><span>Namaa AI</span><strong>Strategy board</strong></div>'
+      + '</div>';
+  }
+
+  function strategyCompactCardHtml(slot, text) {
+    const meta = strategyBoardMeta(slot);
+    const items = strategyBulletItems(text, 3);
+    const fallback = {
+      market: ['السوق والجمهور', 'المنافسين والفرصة', 'الثقة والطلب'],
+      digital: ['العرض والقنوات', 'المحتوى والإعلانات', 'WhatsApp و CRM'],
+      roadmap: ['30 يوم', '60 يوم', '90 يوم']
+    }[slot] || ['ملخص', 'خطوات', 'نتيجة'];
+    const finalItems = (items.length ? items : fallback).slice(0, 3);
+    return '<div class="strategy-compact-card" data-board-kind="' + escapeHtml(slot) + '">'
+      + '<div class="strategy-compact-top"><span>' + meta[0] + '</span><strong>' + escapeHtml(meta[1]) + '</strong><em>' + strategyIcon(slot) + '</em></div>'
+      + '<p>' + escapeHtml(meta[2]) + '</p>'
+      + '<ul>' + finalItems.map(function(item){ return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul>'
+      + '<small>كليكي باش تشوف التفاصيل</small>'
       + '</div>';
   }
 
@@ -1542,12 +1560,15 @@
 
   function strategyChatBoardsHtml(text, loading) {
     const parts = splitStrategyBoards(text || '');
-    return '<div class="chat-strategy-result">'
-      + '<p><strong>هادي هي الاستراتيجية النهائية ديال المشروع ✅</strong><br>وجدت لك 3 صور منظمة: بحث السوق، الخطة الرقمية، والروودماب. كليكي على أي صورة باش تشوف التفاصيل.</p>'
+    if (loading) {
+      return '<div class="chat-strategy-result is-loading"><p><strong>كنوجد لك 3 outputs نهائيين...</strong><br>غادي يبان لك ملخص صغير هنا، والتفاصيل كتفتح فـ popup منظم.</p></div>';
+    }
+    return '<div class="chat-strategy-result chat-strategy-compact">'
+      + '<div class="strategy-final-intro"><strong>الاستراتيجية النهائية واجدة ✅</strong><span>خليتها مختصرة هنا باش الشات يبقى نقي. كليكي على أي بطاقة وتشوف board كامل ومنظم.</span></div>'
       + '<div class="chat-strategy-grid">'
-      + '<button type="button" class="chat-strategy-board" data-chat-strategy="market">' + boardHtml('market', parts.market, loading) + '</button>'
-      + '<button type="button" class="chat-strategy-board" data-chat-strategy="digital">' + boardHtml('digital', parts.digital, loading) + '</button>'
-      + '<button type="button" class="chat-strategy-board" data-chat-strategy="roadmap">' + boardHtml('roadmap', parts.roadmap, loading) + '</button>'
+      + '<button type="button" class="chat-strategy-board" data-chat-strategy="market">' + strategyCompactCardHtml('market', parts.market) + '</button>'
+      + '<button type="button" class="chat-strategy-board" data-chat-strategy="digital">' + strategyCompactCardHtml('digital', parts.digital) + '</button>'
+      + '<button type="button" class="chat-strategy-board" data-chat-strategy="roadmap">' + strategyCompactCardHtml('roadmap', parts.roadmap) + '</button>'
       + '</div>'
       + '<div class="chat-founder-message">' + strategyFounderMessage(parts.finalNotes) + '</div>'
       + '</div>';

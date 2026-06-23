@@ -1,6 +1,0 @@
-git status
-git add .
-git commit -m "Update 85: lock and unlock Namaa agents by flow"
-git branch -M main
-git remote set-url origin https://github.com/abdozonetech-byte/EAwebsite.git
-git push -u origin main
