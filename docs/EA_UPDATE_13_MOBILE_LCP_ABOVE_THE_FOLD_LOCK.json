@@ -1,0 +1,117 @@
+{
+  "update": 13,
+  "name": "Mobile LCP and above-the-fold CSS optimization",
+  "created_utc": "2026-06-19T14:12:25+00:00",
+  "scope": "homepage mobile CSS loading order only; no HTML content, SEO, tracking, form, animation removal, or desktop CSS behavior changes",
+  "critical_css": {
+    "file": "assets/css/pages/home-mobile-critical.css",
+    "bytes": 328463,
+    "sha256": "2b986f41cbe16daab095eeae18110655553a0e5b4d676f7ec3815567e46c0af7",
+    "source_filter_stats": [
+      {
+        "file": "assets/css/pages/home-shared-pre.css",
+        "source_bytes": 468254,
+        "critical_bytes": 136113
+      },
+      {
+        "file": "assets/css/elboubakry-mobile-performance-safe.css",
+        "source_bytes": 3578,
+        "critical_bytes": 2173
+      },
+      {
+        "file": "assets/css/pages/home-shared-post.css",
+        "source_bytes": 263333,
+        "critical_bytes": 91515
+      },
+      {
+        "file": "assets/css/pages/home-mobile.css",
+        "source_bytes": 50902,
+        "critical_bytes": 35217
+      }
+    ],
+    "critical_classes_count": 116,
+    "critical_ids": [
+      "cursor-ball",
+      "header-sticky",
+      "homeonepage",
+      "loader",
+      "mobile-menu",
+      "pre-load",
+      "rs-mouse"
+    ]
+  },
+  "deferred_css": {
+    "file": "assets/css/pages/home-mobile-deferred.css",
+    "bytes": 786439,
+    "sha256": "4a3d7f8e0224dad3ab8effebbafe4b67fa153429763f0e005715edcdafb1afe6",
+    "sources_preserved_in_original_order": [
+      {
+        "file": "assets/css/pages/home-shared-pre.css",
+        "sha256": "62a31f38afce4ea34d23b3851fe27fd5c9dc8a680b60da7b2b21469f71bfc59b",
+        "bytes": 468254
+      },
+      {
+        "file": "assets/css/elboubakry-mobile-performance-safe.css",
+        "sha256": "7eff0e699eb04969fe7e5a11d405d032f41e09d8d56b023aa4f023e817398d13",
+        "bytes": 3578
+      },
+      {
+        "file": "assets/css/pages/home-shared-post.css",
+        "sha256": "9d5daa7f6d50013abcce16841ad2867a31c7715fd8f09a9664c35fc7fa62da27",
+        "bytes": 263333
+      },
+      {
+        "file": "assets/css/pages/home-mobile.css",
+        "sha256": "3f0c9f652543030bef56f746e4fc0a8aaa9faf5f2c697d1bdd90e4f746cf01f8",
+        "bytes": 50902
+      }
+    ]
+  },
+  "mobile_render_blocking_css_before": {
+    "bytes": 850628,
+    "links": [
+      [
+        "/assets/css/pages/home-mobile-vendor.css?v=ea-update-12",
+        "(max-width: 768px)",
+        64561
+      ],
+      [
+        "/assets/css/pages/home-shared-pre.css?v=ea-update-11",
+        "all",
+        468254
+      ],
+      [
+        "/assets/css/elboubakry-mobile-performance-safe.css?v=20260617-menu-clean",
+        "(max-width: 768px)",
+        3578
+      ],
+      [
+        "/assets/css/pages/home-shared-post.css?v=ea-update-11",
+        "all",
+        263333
+      ],
+      [
+        "/assets/css/pages/home-mobile.css?v=ea-update-02",
+        "(max-width: 768px)",
+        50902
+      ]
+    ]
+  },
+  "mobile_render_blocking_css_after": {
+    "bytes": 328463,
+    "links": [
+      [
+        "/assets/css/pages/home-mobile-critical.css?v=ea-update-13",
+        "(max-width: 768px)",
+        328463
+      ]
+    ]
+  },
+  "mobile_render_blocking_css_saved": 522165,
+  "desktop_protection": {
+    "home_shared_pre": "desktop-only media min-width 769px",
+    "home_shared_post": "desktop-only media min-width 769px",
+    "home_desktop": "unchanged desktop-only",
+    "vendor_files": "unchanged desktop-only"
+  }
+}

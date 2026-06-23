@@ -1,0 +1,25 @@
+EA UPDATE 11 REPORT
+===================
+
+Scope:
+- Homepage shared CSS bundles only
+- No UI/UX, layout, animation, SEO, tracking, form, sitemap or schema changes
+
+Changed:
+- Minified assets/css/pages/home-shared-pre.css
+- Minified assets/css/pages/home-shared-post.css
+- Updated homepage cache query for those two files to ea-update-11
+
+Result:
+- home-shared-pre.css: 547,696 -> 468,254 bytes
+- home-shared-post.css: 321,427 -> 263,333 bytes
+- Total saved: 137,536 bytes (15.82%)
+
+Duplicate audit:
+- CSS rule blocks scanned: 6492
+- Exact duplicate rule signatures found: 136
+- Removed duplicates: 0
+- Reason: duplicates may be protecting the current cascade/UI and require screenshot-based verification before deletion.
+
+Verification:
+- Run python3 tools/ea_update_11_homepage_css_minify_check.py

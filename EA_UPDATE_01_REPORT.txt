@@ -1,0 +1,27 @@
+EA UPDATE 01 — CSS MAP & PROTECTION
+Project: elboubakry.com / EA Portfolio
+
+Status: DONE
+Visual changes: NONE
+HTML load order changes: NONE
+UI/UX/animation changes: NONE
+SEO/tracking/form changes: NONE
+
+What was added:
+1. docs/EA_UPDATE_01_CSS_DEVICE_SEPARATION_AUDIT.md
+   - Human-readable audit and safe separation plan.
+
+2. docs/EA_UPDATE_01_CSS_LOAD_ORDER_LOCK.json
+   - Machine-readable lock of current CSS/JS dependencies, media attributes, sizes and hashes.
+
+3. tools/ea_css_audit.py
+   - Repeatable audit script to regenerate the lock file before/after future updates.
+
+Why this update matters:
+The current website works visually because many CSS files override each other in a specific order.
+Before separating desktop and mobile CSS, we need this map to avoid breaking the navbar, hero, carousel,
+FAQ, services cards, footer, or mobile animations.
+
+Next recommended update:
+Update 02 should focus only on homepage mobile CSS separation.
+Do not touch desktop CSS or desktop behavior in Update 02.
