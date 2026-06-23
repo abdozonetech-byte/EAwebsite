@@ -122,7 +122,7 @@ SECTIONS AND COPY
 CTA AND LEAD FLOW
 HTML CSS JS
 PREVIEW / INTEGRATION CHECKLIST
-- Under HTML CSS JS, include one complete standalone HTML document inside exactly one fenced code block using an escaped fenced code block marker: `\`\`\`html`.
+- Under HTML CSS JS, include one complete standalone HTML document inside exactly one fenced code block. Tell Gemini to start the block with three backtick characters followed by html, but do not write that marker inside this JavaScript prompt source.
 - The code must be safe for static hosting: no unknown external scripts, no API keys, no trackers, no obfuscation, no eval, no document.write, and no hardcoded private endpoints.
 - The preview must work from srcdoc/iframe. The public UI must not show code or download buttons; it shows the live landing page preview only.
 `.trim();
