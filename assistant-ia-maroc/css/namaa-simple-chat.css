@@ -3549,3 +3549,265 @@ body.strategy-modal-open { overflow: hidden; }
     padding-inline: 16px;
   }
 }
+
+
+/* Update 85 — locked agent flow */
+.namaa-agent{position:relative;}
+.namaa-agent.is-locked{opacity:.45;filter:saturate(.45);cursor:not-allowed;}
+.namaa-agent.is-locked:hover{transform:none;box-shadow:none;}
+.namaa-agent.is-locked .agent-icon{background:rgba(255,255,255,.05);}
+.agent-lock-badge{margin-left:auto;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);color:#b8c2d7;font-size:10px;font-style:normal;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+.namaa-agent.active.is-locked{opacity:.7;}
+@media (max-width: 720px){.agent-lock-badge{font-size:9px;padding:3px 7px}.namaa-agent.is-locked{opacity:.55}}
+
+
+/* Update 86: Namaa Design becomes chat-first, not a static workspace */
+.namaa-shell[data-agent="design"] .namaa-design-workspace { display: none !important; }
+.namaa-shell[data-agent="design"] .namaa-chat-stage { display: block !important; }
+.namaa-shell[data-agent="design"] .namaa-composer { display: block !important; }
+.namaa-shell[data-agent="design"] .namaa-credit { display: block !important; }
+.namaa-shell[data-agent="design"] .namaa-messages { display: flex !important; }
+.chat-generated-visual { display: grid; gap: 14px; }
+.chat-generated-frame { border: 1px solid rgba(24,88,242,.14); border-radius: 22px; overflow: hidden; background: linear-gradient(135deg,#f8fbff,#eef4ff); box-shadow: inset 0 0 0 1px rgba(255,255,255,.55); }
+.chat-generated-frame img { display: block; width: 100%; height: auto; max-height: 620px; object-fit: contain; }
+.chat-visual-board { border: 1px solid rgba(24,88,242,.15); border-radius: 24px; padding: 18px; background: radial-gradient(circle at 20% 20%,rgba(24,88,242,.12),transparent 34%), #f8fbff; display: grid; gap: 16px; }
+.chat-visual-hero { display: flex; align-items: center; gap: 14px; }
+.chat-visual-logo { width: 58px; height: 58px; border-radius: 18px; background: linear-gradient(135deg,#1ab7ff,#1438d4); color: #fff; display: grid; place-items: center; font-weight: 950; font-size: 24px; box-shadow: 0 18px 35px rgba(24,88,242,.22); }
+.chat-visual-hero strong { display: block; font-size: 18px; color: #111827; }
+.chat-visual-hero span { display: block; color: #667085; font-weight: 800; font-size: 12px; margin-top: 2px; }
+.chat-visual-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+.chat-visual-tile { min-height: 88px; border-radius: 18px; background: rgba(255,255,255,.8); border: 1px solid rgba(24,88,242,.12); display: grid; place-items: center; text-align: center; padding: 10px; font-weight: 900; color: #1f2a44; box-shadow: 0 12px 28px rgba(15,23,42,.06); }
+.chat-visual-note { margin: 0; color: #667085; font-weight: 800; font-size: 12px; }
+@media (max-width: 720px) {
+  .chat-visual-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .chat-generated-frame img { max-height: 420px; }
+}
+
+/* Update 87: Namaa Website becomes chat-first with visual desktop/mobile mockup inside chat */
+.namaa-shell[data-agent="website"] .namaa-website-workspace { display: none !important; }
+.namaa-shell[data-agent="website"] .namaa-chat-stage { display: block !important; }
+.namaa-shell[data-agent="website"] .namaa-composer { display: block !important; }
+.namaa-shell[data-agent="website"] .namaa-credit { display: block !important; }
+.namaa-shell[data-agent="website"] .namaa-messages { display: flex !important; }
+.chat-website-result { display: grid; gap: 14px; width: 100%; }
+.chat-website-result > p { margin: 0; color: #243044; line-height: 1.75; }
+.chat-website-devices { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 16px; align-items: start; }
+.chat-device-label { color: #1858f2; font-size: 11px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.chat-browser-shell { border-radius: 22px; overflow: hidden; border: 1px solid rgba(24,88,242,.14); background: #0f172a; box-shadow: 0 22px 60px rgba(15,23,42,.14); }
+.chat-browser-top { min-height: 38px; display: flex; align-items: center; gap: 12px; padding: 0 12px; background: #101827; color: rgba(255,255,255,.82); font-size: 11px; }
+.chat-browser-top span { display: flex; gap: 5px; }
+.chat-browser-top i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.36); display: block; }
+.chat-browser-top strong { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-browser-scroll { height: 390px; background: #fff; overflow: auto; }
+.chat-browser-scroll iframe, .chat-phone-scroll iframe { width: 100%; height: 820px; border: 0; display: block; background: #fff; }
+.chat-phone-shell { width: 100%; max-width: 230px; margin: 0 auto; border: 10px solid #101827; border-radius: 34px; padding: 10px; background: #101827; box-shadow: 0 22px 50px rgba(15,23,42,.18); }
+.chat-phone-speaker { width: 70px; height: 5px; border-radius: 999px; background: rgba(255,255,255,.25); margin: 0 auto 10px; }
+.chat-phone-scroll { height: 410px; overflow: auto; border-radius: 22px; background: #fff; }
+@media (max-width: 920px) {
+  .chat-website-devices { grid-template-columns: 1fr; }
+  .chat-phone-shell { max-width: 260px; }
+}
+@media (max-width: 640px) {
+  .chat-browser-scroll { height: 300px; }
+  .chat-phone-scroll { height: 360px; }
+  .chat-browser-scroll iframe, .chat-phone-scroll iframe { height: 760px; }
+}
+
+
+/* Update 88: Namaa Strategy becomes chat-first with 3 visual boards inside chat */
+.namaa-shell[data-agent="strategy"] .namaa-strategy-workspace { display: none !important; }
+.namaa-shell[data-agent="strategy"] .namaa-chat-stage { display: block !important; }
+.namaa-shell[data-agent="strategy"] .namaa-composer { display: block !important; }
+.namaa-shell[data-agent="strategy"] .namaa-credit { display: block !important; }
+.namaa-shell[data-agent="strategy"] .namaa-messages { display: flex !important; }
+.chat-strategy-result { display: grid; gap: 16px; width: 100%; }
+.chat-strategy-result > p { margin: 0; color: #263449; line-height: 1.8; }
+.chat-strategy-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
+.chat-strategy-board { appearance: none; border: 0; padding: 0; margin: 0; text-align: inherit; background: transparent; cursor: pointer; border-radius: 24px; transition: transform .2s ease, box-shadow .2s ease; }
+.chat-strategy-board:hover { transform: translateY(-3px); box-shadow: 0 24px 60px rgba(15,23,42,.12); }
+.chat-strategy-board .strategy-diagram-board { min-height: 430px; height: 100%; }
+.chat-strategy-board .strategy-diagram-step p { font-size: 12px; line-height: 1.45; }
+.chat-founder-message { border-radius: 24px; border: 1px solid rgba(24,88,242,.13); background: linear-gradient(135deg,#ffffff,#f4f7ff); padding: 18px; box-shadow: 0 16px 42px rgba(15,23,42,.07); }
+.chat-founder-message .strategy-founder-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.chat-founder-message .strategy-founder-actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 14px; border-radius: 999px; background: #1858f2; color: #fff; font-weight: 900; text-decoration: none; font-size: 12px; }
+.chat-founder-message .strategy-founder-actions a:nth-child(2) { background: #0f172a; }
+.chat-founder-message .strategy-founder-actions a:nth-child(3) { background: #fff; color: #1858f2; border: 1px solid rgba(24,88,242,.18); }
+@media (max-width: 1100px) { .chat-strategy-grid { grid-template-columns: 1fr; } .chat-strategy-board .strategy-diagram-board { min-height: 360px; } }
+@media (max-width: 640px) { .chat-strategy-result { gap: 12px; } .chat-strategy-board .strategy-diagram-board { min-height: 320px; } }
+
+/* Update 89 — final UX polish: clean Darija chat, responsive bubbles, smooth agent transitions */
+:root{
+  --namaa-font-ui: 'Poppins', 'Segoe UI', Tahoma, Arial, sans-serif;
+  --namaa-font-ar: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.namaa-shell,
+.namaa-main,
+.namaa-chat-stage,
+.namaa-composer textarea,
+.message-bubble{
+  font-family: var(--namaa-font-ar);
+}
+.namaa-chat-home{
+  background:
+    radial-gradient(circle at 52% 0%, rgba(24,88,242,.075), transparent 32%),
+    linear-gradient(180deg,#fbfdff 0%,#f6f8fc 100%);
+}
+.namaa-chat-stage{
+  scroll-behavior:smooth;
+}
+.namaa-messages{
+  width:min(920px,100%);
+  margin-inline:auto;
+  gap:18px;
+}
+.namaa-message{
+  animation:namaaMsgIn .22s ease both;
+}
+@keyframes namaaMsgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.namaa-message .message-wrap{
+  min-width:0;
+  max-width:min(760px,82%);
+}
+.namaa-message.user{
+  justify-content:flex-end;
+}
+.namaa-message.user .message-wrap{
+  max-width:min(560px,72%);
+  display:flex;
+  justify-content:flex-end;
+}
+.message-bubble{
+  width:auto!important;
+  max-width:100%!important;
+  min-width:56px!important;
+  white-space:pre-wrap!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+  line-break:auto!important;
+  hyphens:none!important;
+  text-wrap:pretty;
+  letter-spacing:0;
+  line-height:1.72;
+  font-size:15px;
+  border-radius:24px;
+  padding:15px 18px;
+}
+.namaa-message.user .message-bubble{
+  min-width:48px!important;
+  max-width:100%!important;
+  display:inline-block;
+  text-align:right;
+  direction:auto;
+  unicode-bidi:plaintext;
+  color:#fff;
+  font-weight:800;
+  background:linear-gradient(135deg,#1858f2,#0e42cd);
+  box-shadow:0 16px 38px rgba(24,88,242,.23);
+}
+.namaa-message.assistant .message-bubble{
+  color:#162033;
+  background:rgba(255,255,255,.98);
+  border:1px solid rgba(24,88,242,.08);
+  box-shadow:0 20px 62px rgba(15,23,42,.08);
+}
+.message-bubble strong{font-weight:950;color:#071226}
+.namaa-message.user .message-bubble strong{color:#fff}
+.message-avatar{
+  box-shadow:0 14px 32px rgba(24,88,242,.18);
+}
+.namaa-mode-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:14px;
+}
+.namaa-mode-actions button,
+.handoff-button{
+  border-radius:999px!important;
+  min-height:42px;
+  padding:0 16px!important;
+  font-family:var(--namaa-font-ar);
+  font-weight:950!important;
+  letter-spacing:0!important;
+  box-shadow:0 12px 30px rgba(24,88,242,.10);
+}
+.namaa-mode-actions button:first-child,
+.handoff-button{
+  background:linear-gradient(135deg,#1858f2,#0e42cd)!important;
+  color:#fff!important;
+  border-color:transparent!important;
+}
+.namaa-mode-actions button:hover,
+.handoff-button:hover{transform:translateY(-2px)}
+.namaa-agent strong,
+.namaa-agent small,
+.namaa-side-title,
+.namaa-new-chat,
+.namaa-topbar{
+  font-family:var(--namaa-font-ar);
+}
+.agent-lock-badge{
+  text-transform:none!important;
+  letter-spacing:0!important;
+  font-family:var(--namaa-font-ar);
+}
+.namaa-agent.is-locked .agent-lock-badge{font-size:0}
+.namaa-agent.is-locked .agent-lock-badge::after{content:'مقفل';font-size:10px}
+.namaa-empty h1,
+.namaa-empty p{
+  font-family:var(--namaa-font-ar);
+}
+.namaa-composer{
+  width:min(920px,100%);
+  margin-inline:auto;
+  border-radius:28px;
+  background:rgba(255,255,255,.98);
+  box-shadow:0 18px 60px rgba(15,23,42,.09);
+}
+.namaa-composer textarea{
+  direction:auto;
+  unicode-bidi:plaintext;
+  font-size:15px;
+  font-weight:750;
+  line-height:1.55;
+}
+.namaa-credit{
+  font-family:var(--namaa-font-ar);
+  color:#7a8495;
+}
+.chat-generated-frame,
+.chat-browser-shell,
+.chat-phone-shell,
+.chat-strategy-board .strategy-diagram-board,
+.chat-visual-board{
+  box-shadow:0 26px 70px rgba(15,23,42,.11);
+}
+.chat-strategy-grid{gap:14px}
+.chat-strategy-board .strategy-diagram-board{border-radius:26px}
+.strategy-modal-content{font-family:var(--namaa-font-ar)}
+@media (max-width:720px){
+  .namaa-main{min-width:0}
+  .namaa-chat-home{padding:10px 10px calc(9px + env(safe-area-inset-bottom))!important}
+  .namaa-chat-stage{padding:8px 0 10px!important}
+  .namaa-messages{gap:14px;padding:0 2px 18px!important}
+  .namaa-message{gap:8px}
+  .message-avatar{width:32px;height:32px;flex:0 0 32px}
+  .namaa-message .message-wrap{max-width:calc(100vw - 76px)!important}
+  .namaa-message.user .message-wrap{max-width:min(78vw,340px)!important}
+  .message-bubble{font-size:14px;line-height:1.68;padding:13px 15px;border-radius:20px}
+  .namaa-message.user .message-bubble{min-width:44px!important;padding-inline:15px!important}
+  .namaa-mode-actions{display:grid;grid-template-columns:1fr;gap:8px}
+  .namaa-mode-actions button,.handoff-button{width:100%;min-height:44px}
+  .namaa-composer{border-radius:24px;padding:8px}
+  .namaa-composer textarea{font-size:14px;min-width:0}
+  .namaa-composer button{min-width:70px;height:46px}
+  .chat-website-devices{grid-template-columns:1fr!important}
+  .chat-browser-scroll{height:295px!important}
+  .chat-phone-scroll{height:355px!important}
+  .chat-strategy-grid{grid-template-columns:1fr!important}
+}
+@media (max-width:390px){
+  .namaa-message.user .message-wrap{max-width:80vw!important}
+  .message-bubble{font-size:13.5px;padding:12px 14px}
+  .namaa-composer button{min-width:62px;font-size:12px}
+}

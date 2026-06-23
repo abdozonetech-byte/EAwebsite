@@ -5,30 +5,30 @@
     business: {
       title: 'شنو بغيتي نديرو اليوم؟',
       kicker: 'Namaa Talk',
-      subtitle: 'نهضرو عادي فـ business وAI، ولا نبنيو مشروعك خطوة بخطوة بلا أسئلة كثيرة.',
-      placeholder: 'كتب رسالتك هنا... مثلا: بغيت نبني مشروع',
+      subtitle: 'نهضرو عادي على البيزنس والذكاء الاصطناعي، ولا نقادو مشروعك خطوة بخطوة بلا أسئلة كثيرة.',
+      placeholder: 'كتب رسالتك هنا... مثال: بغيت نقاد مشروع',
       context: 'Namaa Business Talk = free talk about AI, business, IT, marketing, startups, websites, WhatsApp/CRM and Morocco-first execution.'
     },
     design: {
-      title: 'Namaa Design Lab.',
+      title: 'Namaa Design',
       kicker: 'Namaa Design',
-      subtitle: 'Logo first, then category mockups. No long text — just a visual pack ready for Website.',
-      placeholder: 'Namaa Design generates logo + mockups from the confirmed brief...',
+      subtitle: 'غادي نوجد لك اللوغو والموكابات داخل الشات، بلا تقرير طويل.',
+      placeholder: 'جاوب بـ نعم باش نوجد لك اللوغو والموكابات...',
       context: 'Namaa Design = visual lab for logo + category mockups only. It generates a real visual board from the confirmed brief, then hands it to Namaa Website.'
     },
     website: {
-      title: 'Namaa Dev: website mockup preview.',
+      title: 'Namaa Dev',
       kicker: 'Namaa Website / Dev',
-      subtitle: 'Namaa Dev creates the landing page internally and shows it as desktop + mobile mockups. No code, no blank iframe.',
-      placeholder: 'Namaa Dev opens a website mockup preview, not source code...',
+      subtitle: 'غادي نوجد لك موكاب ديال landing page داخل الشات: desktop و mobile.',
+      placeholder: 'جاوب بـ نعم باش نوجد موكاب ديال الصفحة...',
       context: 'Namaa Website = Namaa Dev workspace. Gemini creates a real standalone HTML/CSS/JS landing page internally and the UI shows only desktop and mobile visual mockups, not source code.'
     },
     strategy: {
-      title: 'Build your first serious strategy.',
+      title: 'Namaa Strategy',
       kicker: 'Namaa Strategy',
-      subtitle: 'Final step: market research, digital marketing strategy and roadmap after the website preview.',
-      placeholder: 'Namaa Strategy is the final step after Design and Website...',
-      context: 'Namaa Strategy = final step after Namaa Talk, Namaa Design and Namaa Website. It creates market research, digital marketing strategy and roadmap as branded boards.'
+      subtitle: 'آخر خطوة: غادي نخرج لك 3 صور منظمة: بحث السوق، الخطة الرقمية، والروودماب.',
+      placeholder: 'جاوب بـ نعم باش نوجد الصور الاستراتيجية النهائية...',
+      context: 'Namaa Strategy = final chat-first step after Namaa Talk, Namaa Design and Namaa Website. It asks for confirmation, then creates 3 branded visual boards inside the chat: Market Research, Digital Marketing Strategy, and Roadmap.'
     }
   };
 
@@ -101,6 +101,12 @@
   let projectBriefConfirmed = false;
   let strategyPackPopupShown = false;
   let designAutoStarted = false;
+  let designChatIntroShown = false;
+  let designAwaitingStart = false;
+  let websiteChatIntroShown = false;
+  let websiteAwaitingStart = false;
+  let strategyChatIntroShown = false;
+  let strategyAwaitingStart = false;
   const flowState = { designReady: false, websiteReady: false, strategyReady: false, packRequested: false };
 
   const talkUX = {
@@ -118,12 +124,12 @@
 
   function wantsBuildProject(value) {
     const text = String(value || '').toLowerCase();
-    return /(build\s*project|bni|nbni|n9ado|nqado|نقادو|نبنيو|مشروع|project|بروجي|projet|بناء مشروع)/i.test(text);
+    return /(build\s*project|bni|nbni|n9ado|nqado|نقادو|نبنيو|نبني|بناء|مشروع|project|بروجي|projet|بناء مشروع)/i.test(text);
   }
 
   function wantsFreeTalk(value) {
     const text = String(value || '').toLowerCase();
-    return /(free\s*talk|دردشة|نهضرو|نهضر|dwi|dwik|دوي|هضرة|سؤال عادي|business talk)/i.test(text);
+    return /(free\s*talk|دردشة|نهضرو|نهضر|نهدرو|هضرة عادية|نهضرو عادي|dwi|dwik|دوي|هضرة|سؤال عادي|business talk)/i.test(text);
   }
 
   function isTinyAgreement(value) {
@@ -193,7 +199,7 @@
     const name = projectBrief.projectName || projectBrief.project || 'مشروع جديد';
     const desc = projectBrief.description || projectBrief.offer || 'فكرة مشروع';
     const city = projectBrief.city || projectBrief.market || 'المغرب';
-    return 'واخا، فهمت عليك ✨\n\n**المشروع:** ' + name + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nواش هاد الفهم صحيح؟ إلا نعم، غادي نمشيو مباشرة لـ **Namaa Design** باش نخرجو logo و mockups.';
+    return 'واخا، فهمت عليك ✨\n\n**المشروع:** ' + name + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nواش هاد الفهم صحيح؟ إلا نعم، غادي نمشيو مباشرة لـ **Namaa Design** باش نخرجو اللوغو والموكابات.';
   }
 
   function addChoiceButtons(targetItem, choices) {
@@ -219,8 +225,8 @@
     if (looksLikeGreeting(raw) && talkUX.mode === 'start') {
       talkUX.mode = 'choice';
       return { reply: darijaWelcome(), choices: [
-        { label: 'Free Talk', value: 'Free Talk' },
-        { label: 'Build Project', value: 'Build Project' }
+        { label: 'نهضرو عادي', value: 'نهضرو عادي' },
+        { label: 'نقادو مشروع', value: 'نقادو مشروع' }
       ] };
     }
     if (wantsFreeTalk(raw)) {
@@ -247,11 +253,12 @@
     if (talkUX.awaitingConfirmation && isAffirmationMessage(raw) && hasReadyBrief()) {
       projectBriefConfirmed = true;
       talkUX.awaitingConfirmation = false;
+      updateAgentLocks();
       return { reply: 'مزيان، دابا المشروع واضح ✅\nالخطوة الجاية هي **Namaa Design** باش نخرجو logo و mockups مناسبين للمشروع.', handoffs: [{
         agent: 'design',
-        label: 'Open Namaa Design',
+        label: 'فتح Namaa Design',
         agentLabel: 'Namaa Design',
-        displayMessage: 'Open Namaa Design with this confirmed project brief',
+        displayMessage: 'فتح Namaa Design with this confirmed project brief',
         prompt: 'Use the confirmed Namaa project brief from Business Talk. Create logo + category-specific mockups only. This is step 2 after Namaa Talk.'
       }] };
     }
@@ -365,19 +372,57 @@
   function updateFlowState(kind, ready) {
     if (!kind || !(kind in flowState)) return;
     flowState[kind] = Boolean(ready);
+    updateAgentLocks();
   }
 
   function flowWarning(targetAgent) {
     if (targetAgent === 'design' && !hasReadyBrief()) {
-      return 'Bda b Namaa Talk: 3tih fikra dyal project, khlih yfhem brief, w jaweb b yes/s7i7. Mn b3d Design ghadi ykhdem mzyan.';
+      return 'خاصك تبدا من Namaa Talk: عطيو فكرة المشروع، خليه يفهمها، ومن بعد جاوب بنعم. ملي brief يتأكد، Namaa Design غادي يتحل.';
     }
     if (targetAgent === 'website' && !flowState.designReady) {
-      return 'Kmel Namaa Design lwel. Website khaso brief + visual direction bach ykhdem landing page mzyana, maشي عشوائية.';
+      return 'كمّل Namaa Design الأول. Website خاصو logo و mockups باش يبني preview مزيان.';
     }
     if (targetAgent === 'strategy' && !flowState.websiteReady) {
-      return 'Kmel Namaa Website lwel. Strategy hiya final step: market research + marketing strategy + roadmap mn b3d landing page preview.';
+      return 'كمّل Namaa Website الأول. Strategy هي آخر خطوة: market research + strategy + roadmap من بعد preview.';
     }
     return '';
+  }
+
+  function isAgentUnlocked(agent) {
+    if (agent === 'business') return true;
+    if (agent === 'design') return hasReadyBrief();
+    if (agent === 'website') return Boolean(flowState.designReady);
+    if (agent === 'strategy') return Boolean(flowState.websiteReady);
+    return false;
+  }
+
+  function lockedAgentLabel(agent) {
+    if (agent === 'design') return 'كيحل من بعد Namaa Talk';
+    if (agent === 'website') return 'كيحل من بعد Namaa Design';
+    if (agent === 'strategy') return 'كيحل من بعد Namaa Website';
+    return '';
+  }
+
+  function updateAgentLocks() {
+    agentButtons.forEach(function (button) {
+      const agent = button.dataset.agent;
+      const unlocked = isAgentUnlocked(agent);
+      button.classList.toggle('is-locked', !unlocked);
+      button.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+      button.dataset.locked = unlocked ? 'false' : 'true';
+      const oldBadge = button.querySelector('.agent-lock-badge');
+      if (oldBadge) oldBadge.remove();
+      if (!unlocked) {
+        const badge = document.createElement('em');
+        badge.className = 'agent-lock-badge';
+        badge.textContent = 'Locked';
+        badge.setAttribute('aria-hidden', 'true');
+        button.appendChild(badge);
+        button.title = lockedAgentLabel(agent);
+      } else {
+        button.removeAttribute('title');
+      }
+    });
   }
 
   function showWorkspaceNotice(agent, text) {
@@ -413,6 +458,92 @@
     return data.answer || data.reply || data.text || data.output || data.content || data.message || (data.data && (data.data.answer || data.data.reply || data.data.text)) || '';
   }
 
+
+  function designChatIntroText() {
+    const b = projectBrief && typeof projectBrief === 'object' ? projectBrief : {};
+    const project = b.projectName || b.project || 'المشروع ديالك';
+    const desc = b.description || b.offer || 'الفكرة اللي شرحتي';
+    const city = b.city || b.market || 'المغرب';
+    return 'مرحبا، أنا Namaa Design 🎨\n\nفهمت المشروع ديالك هكذا:\n\n**المشروع:** ' + project + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nنقدر نوجد لك دابا **logo + mockups** مناسبين للمشروع.\n\nواش نبدأ؟';
+  }
+
+  function startDesignChatIfReady() {
+    if (activeAgent !== 'design') return;
+    if (!hasReadyBrief()) return;
+    if (designChatIntroShown) return;
+    designChatIntroShown = true;
+    designAwaitingStart = true;
+    const item = addMessage('assistant', designChatIntroText());
+    addChoiceButtons(item, [{ label: 'نعم، وجد التصميم', value: 'نعم وجد التصميم' }]);
+    if (input) input.placeholder = 'جاوب بنعم باش Namaa Design يخرج logo و mockups...';
+  }
+
+  function designFallbackBoardHtml() {
+    const b = projectBrief && typeof projectBrief === 'object' ? projectBrief : {};
+    const project = escapeHtml(b.projectName || b.project || 'Namaa Project');
+    const city = escapeHtml(b.city || b.market || 'Morocco');
+    const labels = mockupLabelsFromHint().slice(0, 6);
+    return '<div class="chat-visual-board">'
+      + '<div class="chat-visual-hero"><div class="chat-visual-logo">N</div><div><strong>' + project + '</strong><span>' + city + ' · logo + mockups</span></div></div>'
+      + '<div class="chat-visual-grid">' + labels.map(function(label){ return '<div class="chat-visual-tile"><span>' + escapeHtml(label) + '</span></div>'; }).join('') + '</div>'
+      + '<p class="chat-visual-note">Image API ما رجعاتش JPG دابا، ولكن Namaa وجد لك mockup board مؤقت باش تكمل للWebsite.</p>'
+      + '</div>';
+  }
+
+  function designImageBubbleHtml(imageUrl, mimeType) {
+    return '<div class="chat-generated-visual">'
+      + '<p><strong>ها هو أول باك بصري ديال المشروع ✅</strong><br>اللوغو والموكابات واجدين. إلا عجبك الاتجاه، دوز لـ Namaa Dev.</p>'
+      + '<div class="chat-generated-frame"><img src="' + escapeHtml(imageUrl) + '" alt="Namaa Design logo and mockups" /></div>'
+      + '</div>';
+  }
+
+  async function sendDesignChatPrompt(raw, extra) {
+    const message = String(raw || '').trim();
+    if (!message || isSending) return;
+    if (!ensureFlowStep('design')) { setAgent('business'); return; }
+    isSending = true;
+    lastUserPrompt = message;
+    chatHistory.push({ role: 'user', content: message });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+    const displayMessage = extra && extra.displayMessage ? String(extra.displayMessage).trim() : message;
+    addMessage('user', displayMessage || message);
+    if (input) { input.value = ''; resizeInput(); }
+    const loading = addMessage('assistant', 'تمام، كنوجد لك اللوغو والموكابات دابا... لحظة صغيرة 🎨', { loading: true });
+    const imagePrompt = imagePromptFromDesign('Create the final visual result now. No text report. Generate one premium board with logo and project-specific mockups only.');
+    const result = await callImageGeneration(imagePrompt);
+    const data = result.data || {};
+    const image = data.image || {};
+    const imageUrl = image.dataUrl || image.url || image.src || data.imageUrl;
+    let html = '';
+    if (result.ok && imageUrl) {
+      html = designImageBubbleHtml(imageUrl, image.mimeType || 'image/jpeg');
+      lastDesignAnswer = 'Namaa Design generated a visual logo and mockups board for the confirmed project.';
+    } else {
+      html = '<p><strong>التصميم وجد، ولكن توليد الصورة ما رجعش نتيجة دابا.</strong><br>ها mockup board مؤقت باش نكملو flow:</p>' + designFallbackBoardHtml();
+      lastDesignAnswer = 'Namaa Design prepared a fallback visual mockup board because image generation was unavailable.';
+    }
+    flowState.designReady = true;
+    updateAgentLocks();
+    if (loading) {
+      loading.classList.remove('loading');
+      const bubble = loading.querySelector('.message-bubble');
+      if (bubble) bubble.innerHTML = html;
+      addHandoffs(loading, frontendHandoffsForActive());
+    } else {
+      const item = addMessage('assistant', 'Design ready.');
+      const bubble = item && item.querySelector('.message-bubble');
+      if (bubble) bubble.innerHTML = html;
+      addHandoffs(item, frontendHandoffsForActive());
+    }
+    lastAgentAnswer = lastDesignAnswer;
+    chatHistory.push({ role: 'assistant', content: lastDesignAnswer });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+    isSending = false;
+    if (sendButton) sendButton.disabled = false;
+    if (input) input.focus();
+    scrollToBottom();
+  }
+
   function setAgent(agent) {
     const next = AGENTS[agent] ? agent : 'business';
     activeAgent = next;
@@ -423,16 +554,17 @@
     if (kicker) kicker.textContent = data.kicker;
     if (input) input.placeholder = data.placeholder;
     agentButtons.forEach((button) => button.classList.toggle('active', button.dataset.agent === next));
+    updateAgentLocks();
     document.body.classList.remove('sidebar-open');
     if (next === 'design') {
       refreshDesignBriefCard();
-      if (ensureFlowStep('design')) startDesignAutoIfReady();
+      if (ensureFlowStep('design')) startDesignChatIfReady();
     } else if (next === 'website') {
       refreshWebsiteBriefCard();
-      ensureFlowStep('website');
+      if (ensureFlowStep('website')) startWebsiteChatIfReady();
     } else if (next === 'strategy') {
       refreshStrategyBriefCard();
-      ensureFlowStep('strategy');
+      if (ensureFlowStep('strategy')) startStrategyChatIfReady();
     } else if (input) {
       input.focus();
     }
@@ -457,6 +589,12 @@
     flowState.strategyReady = false;
     flowState.packRequested = false;
     designAutoStarted = false;
+    designChatIntroShown = false;
+    designAwaitingStart = false;
+    websiteChatIntroShown = false;
+    websiteAwaitingStart = false;
+    strategyChatIntroShown = false;
+    strategyAwaitingStart = false;
     talkUX.mode = 'start';
     talkUX.language = 'darija_ar';
     talkUX.askedBasics = false;
@@ -471,6 +609,7 @@
       input.focus();
     }
     setAgent('business');
+    updateAgentLocks();
   }
 
   function addMessage(role, text, options) {
@@ -518,6 +657,9 @@
           return;
         }
         setAgent(targetAgent);
+        if (targetAgent === 'design' || targetAgent === 'website') {
+          return;
+        }
         sendPrompt(prompt, {
           handoffFrom: fromAgent,
           previousUserPrompt: sourcePrompt,
@@ -560,34 +702,34 @@
     if (!warning) return '';
     const required = requiredAgentFor(targetAgent);
     const requiredLabel = required === 'business' ? 'Namaa Business Talk' : (required === 'design' ? 'Namaa Design' : (required === 'website' ? 'Namaa Website' : 'Namaa Strategy'));
-    return warning + '\n\nDaba khdem l-step li qbl: ' + requiredLabel + '.';
+    return warning + '\n\nدابا خاصك تكمل الخطوة اللي قبل: ' + requiredLabel + '.';
   }
 
   function frontendHandoffsForActive() {
     if (activeAgent === 'business' && hasReadyBrief()) {
       return [{
         agent: 'design',
-        label: 'Open Namaa Design',
+        label: 'فتح Namaa Design',
         agentLabel: 'Namaa Design',
-        displayMessage: 'Open Namaa Design with this confirmed project brief',
-        prompt: 'Use the confirmed Namaa project brief from Business Talk. Create the polished Namaa Design workspace with exact headings: DESIGN SNAPSHOT, LOGO DIRECTIONS, BRAND SYSTEM, MOCKUP PACK, NANO BANANA / GEMINI PROMPTS, CONTENT NOTES, NAMAA WEBSITE HANDOFF. Keep it card-friendly and ready for website handoff. This is step 2 after Namaa Talk.'
+        displayMessage: 'فتح Namaa Design with this confirmed project brief',
+        prompt: 'فتح Namaa Design chat with the confirmed project brief. Ask for confirmation, then generate a logo and mockups visual board inside the chat.'
       }];
     }
     if (activeAgent === 'design' && flowState.designReady) {
       return [{
         agent: 'website',
-        label: 'Open Namaa Website',
+        label: 'فتح Namaa Dev',
         agentLabel: 'Namaa Website',
-        displayMessage: 'Open Namaa Website with this design',
+        displayMessage: 'فتح Namaa Dev with this design',
         prompt: 'Use the previous Namaa Design output and current project brief. Build a real landing page and show it as a live browser preview. Do not show source code in the UI.'
       }];
     }
     if (activeAgent === 'website' && flowState.websiteReady) {
       return [{
         agent: 'strategy',
-        label: 'Open final Namaa Strategy',
+        label: 'فتح Namaa Strategy',
         agentLabel: 'Namaa Strategy',
-        displayMessage: 'Open final Namaa Strategy with this website preview',
+        displayMessage: 'فتح Namaa Strategy with this website preview',
         prompt: 'Use the confirmed project brief, previous Namaa Design output, and current Namaa Website landing page preview. Generate the final Namaa Strategy boards: market research, digital marketing strategy, roadmap and a short founder message. This is the final step after Talk → Design → Website.'
       }];
     }
@@ -694,7 +836,10 @@
     if (!data || typeof data !== 'object') return;
     if (data.brief && typeof data.brief === 'object') projectBrief = data.brief;
     if (data.briefStatus && typeof data.briefStatus === 'object') projectBriefStatus = data.briefStatus;
-    if (data.briefConfirmed === true) projectBriefConfirmed = true;
+    if (data.briefConfirmed === true) {
+      projectBriefConfirmed = true;
+      updateAgentLocks();
+    }
   }
 
   function cleanText(value, max) {
@@ -1118,6 +1263,94 @@
   }
 
 
+  function websiteChatIntroText() {
+    const b = projectBrief && typeof projectBrief === 'object' ? projectBrief : {};
+    const project = b.projectName || b.project || 'المشروع ديالك';
+    const desc = b.description || b.offer || 'الفكرة اللي شرحتي';
+    const city = b.city || b.market || 'المغرب';
+    return 'مرحبا، أنا Namaa Dev 💻\n\nوصلني التصميم ديال المشروع، وفهمت السياق هكذا:\n\n**المشروع:** ' + project + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nنقدر نبني لك دابا **landing page mockup**: نسخة Desktop ونسخة Mobile قابلة للسكرول، بلا ما نوريك الكود.\n\nواش نبدأ؟';
+  }
+
+  function startWebsiteChatIfReady() {
+    if (activeAgent !== 'website') return;
+    if (!flowState.designReady) return;
+    if (websiteChatIntroShown) return;
+    websiteChatIntroShown = true;
+    websiteAwaitingStart = true;
+    const item = addMessage('assistant', websiteChatIntroText());
+    addChoiceButtons(item, [{ label: 'نعم، وجد landing page', value: 'نعم وجد landing page' }]);
+    if (input) input.placeholder = 'جاوب بنعم باش Namaa Dev يبني landing page mockup...';
+  }
+
+  function websiteChatMockupShellHtml() {
+    return '<div class="chat-website-result">'
+      + '<p><strong>ها landing page mockup وجدات ✅</strong><br>شوفها فـ Desktop وMobile. إلا الاتجاه مزيان، دوز لـ Namaa Strategy.</p>'
+      + '<div class="chat-website-devices">'
+        + '<div class="chat-desktop-mockup">'
+          + '<div class="chat-device-label">Desktop preview</div>'
+          + '<div class="chat-browser-shell">'
+            + '<div class="chat-browser-top"><span><i></i><i></i><i></i></span><strong>namaa.preview/' + escapeHtml(websitePreviewSlug()) + '</strong></div>'
+            + '<div class="chat-browser-scroll"><iframe title="Namaa desktop landing page result" sandbox="allow-forms allow-scripts"></iframe></div>'
+          + '</div>'
+        + '</div>'
+        + '<div class="chat-phone-mockup">'
+          + '<div class="chat-device-label">Mobile scroll</div>'
+          + '<div class="chat-phone-shell"><div class="chat-phone-speaker"></div><div class="chat-phone-scroll"><iframe title="Namaa mobile landing page result" sandbox="allow-forms allow-scripts"></iframe></div></div>'
+        + '</div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  function mountWebsiteChatPreview(targetItem, htmlCode) {
+    if (!targetItem) return;
+    const bubble = targetItem.querySelector('.message-bubble');
+    if (!bubble) return;
+    bubble.innerHTML = websiteChatMockupShellHtml();
+    const iframes = bubble.querySelectorAll('iframe');
+    iframes.forEach(function (frame) {
+      frame.srcdoc = htmlCode || fallbackLandingPageHtml('Namaa Dev generated a temporary visual landing page from the project brief.');
+    });
+  }
+
+  async function sendWebsiteChatPrompt(raw, extra) {
+    const message = String(raw || '').trim();
+    if (!message || isSending) return;
+    if (!ensureFlowStep('website')) { setAgent('design'); return; }
+    isSending = true;
+    lastUserPrompt = message;
+    chatHistory.push({ role: 'user', content: message });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+    const displayMessage = extra && extra.displayMessage ? String(extra.displayMessage).trim() : message;
+    addMessage('user', displayMessage || message);
+    if (input) { input.value = ''; resizeInput(); }
+    const loading = addMessage('assistant', 'تمام، كنبني لك landing page mockup دابا... غادي يبان فـ Desktop وMobile بلا كود 💻', { loading: true });
+    const buildPrompt = 'Use the confirmed project brief and previous Namaa Design output. Generate a complete premium one-file HTML/CSS/JS landing page for live visual preview only. Return only the full HTML document inside one html fenced code block. No explanation outside the code block. The page must look like a real landing page: strong hero, offer, benefits, trust, FAQ, CTA, mobile responsive CSS and light JS if useful.';
+    const result = await callAgent(buildPrompt, extra || {});
+    const reply = result.reply || '';
+    const code = extractCode(reply) || fallbackLandingPageHtml('Gemini returned no full HTML document, so Namaa Dev opened a clean working landing page mockup from your confirmed brief.');
+    lastWebsiteAnswer = reply || 'Namaa Dev generated a landing page mockup visual preview from the confirmed brief and design.';
+    lastWebsiteCode = code;
+    renderWebsitePreview(code);
+    updateFlowState('websiteReady', true);
+    if (loading) {
+      loading.classList.remove('loading');
+      mountWebsiteChatPreview(loading, code);
+      addHandoffs(loading, frontendHandoffsForActive());
+    } else {
+      const item = addMessage('assistant', 'Landing page mockup ready.');
+      mountWebsiteChatPreview(item, code);
+      addHandoffs(item, frontendHandoffsForActive());
+    }
+    lastAgentAnswer = lastWebsiteAnswer;
+    chatHistory.push({ role: 'assistant', content: lastWebsiteAnswer });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+    isSending = false;
+    if (sendButton) sendButton.disabled = false;
+    if (input) input.focus();
+    scrollToBottom();
+  }
+
+
   function updateDesignProgress(stage) {
     const steps = designWorkspace ? Array.from(designWorkspace.querySelectorAll('.design-flow-step')) : [];
     if (!steps.length) return;
@@ -1272,6 +1505,104 @@
     // CRM/email popup is parked until the final CRM update.
   }
 
+
+  function strategyChatIntroText() {
+    const b = projectBrief && typeof projectBrief === 'object' ? projectBrief : {};
+    const project = b.projectName || b.project || 'المشروع ديالك';
+    const desc = b.description || b.offer || 'الفكرة اللي شرحتي';
+    const city = b.city || b.market || 'المغرب';
+    return 'مرحبا، أنا Namaa Strategy 🧭\n\nوصلنا للمرحلة الأخيرة. غادي نبني لك strategy نهائية على هاد الأساس:\n\n**المشروع:** ' + project + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nغادي نوجد لك 3 boards منظمين:\n\n1. Market Research\n2. Digital Marketing Strategy\n3. Roadmap\n\nواش نبدأ دابا؟';
+  }
+
+  function startStrategyChatIfReady() {
+    if (activeAgent !== 'strategy') return;
+    if (!flowState.websiteReady) return;
+    if (strategyChatIntroShown) return;
+    strategyChatIntroShown = true;
+    strategyAwaitingStart = true;
+    const item = addMessage('assistant', strategyChatIntroText());
+    addChoiceButtons(item, [{ label: 'نعم، وجد strategy', value: 'نعم وجد strategy' }]);
+    if (input) input.placeholder = 'جاوب بنعم باش Namaa Strategy يخرج 3 boards النهائية...';
+  }
+
+  function splitStrategyBoards(text) {
+    const source = cleanText(text || '');
+    const market = strategySection(source, ['PICTURE 1 MARKET RESEARCH', 'PICTURE 01 MARKET RESEARCH', 'MARKET RESEARCH PICTURE', 'MARKET RESEARCH'], ['PICTURE 2 DIGITAL MARKETING STRATEGY', 'PICTURE 02 DIGITAL MARKETING STRATEGY', 'DIGITAL MARKETING STRATEGY', 'PICTURE 3 ROADMAP', 'KPI DASHBOARD', 'NAMAA DESIGN HANDOFF']);
+    const digital = strategySection(source, ['PICTURE 2 DIGITAL MARKETING STRATEGY', 'PICTURE 02 DIGITAL MARKETING STRATEGY', 'DIGITAL MARKETING STRATEGY PICTURE', 'DIGITAL MARKETING STRATEGY'], ['PICTURE 3 ROADMAP', 'PICTURE 03 ROADMAP', 'ROADMAP', 'KPI DASHBOARD', 'NAMAA DESIGN HANDOFF']);
+    const roadmap = strategySection(source, ['PICTURE 3 ROADMAP', 'PICTURE 03 ROADMAP', 'ROADMAP PICTURE', '30/60/90 ROADMAP', 'ROADMAP'], ['KPI DASHBOARD', 'NAMAA DESIGN HANDOFF', 'NAMAA WEBSITE STARTER HANDOFF', 'FINAL ACTION NOTES', 'FINAL NOTES', 'FOUNDER MESSAGE']);
+    const finalNotes = strategySection(source, ['FINAL ACTION NOTES', 'FINAL NOTES', 'FOUNDER MESSAGE'], []);
+    return { market: market || source.slice(0, 1000), digital: digital || 'Offer, funnel, channels, content pillars, ads, WhatsApp/CRM and conversion logic.', roadmap: roadmap || '30/60/90 days execution roadmap with priorities, risks and actions.', finalNotes: finalNotes };
+  }
+
+  function strategyChatBoardsHtml(text, loading) {
+    const parts = splitStrategyBoards(text || '');
+    return '<div class="chat-strategy-result">'
+      + '<p><strong>هادي هي الاستراتيجية النهائية ديال المشروع ✅</strong><br>وجدت لك 3 صور منظمة: بحث السوق، الخطة الرقمية، والروودماب. كليكي على أي صورة باش تشوف التفاصيل.</p>'
+      + '<div class="chat-strategy-grid">'
+      + '<button type="button" class="chat-strategy-board" data-chat-strategy="market">' + boardHtml('market', parts.market, loading) + '</button>'
+      + '<button type="button" class="chat-strategy-board" data-chat-strategy="digital">' + boardHtml('digital', parts.digital, loading) + '</button>'
+      + '<button type="button" class="chat-strategy-board" data-chat-strategy="roadmap">' + boardHtml('roadmap', parts.roadmap, loading) + '</button>'
+      + '</div>'
+      + '<div class="chat-founder-message">' + strategyFounderMessage(parts.finalNotes) + '</div>'
+      + '</div>';
+  }
+
+  function wireChatStrategyBoards(targetItem, sourceText) {
+    if (!targetItem) return;
+    const buttons = Array.from(targetItem.querySelectorAll('[data-chat-strategy]'));
+    const parts = splitStrategyBoards(sourceText || lastStrategyAnswer || '');
+    buttons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        const slot = button.getAttribute('data-chat-strategy') || 'market';
+        const meta = strategyBoardMeta(slot);
+        if (strategyModalTitle) strategyModalTitle.textContent = meta[1];
+        if (strategyModalContent) strategyModalContent.innerHTML = boardHtml(slot, parts[slot] || '', false);
+        if (strategyModal) {
+          strategyModal.setAttribute('aria-hidden', 'false');
+          document.body.classList.add('strategy-modal-open');
+        }
+      });
+    });
+  }
+
+  async function sendStrategyChatPrompt(raw, extra) {
+    const message = String(raw || '').trim();
+    if (!message || isSending) return;
+    if (!ensureFlowStep('strategy')) { setAgent('website'); return; }
+    isSending = true;
+    lastUserPrompt = message;
+    chatHistory.push({ role: 'user', content: message });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+    const displayMessage = extra && extra.displayMessage ? String(extra.displayMessage).trim() : message;
+    addMessage('user', displayMessage || message);
+    if (input) { input.value = ''; resizeInput(); }
+    const loading = addMessage('assistant', 'تمام، كنوجد لك 3 صور استراتيجية دابا... لحظة صغيرة 🧭', { loading: true });
+    const buildPrompt = 'Use the confirmed Namaa project brief, previous Namaa Design result, and Namaa Website landing page preview. Create the FINAL Namaa Strategy output as 3 premium picture-style boards. Use exact headings: STRATEGY SNAPSHOT, PICTURE 1 MARKET RESEARCH, PICTURE 2 DIGITAL MARKETING STRATEGY, PICTURE 3 ROADMAP, FINAL ACTION NOTES. For each picture board write compact label:value bullets, no long paragraphs, max 7 key bullets per board, practical Morocco-first logic, assumptions clearly marked, and board-ready wording. Every board must respect Namaa AI branding and Created by Elboubakry Abdessamad. This is the final step after Talk → Design → Website.';
+    const result = await callAgent(buildPrompt, extra || {});
+    const fallback = 'STRATEGY SNAPSHOT\nNamaa Strategy prepared the final boards.\n\nPICTURE 1 MARKET RESEARCH\nAudience: Define who needs this solution.\nDemand: Validate if the city/market has active demand.\nCompetitors: Check direct and indirect competitors.\nPain points: Identify trust, price and speed concerns.\nOpportunity: Build a simple offer with clear proof.\n\nPICTURE 2 DIGITAL MARKETING STRATEGY\nPositioning: Explain the value in one clear promise.\nFunnel: Landing page → WhatsApp/lead form → follow-up.\nContent: Education, proof, before/after and FAQs.\nAds: Start with one focused Meta campaign.\nCRM: Track every lead and response.\n\nPICTURE 3 ROADMAP\n30 days: Launch offer, landing page and first creatives.\n60 days: Optimize ads, content and WhatsApp scripts.\n90 days: Scale what converts and build retargeting.\nRisk: Avoid too many services at launch.\nKPI: Cost per qualified lead and confirmed appointments.\n\nFINAL ACTION NOTES\nProject fih potential. Ila bghiti founder system, digital marketing execution, funnel w growth plan, tواصل m3a Elboubakry Abdessamad for free consultation.';
+    const reply = result.reply || fallback;
+    lastStrategyAnswer = reply;
+    lastAgentAnswer = reply;
+    updateFlowState('strategyReady', true);
+    if (loading) {
+      loading.classList.remove('loading');
+      const bubble = loading.querySelector('.message-bubble');
+      if (bubble) bubble.innerHTML = strategyChatBoardsHtml(reply, false);
+      wireChatStrategyBoards(loading, reply);
+    } else {
+      const item = addMessage('assistant', 'Strategy ready.');
+      const bubble = item && item.querySelector('.message-bubble');
+      if (bubble) bubble.innerHTML = strategyChatBoardsHtml(reply, false);
+      wireChatStrategyBoards(item, reply);
+    }
+    chatHistory.push({ role: 'assistant', content: 'Namaa Strategy generated 3 final visual boards inside the chat.' });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+    isSending = false;
+    if (sendButton) sendButton.disabled = false;
+    if (input) input.focus();
+    scrollToBottom();
+  }
+
   async function sendStrategyPrompt(raw, extra) {
     const message = String(raw || '').trim();
     if (!message || isSending) return;
@@ -1309,7 +1640,7 @@
           brief: projectBrief,
           briefStatus: projectBriefStatus,
           context: AGENTS[activeAgent].context,
-          source: 'namaa-simple-chat-update-84-talk-ui-fix',
+          source: 'namaa-simple-chat-update-88-strategy-chat-first',
           handoffFrom: extra && extra.handoffFrom,
           previousUserPrompt: extra && extra.previousUserPrompt,
           previousAgentAnswer: extra && extra.previousAgentAnswer,
@@ -1353,13 +1684,13 @@
     const message = String(raw || '').trim();
     if (!message || isSending) return;
     if (activeAgent === 'design') {
-      return sendDesignPrompt(message, extra || {});
+      return sendDesignChatPrompt(message, extra || {});
     }
     if (activeAgent === 'website') {
-      return sendWebsitePrompt(message, extra || {});
+      return sendWebsiteChatPrompt(message, extra || {});
     }
     if (activeAgent === 'strategy') {
-      return sendStrategyPrompt(message, extra || {});
+      return sendStrategyChatPrompt(message, extra || {});
     }
     const displayMessage = extra && extra.displayMessage ? String(extra.displayMessage).trim() : message;
     isSending = true;
@@ -1389,7 +1720,10 @@
     const localConfirmed = isAffirmationMessage(message) && hasProjectBrief() && (projectBriefStatus && (projectBriefStatus.isReady || projectBriefStatus.level === 'ready' || projectBriefStatus.score >= 75));
     const loading = addMessage('assistant', 'Namaa كايفهم الرسالة...', { loading: true });
     const result = await callAgent(message, extra || {});
-    if (localConfirmed) projectBriefConfirmed = true;
+    if (localConfirmed) {
+      projectBriefConfirmed = true;
+      updateAgentLocks();
+    }
     const fallback = 'Namaa واجد، ولكن الرد الذكي ما جاوبش دابا. جرّب مرة أخرى بعد لحظات.';
     const reply = result.reply || fallback;
     if (loading) {
@@ -1453,13 +1787,6 @@
     designToWebsite.addEventListener('click', function () {
       if (!ensureFlowStep('website')) return;
       setAgent('website');
-      sendPrompt('Use the previous Namaa Design logo + mockups visual board and current project brief. Generate a complete standalone landing page and show it as a live browser preview. Do not show source code in the UI.', {
-        handoffFrom: 'design',
-        previousUserPrompt: lastUserPrompt,
-        previousAgentAnswer: lastDesignAnswer || lastAgentAnswer,
-        handoffBrief: projectBrief,
-        displayMessage: 'Open Namaa Website with this design'
-      });
     });
   }
 
@@ -1488,7 +1815,7 @@
       const prompt = Object.keys(projectBrief || {}).length || lastAgentAnswer
         ? 'Use the confirmed Namaa project brief, previous Namaa Design direction and previous Namaa Website preview result. Create the FINAL Namaa Strategy workspace as 3 premium picture-style boards. Use exact headings: STRATEGY SNAPSHOT, PICTURE 1 MARKET RESEARCH, PICTURE 2 DIGITAL MARKETING STRATEGY, PICTURE 3 ROADMAP, FINAL ACTION NOTES. For each picture board write compact label:value bullets, no long paragraphs, max 7 key bullets per board, practical Morocco-first logic, assumptions clearly marked, and board-ready wording. Every board must respect the visual reference: Namaa logo, Namaa AI branding, and Created by Elboubakry Abdessamad. This is the final step after Talk → Design → Website.'
         : 'Ask me only for the missing essentials to create Namaa Strategy: project/service, city/market, target customer, budget, goal, current stage and channels.';
-      sendStrategyPrompt(prompt, { handoffFrom: 'strategy-workspace-button', previousAgentAnswer: lastAgentAnswer });
+      sendStrategyChatPrompt(prompt, { handoffFrom: 'strategy-workspace-button', previousAgentAnswer: lastAgentAnswer });
     });
   }
   if (strategyBackTalk) strategyBackTalk.addEventListener('click', function () { setAgent('business'); });
@@ -1500,7 +1827,7 @@
         previousUserPrompt: lastUserPrompt,
         previousAgentAnswer: lastStrategyAnswer || lastAgentAnswer,
         handoffBrief: projectBrief,
-        displayMessage: 'Open Namaa Design with this strategy'
+        displayMessage: 'فتح Namaa Design with this strategy'
       });
     });
   }
@@ -1512,7 +1839,7 @@
         previousUserPrompt: lastUserPrompt,
         previousAgentAnswer: lastStrategyAnswer || lastAgentAnswer,
         handoffBrief: projectBrief,
-        displayMessage: 'Open Namaa Website with this strategy'
+        displayMessage: 'فتح Namaa Dev with this strategy'
       });
     });
   }
@@ -1536,7 +1863,7 @@
         previousUserPrompt: lastUserPrompt,
         previousAgentAnswer: [lastDesignAnswer, lastWebsiteAnswer || lastAgentAnswer].filter(Boolean).join('\n\n--- WEBSITE / DESIGN CONTEXT ---\n\n'),
         handoffBrief: projectBrief,
-        displayMessage: 'Open final Namaa Strategy with this website preview'
+        displayMessage: 'فتح Namaa Strategy with this website preview'
       });
     });
   }
@@ -1575,16 +1902,16 @@
       event.preventDefault();
       const email = packEmail ? packEmail.value.trim() : '';
       if (!validPackEmail(email)) {
-        packModalMessage('Dakhl email s7i7 bach nrslo lik Namaa Pack.', true);
+        packModalMessage('دخل email صحيح باش نرسلو لك Namaa Pack.', true);
         if (packEmail) packEmail.focus();
         return;
       }
       if (packSubmit) packSubmit.disabled = true;
-      packModalMessage('Pack link tوجد محليا. CRM/Sheet ghadi nربطوه f update lkhra.', false);
+      packModalMessage('رابط الباك توجد محليا. CRM/Sheet غادي نربطوه فآخر update.', false);
       try {
         const data = await submitPackLead(email);
         flowState.packRequested = true;
-        packModalMessage('Safi. CRM/Sheet mazal parked l final update; pack link tوجد b najah.', false);
+        packModalMessage('صافي. CRM/Sheet باقي مخلييناه لآخر update؛ رابط الباك توجد بنجاح.', false);
         if (packSubmit) packSubmit.textContent = 'Email saved';
         window.setTimeout(closePackModal, 1600);
       } catch (error) {
@@ -1608,4 +1935,5 @@
   resetStrategyWorkspace();
   setAgent('business');
   resizeInput();
+  updateAgentLocks();
 })();
