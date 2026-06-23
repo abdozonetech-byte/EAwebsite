@@ -1,0 +1,14 @@
+{
+  "key": "local_service",
+  "label": "Service local",
+  "accent": "#14b8a6",
+  "description": "Local service booking page",
+  "sections": [
+    "Promise",
+    "checklist",
+    "before/after",
+    "area",
+    "WhatsApp booking"
+  ],
+  "usage": "NamaaDev category template for fallback preview and Gemini guidance."
+}

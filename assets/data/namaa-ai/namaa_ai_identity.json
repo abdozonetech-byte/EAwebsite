@@ -1,0 +1,22 @@
+{
+  "project": "Namaa AI by Elboubakry",
+  "version": "ui_only_no_api",
+  "purpose": "Moroccan business AI assistant focused on entrepreneurship, marketing, startups, SMEs, local services and growth in Morocco.",
+  "current_status": "No API, no model connection, no backend. UI/UX prototype only.",
+  "languages_initial": [
+    "Darija",
+    "Français",
+    "العربية",
+    "English"
+  ],
+  "future_brain_layers": [
+    "Moroccan business knowledge base",
+    "sector playbooks",
+    "city notes",
+    "budget rules",
+    "WhatsApp scripts",
+    "marketing frameworks",
+    "lead-generation examples",
+    "RAG/fine-tuning later"
+  ]
+}
