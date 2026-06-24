@@ -7,7 +7,7 @@
       kicker: 'Namaa Talk',
       subtitle: 'نهضرو عادي على البيزنس والذكاء الاصطناعي، ولا نقادو مشروعك خطوة بخطوة بلا أسئلة كثيرة.',
       placeholder: 'كتب رسالتك هنا... مثال: بغيت نقاد مشروع',
-      context: 'Namaa Business Talk = free talk about AI, business, IT, marketing, startups, websites, WhatsApp/CRM and Morocco-first execution.'
+      context: 'Namaa Talk = Namaa AI conversational brain created by Elboubakry Abdessamad. Same-language rule is strict: Darija Latin stays Darija Latin, Arabic script stays Arabic script, French stays French, English stays English. Scope: business, AI, IT, startups, ideas, marketing, websites, automation, CRM, sales, branding, content, entrepreneurship and Moroccan market. Politely redirect unrelated topics to a useful business/AI/IT/marketing angle.'
     },
     design: {
       title: 'Namaa Design',
@@ -41,6 +41,7 @@
   const sendButton = document.getElementById('namaaSendButton');
   const messages = document.getElementById('namaaMessages');
   const stage = document.getElementById('namaaChatStage');
+  const scrollBottomButton = document.getElementById('namaaScrollBottom');
   const title = document.getElementById('namaaMainTitle');
   const subtitle = document.getElementById('namaaSubtitle');
   const kicker = document.getElementById('namaaAgentKicker');
@@ -137,6 +138,37 @@
     return /^(oui|yes|ok|oki|okay|اه|ايه|نعم|واخا|سافي|safi|ah|iyah|yeh|تمام)$/i.test(text);
   }
 
+  function detectLanguageStyle(value) {
+    const raw = String(value || '').trim();
+    const lower = raw.toLowerCase();
+    if (/[\u0600-\u06FF]/.test(raw)) return 'arabic';
+    if (/\b(bghit|wach|chno|kifach|3lach|3ndi|daba|dyal|mzyan|khass|n9der|nqder|n9ado|nqado|ndir|fikra|projet|salam|labas|safi|asahbi|hna|f morocco|f maroc)\b/i.test(lower)) return 'darija_latin';
+    if (/\b(bonjour|salut|merci|je veux|j'ai|projet|idée|idee|marché|marche|entreprise|stratégie|strategie|site web|automatisation)\b/i.test(lower)) return 'french';
+    return 'english';
+  }
+
+  function languageInstructionFor(value) {
+    const style = detectLanguageStyle(value || lastUserPrompt || '');
+    if (style === 'darija_latin') return 'Moroccan Darija Latin only. Do not use Arabic script.';
+    if (style === 'arabic') return 'Arabic script only.';
+    if (style === 'french') return 'French only.';
+    return 'English only.';
+  }
+
+  function replyByLanguage(value, variants) {
+    const style = detectLanguageStyle(value);
+    return variants[style] || variants.english || variants.darija_latin || variants.arabic || '';
+  }
+
+  function loadingTextFor(value) {
+    return replyByLanguage(value, {
+      darija_latin: 'Namaa kayfhem message dyalek...',
+      arabic: 'Namaa كايفهم الرسالة...',
+      french: 'Namaa analyse ton message...',
+      english: 'Namaa is reading your message...'
+    });
+  }
+
   function extractProjectBasics(value) {
     const raw = String(value || '').trim();
     const lines = raw.split(/\n+/).map((line) => line.trim()).filter(Boolean);
@@ -185,21 +217,36 @@
     projectBriefStatus = { score: score, level: score >= 75 ? 'ready' : 'collecting', isReady: score >= 75, missing: [!hasName && 'اسم المشروع', !hasDesc && 'وصف قصير', !hasCity && 'المدينة ولا المغرب كامل'].filter(Boolean) };
   }
 
-  function darijaWelcome() {
-    return 'سلام، أنا Namaa ✨\n\nنقدر نعاونك بطريقتين:\n\n**Free Talk**: نهضرو عادي فـ business، AI، IT، marketing.\n**Build Project**: نبنيو مشروعك خطوة بخطوة.';
+  function talkWelcome(value) {
+    return replyByLanguage(value, {
+      darija_latin: 'Salam, ana Namaa.\n\nN9der n3awnek b joj toroq:\n\n**Free Talk**: nhadro 3adi f business, AI, IT, marketing.\n**Build Project**: nbniw projet dyalek step by step.',
+      arabic: 'سلام، أنا Namaa.\n\nنقدر نعاونك بطريقتين:\n\n**Free Talk**: نهضرو عادي فـ business، AI، IT، marketing.\n**Build Project**: نبنيو مشروعك خطوة بخطوة.',
+      french: 'Bonjour, je suis Namaa.\n\nJe peux t’aider de deux façons :\n\n**Free Talk** : discuter business, IA, IT ou marketing.\n**Build Project** : construire ton projet étape par étape.',
+      english: 'Hi, I’m Namaa.\n\nI can help in two ways:\n\n**Free Talk**: discuss business, AI, IT, or marketing.\n**Build Project**: build your project step by step.'
+    });
   }
 
-  function darijaAskBasics() {
+  function askProjectBasics(value) {
     talkUX.askedBasics = true;
     talkUX.basicsTries += 1;
-    return 'زوين، باش نبني معاك المشروع بلا ما نطول عليك، عطيني غير 3 معلومات فـ رسالة وحدة:\n\n1. **سميت المشروع**\n2. **وصف قصير**: شنو كيدير المشروع؟\n3. **فين غادي يخدم؟** مدينة معينة ولا المغرب كامل؟\n\nمثال: سميتو CasaFit، تطبيق كيربط الكوتشات مع الناس، فـ كازا.';
+    return replyByLanguage(value, {
+      darija_latin: 'Mzyan. Bach nbniw projet bla ma ntwlo, 3tini ghir 3 infos f message wa7da:\n\n1. **Smit projet**\n2. **Description 9sira**: chno kaydir?\n3. **Fin ghadi ykhdem?** chi ville ola Morocco kaml?\n\nExample: CasaFit, app kayrbet coaches m3a clients, f Casa.',
+      arabic: 'زوين، باش نبني معاك المشروع بلا ما نطول عليك، عطيني غير 3 معلومات فـ رسالة وحدة:\n\n1. **سميت المشروع**\n2. **وصف قصير**: شنو كيدير المشروع؟\n3. **فين غادي يخدم؟** مدينة معينة ولا المغرب كامل؟\n\nمثال: سميتو CasaFit، تطبيق كيربط الكوتشات مع الناس، فـ كازا.',
+      french: 'Très bien. Pour construire le projet sans te noyer de questions, donne-moi juste 3 infos en un message :\n\n1. **Nom du projet**\n2. **Description courte** : que fait-il ?\n3. **Marché** : ville précise ou tout le Maroc ?\n\nExemple : CasaFit, une app qui connecte coachs et clients à Casablanca.',
+      english: 'Great. To build the project without too many questions, send me just 3 things in one message:\n\n1. **Project name**\n2. **Short description**: what does it do?\n3. **Market**: one city or all Morocco?\n\nExample: CasaFit, an app connecting coaches with clients in Casablanca.'
+    });
   }
 
-  function darijaConfirmBrief() {
+  function confirmBriefText(value) {
     const name = projectBrief.projectName || projectBrief.project || 'مشروع جديد';
     const desc = projectBrief.description || projectBrief.offer || 'فكرة مشروع';
     const city = projectBrief.city || projectBrief.market || 'المغرب';
-    return 'واخا، فهمت عليك ✨\n\n**المشروع:** ' + name + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nواش هاد الفهم صحيح؟ إلا نعم، غادي نمشيو مباشرة لـ **Namaa Design** باش نخرجو اللوغو والموكابات.';
+    return replyByLanguage(value, {
+      darija_latin: 'Wakha, fhemtk.\n\n**Projet:** ' + name + '\n**Fikra:** ' + desc + '\n**Market:** ' + city + '\n\nWash had l-fhem s7i7? Ila oui, nmchiw directement l **Namaa Design** bach nkhrjo logo w mockups.',
+      arabic: 'واخا، فهمت عليك.\n\n**المشروع:** ' + name + '\n**الفكرة:** ' + desc + '\n**السوق:** ' + city + '\n\nواش هاد الفهم صحيح؟ إلا نعم، غادي نمشيو مباشرة لـ **Namaa Design** باش نخرجو اللوغو والموكابات.',
+      french: 'Très bien, voilà ce que j’ai compris.\n\n**Projet :** ' + name + '\n**Idée :** ' + desc + '\n**Marché :** ' + city + '\n\nC’est correct ? Si oui, on passe à **Namaa Design** pour le logo et les mockups.',
+      english: 'Got it. Here is what I understood.\n\n**Project:** ' + name + '\n**Idea:** ' + desc + '\n**Market:** ' + city + '\n\nIs this correct? If yes, we move to **Namaa Design** for the logo and mockups.'
+    });
   }
 
   function addChoiceButtons(targetItem, choices) {
@@ -222,39 +269,60 @@
   function localBusinessReplyFor(message) {
     const raw = String(message || '').trim();
     if (!raw) return null;
+    talkUX.language = detectLanguageStyle(raw);
     if (looksLikeGreeting(raw) && talkUX.mode === 'start') {
       talkUX.mode = 'choice';
-      return { reply: darijaWelcome(), choices: [
-        { label: 'نهضرو عادي', value: 'نهضرو عادي' },
-        { label: 'نقادو مشروع', value: 'نقادو مشروع' }
+      return { reply: talkWelcome(raw), choices: [
+        { label: replyByLanguage(raw, { darija_latin: 'Nhadro 3adi', arabic: 'نهضرو عادي', french: 'Free Talk', english: 'Free Talk' }), value: replyByLanguage(raw, { darija_latin: 'nhadro 3adi', arabic: 'نهضرو عادي', french: 'Free Talk', english: 'Free Talk' }) },
+        { label: replyByLanguage(raw, { darija_latin: 'N9ado projet', arabic: 'نقادو مشروع', french: 'Build Project', english: 'Build Project' }), value: replyByLanguage(raw, { darija_latin: 'n9ado projet', arabic: 'نقادو مشروع', french: 'Build Project', english: 'Build Project' }) }
       ] };
     }
     if (wantsFreeTalk(raw)) {
       talkUX.mode = 'free';
-      return { reply: 'واخا، نخليوها Free Talk 😊\nسولني على AI، business، IT، marketing ولا شي فكرة عندك، ونجاوبك بطريقة مباشرة.' };
+      return { reply: replyByLanguage(raw, {
+        darija_latin: 'Wakha, nkheliwha Free Talk.\nSowelni 3la AI, business, IT, marketing ola chi fikra 3ndek, w njawebk direct.',
+        arabic: 'واخا، نخليوها Free Talk.\nسولني على AI، business، IT، marketing ولا شي فكرة عندك، ونجاوبك بطريقة مباشرة.',
+        french: 'Parfait, on reste en Free Talk.\nPose-moi ta question sur l’IA, le business, l’IT, le marketing ou une idée de projet, et je te réponds directement.',
+        english: 'Perfect, we’ll keep it as Free Talk.\nAsk me about AI, business, IT, marketing, or a project idea, and I’ll answer directly.'
+      }) };
     }
     if (wantsBuildProject(raw) && !hasReadyBrief()) {
       talkUX.mode = 'collecting';
-      return { reply: darijaAskBasics() };
+      return { reply: askProjectBasics(raw) };
     }
     if (talkUX.mode === 'collecting' && !hasReadyBrief()) {
       if (isTinyAgreement(raw)) {
-        return { reply: 'تمام، فهمت أنك موافق. باقي خاصني غير المعلومات ديال المشروع:\n\n**سميت المشروع + وصف قصير + المدينة ولا المغرب كامل**\n\nكتبهم فـ رسالة وحدة، وأنا نحللهم مباشرة.' };
+        return { reply: replyByLanguage(raw, {
+          darija_latin: 'Wakha, fhemtk mtaf9. Ba9i khasni ghir infos dyal projet:\n\n**Smit projet + description 9sira + ville ola Morocco kaml**\n\nKtebhom f message wa7da, w n7llelhom direct.',
+          arabic: 'تمام، فهمت أنك موافق. باقي خاصني غير المعلومات ديال المشروع:\n\n**سميت المشروع + وصف قصير + المدينة ولا المغرب كامل**\n\nكتبهم فـ رسالة وحدة، وأنا نحللهم مباشرة.',
+          french: 'Parfait, j’ai compris que tu es d’accord. Il me manque juste les infos du projet :\n\n**Nom + description courte + ville ou Maroc entier**\n\nEnvoie-les en un seul message, et je les analyse directement.',
+          english: 'Perfect, I understood that you agree. I still need the project info:\n\n**Name + short description + city or all Morocco**\n\nSend them in one message and I’ll analyze them directly.'
+        }) };
       }
       const patch = extractProjectBasics(raw);
       mergeLocalBriefPatch(patch);
       if (hasReadyBrief()) {
         talkUX.awaitingConfirmation = true;
-        return { reply: darijaConfirmBrief() };
+        return { reply: confirmBriefText(raw) };
       }
       const missing = (projectBriefStatus && projectBriefStatus.missing && projectBriefStatus.missing.length) ? projectBriefStatus.missing.join('، ') : 'وصف أوضح';
-      return { reply: 'قريب نفهمك مزيان. باقي خاصني: **' + missing + '**.\n\nعطينيها باختصار، وما نحتاجش تفاصيل كثيرة.' };
+      return { reply: replyByLanguage(raw, {
+        darija_latin: 'Qrib nfhemk mzyan. Ba9i khasni: **' + missing + '**.\n\n3tiniha b ikhtisar, bla details bzaf.',
+        arabic: 'قريب نفهمك مزيان. باقي خاصني: **' + missing + '**.\n\nعطينيها باختصار، وما نحتاجش تفاصيل كثيرة.',
+        french: 'On est presque bon. Il me manque : **' + missing + '**.\n\nDonne-moi ça brièvement, sans trop de détails.',
+        english: 'We’re almost there. I still need: **' + missing + '**.\n\nSend it briefly, no need for too many details.'
+      }) };
     }
     if (talkUX.awaitingConfirmation && isAffirmationMessage(raw) && hasReadyBrief()) {
       projectBriefConfirmed = true;
       talkUX.awaitingConfirmation = false;
       updateAgentLocks();
-      return { reply: 'مزيان، دابا المشروع واضح ✅\nالخطوة الجاية هي **Namaa Design** باش نخرجو logo و mockups مناسبين للمشروع.', handoffs: [{
+      return { reply: replyByLanguage(raw, {
+        darija_latin: 'Mzyan, daba projet wade7.\nStep jaya hiya **Namaa Design** bach nkhrjo logo w mockups mnasbin.',
+        arabic: 'مزيان، دابا المشروع واضح.\nالخطوة الجاية هي **Namaa Design** باش نخرجو logo و mockups مناسبين للمشروع.',
+        french: 'Très bien, le projet est clair.\nLa prochaine étape est **Namaa Design** pour créer le logo et les mockups adaptés.',
+        english: 'Great, the project is clear now.\nNext step is **Namaa Design** so we can create the right logo and mockups.'
+      }), handoffs: [{
         agent: 'design',
         label: 'فتح Namaa Design',
         agentLabel: 'Namaa Design',
@@ -580,6 +648,7 @@
     agentButtons.forEach((button) => button.classList.toggle('active', button.dataset.agent === next));
     updateAgentLocks();
     document.body.classList.remove('sidebar-open');
+    if (menuButton) menuButton.setAttribute('aria-expanded', 'false');
     if (next === 'design') {
       refreshDesignBriefCard();
       if (ensureFlowStep('design')) startDesignChatIfReady();
@@ -846,8 +915,27 @@
     return { ok: true, parked: true, email: payload.email, packLink: payload.packLink, emailSent: false };
   }
 
-  function scrollToBottom() {
-    if (stage) stage.scrollTop = stage.scrollHeight;
+  function isStageNearBottom() {
+    if (!stage) return true;
+    return stage.scrollHeight - stage.scrollTop - stage.clientHeight < 96;
+  }
+
+  function updateScrollButton() {
+    if (!scrollBottomButton || !stage) return;
+    const canScroll = stage.scrollHeight > stage.clientHeight + 80;
+    const show = canScroll && !isStageNearBottom();
+    scrollBottomButton.hidden = !show;
+    scrollBottomButton.classList.toggle('is-visible', show);
+  }
+
+  function scrollToBottom(options) {
+    if (!stage) return;
+    const smooth = options && options.smooth;
+    stage.scrollTo({
+      top: stage.scrollHeight,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+    window.setTimeout(updateScrollButton, smooth ? 260 : 40);
   }
 
   function resizeInput() {
@@ -1276,7 +1364,7 @@
     if (websiteGenerate) websiteGenerate.disabled = true;
     renderWebsiteLoading();
     const result = await callAgent(message, extra || {});
-    const fallback = 'Namaa Dev mockup is ready, but the Gemini route did not answer yet. Check GEMINI_API_KEY and redeploy, then generate the website mockup again.';
+    const fallback = 'Namaa Dev mockup is ready, but the live AI route did not answer yet. Check the private backend connection and redeploy, then generate the website mockup again.';
     const reply = result.reply || fallback;
     renderWebsiteWorkspace(reply);
     lastAgentAnswer = reply;
@@ -1640,7 +1728,7 @@
     if (strategyGenerate) strategyGenerate.disabled = true;
     renderStrategyLoading();
     const result = await callAgent(message, extra || {});
-    const fallback = 'STRATEGY SNAPSHOT\nNamaa Strategy workspace is ready with Namaa logo and Created by Elboubakry Abdessamad branding, but the Gemini route did not answer yet. Check GEMINI_API_KEY and redeploy.\n\nPICTURE 1 MARKET RESEARCH\nSend project type, city, target and offer to build the market research board.\n\nPICTURE 2 DIGITAL MARKETING STRATEGY\nChannels, offer, funnel, content pillars and WhatsApp/CRM will appear here.\n\nPICTURE 3 ROADMAP\n30/60/90 actions, priorities and risks will appear here.\n\nFINAL ACTION NOTES\nProject fih potential. Ila bghiti founder system, digital marketing execution, funnel w growth plan, tواصل m3a Elboubakry Abdessamad for free consultation.';
+    const fallback = 'STRATEGY SNAPSHOT\nNamaa Strategy workspace is ready with Namaa logo and Created by Elboubakry Abdessamad branding, but the live AI route did not answer yet. Check the private backend connection and redeploy.\n\nPICTURE 1 MARKET RESEARCH\nSend project type, city, target and offer to build the market research board.\n\nPICTURE 2 DIGITAL MARKETING STRATEGY\nChannels, offer, funnel, content pillars and WhatsApp/CRM will appear here.\n\nPICTURE 3 ROADMAP\n30/60/90 actions, priorities and risks will appear here.\n\nFINAL ACTION NOTES\nProject fih potential. Ila bghiti founder system, digital marketing execution, funnel w growth plan, tواصل m3a Elboubakry Abdessamad for free consultation.';
     const reply = result.reply || fallback;
     renderStrategyWorkspace(reply);
     lastAgentAnswer = reply;
@@ -1667,7 +1755,10 @@
           brief: projectBrief,
           briefStatus: projectBriefStatus,
           context: AGENTS[activeAgent].context,
-          source: 'namaa-simple-chat-update-88-strategy-chat-first',
+          languageStyle: detectLanguageStyle(message),
+          languageInstruction: languageInstructionFor(message),
+          systemBehavior: 'You are Namaa AI, created by Elboubakry Abdessamad. You are Namaa Talk, not Gemini and not ChatGPT. Keep the answer in the same language as the user. Stay focused on business, AI, IT, startups, ideas, marketing, websites, automation, CRM, sales, branding, content, entrepreneurship and Moroccan market. If unrelated, politely redirect to one of those angles.',
+          source: 'namaa-simple-chat-update-92-mobile-language-personality',
           handoffFrom: extra && extra.handoffFrom,
           previousUserPrompt: extra && extra.previousUserPrompt,
           previousAgentAnswer: extra && extra.previousAgentAnswer,
@@ -1745,7 +1836,7 @@
       return;
     }
     const localConfirmed = isAffirmationMessage(message) && hasProjectBrief() && (projectBriefStatus && (projectBriefStatus.isReady || projectBriefStatus.level === 'ready' || projectBriefStatus.score >= 75));
-    const loading = addMessage('assistant', 'Namaa كايفهم الرسالة...', { loading: true });
+    const loading = addMessage('assistant', loadingTextFor(message), { loading: true });
     const result = await callAgent(message, extra || {});
     if (localConfirmed) {
       projectBriefConfirmed = true;
@@ -1949,12 +2040,24 @@
   }
 
   if (newChatButton) newChatButton.addEventListener('click', resetChat);
-  if (menuButton) menuButton.addEventListener('click', function () { document.body.classList.toggle('sidebar-open'); });
+  if (scrollBottomButton) {
+    scrollBottomButton.addEventListener('click', function () {
+      scrollToBottom({ smooth: true });
+      if (input) input.focus();
+    });
+  }
+  if (stage) stage.addEventListener('scroll', updateScrollButton, { passive: true });
+  window.addEventListener('resize', updateScrollButton);
+  if (menuButton) menuButton.addEventListener('click', function () {
+    const isOpen = document.body.classList.toggle('sidebar-open');
+    menuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
   document.addEventListener('click', function (event) {
     if (!document.body.classList.contains('sidebar-open')) return;
     if (sidebar && sidebar.contains(event.target)) return;
     if (menuButton && menuButton.contains(event.target)) return;
     document.body.classList.remove('sidebar-open');
+    if (menuButton) menuButton.setAttribute('aria-expanded', 'false');
   });
 
   resetDesignWorkspace();
@@ -1963,4 +2066,5 @@
   setAgent('business');
   resizeInput();
   updateAgentLocks();
+  updateScrollButton();
 })();
