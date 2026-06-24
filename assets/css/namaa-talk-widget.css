@@ -52,7 +52,7 @@
 }
 
 .namaa-talk__launcher:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 22px 52px rgba(2, 8, 23, 0.3);
 }
 
@@ -86,6 +86,7 @@
   height: 46px;
   border-radius: 15px;
   font-size: 21px;
+  animation: namaaTalkLogoGlow 3.6s ease-in-out infinite;
 }
 
 .namaa-talk__launcher-copy {
@@ -125,8 +126,8 @@
   bottom: 22px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  width: min(430px, calc(100vw - 32px));
-  height: min(690px, calc(100dvh - 40px));
+  width: min(420px, calc(100vw - 32px));
+  height: min(720px, calc(100dvh - 40px));
   max-height: 720px;
   border: 1px solid rgba(226, 232, 240, 0.95);
   border-radius: 26px;
@@ -137,7 +138,7 @@
   pointer-events: none;
   transform: translateY(18px) scale(0.97);
   transform-origin: bottom right;
-  transition: opacity 0.22s ease, transform 0.22s ease;
+  transition: opacity 0.24s ease, transform 0.24s ease;
 }
 
 .namaa-talk.is-open .namaa-talk__panel {
@@ -157,7 +158,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 17px 18px;
+  min-height: 78px;
+  padding: 15px 17px;
   background: var(--namaa-talk-navy);
   color: var(--namaa-talk-white);
 }
@@ -174,6 +176,7 @@
   height: 44px;
   border-radius: 15px;
   font-size: 20px;
+  animation: namaaTalkLogoGlow 3.6s ease-in-out infinite;
 }
 
 .namaa-talk__brand-text {
@@ -204,6 +207,8 @@
   height: 7px;
   border-radius: 999px;
   background: var(--namaa-talk-green);
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.38);
+  animation: namaaTalkReadyPulse 1.8s ease-out infinite;
 }
 
 .namaa-talk__close {
@@ -232,10 +237,19 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 18px;
+  padding: 16px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+}
+
+.namaa-talk:not(.has-messages) .namaa-talk__messages-shell {
+  display: grid;
+  align-items: center;
+}
+
+.namaa-talk:not(.has-messages) .namaa-talk__messages {
+  display: none;
 }
 
 .namaa-talk__messages-shell::-webkit-scrollbar {
@@ -249,10 +263,28 @@
 
 .namaa-talk__welcome {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   justify-items: center;
-  padding: 18px 4px 16px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 12px 4px;
   text-align: center;
+}
+
+.namaa-talk__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.2;
+  animation: namaaTalkWelcomeIn 0.34s ease both;
 }
 
 .namaa-talk.has-messages .namaa-talk__welcome {
@@ -264,6 +296,7 @@
   height: 56px;
   border-radius: 18px;
   font-size: 26px;
+  animation: namaaTalkWelcomeIn 0.34s ease both, namaaTalkLogoGlow 3.6s ease-in-out infinite;
 }
 
 .namaa-talk__welcome h3 {
@@ -272,6 +305,7 @@
   font-size: 20px;
   font-weight: 850;
   line-height: 1.2;
+  animation: namaaTalkWelcomeIn 0.34s ease 0.06s both;
 }
 
 .namaa-talk__welcome p {
@@ -280,6 +314,7 @@
   color: var(--namaa-talk-muted);
   font-size: 14px;
   line-height: 1.5;
+  animation: namaaTalkWelcomeIn 0.34s ease 0.1s both;
 }
 
 .namaa-talk__scope {
@@ -291,6 +326,7 @@
   color: #475569;
   font-size: 12px;
   line-height: 1.45;
+  animation: namaaTalkWelcomeIn 0.34s ease 0.14s both;
 }
 
 .namaa-talk__chips {
@@ -313,13 +349,21 @@
   font-weight: 750;
   cursor: pointer;
   transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, color 0.16s ease;
+  animation: namaaTalkChipIn 0.28s ease both;
 }
+
+.namaa-talk__chip:nth-child(1) { animation-delay: 0.16s; }
+.namaa-talk__chip:nth-child(2) { animation-delay: 0.2s; }
+.namaa-talk__chip:nth-child(3) { animation-delay: 0.24s; }
+.namaa-talk__chip:nth-child(4) { animation-delay: 0.28s; }
+.namaa-talk__chip:nth-child(5) { animation-delay: 0.32s; }
+.namaa-talk__chip:nth-child(6) { animation-delay: 0.36s; }
 
 .namaa-talk__chip:hover {
   border-color: rgba(37, 99, 235, 0.42);
   color: var(--namaa-talk-blue);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.01);
 }
 
 .namaa-talk__chip:active {
@@ -328,14 +372,14 @@
 
 .namaa-talk__messages {
   display: grid;
-  gap: 10px;
+  gap: 11px;
 }
 
 .namaa-talk__message {
   display: grid;
   gap: 5px;
   max-width: 86%;
-  animation: namaaTalkMessageIn 0.22s ease both;
+  animation: namaaTalkMessageIn 0.24s ease both;
 }
 
 .namaa-talk__bubble {
@@ -355,6 +399,7 @@
   border-bottom-right-radius: 7px;
   background: linear-gradient(135deg, var(--namaa-talk-blue), var(--namaa-talk-blue-2));
   color: var(--namaa-talk-white);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.18);
 }
 
 .namaa-talk__message--assistant {
@@ -367,6 +412,15 @@
   background: var(--namaa-talk-white);
   color: var(--namaa-talk-ink);
   box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+}
+
+.namaa-talk__disclaimer {
+  max-width: 320px;
+  margin-top: 2px !important;
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  animation: namaaTalkWelcomeIn 0.34s ease 0.42s both !important;
 }
 
 .namaa-talk__time {
@@ -432,21 +486,21 @@
 
 .namaa-talk__composer {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 48px;
+  grid-template-columns: minmax(0, 1fr) 52px;
   align-items: end;
   gap: 10px;
-  padding: 14px;
+  padding: 13px;
   border-top: 1px solid var(--namaa-talk-line);
   background: var(--namaa-talk-white);
 }
 
 .namaa-talk__input {
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
   max-height: 132px;
   resize: none;
   overflow-y: auto;
-  padding: 13px 14px;
+  padding: 14px 15px;
   border: 1px solid #d8e1ee;
   border-radius: 16px;
   background: #ffffff;
@@ -469,18 +523,20 @@
 .namaa-talk__send {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border: 0;
   border-radius: 16px;
-  background: var(--namaa-talk-blue);
+  background: linear-gradient(135deg, var(--namaa-talk-blue), var(--namaa-talk-blue-2));
   color: var(--namaa-talk-white);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
   cursor: pointer;
-  transition: transform 0.16s ease, background 0.16s ease, opacity 0.16s ease;
+  transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
 }
 
 .namaa-talk__send:hover {
-  background: #1d4ed8;
+  filter: brightness(0.98) saturate(1.06);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.27);
 }
 
 .namaa-talk__send:active {
@@ -489,7 +545,8 @@
 
 .namaa-talk__send:disabled {
   cursor: not-allowed;
-  opacity: 0.45;
+  opacity: 0.42;
+  box-shadow: none;
 }
 
 @keyframes namaaTalkLauncherIn {
@@ -523,6 +580,38 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes namaaTalkLogoGlow {
+  0%,
+  100% {
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.22);
+  }
+  50% {
+    box-shadow: 0 16px 34px rgba(14, 165, 233, 0.32);
+  }
+}
+
+@keyframes namaaTalkWelcomeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes namaaTalkChipIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -570,8 +659,9 @@
     max-height: none;
     border: 0;
     border-radius: 0;
-    transform: translateY(18px);
+    transform: translateY(20px);
     transform-origin: center bottom;
+    transition: opacity 0.22s ease, transform 0.24s ease;
   }
 
   .namaa-talk.is-open .namaa-talk__panel {
@@ -591,11 +681,12 @@
   }
 
   .namaa-talk__messages-shell {
-    padding: 16px 14px;
+    padding: 14px;
   }
 
   .namaa-talk__welcome {
-    padding-top: 20px;
+    max-width: 350px;
+    padding: 14px 0;
   }
 
   .namaa-talk__message {
@@ -605,7 +696,7 @@
   .namaa-talk__composer {
     position: sticky;
     bottom: 0;
-    grid-template-columns: minmax(0, 1fr) 48px;
+    grid-template-columns: minmax(0, 1fr) 52px;
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
   }
 
@@ -617,7 +708,7 @@
 
   .namaa-talk__scroll-bottom {
     display: flex;
-    bottom: calc(102px + env(safe-area-inset-bottom));
+    bottom: calc(104px + env(safe-area-inset-bottom));
     right: 14px;
   }
 }

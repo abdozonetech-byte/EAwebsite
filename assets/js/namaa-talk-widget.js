@@ -52,8 +52,8 @@
     var value = String(text || '').trim();
     var lower = value.toLowerCase();
     if (/[\u0600-\u06FF]/.test(value)) return 'arabic-script';
-    if (/\b(bghit| بغيت |wach| واش |kifach| kifach |3afak|salam|smah|daba|mzyan|khdma|projet|fikra|flous|maghrib|morocco|marrakech|casablanca|rabat)\b/i.test(lower) || /[379]/.test(value)) return 'darija-latin';
-    if (/[àâçéèêëîïôùûüÿœ]/i.test(value) || /\b(je|j'ai|j ai|vous|nous|pour|avec|une|stratégie|marketing|entreprise|idée|bonjour|salut)\b/i.test(lower)) return 'french';
+    if (/\b(bghit|wach|kifach|3afak|salam|smah|daba|mzyan|khdma|projet|fikra|flous|maghrib|maroc|bzaf|chwiya|n9dro|nqder|baghi|bghina)\b/i.test(lower) || /[379]/.test(value)) return 'darija-latin';
+    if (/[àâçéèêëîïôùûüÿœ]/i.test(value) || /\b(je|j'ai|j ai|vous|nous|pour|avec|une|des|stratégie|entreprise|idée|bonjour|salut|marché|croissance|publicité)\b/i.test(lower)) return 'french';
     return 'english';
   }
 
@@ -65,10 +65,10 @@
   }
 
   function fallbackMessage(style) {
-    if (style === 'arabic-script') return 'سمح ليا، Namaa Talk ما قدرش يجاوب دابا. عاود جرّب بعد شوية.';
-    if (style === 'darija-latin') return 'Smah liya, Namaa Talk ma qdratsh tjawb daba. 3awd jarrb f chi chwia.';
-    if (style === 'french') return "Désolé, Namaa Talk n'a pas pu répondre maintenant. Réessaie dans un instant.";
-    return 'Sorry, Namaa Talk could not answer right now. Please try again in a moment.';
+    if (style === 'arabic-script') return 'سمح ليا، وقع مشكل فالاتصال مع Namaa. عاود جرّب بعد شوية.';
+    if (style === 'darija-latin') return 'Smah liya, kayn mochkil f connection m3a Namaa. 3awd jarrb f chi chwia.';
+    if (style === 'french') return "Désolé, Namaa a eu un souci de connexion. Réessaie dans un instant.";
+    return 'Sorry, Namaa had a connection issue. Please try again in a moment.';
   }
 
   function timeLabel() {
@@ -85,7 +85,8 @@
     var state = {
       open: false,
       loading: false,
-      messages: []
+      messages: [],
+      userNearBottom: true
     };
 
     var root = create('div', 'namaa-talk', { 'data-namaa-talk-root': 'true' });
@@ -150,11 +151,13 @@
     });
     append(
       welcome,
+      create('div', 'namaa-talk__eyebrow', { text: 'Built for smart business conversations' }),
       create('div', 'namaa-talk__welcome-logo', { text: 'N', 'aria-hidden': 'true' }),
       create('h3', '', { text: "Hi, I'm Namaa Talk 👋" }),
       create('p', '', { text: 'Your AI assistant for business, AI, IT, startups, marketing and ideas.' }),
-      create('div', 'namaa-talk__scope', { text: 'Free talk limited to business, AI, IT, startups, marketing and digital growth.' }),
-      chipsWrap
+      create('div', 'namaa-talk__scope', { text: 'Free talk is focused on business, AI, IT, startups, marketing and digital growth.' }),
+      chipsWrap,
+      create('p', 'namaa-talk__disclaimer', { text: 'Namaa Talk can make mistakes. Verify important business decisions.' })
     );
     var messages = create('div', 'namaa-talk__messages', {
       role: 'log',
@@ -228,10 +231,16 @@
         top: messagesShell.scrollHeight,
         behavior: behavior || 'smooth'
       });
+      state.userNearBottom = true;
     }
 
     function isNearBottom() {
       return messagesShell.scrollHeight - messagesShell.scrollTop - messagesShell.clientHeight < 96;
+    }
+
+    function maybeScrollToBottom(behavior) {
+      if (state.userNearBottom) scrollToBottom(behavior);
+      else updateScrollButton();
     }
 
     function updateScrollButton() {
@@ -259,6 +268,7 @@
       }
       messages.appendChild(message);
       root.classList.add('has-messages');
+      updateScrollButton();
       if (options && options.typing) return message;
       return message;
     }
@@ -290,7 +300,7 @@
       scrollToBottom('smooth');
 
       var typing = renderMessage('assistant', '', { typing: true });
-      scrollToBottom('smooth');
+      maybeScrollToBottom('smooth');
 
       try {
         var response = await fetch(API_ROUTE, {
@@ -311,15 +321,16 @@
         typing.remove();
         renderMessage('assistant', answer);
         remember('assistant', answer);
+        maybeScrollToBottom('smooth');
       } catch (error) {
         typing.remove();
         var fallback = fallbackMessage(style);
         renderMessage('assistant', fallback);
         remember('assistant', fallback);
+        maybeScrollToBottom('smooth');
       } finally {
         state.loading = false;
         updateSendState();
-        scrollToBottom('smooth');
         updateScrollButton();
       }
     }
@@ -353,7 +364,10 @@
       }
     });
 
-    messagesShell.addEventListener('scroll', updateScrollButton, { passive: true });
+    messagesShell.addEventListener('scroll', function () {
+      state.userNearBottom = isNearBottom();
+      updateScrollButton();
+    }, { passive: true });
     window.addEventListener('resize', function () {
       setBodyLock(state.open && isMobile());
       updateScrollButton();
