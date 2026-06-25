@@ -2,14 +2,155 @@
 <html lang="fr-MA">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="refresh" content="0; url=/">
-  <title>Namaa Talk | Elboubakry Abdessamad</title>
-  <link rel="canonical" href="https://elboubakry.com/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Namaa AI — Assistant Business Maroc | Elboubakry Abdessamad</title>
+  <meta name="description" content="Namaa AI est votre assistant business intelligent au Maroc. Aide pour idées, marketing, sites web, automatisation, stratégie et croissance digitale.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://elboubakry.com/namaa-ai/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/namaa-page.css?v=20260625">
+  <link rel="icon" href="/assets/images/logo-e-blue.png" type="image/png">
 </head>
-<body>
-  <script>window.location.replace('/');</script>
-  <a href="/">Open Elboubakry.com</a>
+<body class="namaa-page">
+  <div id="namaa-app" class="namaa-app">
+    <!-- Sidebar -->
+    <aside id="namaa-sidebar" class="namaa-sidebar" role="navigation" aria-label="Namaa AI sidebar">
+      <div class="namaa-sidebar-inner">
+        <div class="namaa-sidebar-header">
+          <a href="/" class="namaa-brand" aria-label="Retour à l'accueil Elboubakry.com">
+            <span class="namaa-brand-icon">N</span>
+            <div class="namaa-brand-text">
+              <strong>Namaa AI</strong>
+              <small>by Elboubakry</small>
+            </div>
+          </a>
+        </div>
+
+        <button id="namaa-new-chat" class="namaa-new-chat" type="button" aria-label="Nouvelle conversation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Nouveau chat</span>
+        </button>
+
+        <div class="namaa-sidebar-section">
+          <h3 class="namaa-sidebar-label">Focus modes</h3>
+          <div id="namaa-modes" class="namaa-modes" role="radiogroup" aria-label="Mode de focus">
+            <button class="namaa-mode is-active" data-mode="free" role="radio" aria-checked="true" tabindex="0">
+              <span class="namaa-mode-icon mode-free">💬</span>
+              <span class="namaa-mode-name">Free Talk</span>
+            </button>
+            <button class="namaa-mode" data-mode="business" role="radio" aria-checked="false" tabindex="-1">
+              <span class="namaa-mode-icon mode-business">📊</span>
+              <span class="namaa-mode-name">Business Strategy</span>
+            </button>
+            <button class="namaa-mode" data-mode="marketing" role="radio" aria-checked="false" tabindex="-1">
+              <span class="namaa-mode-icon mode-marketing">📈</span>
+              <span class="namaa-mode-name">Marketing</span>
+            </button>
+            <button class="namaa-mode" data-mode="website" role="radio" aria-checked="false" tabindex="-1">
+              <span class="namaa-mode-icon mode-website">🌐</span>
+              <span class="namaa-mode-name">Website / IT</span>
+            </button>
+            <button class="namaa-mode" data-mode="automation" role="radio" aria-checked="false" tabindex="-1">
+              <span class="namaa-mode-icon mode-automation">🤖</span>
+              <span class="namaa-mode-name">AI Automation</span>
+            </button>
+            <button class="namaa-mode" data-mode="whatsapp" role="radio" aria-checked="false" tabindex="-1">
+              <span class="namaa-mode-icon mode-whatsapp">📱</span>
+              <span class="namaa-mode-name">WhatsApp CRM</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="namaa-sidebar-section">
+          <h3 class="namaa-sidebar-label">Shortcuts</h3>
+          <div class="namaa-shortcuts">
+            <button class="namaa-shortcut" data-prompt="Give me a business idea for the Moroccan market" type="button">💡 Business idea</button>
+            <button class="namaa-shortcut" data-prompt="Help me create a marketing strategy for my business in Morocco" type="button">📊 Marketing strategy</button>
+            <button class="namaa-shortcut" data-prompt="How can I improve my website to get more clients?" type="button">🌐 Improve website</button>
+            <button class="namaa-shortcut" data-prompt="What AI automation can help my Moroccan business grow?" type="button">🤖 AI automation</button>
+          </div>
+        </div>
+
+        <div class="namaa-sidebar-footer">
+          <a href="/" class="namaa-back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+            <span>Retour au site</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile sidebar overlay -->
+    <div id="namaa-overlay" class="namaa-overlay" aria-hidden="true"></div>
+
+    <!-- Main chat area -->
+    <main id="namaa-chat" class="namaa-chat" role="main">
+      <!-- Mobile header -->
+      <header class="namaa-mobile-header">
+        <button id="namaa-menu-toggle" class="namaa-menu-toggle" type="button" aria-label="Ouvrir le menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="namaa-mobile-brand">
+          <span class="namaa-mobile-brand-icon">N</span>
+          <strong>Namaa AI</strong>
+        </div>
+        <button id="namaa-mobile-new" class="namaa-mobile-new" type="button" aria-label="Nouveau chat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </header>
+
+      <!-- Messages area -->
+      <div id="namaa-messages" class="namaa-messages">
+        <div id="namaa-welcome" class="namaa-welcome">
+          <div class="namaa-welcome-logo">N</div>
+          <h1 class="namaa-welcome-title">Salam 👋, je suis <strong>Namaa AI</strong></h1>
+          <p class="namaa-welcome-subtitle">Votre assistant business intelligent pour le Maroc.</p>
+          <p class="namaa-welcome-desc">Posez votre question sur votre business, marketing, site web, IA, startup, ou idée de projet.</p>
+          <div id="namaa-suggested" class="namaa-suggested">
+            <button class="namaa-suggested-chip" data-prompt="Give me a business idea for Casablanca" type="button">💡 Business idea Casablanca</button>
+            <button class="namaa-suggested-chip" data-prompt="How do I start a marketing strategy in Morocco?" type="button">📊 Marketing strategy</button>
+            <button class="namaa-suggested-chip" data-prompt="What are the best AI tools for Moroccan businesses?" type="button">🤖 AI tools Morocco</button>
+            <button class="namaa-suggested-chip" data-prompt="I need a website for my business in Morocco" type="button">🌐 Website for business</button>
+            <button class="namaa-suggested-chip" data-prompt="How to get more clients using WhatsApp?" type="button">📱 WhatsApp clients</button>
+            <button class="namaa-suggested-chip" data-prompt="Give me a startup roadmap for Morocco" type="button">🚀 Startup roadmap</button>
+          </div>
+          <p class="namaa-welcome-disclaimer">Namaa AI peut faire des erreurs. Vérifiez les décisions importantes.</p>
+        </div>
+        <div id="namaa-chat-messages" class="namaa-chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div id="namaa-typing" class="namaa-typing" aria-hidden="true">
+        <div class="namaa-typing-dots"><span></span><span></span><span></span></div>
+        <span class="namaa-typing-text">Namaa AI réfléchit...</span>
+      </div>
+
+      <!-- Input area -->
+      <footer class="namaa-input-area">
+        <form id="namaa-form" class="namaa-form" autocomplete="off">
+          <div class="namaa-input-wrap">
+            <textarea
+              id="namaa-input"
+              class="namaa-input"
+              rows="1"
+              maxlength="1200"
+              placeholder="Posez votre question à Namaa..."
+              aria-label="Message à Namaa AI"
+              autocomplete="off"
+              spellcheck="true"
+            ></textarea>
+            <button id="namaa-send" class="namaa-send" type="submit" aria-label="Envoyer" disabled>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <p class="namaa-footer-note">Namaa AI peut faire des erreurs. Vérifiez les informations importantes.</p>
+        </form>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/assets/js/namaa-page.js?v=20260625"></script>
 </body>
 </html>

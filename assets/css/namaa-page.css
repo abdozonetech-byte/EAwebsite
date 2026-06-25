@@ -1,0 +1,908 @@
+/* ===== Namaa AI — Full Page ChatGPT-style ===== */
+
+:root {
+  --n-primary: #2563eb;
+  --n-primary-hover: #1d4ed8;
+  --n-primary-soft: #eff6ff;
+  --n-primary-light: #dbeafe;
+  --n-primary-glow: rgba(37, 99, 235, 0.15);
+  --n-bg: #ffffff;
+  --n-bg-alt: #f8fafc;
+  --n-sidebar: #0f172a;
+  --n-sidebar-hover: #1e293b;
+  --n-sidebar-active: rgba(37, 99, 235, 0.15);
+  --n-sidebar-text: #cbd5e1;
+  --n-sidebar-heading: #64748b;
+  --n-text: #0f172a;
+  --n-text-secondary: #475569;
+  --n-text-muted: #94a3b8;
+  --n-border: #e2e8f0;
+  --n-border-light: #f1f5f9;
+  --n-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --n-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+  --n-shadow-lg: 0 12px 48px rgba(15, 23, 42, 0.12);
+  --n-radius-sm: 8px;
+  --n-radius: 12px;
+  --n-radius-lg: 16px;
+  --n-radius-xl: 20px;
+  --n-radius-full: 999px;
+  --n-sidebar-width: 280px;
+  --n-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --n-transition: 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body.namaa-page {
+  font-family: var(--n-font);
+  color: var(--n-text);
+  background: var(--n-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ===== App Layout ===== */
+
+.namaa-app {
+  display: flex;
+  height: 100dvh;
+  width: 100%;
+}
+
+/* ===== Sidebar ===== */
+
+.namaa-sidebar {
+  width: var(--n-sidebar-width);
+  flex: 0 0 var(--n-sidebar-width);
+  background: var(--n-sidebar);
+  color: var(--n-sidebar-text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.namaa-sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 12px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+.namaa-sidebar-inner::-webkit-scrollbar {
+  width: 4px;
+}
+
+.namaa-sidebar-inner::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--n-radius-full);
+}
+
+.namaa-sidebar-header {
+  padding: 0 4px 16px;
+}
+
+.namaa-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.namaa-brand-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--n-radius);
+  background: linear-gradient(135deg, #0ea5e9, var(--n-primary));
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.namaa-brand-text strong {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.namaa-brand-text small {
+  font-size: 11px;
+  color: var(--n-sidebar-text);
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* New chat button */
+
+.namaa-new-chat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--n-radius);
+  background: var(--n-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background var(--n-transition), transform var(--n-transition);
+  margin-bottom: 20px;
+}
+
+.namaa-new-chat:hover {
+  background: var(--n-primary-hover);
+  transform: translateY(-1px);
+}
+
+.namaa-new-chat:active {
+  transform: translateY(0);
+}
+
+.namaa-new-chat svg {
+  flex: 0 0 auto;
+}
+
+/* Sidebar sections */
+
+.namaa-sidebar-section {
+  margin-bottom: 20px;
+}
+
+.namaa-sidebar-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--n-sidebar-heading);
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+/* Focus modes */
+
+.namaa-modes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.namaa-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--n-radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--n-sidebar-text);
+  text-align: left;
+  transition: background var(--n-transition), color var(--n-transition);
+}
+
+.namaa-mode:hover {
+  background: var(--n-sidebar-hover);
+  color: #fff;
+}
+
+.namaa-mode.is-active {
+  background: var(--n-sidebar-active);
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.namaa-mode-icon {
+  font-size: 16px;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+.namaa-mode-name {
+  line-height: 1.2;
+}
+
+/* Shortcuts */
+
+.namaa-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.namaa-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--n-radius-sm);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--n-sidebar-text);
+  text-align: left;
+  opacity: 0.75;
+  transition: background var(--n-transition), opacity var(--n-transition), color var(--n-transition);
+}
+
+.namaa-shortcut:hover {
+  background: var(--n-sidebar-hover);
+  opacity: 1;
+  color: #fff;
+}
+
+/* Sidebar footer */
+
+.namaa-sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.namaa-back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--n-radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--n-sidebar-text);
+  transition: background var(--n-transition), color var(--n-transition);
+}
+
+.namaa-back-link:hover {
+  background: var(--n-sidebar-hover);
+  color: #fff;
+}
+
+/* ===== Mobile overlay ===== */
+
+.namaa-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 8;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.namaa-overlay.is-open {
+  opacity: 1;
+}
+
+/* ===== Main chat area ===== */
+
+.namaa-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100dvh;
+  background: var(--n-bg);
+  position: relative;
+}
+
+/* Mobile header */
+
+.namaa-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--n-border);
+  background: var(--n-bg);
+  z-index: 5;
+}
+
+.namaa-mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--n-text);
+}
+
+.namaa-mobile-brand-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--n-radius-sm);
+  background: linear-gradient(135deg, #0ea5e9, var(--n-primary));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.namaa-menu-toggle,
+.namaa-mobile-new {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--n-radius-sm);
+  color: var(--n-text-secondary);
+  transition: background var(--n-transition);
+}
+
+.namaa-menu-toggle:hover,
+.namaa-mobile-new:hover {
+  background: var(--n-bg-alt);
+}
+
+/* Messages area */
+
+.namaa-messages {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--n-border) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.namaa-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.namaa-messages::-webkit-scrollbar-thumb {
+  background: var(--n-border);
+  border-radius: var(--n-radius-full);
+}
+
+/* Welcome state */
+
+.namaa-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100%;
+  padding: 40px 24px;
+  animation: namaaFadeUp 0.5s ease both;
+}
+
+.namaa-welcome-logo {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--n-radius-xl);
+  background: linear-gradient(135deg, #0ea5e9, var(--n-primary));
+  color: #fff;
+  font-size: 34px;
+  font-weight: 900;
+  box-shadow: 0 12px 40px rgba(37, 99, 235, 0.3);
+  margin-bottom: 20px;
+  animation: namaaPulseGlow 4s ease-in-out infinite;
+}
+
+.namaa-welcome-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--n-text);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.namaa-welcome-title strong {
+  background: linear-gradient(135deg, var(--n-primary), #0ea5e9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.namaa-welcome-subtitle {
+  font-size: 16px;
+  color: var(--n-text-secondary);
+  margin-bottom: 4px;
+}
+
+.namaa-welcome-desc {
+  font-size: 14px;
+  color: var(--n-text-muted);
+  max-width: 420px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+/* Suggested chips */
+
+.namaa-suggested {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 520px;
+  margin-bottom: 20px;
+}
+
+.namaa-suggested-chip {
+  padding: 8px 16px;
+  border: 1px solid var(--n-border);
+  border-radius: var(--n-radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--n-text-secondary);
+  background: var(--n-bg);
+  transition: border-color var(--n-transition), box-shadow var(--n-transition), transform var(--n-transition), color var(--n-transition);
+  animation: namaaChipIn 0.3s ease both;
+}
+
+.namaa-suggested-chip:nth-child(1) { animation-delay: 0.05s; }
+.namaa-suggested-chip:nth-child(2) { animation-delay: 0.1s; }
+.namaa-suggested-chip:nth-child(3) { animation-delay: 0.15s; }
+.namaa-suggested-chip:nth-child(4) { animation-delay: 0.2s; }
+.namaa-suggested-chip:nth-child(5) { animation-delay: 0.25s; }
+.namaa-suggested-chip:nth-child(6) { animation-delay: 0.3s; }
+
+.namaa-suggested-chip:hover {
+  border-color: var(--n-primary);
+  color: var(--n-primary);
+  box-shadow: 0 4px 16px var(--n-primary-glow);
+  transform: translateY(-1px);
+}
+
+.namaa-suggested-chip:active {
+  transform: translateY(0);
+}
+
+.namaa-welcome-disclaimer {
+  font-size: 11px;
+  color: var(--n-text-muted);
+  opacity: 0.6;
+}
+
+.namaa-welcome.is-hidden {
+  display: none;
+}
+
+/* Chat messages */
+
+.namaa-chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 16px 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.namaa-msg {
+  display: flex;
+  gap: 12px;
+  animation: namaaMsgIn 0.3s ease both;
+  max-width: 100%;
+}
+
+.namaa-msg--user {
+  flex-direction: row-reverse;
+}
+
+.namaa-msg--assistant {
+  flex-direction: row;
+}
+
+.namaa-msg-avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--n-radius-sm);
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 900;
+  margin-top: 2px;
+}
+
+.namaa-msg--assistant .namaa-msg-avatar {
+  background: linear-gradient(135deg, #0ea5e9, var(--n-primary));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.namaa-msg--user .namaa-msg-avatar {
+  background: var(--n-bg-alt);
+  color: var(--n-text-secondary);
+  border: 1px solid var(--n-border);
+}
+
+.namaa-msg-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 85%;
+}
+
+.namaa-msg-bubble {
+  padding: 12px 16px;
+  border-radius: var(--n-radius-lg);
+  font-size: 14.5px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: pre-wrap;
+}
+
+.namaa-msg--assistant .namaa-msg-bubble {
+  background: var(--n-bg-alt);
+  color: var(--n-text);
+  border: 1px solid var(--n-border-light);
+  border-bottom-left-radius: 6px;
+}
+
+.namaa-msg--user .namaa-msg-bubble {
+  background: var(--n-primary);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+
+.namaa-msg-time {
+  font-size: 11px;
+  color: var(--n-text-muted);
+  padding: 0 4px;
+}
+
+.namaa-msg--user .namaa-msg-time {
+  text-align: right;
+}
+
+/* Typing indicator */
+
+.namaa-typing {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.namaa-typing.is-visible {
+  display: flex;
+}
+
+.namaa-typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background: var(--n-bg-alt);
+  border: 1px solid var(--n-border-light);
+  border-radius: var(--n-radius-lg);
+  border-bottom-left-radius: 6px;
+}
+
+.namaa-typing-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--n-text-muted);
+  animation: namaaTypingBounce 1.2s ease-in-out infinite;
+}
+
+.namaa-typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.namaa-typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+.namaa-typing-text {
+  font-size: 13px;
+  color: var(--n-text-muted);
+  font-weight: 500;
+}
+
+/* Input area */
+
+.namaa-input-area {
+  border-top: 1px solid var(--n-border);
+  background: var(--n-bg);
+  padding: 12px 16px 16px;
+}
+
+.namaa-form {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.namaa-input-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  border: 1px solid var(--n-border);
+  border-radius: var(--n-radius-lg);
+  padding: 4px 4px 4px 16px;
+  background: var(--n-bg);
+  transition: border-color var(--n-transition), box-shadow var(--n-transition);
+}
+
+.namaa-input-wrap:focus-within {
+  border-color: var(--n-primary);
+  box-shadow: 0 0 0 3px var(--n-primary-glow), 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.namaa-input {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  resize: none;
+  border: none;
+  background: transparent;
+  color: var(--n-text);
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  padding: 12px 0;
+}
+
+.namaa-input::placeholder {
+  color: var(--n-text-muted);
+}
+
+.namaa-send {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--n-radius);
+  background: var(--n-primary);
+  color: #fff;
+  flex: 0 0 auto;
+  transition: background var(--n-transition), transform var(--n-transition), box-shadow var(--n-transition);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.namaa-send:hover:not(:disabled) {
+  background: var(--n-primary-hover);
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+.namaa-send:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.namaa-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.namaa-footer-note {
+  font-size: 11px;
+  color: var(--n-text-muted);
+  text-align: center;
+  margin-top: 8px;
+  opacity: 0.5;
+}
+
+/* ===== Animations ===== */
+
+@keyframes namaaFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes namaaMsgIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes namaaChipIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes namaaPulseGlow {
+  0%, 100% {
+    box-shadow: 0 12px 40px rgba(37, 99, 235, 0.3);
+  }
+  50% {
+    box-shadow: 0 16px 48px rgba(14, 165, 233, 0.4);
+  }
+}
+
+@keyframes namaaTypingBounce {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+/* ===== Mobile ===== */
+
+@media (max-width: 768px) {
+  .namaa-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 9;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .namaa-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .namaa-overlay.is-open {
+    display: block;
+  }
+
+  .namaa-mobile-header {
+    display: flex;
+  }
+
+  .namaa-messages {
+    padding-top: 0;
+  }
+
+  .namaa-welcome {
+    padding: 32px 20px;
+    min-height: auto;
+  }
+
+  .namaa-welcome-logo {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .namaa-welcome-title {
+    font-size: 22px;
+  }
+
+  .namaa-welcome-subtitle {
+    font-size: 15px;
+  }
+
+  .namaa-welcome-desc {
+    font-size: 13px;
+  }
+
+  .namaa-suggested {
+    gap: 6px;
+  }
+
+  .namaa-suggested-chip {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+
+  .namaa-chat-messages {
+    padding: 16px 12px;
+  }
+
+  .namaa-msg-bubble {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .namaa-msg-content {
+    max-width: 88%;
+  }
+
+  .namaa-input-area {
+    padding: 8px 12px 12px;
+  }
+
+  .namaa-input-wrap {
+    padding: 2px 2px 2px 14px;
+  }
+
+  .namaa-input {
+    min-height: 40px;
+    font-size: 16px;
+    padding: 10px 0;
+  }
+
+  .namaa-send {
+    width: 40px;
+    height: 40px;
+  }
+
+  .namaa-input-wrap:focus-within {
+    box-shadow: 0 0 0 3px var(--n-primary-glow);
+  }
+}
+
+@media (max-width: 380px) {
+  .namaa-welcome-title {
+    font-size: 19px;
+  }
+
+  .namaa-welcome-logo {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+  }
+
+  .namaa-chat-messages {
+    padding: 12px 8px;
+  }
+
+  .namaa-msg-bubble {
+    font-size: 13.5px;
+    padding: 9px 12px;
+  }
+
+  .namaa-input-area {
+    padding: 6px 8px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
