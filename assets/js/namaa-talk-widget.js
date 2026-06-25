@@ -13,7 +13,7 @@
     'AI automation',
     'Improve my website',
     'Startup roadmap',
-    'Content plan'
+    'Lead generation system'
   ];
 
   function ready(callback) {
