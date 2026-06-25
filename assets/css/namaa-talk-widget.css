@@ -391,18 +391,18 @@
 .namaa-talk__message {
   display: grid;
   gap: 5px;
-  max-width: min(86%, 350px);
+  max-width: min(78%, 350px);
   animation: namaaTalkMessageIn 0.22s cubic-bezier(.22, 1, .36, 1) both;
 }
 
 .namaa-talk__bubble {
-  padding: 12px 15px;
+  padding: 13px 16px;
   border-radius: 20px;
   font-size: 14.5px;
-  line-height: 1.56;
+  line-height: 1.64;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  word-break: break-word;
+  word-break: normal;
 }
 
 .namaa-talk__message--user {
@@ -807,7 +807,9 @@
   }
 
   .namaa-talk__bubble {
+    padding: 13px 15px;
     font-size: 15px;
+    line-height: 1.62;
   }
 
   .namaa-talk__composer {

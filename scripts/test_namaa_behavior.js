@@ -19,6 +19,7 @@ const factory = new Function(`${body}
 return {
   inferLanguageStyle,
   buildUserPrompt,
+  requestStyleInstruction,
   softCtaInstruction,
   cleanPublicAnswer,
 };
@@ -27,6 +28,7 @@ return {
 const {
   inferLanguageStyle,
   buildUserPrompt,
+  requestStyleInstruction,
   softCtaInstruction,
   cleanPublicAnswer,
 } = factory();
@@ -39,41 +41,62 @@ const cases = [
     cta: false,
     contact: false,
     long: false,
+    promptIncludes: ['Salam, labas 3lik', 'No CTA'],
   },
   {
-    label: 'Darija idea',
-    text: 'bghit fikra business f morocco',
+    label: 'Darija Casablanca business',
+    text: 'wach casa mdina dyal business',
     style: 'darija-latin',
+    cta: false,
+    contact: false,
+    long: false,
+    promptIncludes: ['Casablanca is good for business', 'competition is strong'],
+    promptExcludes: ['Soft CTA is allowed'],
+  },
+  {
+    label: 'Darija Casablanca idea',
+    text: 'bghit fikra business f casa',
+    style: 'darija-latin',
+    cta: false,
+    contact: false,
+    long: false,
+    promptIncludes: ['business ideas in Casablanca', 'exactly 3 short ideas'],
+  },
+  {
+    label: 'Darija CRM definition',
+    text: 'chno howa CRM',
+    style: 'darija-latin',
+    cta: false,
+    contact: false,
+    long: false,
+    promptIncludes: ['simple definition/question', 'No CTA'],
+  },
+  {
+    label: 'Arabic project idea',
+    text: 'أريد فكرة مشروع',
+    style: 'arabic-script',
     cta: false,
     contact: false,
     long: false,
   },
   {
-    label: 'Arabic site improve',
-    text: 'أريد تحسين موقعي',
-    style: 'arabic-script',
-    cta: true,
-    contact: false,
-    long: false,
-  },
-  {
-    label: 'French strategy',
-    text: 'Je veux une stratégie marketing',
+    label: 'French improve website',
+    text: 'Je veux améliorer mon site',
     style: 'french',
     cta: true,
     contact: false,
     long: false,
   },
   {
-    label: 'English startup idea',
-    text: 'I need a startup idea',
+    label: 'English marketing strategy',
+    text: 'I need a marketing strategy',
     style: 'english',
-    cta: false,
+    cta: true,
     contact: false,
     long: false,
   },
   {
-    label: 'Simple CRM definition',
+    label: 'English CRM definition',
     text: 'What is CRM?',
     style: 'english',
     cta: false,
@@ -81,12 +104,13 @@ const cases = [
     long: false,
   },
   {
-    label: 'Full roadmap',
-    text: 'Give me a full roadmap for an AI automation agency',
+    label: 'Deep Casablanca analysis',
+    text: 'give me deep analysis for Casablanca market',
     style: 'english',
-    cta: true,
+    cta: false,
     contact: false,
     long: true,
+    promptIncludes: ['clearly asked for depth'],
   },
   {
     label: 'Unrelated sports',
@@ -97,11 +121,11 @@ const cases = [
     long: false,
   },
   {
-    label: 'Landing page and ads',
-    text: 'I need a landing page and ads system',
+    label: 'Landing page and ads contact',
+    text: 'I want someone to build this landing page and ads system',
     style: 'english',
     cta: true,
-    contact: false,
+    contact: true,
     long: false,
   },
   {
@@ -128,14 +152,6 @@ const cases = [
     contact: false,
     long: false,
   },
-  {
-    label: 'Strong execution intent',
-    text: 'I want someone to build this for me',
-    style: 'english',
-    cta: true,
-    contact: true,
-    long: false,
-  },
 ];
 
 function assert(condition, message) {
@@ -156,9 +172,19 @@ for (const testCase of cases) {
   assert(cta === testCase.cta, `${testCase.label}: expected cta=${testCase.cta}, got ${cta}`);
   assert(contact === testCase.contact, `${testCase.label}: expected contact=${testCase.contact}, got ${contact}`);
   assert(long === testCase.long, `${testCase.label}: expected long=${testCase.long}, got ${long}`);
+  (testCase.promptIncludes || []).forEach((snippet) => {
+    assert(prompt.includes(snippet), `${testCase.label}: prompt should include "${snippet}"`);
+  });
+  (testCase.promptExcludes || []).forEach((snippet) => {
+    assert(!prompt.includes(snippet), `${testCase.label}: prompt should not include "${snippet}"`);
+  });
 
   console.log(`${testCase.label}: ok`);
 }
+
+const styleGuide = requestStyleInstruction('wach casa mdina dyal business', 'darija-latin');
+assert(/Avoid "l-markaz l-iqtisadi"/.test(styleGuide), 'Darija bad-phrase guard failed');
+console.log('Darija bad-phrase guidance: ok');
 
 const repeated = softCtaInstruction('I need a landing page', 'english', [
   { role: 'assistant', content: 'Elboubakry Abdessamad can help.' },
@@ -175,5 +201,9 @@ console.log('Declined CTA guard: ok');
 const cleaned = cleanPublicAnswer('Gemini and ChatGPT');
 assert(cleaned === 'Namaa Talk and Namaa Talk', 'Provider cleanup failed');
 console.log('Provider cleanup: ok');
+
+const darijaCleaned = cleanPublicAnswer('Sala L-bass 3alik? Casa hiya l-markaz l-iqtisadi l-awwal w l-mounafasa qwiya.', 'darija-latin');
+assert(!/Sala L-bass|l-markaz l-iqtisadi|l-mounafasa/i.test(darijaCleaned), 'Darija cleanup failed');
+console.log('Darija cleanup: ok');
 
 console.log('\nChecks complete.');

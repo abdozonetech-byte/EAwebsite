@@ -52,14 +52,14 @@
     var value = String(text || '').trim();
     var lower = value.toLowerCase();
     if (/[\u0600-\u06FF]/.test(value)) return 'arabic-script';
-    if (/\b(bghit|wach|kifach|3afak|salam|smah|daba|mzyan|khdma|projet|fikra|flous|maghrib|maroc|bzaf|chwiya|n9dro|nqder|baghi|bghina)\b/i.test(lower) || /[379]/.test(value)) return 'darija-latin';
     if (/[àâçéèêëîïôùûüÿœ]/i.test(value) || /\b(je|j'ai|j ai|vous|nous|pour|avec|une|des|stratégie|entreprise|idée|bonjour|salut|marché|croissance|publicité)\b/i.test(lower)) return 'french';
+    if (/\b(bghit|brit|wach|wash|chno|shno|kifach|kifash|3afak|salam|smah|daba|db|mzyan|mezian|khdma|project|projet|fikra|flous|maghrib|maroc|casa|mdina|bizness|business|bzaf|chwiya|n9dro|nqder|baghi|bghina|khass|khas|3lach|3lash)\b/i.test(lower) || /[379]/.test(value)) return 'darija-latin';
     return 'english';
   }
 
   function languageInstruction(style) {
     if (style === 'arabic-script') return 'Reply in Arabic script, matching the user language and style.';
-    if (style === 'darija-latin') return 'Reply in Moroccan Darija written with Latin characters. Do not switch to Arabic script.';
+    if (style === 'darija-latin') return 'Reply in natural Moroccan Darija written with Latin characters. Do not switch to Arabic script or formal transliteration.';
     if (style === 'french') return 'Reply in French.';
     return 'Reply in English.';
   }

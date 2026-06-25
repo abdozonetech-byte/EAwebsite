@@ -8,7 +8,7 @@ import {
   safeText,
 } from './_api-config.js';
 
-const ROUTE_VERSION = 'namaa-talk-lead-conversion-20260625';
+const ROUTE_VERSION = 'namaa-talk-natural-style-20260625';
 
 const NAMAA_CONTACT_LINKS = {
   whatsapp: 'https://wa.me/212687321925',
@@ -19,7 +19,7 @@ const NAMAA_TALK_SYSTEM_PROMPT = `
 You are Namaa Talk, a Moroccan AI business assistant created by Elboubakry Abdessamad.
 You are not Gemini.
 You are not ChatGPT.
-You are not a generic assistant or support bot.
+You are not a generic chatbot, assistant, or support bot.
 You are Namaa Talk.
 
 What Namaa helps with:
@@ -35,23 +35,34 @@ Natural free talk:
 
 Short answer mode:
 - Short by default.
-- Prefer 2 to 6 lines.
+- Prefer 2 to 5 short lines.
 - Use maximum 3 bullets by default.
 - No giant strategy unless the user asks for it.
 - No heavy paragraphs.
 - No long intro.
 - Give the useful answer first.
 - Add one small next step only if useful.
-- Give a long/deep answer only if the user explicitly asks for deep analysis, full strategy, roadmap, detailed plan, "explain more", "give me everything", "strategy complète", "خطة كاملة", "تحليل عميق", or similar.
+- Make every short answer useful. Include at least one clear recommendation, practical next step, useful warning, simple example, or smart business insight.
+- Classify the request before answering:
+  Greeting -> very short friendly answer.
+  Simple question -> 2 to 4 useful lines.
+  Advice request -> maximum 3 bullets.
+  Strategy/full plan -> longer only if the user clearly asks.
+- Give a long/deep answer only if the user explicitly asks for deep analysis, full plan, roadmap, detailed strategy, analyze deeply, give me everything, strategy complète, "خطة كاملة", "تحليل عميق", "بالتفصيل", or similar.
 
 Namaa voice:
 - Friendly, smart, warm, practical, clear, direct, human.
 - Moroccan-aware when relevant.
+- Business-focused but not pushy.
+- Sound like a smart business friend who understands AI, marketing, websites, startups and Morocco.
 - Use light emojis. One emoji is enough most of the time. Maximum 2 emojis in normal answers.
-- Good emojis: 👌 💡 🚀 ✅ 📌 🤝
+- Maximum 3 emojis only in longer requested plans.
+- Good emojis: 👋 👌 💡 🚀 ✅ 📌 📈 🤝 ⚠️ 🔧
 - Avoid emoji spam.
+- Do not put emojis in every line.
 - Never say "As an AI model", "I am Gemini", "I am ChatGPT", or similar.
 - Avoid generic robotic phrases.
+- Avoid long AI-style introductions, cold formal answers, empty motivational answers, and translated-model phrasing.
 - Do not repeat the same CTA.
 
 Same-language rule:
@@ -63,6 +74,24 @@ Same-language rule:
 - Do not switch language without permission.
 - Do not translate unless asked.
 - Do not mix languages unless the user mixed languages first.
+
+Natural Darija Latin style:
+- If the user writes Darija Latin, answer in natural Moroccan Darija Latin only.
+- Keep sentences short and conversational.
+- Avoid academic Arabic transliterated into Latin.
+- Avoid too many hyphenated words.
+- Avoid putting "l-" before every noun.
+- Avoid machine-like phrases such as "Sala L-bass 3alik?", "Ahlan! Casa hiya l9elb dyal l-business f l-meghrib", "l-markaz l-iqtisadi l-awwal", "l-mounafasa", "l-foras", "l-qorba", and "l-mouassasat".
+- It is okay to naturally use common French/English business words: business, marketing, clients, leads, website, ads, offer, strategy, automation, CRM, project, niche, content, sales.
+- Do not use Arabic script in Darija Latin answers. Write "qwiya", "wad7", "kbidaya", and "dyal" instead of Arabic-script words.
+- Good greeting: "Salam, labas 3lik? 👋 Ana Namaa Talk, n9der n3awnek f business, AI, marketing, websites, w afkar projects."
+- Good Casablanca answer: "Iyeh, Casa mdina qwiya bzaf f business 👌 Fiha clients, companies, networking, w opportunities. Walakin competition fiha strong, donc khassek offer wad7 w marketing mzyan."
+- Good business idea answer: "Mzyan 👌 Hadi 3 afkar: 1. AI automation l small businesses 2. Landing page + ads system l local services 3. Niche e-commerce b products marocains. A9wa wa7da kbidaya hiya automation, 7it bzaf dyal businesses mazal khdamin manually."
+
+Good same-language examples:
+- Arabic: "نعم، الدار البيضاء من أقوى المدن للبزنس في المغرب 👌 فيها الشركات، العملاء، والفرص. لكن المنافسة قوية، لذلك تحتاج عرض واضح وتسويق جيد."
+- French: "Oui, Casablanca est l’une des meilleures villes business au Maroc 👌 Il y a beaucoup d’entreprises, de clients et d’opportunités. Mais la concurrence est forte, donc il faut une offre claire et une bonne stratégie."
+- English: "Yes, Casablanca is one of the strongest business cities in Morocco 👌 You’ll find clients, companies, networking, and opportunities. But competition is high, so you need a clear offer and strong marketing."
 
 Out-of-scope handling:
 - If a message is clearly unrelated, give a short polite redirection only.
@@ -123,11 +152,11 @@ function inferLanguageStyle(text, clientHint = '') {
   if (hint === 'french') return 'french';
   if (hint === 'english') return 'english';
 
-  if (/\b(bghit|wach|kifach|3afak|salam|smah|daba|mzyan|khoya|khti|fikra|khdma|maghrib|bzaf|chwiya|n9dro|nqder|baghi|bghina)\b/i.test(lower) || /[379]/.test(value)) {
-    return 'darija-latin';
-  }
   if (/[àâçéèêëîïôùûüÿœ]/i.test(value) || /\b(je|j'ai|j ai|vous|nous|pour|avec|une|des|stratégie|entreprise|idée|bonjour|salut)\b/i.test(lower)) {
     return 'french';
+  }
+  if (/\b(bghit|brit|wach|wash|chno|shno|kifach|kifash|3afak|salam|smah|daba|db|mzyan|mezian|khoya|khti|fikra|khdma|project|projet|bizness|business|maghrib|maroc|casa|mdina|bzaf|chwiya|n9dro|nqder|baghi|bghina|khass|khas|3lach|3lash)\b/i.test(lower) || /[379]/.test(value)) {
+    return 'darija-latin';
   }
   return 'english';
 }
@@ -137,7 +166,7 @@ function strictLanguageInstruction(style) {
     return 'Answer in Arabic script only, matching the user tone.';
   }
   if (style === 'darija-latin') {
-    return 'Answer in Moroccan Darija written with Latin characters only. Do not use Arabic script.';
+    return 'Answer in natural Moroccan Darija written with Latin characters only. Do not use Arabic script. Avoid formal Arabic transliteration, too many hyphens, and too many "l-" prefixes.';
   }
   if (style === 'french') {
     return 'Answer in French only.';
@@ -159,13 +188,13 @@ function fallbackAnswer(style) {
 }
 
 function isSimpleDefinition(message) {
-  return /^(what is|what's|define|explain simply|c'?est quoi|qu'?est-ce que|شنو هو|ما هو|شنو هي|achno huwa|chno howa|wach chno|شنو معنى)\b/i.test(String(message || '').trim());
+  return /^(what is|what's|define|explain simply|c'?est quoi|qu'?est-ce que|شنو هو|ما هو|شنو هي|achno huwa|achno howa|chno howa|chno huwa|shno howa|shno huwa|wach chno|شنو معنى)\b/i.test(String(message || '').trim());
 }
 
 function isSoftCtaRelevant(message) {
   const value = String(message || '').toLowerCase();
   if (isSimpleDefinition(value)) return false;
-  return /(marketing strategy|digital strategy|website|site web|landing page|ads|advertising|meta ads|google ads|lead generation|get clients|more clients|leads|crm|automation|business growth|growth|launch|roadmap|full plan|implementation|implement|build this|build it|create a site|create a website|improve conversions|conversion rate|ready to start|start now|who can help|execute|execution|strat[eé]gie marketing|strat[eé]gie digitale|cr[eé]er un site|site internet|page d['’ ]atterrissage|page de vente|publicit[eé]|g[eé]n[eé]ration de leads|clients|automatisation|lancement|feuille de route|plan complet|am[eé]liorer les conversions|mettre en place|ex[eé]cuter|استراتيجية تسويق|استراتيجية رقمية|إنشاء موقع|موقع|صفحة هبوط|صفحة بيع|إعلانات|جلب العملاء|عملاء|نظام عملاء|أتمتة|إطلاق|خطة كاملة|خارطة طريق|تنفيذ|تحسين التحويلات|جاهز|أريد البدء|landing|ads system|systeme dyal leads|system dyal leads|ndir landing|ndir site|ndir website|bghit clients|bghit leads|nlaunchi|n9ad|nbni|nimplementi|nexecuti|bghit nbda|ana serious|bghit ndir)/i.test(value);
+  return /(marketing strategy|digital strategy|website|site web|landing page|ads|advertising|meta ads|google ads|lead generation|get clients|more clients|leads|crm|automation|business growth|growth|launch|roadmap|full plan|implementation|implement|build this|build it|create a site|create a website|improve my website|improve the website|improve conversions|conversion rate|ready to start|start now|who can help|execute|execution|strat[eé]gie marketing|strat[eé]gie digitale|cr[eé]er un site|site internet|page d['’ ]atterrissage|page de vente|publicit[eé]|g[eé]n[eé]ration de leads|clients|automatisation|lancement|feuille de route|plan complet|am[eé]liorer mon site|am[eé]liorer le site|am[eé]liorer votre site|am[eé]liorer les conversions|mettre en place|ex[eé]cuter|استراتيجية تسويق|استراتيجية رقمية|إنشاء موقع|موقع|صفحة هبوط|صفحة بيع|إعلانات|جلب العملاء|عملاء|نظام عملاء|أتمتة|إطلاق|خطة كاملة|خارطة طريق|تنفيذ|تحسين التحويلات|جاهز|أريد البدء|landing|ads system|systeme dyal leads|system dyal leads|ndir landing|ndir site|ndir website|n7ssen site|n7ssen website|bghit n7ssen site|bghit n7ssen website|bghit clients|bghit leads|nlaunchi|n9ad|nbni|nimplementi|nexecuti|bghit nbda|ana serious|bghit ndir)/i.test(value);
 }
 
 function isStrongExecutionIntent(message) {
@@ -228,15 +257,46 @@ function softCtaInstruction(message, style, history = []) {
   return guidance.join(' ');
 }
 
+function requestStyleInstruction(message, style) {
+  const value = String(message || '').trim();
+  const lower = value.toLowerCase();
+
+  if (/^(salam|salut|bonjour|hello|hi|السلام|مرحبا)\b/i.test(lower)) {
+    if (style === 'darija-latin') {
+      return 'This is a greeting. Answer very short and friendly. Start naturally: "Salam, labas 3lik? 👋" Then one useful sentence about how Namaa can help. No CTA.';
+    }
+    return 'This is a greeting. Answer very short, friendly, and useful. No CTA.';
+  }
+
+  if (style === 'darija-latin' && /\b(wach|wash).*\b(casa|casablanca).*\b(business|bizness)\b/i.test(lower)) {
+    return 'The user asks if Casablanca is good for business. Answer in natural Darija Latin, max 4 short lines. Mention clients, companies/networking/opportunities, and the warning that competition is strong so the offer and marketing must be clear. Avoid "l-markaz l-iqtisadi", "l-mounafasa", and formal transliteration.';
+  }
+
+  if (style === 'darija-latin' && /\b(bghit|brit).*\bfikra\b.*\b(business|bizness)\b.*\b(casa|casablanca)\b/i.test(lower)) {
+    return 'The user wants business ideas in Casablanca. Answer in natural Darija Latin with exactly 3 short ideas maximum, then one short recommendation for the strongest starting idea. Use one suitable emoji. No long roadmap.';
+  }
+
+  if (isSimpleDefinition(value)) {
+    return 'This is a simple definition/question. Answer in 2 to 4 useful lines. No CTA. Include one practical example if helpful.';
+  }
+
+  if (/\b(deep analysis|full strategy|full plan|roadmap|detailed plan|give me details|give me everything|explain more|analyze deeply|analyse approfondie|analyse profonde|strat[eé]gie compl[eè]te|plan complet|feuille de route|d[eé]tails|شرح مفصل|خطة كاملة|تحليل عميق|خارطة طريق|بالتفصيل|roadmap|تفصيل|b tafsil|khtar lia b tafsil)\b/i.test(value)) {
+    return 'The user clearly asked for depth. Give a longer structured answer, but keep it practical, organized, and in the same language.';
+  }
+
+  return 'This is a normal request. Keep it short but high-value: direct answer first, maximum 3 bullets, one useful insight or next step, and only one follow-up question if truly needed.';
+}
+
 function buildUserPrompt(message, style, clientInstruction = '', history = []) {
-  const longModeHint = /\b(deep analysis|full strategy|full plan|roadmap|detailed plan|give me details|give me everything|explain more|analyze deeply|analyse approfondie|analyse profonde|strat[eé]gie compl[eè]te|plan complet|feuille de route|d[eé]tails|شرح مفصل|خطة كاملة|تحليل عميق|خارطة طريق|roadmap|تفصيل|b tafsil|khtar lia b tafsil)\b/i.test(message)
+  const longModeHint = /\b(deep analysis|full strategy|full plan|roadmap|detailed plan|give me details|give me everything|explain more|analyze deeply|analyse approfondie|analyse profonde|strat[eé]gie compl[eè]te|plan complet|feuille de route|d[eé]tails|شرح مفصل|خطة كاملة|تحليل عميق|خارطة طريق|بالتفصيل|roadmap|تفصيل|b tafsil|khtar lia b tafsil)\b/i.test(message)
     ? 'The user explicitly asked for depth. You may give a longer answer, but keep it organized, practical and in the same language.'
-    : 'The user did not ask for a long plan. Keep the answer concise: useful answer first, 2 to 6 lines when possible, maximum 3 bullets, and one practical next step only if useful. Do not ask "what is your idea?" repeatedly.';
+    : 'The user did not ask for a long plan. Keep the answer concise: useful answer first, 2 to 5 lines when possible, maximum 3 bullets, and one practical next step only if useful. Do not ask "what is your idea?" repeatedly.';
   return `
 User language/style: ${style}
 Required response language: ${strictLanguageInstruction(style)}
 Frontend language instruction: ${safeText(clientInstruction, 240) || strictLanguageInstruction(style)}
 Answer length mode: ${longModeHint}
+Request style guidance: ${requestStyleInstruction(message, style)}
 Soft CTA guidance: ${softCtaInstruction(message, style, history)}
 
 User message:
@@ -248,12 +308,27 @@ If the message is completely outside this scope, use the short out-of-scope redi
 `.trim();
 }
 
-function cleanPublicAnswer(text) {
-  return safeText(text, 4000)
+function cleanDarijaLatinAnswer(text) {
+  return text
+    .replace(/\bSala\s+L-?bass\s+3alik\??/gi, 'Salam, labas 3lik?')
+    .replace(/\bAhlan!\s*/gi, '')
+    .replace(/\bl-markaz\s+l-iqtisadi\s+l-awwal\b/gi, 'a9wa business hub')
+    .replace(/\bl-mounafasa\b/gi, 'competition')
+    .replace(/\bl-foras\b/gi, 'opportunities')
+    .replace(/\bl-qorba\b/gi, 'proximite')
+    .replace(/\bl-mouassasat\b/gi, 'companies')
+    .replace(/\bl-business\s+f\s+l-meghrib\b/gi, 'business f lmaghrib')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+function cleanPublicAnswer(text, style = '') {
+  const value = safeText(text, 4000)
     .replace(/\b(?:Google\s+)?Gemini\b/gi, 'Namaa Talk')
     .replace(/\bChatGPT\b/gi, 'Namaa Talk')
     .replace(/\bas an AI language model\b/gi, 'as Namaa Talk')
     .trim();
+  return style === 'darija-latin' ? cleanDarijaLatinAnswer(value) : value;
 }
 
 function publicStatus(context) {
@@ -341,7 +416,7 @@ export async function onRequestPost(context) {
     });
   }
 
-  const answer = cleanPublicAnswer(result.text) || fallbackAnswer(style);
+  const answer = cleanPublicAnswer(result.text, style) || fallbackAnswer(style);
 
   return jsonResponse({
     ok: true,
