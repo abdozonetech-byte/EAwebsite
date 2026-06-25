@@ -5,15 +5,15 @@
   window.__NamaaTalkWidgetLoaded = true;
 
   var API_ROUTE = '/api/namaa/agent';
-  var MOBILE_QUERY = '(max-width: 640px)';
+  var MOBILE_QUERY = '(max-width: 767px)';
   var MAX_HISTORY = 8;
   var chips = [
-    'Business idea for Morocco',
+    'Business idea',
     'Marketing strategy',
     'AI automation',
     'Improve my website',
-    'Startup roadmap',
-    'Lead generation system'
+    'Landing page',
+    'Content plan'
   ];
 
   function ready(callback) {
@@ -151,11 +151,10 @@
     });
     append(
       welcome,
-      create('div', 'namaa-talk__eyebrow', { text: 'Built for smart business conversations' }),
       create('div', 'namaa-talk__welcome-logo', { text: 'N', 'aria-hidden': 'true' }),
       create('h3', '', { text: "Hi, I'm Namaa Talk 👋" }),
-      create('p', '', { text: 'Your AI assistant for business, AI, IT, startups, marketing and ideas.' }),
-      create('div', 'namaa-talk__scope', { text: 'Free talk is focused on business, AI, IT, startups, marketing and digital growth.' }),
+      create('p', '', { text: 'Your smart assistant for business, AI, IT, startups, marketing and ideas.' }),
+      create('div', 'namaa-talk__scope', { text: 'Short answers. Smart steps. Built for digital growth.' }),
       chipsWrap,
       create('p', 'namaa-talk__disclaimer', { text: 'Namaa Talk can make mistakes. Verify important business decisions.' })
     );
@@ -176,7 +175,7 @@
     var input = create('textarea', 'namaa-talk__input', {
       rows: '1',
       maxlength: '1200',
-      placeholder: 'Ask Namaa Talk about business, AI, marketing or any idea...',
+      placeholder: 'Ask Namaa Talk about business, AI, marketing or any idea…',
       'aria-label': 'Message to Namaa Talk',
       autocomplete: 'off',
       spellcheck: 'true'
@@ -200,6 +199,7 @@
       state.open = true;
       root.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
+      panel.setAttribute('aria-modal', isMobile() ? 'true' : 'false');
       launcher.setAttribute('aria-expanded', 'true');
       setBodyLock(isMobile());
       updateScrollButton();
@@ -212,6 +212,7 @@
       state.open = false;
       root.classList.remove('is-open');
       panel.setAttribute('aria-hidden', 'true');
+      panel.setAttribute('aria-modal', 'false');
       launcher.setAttribute('aria-expanded', 'false');
       setBodyLock(false);
       launcher.focus({ preventScroll: true });
@@ -219,6 +220,9 @@
 
     function updateSendState() {
       send.disabled = state.loading || !input.value.trim();
+      send.classList.toggle('is-loading', state.loading);
+      send.setAttribute('aria-busy', state.loading ? 'true' : 'false');
+      send.setAttribute('aria-label', state.loading ? 'Namaa is thinking' : 'Send message');
     }
 
     function resizeInput() {
@@ -244,21 +248,28 @@
     }
 
     function updateScrollButton() {
-      var show = state.open && isMobile() && messagesShell.scrollHeight > messagesShell.clientHeight + 40 && !isNearBottom();
+      var show = state.open && messagesShell.scrollHeight > messagesShell.clientHeight + 40 && !isNearBottom();
       scrollButton.classList.toggle('is-visible', show);
     }
 
     function renderMessage(role, content, options) {
-      var message = create('article', 'namaa-talk__message namaa-talk__message--' + role);
+      var messageClass = 'namaa-talk__message namaa-talk__message--' + role;
+      if (options && options.typing) messageClass += ' is-typing';
+      var message = create('article', messageClass, options && options.typing ? {
+        role: 'status',
+        'aria-label': 'Namaa is thinking'
+      } : null);
       var bubble = create('div', 'namaa-talk__bubble');
       bubble.dir = 'auto';
       if (options && options.typing) {
+        var avatar = create('span', 'namaa-talk__message-avatar', { text: 'N', 'aria-hidden': 'true' });
         append(
           bubble,
           create('span', 'namaa-talk__typing', {
             html: '<span></span><span></span><span></span>'
           })
         );
+        append(message, avatar);
       } else {
         bubble.textContent = content;
       }
