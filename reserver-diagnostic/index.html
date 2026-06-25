@@ -3,14 +3,51 @@
 <head>
 <!-- Meta Pixel Code - EA clean setup -->
 <script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+!function(f,b,e,v,n,t,s,m){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];f.__loadMetaPixel=function(){if(n._scriptLoaded)return;n._scriptLoaded=!0;t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)};m=(f.matchMedia&&f.matchMedia('(max-width: 767px)').matches)||(f.screen&&Math.min(f.screen.width||9999,f.screen.height||9999)<=767);if(!m){f.__loadMetaPixel()}}(window,document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 
 fbq('init', '2322425664833523');
 fbq('track', 'PageView');
+
+(function() {
+  var isMobile = (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) || (window.screen && Math.min(window.screen.width || 9999, window.screen.height || 9999) <= 767);
+  if (!isMobile) return;
+  var armed = true;
+  var events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+  var passiveOptions = { passive: true };
+
+  function cleanup() {
+    events.forEach(function(eventName) {
+      window.removeEventListener(eventName, trigger, passiveOptions);
+    });
+  }
+
+  function trigger() {
+    if (!armed) return;
+    armed = false;
+    cleanup();
+    var schedule = window.requestIdleCallback || function(callback) {
+      return window.setTimeout(callback, 500);
+    };
+    schedule(function() {
+      if (typeof window.__loadMetaPixel === 'function') window.__loadMetaPixel();
+    }, { timeout: 1600 });
+  }
+
+  if (document.readyState === 'complete') {
+    trigger();
+  } else {
+    window.addEventListener('load', function() {
+      events.forEach(function(eventName) {
+        window.addEventListener(eventName, trigger, passiveOptions);
+      });
+      window.setTimeout(trigger, 8000);
+    }, { once: true });
+  }
+}());
 
 (function() {
   try {
@@ -134,17 +171,19 @@ fbq('track', 'PageView');
 }
 </script>
 <script defer src="/assets/js/analytics.js"></script>
+  <link rel="preload" as="image" href="/assets/images/logo-e-blue.png" media="(max-width: 767px)" fetchpriority="high">
   <link rel="stylesheet" href="/assets/lead-page/reserver-diagnostic-page.css?v=ea-update-08">
-  <script type="module" crossorigin src="/assets/lead-page/reserver-diagnostic.js?v=lead-fix-20260617-01"></script>
+  <script type="module" crossorigin src="/assets/lead-page/reserver-diagnostic.js?v=mobile-perf-20260625-01"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" onload="this.onload=null;this.rel='stylesheet'"/>
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"/></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" media="(min-width: 768px)" onload="this.onload=null;this.rel='stylesheet'"/>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" media="(min-width: 768px)"/></noscript>
 <link rel="preconnect" href="https://www.googletagmanager.com"/>
 <link rel="preconnect" href="https://connect.facebook.net"/>
 <link rel="dns-prefetch" href="//www.googletagmanager.com"/>
 <link rel="dns-prefetch" href="//connect.facebook.net"/>
-<link rel="stylesheet" href="/assets/css/namaa-talk-widget.css?v=20260624">
+<link id="namaa-talk-css" rel="preload" as="style" href="/assets/css/namaa-talk-widget.css?v=20260624" media="(min-width: 768px)" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/css/namaa-talk-widget.css?v=20260624" media="(min-width: 768px)"></noscript>
 </head>
 <body>
 <noscript>
@@ -152,7 +191,101 @@ fbq('track', 'PageView');
        src="https://www.facebook.com/tr?id=2322425664833523&ev=PageView&noscript=1" alt=""/>
 </noscript>
 
-<div id="root" aria-live="polite"></div>
-<script src="/assets/js/namaa-talk-widget.js?v=20260624" defer></script>
+<div id="root" aria-live="polite">
+  <div class="lead-mobile-fallback" aria-hidden="true">
+    <header>
+      <a href="/" aria-label="Retour au portfolio Elboubakry Abdessamad">
+        <img src="/assets/images/logo-e-blue.png" alt="" width="52" height="52" decoding="async" fetchpriority="high">
+        <span><strong>Elboubakry<span>.</span></strong></span>
+      </a>
+      <a href="/" class="lead-mobile-fallback__back">← Retour</a>
+    </header>
+    <main>
+      <section>
+        <span class="lead-mobile-fallback__badge">Diagnostic marketing gratuit</span>
+        <h1>Réservez votre diagnostic <span>marketing gratuit</span></h1>
+        <p>Remplissez ce formulaire pour clarifier votre projet, vos priorités marketing et les premières actions utiles pour générer des demandes plus propres.</p>
+        <div class="lead-mobile-fallback__proof">
+          <strong>100% gratuit</strong>
+          <strong>Sans engagement</strong>
+          <strong>Réponse sous 24h</strong>
+          <strong>Confidentiel</strong>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+(function () {
+  var cssHref = '/assets/css/namaa-talk-widget.css?v=20260624';
+  var scriptSrc = '/assets/js/namaa-talk-widget.js?v=20260624';
+  var loaded = false;
+
+  function loadNamaaTalk() {
+    if (loaded) return;
+    loaded = true;
+
+    var existingCss = document.getElementById('namaa-talk-css');
+    if (existingCss) {
+      existingCss.media = 'all';
+      existingCss.rel = 'stylesheet';
+    } else {
+      var link = document.createElement('link');
+      link.id = 'namaa-talk-css';
+      link.rel = 'stylesheet';
+      link.href = cssHref;
+      document.head.appendChild(link);
+    }
+
+    if (!document.querySelector('script[src="' + scriptSrc + '"]')) {
+      var script = document.createElement('script');
+      script.src = scriptSrc;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+  }
+
+  function loadAfterMobileIdle() {
+    var schedule = window.requestIdleCallback || function (callback) {
+      return window.setTimeout(callback, 600);
+    };
+    schedule(loadNamaaTalk, { timeout: 1800 });
+  }
+
+  function armMobileNamaaTalk() {
+    var armed = true;
+    var events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+
+    function cleanup() {
+      events.forEach(function (eventName) {
+        window.removeEventListener(eventName, trigger, passiveOptions);
+      });
+    }
+
+    function trigger() {
+      if (!armed) return;
+      armed = false;
+      cleanup();
+      loadAfterMobileIdle();
+    }
+
+    var passiveOptions = { passive: true };
+    events.forEach(function (eventName) {
+      window.addEventListener(eventName, trigger, passiveOptions);
+    });
+    window.setTimeout(trigger, 8000);
+  }
+
+  if (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) {
+    if (document.readyState === 'complete') {
+      armMobileNamaaTalk();
+    } else {
+      window.addEventListener('load', armMobileNamaaTalk, { once: true });
+    }
+  } else {
+    loadNamaaTalk();
+  }
+}());
+</script>
 </body>
 </html>

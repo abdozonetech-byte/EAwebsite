@@ -35,7 +35,53 @@
     return !/^G-[A-Z0-9]+$/.test(GA_MEASUREMENT_ID);
   }
 
+  function isDiagnosticMobilePage() {
+    var path = window.location.pathname.replace(/\/+$/, '') || '/';
+    var mobileViewport = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+    var mobileScreen = window.screen && Math.min(window.screen.width || 9999, window.screen.height || 9999) <= 767;
+    return path === '/reserver-diagnostic' && (mobileViewport || mobileScreen);
+  }
+
+  function runAfterMobileInteraction(callback) {
+    var armed = true;
+    var events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+    var passiveOptions = { passive: true };
+
+    function cleanup() {
+      events.forEach(function (eventName) {
+        window.removeEventListener(eventName, trigger, passiveOptions);
+      });
+    }
+
+    function trigger() {
+      if (!armed) return;
+      armed = false;
+      cleanup();
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(callback, { timeout: 1600 });
+      } else {
+        window.setTimeout(callback, 500);
+      }
+    }
+
+    events.forEach(function (eventName) {
+      window.addEventListener(eventName, trigger, passiveOptions);
+    });
+    window.setTimeout(trigger, 8000);
+  }
+
   function runWhenBrowserIsFree(callback) {
+    if (isDiagnosticMobilePage()) {
+      if (document.readyState === 'complete') {
+        runAfterMobileInteraction(callback);
+      } else {
+        window.addEventListener('load', function () {
+          runAfterMobileInteraction(callback);
+        }, { once: true });
+      }
+      return;
+    }
+
     var run = function () {
       if ('requestIdleCallback' in window) {
         window.requestIdleCallback(callback, { timeout: 2200 });
