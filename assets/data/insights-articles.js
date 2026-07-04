@@ -220,6 +220,17 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     ]
   },
   {
+    "id": "combien-coute-campagne-meta-ads-maroc",
+    "slug": "combien-coute-campagne-meta-ads-maroc",
+    "title": "Combien coûte une campagne Meta Ads au Maroc ?",
+    "category": "Publicité Digitale",
+    "excerpt": "Comprendre le vrai budget d’une campagne Meta Ads au Maroc : média, créatifs, landing page, tracking et suivi des leads.",
+    "readingTime": "6 min",
+    "keywords": [
+      "Coût campagne Meta Ads Maroc"
+    ]
+  },
+  {
     "id": "meta-ads-leads-qualifies-maroc",
     "slug": "meta-ads-leads-qualifies-maroc",
     "title": "Structurer une campagne Meta Ads qui génère des leads qualifiés au Maroc",
