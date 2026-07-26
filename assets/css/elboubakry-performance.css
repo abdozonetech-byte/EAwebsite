@@ -1,0 +1,36 @@
+/* Performance and accessibility overrides — 2026-07 */
+html { scroll-behavior: smooth; }
+body.ea-menu-open { overflow: hidden; }
+#pre-load { display: none !important; }
+#rs-mouse { display: none !important; }
+.rs-banner-one .rs-banner-title,
+.rs-banner-one .ea-hero-role-line,
+.rs-banner-one .rs-banner-description,
+.rs-banner-one .rs-btn-group,
+.rs-banner-one .rs-theme-social,
+.rs-banner-one .rs-banner-thumb-wrapper {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  animation: none !important;
+}
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid #0b55ff !important;
+  outline-offset: 3px !important;
+}
+.ea-menu-open .offcanvas-area { visibility: visible; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
+
+.ea-footer-block .ea-footer-heading {
+  margin: 0 0 18px;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+.ea-home-footer .ea-footer-block .ea-footer-heading { margin-bottom: 14px; font-size: 15px; }
+@media (max-width: 991px) { .ea-footer-block .ea-footer-heading { margin-bottom: 10px; } }

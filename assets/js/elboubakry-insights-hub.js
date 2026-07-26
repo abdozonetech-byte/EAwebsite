@@ -62,7 +62,7 @@
       const icon = iconMap[article.category] || "ri-article-line";
       const keyword = article.keywords && article.keywords[0] ? article.keywords[0] : "Insight pratique";
       return `
-        <article class="ea-insight-card wow fadeInUp" data-wow-delay="${Math.min(index % 3, 2) * 0.08 + 0.12}s" data-wow-duration=".8s">
+        <article class="ea-insight-card">
           <a class="ea-insight-card-button" href="${articleUrl(article)}" aria-label="Lire le guide : ${escapeHtml(article.title)}">
             <span class="ea-insight-top">
               <span class="ea-insight-tag"><i class="${icon}" aria-hidden="true"></i>${escapeHtml(article.category)}</span>
