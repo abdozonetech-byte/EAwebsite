@@ -1,49 +1,55 @@
 /*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
-
-/
-  Cache-Control: public, max-age=0, must-revalidate
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+  X-Permitted-Cross-Domain-Policies: none
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Cross-Origin-Resource-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; form-action 'self' https://script.google.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net; frame-src 'self' https://script.google.com https://script.googleusercontent.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://script.google.com https://script.googleusercontent.com https://www.facebook.com; upgrade-insecure-requests
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/insights/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/reserver-diagnostic/
+  Cache-Control: public, max-age=0, must-revalidate
+
 /merci/
-  X-Robots-Tag: noindex, follow
+  Cache-Control: private, no-store, max-age=0
 
 /robots.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Robots-Tag: index, follow
+  Cache-Control: public, max-age=0, must-revalidate
 
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
+/sitemap.xml
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/css/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/js/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/images/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
 
 /*.png
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
 
 /*.jpg
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.jpeg
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
 
 /*.webp
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
 
 /*.svg
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
 
 /*.ico
-  Cache-Control: public, max-age=31536000, immutable
-
-/api/*
-  Cache-Control: no-store
-  X-Robots-Tag: noindex, nofollow
-
-/assets/js/namaa-talk-widget.js
-  Cache-Control: public, max-age=31536000, immutable
-
-/assets/css/namaa-talk-widget.css
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800

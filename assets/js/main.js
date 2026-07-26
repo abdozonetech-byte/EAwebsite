@@ -79,14 +79,11 @@
 
     /* Wow Active */
     function wowAnimation() {
-        var smallScreen = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
-        if (smallScreen) {
-            return;
-        }
+        var smallScreen = window.matchMedia && window.matchMedia("(max-width: 767px)").matches;
         var wow = new WOW({
             boxClass: 'wow',
             animateClass: 'animated',
-            offset: 0,
+            offset: smallScreen ? 24 : 0,
             mobile: true,
             live: true
         });
@@ -299,9 +296,6 @@ Sidebar Toggle
             meanScreenWidth: "1199",
             meanExpand: ['<i class="fa-regular fa-plus"></i>'],
         });
-        if (window.matchMedia && window.matchMedia("(max-width: 768px)").matches) {
-            $(".mobile-menu .mean-expand[href='#']").attr("href", "#mobile-menu").attr("aria-label", "Ouvrir le sous-menu");
-        }
 
         /* radial-progress activation */
         $(window).scroll(function () {
@@ -819,7 +813,7 @@ Sidebar Toggle
 
 
     // Smooth Scroling
-    if ($('.rs-smoother-yes').length && (!window.matchMedia || !window.matchMedia("(max-width: 768px)").matches)) {
+    if ($('.rs-smoother-yes').length) {
         const lenis = new Lenis({
             smoothWheel: true,
             wheelMultiplier: 1.4,

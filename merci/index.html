@@ -1,58 +1,23 @@
-<!doctype html>
-<html lang="fr" dir="ltr">
+<!DOCTYPE html>
+
+<html dir="ltr" lang="fr">
 <head>
-<!-- Meta Pixel Code - EA clean setup -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-
-fbq('init', '2322425664833523');
-fbq('track', 'PageView');
-
-(function() {
-  try {
-    var cleanPath = window.location.pathname.replace(/\/+$/, '');
-    var hasSubmittedLead = sessionStorage.getItem('lead_submitted') === 'true';
-
-    if (cleanPath === '/merci' && hasSubmittedLead) {
-      fbq('track', 'Lead', {
-        content_name: 'Diagnostic gratuit',
-        content_category: 'Lead Form',
-        value: 0,
-        currency: 'MAD'
-      });
-      sessionStorage.removeItem('lead_submitted');
-    }
-  } catch (error) {
-    console.warn('Meta Pixel Lead tracking could not run.', error);
-  }
-}());
-</script>
-<!-- End Meta Pixel Code -->
-
 <meta charset="utf-8"/>
-<meta http-equiv="x-ua-compatible" content="ie=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Demande Reçue | Diagnostic Marketing Gratuit | Elboubakry</title>
-<meta name="description" content="Votre demande de diagnostic marketing gratuit au Maroc a bien été reçue. Elboubakry Abdessamad vous recontactera avec les prochaines étapes."/>
-<meta name="robots" content="noindex, follow"/>
-<link rel="canonical" href="https://elboubakry.com/merci/"/>
-<meta property="og:title" content="Demande Reçue | Diagnostic Marketing Gratuit | Elboubakry"/>
-<meta property="og:description" content="Votre demande de diagnostic marketing gratuit au Maroc a bien été reçue. Elboubakry Abdessamad vous recontactera avec les prochaines étapes."/>
-<meta property="og:type" content="website"/>
-<meta property="og:url" content="https://elboubakry.com/merci/"/>
-<meta property="og:image" content="https://elboubakry.com/assets/images/elboubakry-growth-portrait.png"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Demande Reçue | Diagnostic Marketing Gratuit | Elboubakry"/>
-<meta name="twitter:description" content="Votre demande de diagnostic marketing gratuit au Maroc a bien été reçue. Elboubakry Abdessamad vous recontactera avec les prochaines étapes."/>
-<meta name="twitter:image" content="https://elboubakry.com/assets/images/elboubakry-growth-portrait.png"/>
-<link href="/assets/images/logo-e-blue.png" rel="icon" type="image/png" sizes="76x76"/>
-<link href="/assets/images/logo-e-blue.png" rel="shortcut icon" type="image/png"/>
-<link href="/assets/images/logo-e-blue.png" rel="apple-touch-icon"/>
-<link href="/assets/images/site.webmanifest" rel="manifest"/>
+<meta content="ie=edge" http-equiv="x-ua-compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Merci | Elboubakry Abdessamad</title>
+<meta content="Merci, votre demande de diagnostic marketing a été envoyée avec succès." name="description"/>
+<meta content="noindex,follow" name="robots"/>
+<link href="https://elboubakry.com/merci" rel="canonical"/>
+<meta content="Merci — Demande reçue | Elboubakry Abdessamad" property="og:title"/>
+<meta content="Votre demande de diagnostic marketing a été envoyée avec succès." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://elboubakry.com/merci/" property="og:url"/>
+<meta content="https://elboubakry.com/assets/images/elboubakry-social-card.jpg" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<link href="../assets/images/logo-e-blue.png" rel="icon" sizes="76x76" type="image/png"/>
+<link href="../assets/images/logo-e-blue.png" rel="shortcut icon" type="image/png"/>
+<link href="../assets/images/logo-e-blue.png" rel="apple-touch-icon"/>
 <style>
   :root {
     color-scheme: light;
@@ -314,54 +279,46 @@ fbq('track', 'PageView');
     }
   }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" media="print" onload="this.media='all'"/>
-<noscript><style>@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');</style></noscript>
-<link rel="preconnect" href="https://www.googletagmanager.com"/>
-<link rel="preconnect" href="https://connect.facebook.net"/>
-<link rel="dns-prefetch" href="//www.googletagmanager.com"/>
-<link rel="dns-prefetch" href="//connect.facebook.net"/>
-<link rel="stylesheet" href="/assets/css/namaa-talk-widget.css?v=20260624">
+<meta content="Elboubakry Abdessamad" name="author"/>
+<meta content="Elboubakry Abdessamad" property="og:site_name"/>
+<meta content="fr_MA" property="og:locale"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="Elboubakry Abdessamad, consultant marketing digital au Maroc" property="og:image:alt"/>
 </head>
 <body>
-<noscript>
-  <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=2322425664833523&ev=PageView&noscript=1" alt=""/>
-</noscript>
-
 <div class="page">
-  <header class="header" aria-label="En-tête">
-    <a class="brand" href="/" aria-label="Retour au portfolio Elboubakry Abdessamad">
-      <img src="/assets/images/logo-e-blue.png" alt="Logo Elboubakry Abdessamad" width="48" height="48" decoding="async"/>
-      <span>
-        <strong>Elboubakry<span class="dot">.</span></strong>
-        <small>Abdessamad</small>
-      </span>
-    </a>
-  </header>
-
-  <main class="main">
-    <section class="card" aria-labelledby="merci-title">
-      <div class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" role="img">
-          <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <h1 id="merci-title">Merci, votre demande a été envoyée avec succès.</h1>
-      <p>Je vous contacterai rapidement pour discuter de votre projet.</p>
-      <div class="actions" aria-label="Actions">
-        <a class="btn btn-primary" href="/">Retour au portfolio</a>
-        <a class="btn btn-secondary" href="https://wa.me/212687321925" target="_blank" rel="noopener noreferrer">Me contacter sur WhatsApp</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    © 2026 Elboubakry Abdessamad. Tous droits réservés.
-  </footer>
+<header aria-label="En-tête" class="header">
+<a aria-label="Retour au portfolio Elboubakry Abdessamad" class="brand" href="../index.html#homeonepage">
+<img alt="" decoding="async" height="48" src="../assets/images/logo-e-blue.png" width="48"/>
+<span>
+<strong>Elboubakry<span class="dot">.</span></strong>
+<small>Abdessamad</small>
+</span>
+</a>
+</header>
+<main class="main">
+<section aria-labelledby="merci-title" class="card">
+<div aria-hidden="true" class="icon">
+<svg fill="none" role="img" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.8"></path>
+</svg>
 </div>
-<script src="/assets/js/namaa-talk-widget.js?v=20260624" defer></script>
+<h1 id="merci-title">Merci, votre demande a été envoyée avec succès.</h1>
+<p>Je vous contacterai rapidement pour discuter de votre projet.</p>
+<div aria-label="Actions" class="actions">
+<a class="btn btn-primary" href="../index.html#homeonepage">Retour au portfolio</a>
+<a class="btn btn-secondary" href="https://wa.me/212687321925" rel="noopener noreferrer" target="_blank">Me contacter sur WhatsApp</a>
+</div>
+</section>
+</main>
+<footer class="footer">
+<span>© 2026 Elboubakry Abdessamad. Tous droits réservés.</span>
+<span><a href="../politique-confidentialite.html">Confidentialité</a> · <a href="../mentions-legales.html">Mentions légales</a> · <a href="../politique-cookies.html">Cookies</a></span>
+</footer>
+</div>
+<script src="../assets/js/tracking-config.js"></script>
+<script defer="" src="../assets/js/analytics.js"></script>
+<script defer="" src="../assets/js/thank-you-tracking.js"></script>
 </body>
 </html>

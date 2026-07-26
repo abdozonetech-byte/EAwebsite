@@ -49,7 +49,9 @@
 
   function articleUrl(article) {
     const slug = encodeURIComponent(article.slug || article.id);
-    return `/insights/${slug}/`;
+    const path = window.location.pathname.replace(/\/+$/, "/");
+    const inInsightsDirectory = /\/insights\/$/.test(path);
+    return inInsightsDirectory ? `${slug}.html` : `insights/${slug}.html`;
   }
 
   function renderArticles() {
@@ -96,7 +98,7 @@
         "@type": "ListItem",
         "position": index + 1,
         "name": article.title,
-        "url": `https://elboubakry.com/insights/${article.slug || article.id}/`
+        "url": `https://elboubakry.com/insights/${article.slug || article.id}.html`
       }))
     };
     const script = document.createElement("script");

@@ -2,8 +2,14 @@
   "use strict";
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var mobileMotion = window.matchMedia("(max-width: 768px)");
+  var mobileMotion = window.matchMedia("(max-width: 991px)");
   var motionSelector = [
+    ".rs-banner-one .rs-banner-title",
+    ".rs-banner-one .ea-hero-role-line",
+    ".rs-banner-one .rs-banner-description",
+    ".rs-banner-one .rs-btn-group",
+    ".rs-banner-one .rs-theme-social",
+    ".rs-banner-one .rs-banner-thumb-wrapper",
     "#homemarketingsystem .ea-transform-head",
     "#homemarketingsystem .ea-core-person",
     "#homemarketingsystem .ea-orbit-item",
@@ -11,7 +17,7 @@
     "#homeservices .ea-funnel-copy",
     "#homeservices .ea-funnel-visual",
     "#homeservices .ea-funnel-strategy",
-    "#homeportfolio .elb-carousel-shell",
+    "#homeguides .ea-home-guide-card",
     ".ea-home-faq .ea-home-faq-item",
     ".ea-footer-v11 .ea-footer-trust-row span",
     ".ea-footer-v11 .ea-footer-block"

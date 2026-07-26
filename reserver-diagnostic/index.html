@@ -1,291 +1,277 @@
-<!doctype html>
-<html lang="fr" dir="ltr">
+<!DOCTYPE html>
+
+<html dir="ltr" lang="fr">
 <head>
-<!-- Meta Pixel Code - EA clean setup -->
-<script>
-!function(f,b,e,v,n,t,s,m){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];f.__loadMetaPixel=function(){if(n._scriptLoaded)return;n._scriptLoaded=!0;t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)};m=(f.matchMedia&&f.matchMedia('(max-width: 767px)').matches)||(f.screen&&Math.min(f.screen.width||9999,f.screen.height||9999)<=767);if(!m){f.__loadMetaPixel()}}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-
-fbq('init', '2322425664833523');
-fbq('track', 'PageView');
-
-(function() {
-  var isMobile = (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) || (window.screen && Math.min(window.screen.width || 9999, window.screen.height || 9999) <= 767);
-  if (!isMobile) return;
-  var armed = true;
-  var events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
-  var passiveOptions = { passive: true };
-
-  function cleanup() {
-    events.forEach(function(eventName) {
-      window.removeEventListener(eventName, trigger, passiveOptions);
-    });
-  }
-
-  function trigger() {
-    if (!armed) return;
-    armed = false;
-    cleanup();
-    var schedule = window.requestIdleCallback || function(callback) {
-      return window.setTimeout(callback, 500);
-    };
-    schedule(function() {
-      if (typeof window.__loadMetaPixel === 'function') window.__loadMetaPixel();
-    }, { timeout: 1600 });
-  }
-
-  if (document.readyState === 'complete') {
-    trigger();
-  } else {
-    window.addEventListener('load', function() {
-      events.forEach(function(eventName) {
-        window.addEventListener(eventName, trigger, passiveOptions);
-      });
-      window.setTimeout(trigger, 8000);
-    }, { once: true });
-  }
-}());
-
-(function() {
-  try {
-    var cleanPath = window.location.pathname.replace(/\/+$/, '');
-    var hasSubmittedLead = sessionStorage.getItem('lead_submitted') === 'true';
-
-    if (cleanPath === '/merci' && hasSubmittedLead) {
-      fbq('track', 'Lead', {
-        content_name: 'Diagnostic gratuit',
-        content_category: 'Lead Form',
-        value: 0,
-        currency: 'MAD'
-      });
-      sessionStorage.removeItem('lead_submitted');
-    }
-  } catch (error) {
-    console.warn('Meta Pixel Lead tracking could not run.', error);
-  }
-}());
-</script>
-<!-- End Meta Pixel Code -->
-
 <meta charset="utf-8"/>
-<meta http-equiv="x-ua-compatible" content="ie=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Diagnostic Marketing Gratuit au Maroc | Elboubakry</title>
-<meta name="description" content="Réservez un diagnostic marketing gratuit au Maroc pour clarifier votre stratégie digitale, vos campagnes, vos leads et vos priorités de croissance."/>
-<meta name="robots" content="index,follow"/>
-<link rel="canonical" href="https://elboubakry.com/reserver-diagnostic/"/>
-<link href="/assets/images/logo-e-blue.png" rel="icon" type="image/png" sizes="76x76"/>
-<link href="/assets/images/logo-e-blue.png" rel="shortcut icon" type="image/png"/>
-<link href="/assets/images/logo-e-blue.png" rel="apple-touch-icon"/>
-<meta property="og:type" content="website"/>
-<meta property="og:locale" content="fr_FR"/>
-<meta property="og:site_name" content="Elboubakry Abdessamad"/>
-<meta property="og:title" content="Diagnostic Marketing Gratuit au Maroc | Elboubakry"/>
-<meta property="og:description" content="Réservez un diagnostic marketing gratuit au Maroc pour clarifier votre stratégie digitale, vos campagnes, vos leads et vos priorités de croissance."/>
-<meta property="og:url" content="https://elboubakry.com/reserver-diagnostic/"/>
-<meta property="og:image" content="https://elboubakry.com/assets/images/elboubakry-growth-portrait.png"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Diagnostic Marketing Gratuit au Maroc | Elboubakry"/>
-<meta name="twitter:description" content="Réservez un diagnostic marketing gratuit au Maroc pour clarifier votre stratégie digitale, vos campagnes, vos leads et vos priorités de croissance."/>
-<meta name="twitter:image" content="https://elboubakry.com/assets/images/elboubakry-growth-portrait.png"/>
-<script type="application/ld+json">
-{
+<meta content="ie=edge" http-equiv="x-ua-compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Diagnostic Marketing Gratuit | Elboubakry Abdessamad</title>
+<meta content="Demandez un diagnostic marketing gratuit et confidentiel pour clarifier vos priorités d'acquisition, de conversion et de mesure avec Elboubakry Abdessamad." name="description"/>
+<meta content="index,follow" name="robots"/>
+<link href="https://elboubakry.com/reserver-diagnostic/" rel="canonical"/>
+<link href="../assets/images/logo-e-blue.png" rel="icon" sizes="76x76" type="image/png"/>
+<link href="../assets/images/logo-e-blue.png" rel="apple-touch-icon"/>
+<meta content="#f4f7ff" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="fr_MA" property="og:locale"/>
+<meta content="Elboubakry" property="og:site_name"/>
+<meta content="Diagnostic Marketing Gratuit | Elboubakry Abdessamad" property="og:title"/>
+<meta content="Clarifiez vos priorités d'acquisition, de conversion et de mesure grâce à un diagnostic marketing gratuit et confidentiel." property="og:description"/>
+<meta content="https://elboubakry.com/reserver-diagnostic/" property="og:url"/>
+<meta content="https://elboubakry.com/assets/images/elboubakry-social-card.jpg" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Diagnostic Marketing Gratuit | Elboubakry Abdessamad" name="twitter:title"/>
+<meta content="Clarifiez vos priorités d'acquisition, de conversion et de mesure grâce à un diagnostic marketing gratuit et confidentiel." name="twitter:description"/>
+<meta content="https://elboubakry.com/assets/images/elboubakry-social-card.jpg" name="twitter:image"/>
+<script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  "name": "Réserver un Diagnostic Marketing Gratuit",
-  "description": "Réservez un diagnostic marketing gratuit avec Elboubakry Abdessamad : échange confidentiel pour clarifier votre stratégie, vos campagnes, votre parcours lead et vos priorités de croissance.",
+  "name": "Diagnostic Marketing Gratuit",
+  "description": "Demandez un diagnostic marketing gratuit et confidentiel pour clarifier vos priorités d'acquisition, de conversion et de mesure.",
   "url": "https://elboubakry.com/reserver-diagnostic/",
   "isPartOf": {
     "@type": "WebSite",
     "name": "Elboubakry Abdessamad",
     "url": "https://elboubakry.com/"
   },
-  "about": [
-    "Diagnostic marketing digital",
-    "Stratégie marketing",
-    "Génération de leads",
-    "Publicité digitale",
-    "Tracking marketing"
-  ],
   "provider": {
     "@type": "Person",
     "@id": "https://elboubakry.com/#person",
-    "name": "Elboubakry Abdessamad"
+    "name": "Elboubakry Abdessamad",
+    "jobTitle": "Consultant Marketing Digital"
   },
-  "inLanguage": "fr-FR"
-}
-</script>
+  "inLanguage": "fr-FR",
+  "dateModified": "2026-07-26"
+}</script>
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Accueil",
-      "item": "https://elboubakry.com/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Diagnostic marketing gratuit",
-      "item": "https://elboubakry.com/reserver-diagnostic/"
-    }
-  ]
-}
-</script>
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": "https://elboubakry.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Diagnostic marketing gratuit",
+        "item": "https://elboubakry.com/reserver-diagnostic/"
+      }
+    ]
+  }
+  </script>
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Le diagnostic marketing est-il gratuit ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Oui. Le diagnostic est gratuit et sans engagement. Il sert à clarifier votre situation marketing et les premières priorités utiles."
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Le diagnostic marketing est-il vraiment gratuit ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Le diagnostic est gratuit et sans engagement. Il sert à clarifier votre situation et les priorités marketing les plus utiles pour votre projet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Que va-t-on analyser pendant l'échange ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Selon votre contexte, l'échange peut couvrir votre offre, vos canaux d'acquisition, votre parcours de conversion et les indicateurs à suivre."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Mes informations sont-elles confidentielles ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Les informations envoyées sont utilisées uniquement pour comprendre votre demande et vous recontacter."
+        }
       }
-    },
-    {
-      "@type": "Question",
-      "name": "Quelles informations sont nécessaires ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Le formulaire demande uniquement les informations utiles pour vous recontacter et comprendre votre contexte : nom, téléphone, email optionnel et secteur d’activité."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Mes informations sont-elles confidentielles ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Oui. Les informations envoyées servent uniquement à traiter votre demande et ne sont pas publiées sur le site."
-      }
-    }
-  ]
-}
-</script>
-<script defer src="/assets/js/analytics.js"></script>
-  <link rel="preload" as="image" href="/assets/images/logo-e-blue.png" media="(max-width: 767px)" fetchpriority="high">
-  <link rel="stylesheet" href="/assets/lead-page/reserver-diagnostic-page.css?v=ea-update-08">
-  <script type="module" crossorigin src="/assets/lead-page/reserver-diagnostic.js?v=mobile-perf-20260625-01"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" media="(min-width: 768px)" onload="this.onload=null;this.rel='stylesheet'"/>
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" media="(min-width: 768px)"/></noscript>
-<link rel="preconnect" href="https://www.googletagmanager.com"/>
-<link rel="preconnect" href="https://connect.facebook.net"/>
-<link rel="dns-prefetch" href="//www.googletagmanager.com"/>
-<link rel="dns-prefetch" href="//connect.facebook.net"/>
-<link id="namaa-talk-css" rel="preload" as="style" href="/assets/css/namaa-talk-widget.css?v=20260624" media="(min-width: 768px)" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/css/namaa-talk-widget.css?v=20260624" media="(min-width: 768px)"></noscript>
-</head>
+    ]
+  }
+  </script>
+<script src="../assets/js/tracking-config.js"></script>
+<script defer="" src="../assets/js/analytics.js"></script>
+<link href="../assets/lead-page/reserver-diagnostic.css" rel="stylesheet"/>
+<script defer="" src="../assets/lead-page/reserver-diagnostic.js"></script>
+<meta content="Elboubakry Abdessamad" name="author"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="Elboubakry Abdessamad — Consultant Marketing Digital au Maroc" property="og:image:alt"/>
+<meta content="Elboubakry Abdessamad — Consultant Marketing Digital au Maroc" name="twitter:image:alt"/></head>
 <body>
-<noscript>
-  <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=2322425664833523&ev=PageView&noscript=1" alt=""/>
-</noscript>
-
-<div id="root" aria-live="polite">
-  <div class="lead-mobile-fallback" aria-hidden="true">
-    <header>
-      <a href="/" aria-label="Retour au portfolio Elboubakry Abdessamad">
-        <img src="/assets/images/logo-e-blue.png" alt="" width="52" height="52" decoding="async" fetchpriority="high">
-        <span><strong>Elboubakry<span>.</span></strong></span>
-      </a>
-      <a href="/" class="lead-mobile-fallback__back">← Retour</a>
-    </header>
-    <main>
-      <section>
-        <span class="lead-mobile-fallback__badge">Diagnostic marketing gratuit</span>
-        <h1>Réservez votre diagnostic <span>marketing gratuit</span></h1>
-        <p>Remplissez ce formulaire pour clarifier votre projet, vos priorités marketing et les premières actions utiles pour générer des demandes plus propres.</p>
-        <div class="lead-mobile-fallback__proof">
-          <strong>100% gratuit</strong>
-          <strong>Sans engagement</strong>
-          <strong>Réponse sous 24h</strong>
-          <strong>Confidentiel</strong>
-        </div>
-      </section>
-    </main>
-  </div>
+<a class="skip-link" href="#diagnostic-form">Aller au formulaire</a>
+<div class="site-shell">
+<header aria-label="En-tête principal" class="site-header">
+<a aria-label="Retour au portfolio Elboubakry Abdessamad" class="brand" href="../index.html#homeonepage">
+<img alt="" height="52" src="../assets/images/logo-e-blue.png" width="52"/>
+<span class="brand-copy">
+<strong>Elboubakry<span>.</span></strong>
+<small>Abdessamad</small>
+</span>
+</a>
+<a class="back-link" href="../index.html#homeonepage">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M19 12H5m6 6-6-6 6-6"></path></svg>
+<span>Retour au portfolio</span>
+</a>
+</header>
+<main>
+<section aria-labelledby="page-title" class="hero">
+<div class="hero-copy">
+<p class="eyebrow">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8M18.4 5.6l-2.8 2.8m-7.2 7.2-2.8 2.8"></path></svg>
+            Diagnostic marketing gratuit
+          </p>
+<div class="hero-heading">
+<h1 id="page-title">Clarifiez vos priorités <span>marketing</span> avant d’investir davantage.</h1>
+<p>Présentez-moi brièvement votre projet. Je vous recontacte pour un échange ciblé afin d’identifier les actions les plus utiles pour améliorer votre acquisition, votre conversion et votre suivi.</p>
 </div>
-<script>
-(function () {
-  var cssHref = '/assets/css/namaa-talk-widget.css?v=20260624';
-  var scriptSrc = '/assets/js/namaa-talk-widget.js?v=20260624';
-  var loaded = false;
-
-  function loadNamaaTalk() {
-    if (loaded) return;
-    loaded = true;
-
-    var existingCss = document.getElementById('namaa-talk-css');
-    if (existingCss) {
-      existingCss.media = 'all';
-      existingCss.rel = 'stylesheet';
-    } else {
-      var link = document.createElement('link');
-      link.id = 'namaa-talk-css';
-      link.rel = 'stylesheet';
-      link.href = cssHref;
-      document.head.appendChild(link);
-    }
-
-    if (!document.querySelector('script[src="' + scriptSrc + '"]')) {
-      var script = document.createElement('script');
-      script.src = scriptSrc;
-      script.defer = true;
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadAfterMobileIdle() {
-    var schedule = window.requestIdleCallback || function (callback) {
-      return window.setTimeout(callback, 600);
-    };
-    schedule(loadNamaaTalk, { timeout: 1800 });
-  }
-
-  function armMobileNamaaTalk() {
-    var armed = true;
-    var events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
-
-    function cleanup() {
-      events.forEach(function (eventName) {
-        window.removeEventListener(eventName, trigger, passiveOptions);
-      });
-    }
-
-    function trigger() {
-      if (!armed) return;
-      armed = false;
-      cleanup();
-      loadAfterMobileIdle();
-    }
-
-    var passiveOptions = { passive: true };
-    events.forEach(function (eventName) {
-      window.addEventListener(eventName, trigger, passiveOptions);
-    });
-    window.setTimeout(trigger, 8000);
-  }
-
-  if (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) {
-    if (document.readyState === 'complete') {
-      armMobileNamaaTalk();
-    } else {
-      window.addEventListener('load', armMobileNamaaTalk, { once: true });
-    }
-  } else {
-    loadNamaaTalk();
-  }
-}());
-</script>
+<ul aria-label="Avantages du diagnostic" class="trust-pills">
+<li>
+<span class="icon-box"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M20 12v8H4v-8m-2-5h20v5H2V7Zm10 13V7m-4 0c-2.7 0-4-1.2-4-2.5S9.3 2 12 7Zm0 0c2.7 0 4-1.2 4-2.5S14.7 2 12 7Z"></path></svg></span>
+<span><strong>100% gratuit</strong><small>Aucun paiement demandé</small></span>
+</li>
+<li>
+<span class="icon-box"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Zm-3.5-10 2.2 2.2 4.8-5"></path></svg></span>
+<span><strong>Sans engagement</strong><small>Un échange utile, sans pression</small></span>
+</li>
+<li>
+<span class="icon-box"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"></path></svg></span>
+<span><strong>Retour rapide</strong><small>Sous 24h selon disponibilité</small></span>
+</li>
+</ul>
+</div>
+<aside aria-labelledby="form-title" class="form-card">
+<div class="form-heading">
+<span class="form-badge">Demande confidentielle</span>
+<h2 id="form-title">Parlons de votre projet</h2>
+<p>Quatre informations suffisent pour préparer un premier échange clair et pertinent.</p>
+</div>
+<form data-defer-submit-tracking="true" id="diagnostic-form" novalidate="">
+<input aria-hidden="true" autocomplete="off" class="honeypot" name="website" tabindex="-1" type="text"/>
+<input aria-hidden="true" autocomplete="off" class="honeypot" name="company" tabindex="-1" type="text"/>
+<div class="field">
+<label for="name">Nom complet <span>*</span></label>
+<div class="control">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path></svg>
+<input aria-describedby="name-error" autocomplete="name" id="name" name="name" placeholder="Votre nom et prénom" required="" type="text"/>
+</div>
+<p aria-live="polite" class="field-error" id="name-error"></p>
+</div>
+<div class="field">
+<label for="phone">Téléphone / WhatsApp <span>*</span></label>
+<div class="control">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2.1Z"></path></svg>
+<input aria-describedby="phone-error" autocomplete="tel" id="phone" inputmode="tel" name="phone" placeholder="06 12 34 56 78" required="" type="tel"/>
+</div>
+<p aria-live="polite" class="field-error" id="phone-error"></p>
+</div>
+<div class="field">
+<label for="email">Email <small>optionnel</small></label>
+<div class="control">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 4h16v16H4V4Zm0 3 8 6 8-6"></path></svg>
+<input aria-describedby="email-error" autocomplete="email" id="email" name="email" placeholder="votre@email.com" type="email"/>
+</div>
+<p aria-live="polite" class="field-error" id="email-error"></p>
+</div>
+<div class="field">
+<label for="sector">Secteur d’activité <span>*</span></label>
+<div class="control control-select">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M3 21h18M6 21V7l6-4 6 4v14M9 10h.01M9 14h.01M9 18h.01M15 10h.01M15 14h.01M15 18h.01"></path></svg>
+<select aria-describedby="sector-error" id="sector" name="sector" required="">
+<option value="">Sélectionnez votre secteur</option>
+<option>Santé / Cabinet médical</option>
+<option>Éducation / Formation</option>
+<option>E-commerce / Vente en ligne</option>
+<option>Immobilier</option>
+<option>Services locaux</option>
+<option>Restaurant / Café</option>
+<option>Application / Startup</option>
+<option>Marque personnelle</option>
+<option>Autre</option>
+</select>
+</div>
+<p aria-live="polite" class="field-error" id="sector-error"></p>
+</div>
+<div class="privacy-note">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 10 0v3m-11 0h12v10H6V11Zm6 4v2"></path></svg>
+<p><strong>Vos informations restent confidentielles.</strong> Elles servent uniquement à comprendre votre demande et à vous recontacter. <a href="../politique-confidentialite.html">Voir la politique de confidentialité</a>.</p>
+</div>
+<button class="submit-button" type="submit">
+<span>Demander mon diagnostic gratuit</span>
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7Zm-11 11 4-4"></path></svg>
+</button>
+<p class="response-time">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="m9 12 2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
+              Réponse sous 24h selon disponibilité.
+            </p>
+<div aria-live="polite" class="form-status" id="form-status" role="status"></div>
+</form>
+</aside>
+<section aria-labelledby="clarity-title" class="clarity-card">
+<div class="section-kicker">Pendant l’échange</div>
+<h2 id="clarity-title">Nous allons surtout clarifier ce qui peut réellement faire avancer votre projet.</h2>
+<div class="clarity-grid">
+<article>
+<span class="number">01</span>
+<div><h3>Acquisition</h3><p>Les canaux à prioriser selon votre cible, votre offre et vos moyens.</p></div>
+</article>
+<article>
+<span class="number">02</span>
+<div><h3>Conversion</h3><p>Les points de friction entre la visite, le formulaire, WhatsApp et la prise de contact.</p></div>
+</article>
+<article>
+<span class="number">03</span>
+<div><h3>Mesure</h3><p>Les indicateurs utiles pour suivre les résultats et prendre de meilleures décisions.</p></div>
+</article>
+</div>
+</section>
+</section>
+<section aria-label="À propos du consultant" class="credibility">
+<div class="consultant">
+<img alt="Elboubakry Abdessamad" decoding="async" height="80" loading="lazy" src="../assets/images/elboubakry-growth-portrait.webp" width="80"/>
+<div>
+<span>Diagnostic réalisé par</span>
+<h2>Elboubakry Abdessamad</h2>
+<p>Consultant Marketing Digital au Maroc</p>
+</div>
+</div>
+<div class="expertise-list">
+<div><svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1"></circle></svg><strong>Approche structurée</strong></div>
+<div><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"></path></svg><strong>Priorités claires</strong></div>
+<div><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 20V10m6 10V4m6 16v-7m4 7H2"></path></svg><strong>Suivi mesurable</strong></div>
+</div>
+</section>
+<section aria-labelledby="process-title" class="process-section">
+<div class="process-heading">
+<p class="section-kicker">Comment ça se passe ?</p>
+<h2 id="process-title">Une démarche simple, claire et sans engagement.</h2>
+</div>
+<div class="process-grid">
+<article><span>1</span><h3>Vous envoyez votre demande</h3><p>Vous partagez les informations essentielles via le formulaire.</p></article>
+<article><span>2</span><h3>Je vous recontacte</h3><p>Je vérifie votre contexte et nous convenons du moyen d’échange le plus pratique.</p></article>
+<article><span>3</span><h3>Nous fixons les priorités</h3><p>Nous identifions les points à travailler en premier selon votre situation.</p></article>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<a class="footer-brand" href="../index.html#homeonepage">
+<img alt="" height="34" loading="lazy" src="../assets/images/logo-e-blue.png" width="34"/>
+<strong>Elboubakry<span>.</span></strong>
+</a>
+<p>© 2026 Elboubakry Abdessamad. Tous droits réservés.</p>
+<nav aria-label="Liens de pied de page">
+<a href="../index.html#homeonepage">Portfolio</a>
+<a href="mailto:abdozonetech@gmail.com">Contact</a>
+<a href="../politique-confidentialite.html">Confidentialité</a>
+<a href="../mentions-legales.html">Mentions légales</a>
+<a href="../politique-cookies.html">Cookies</a></nav>
+</footer>
+</div>
 </body>
 </html>
