@@ -8,6 +8,7 @@
   const submitButton = form.querySelector('.submit-button');
   const statusBox = document.getElementById('form-status');
   const startedAt = Date.now();
+  let hasUserInteracted = false;
 
   const fields = {
     name: document.getElementById('name'),
@@ -164,10 +165,17 @@
 
   Object.entries(fields).forEach(([key, field]) => {
     field.addEventListener(field.tagName === 'SELECT' ? 'change' : 'input', () => {
+      hasUserInteracted = true;
       setError(key, '');
       statusBox.textContent = '';
       statusBox.className = 'form-status';
     });
+  });
+
+  ['pointerdown', 'keydown', 'touchstart'].forEach((eventName) => {
+    form.addEventListener(eventName, () => {
+      hasUserInteracted = true;
+    }, { passive: true });
   });
 
   form.addEventListener('submit', async (event) => {
@@ -182,7 +190,7 @@
       return;
     }
 
-    if (Date.now() - startedAt < 2500) {
+    if (!hasUserInteracted && Date.now() - startedAt < 2500) {
       statusBox.textContent = 'Merci de vérifier les informations avant l’envoi.';
       statusBox.className = 'form-status error';
       return;
