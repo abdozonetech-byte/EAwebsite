@@ -93,7 +93,7 @@
     return data;
   };
 
-  const submitWithIframe = (payload) => new Promise((resolve) => {
+  const submitWithIframe = (payload) => new Promise((resolve, reject) => {
     const frameName = `lead-submit-${Date.now()}`;
     const iframe = document.createElement('iframe');
     iframe.name = frameName;
@@ -125,10 +125,23 @@
       resolve();
     };
 
-    iframe.addEventListener('load', () => window.setTimeout(finish, 400), { once: true });
+    iframe.addEventListener('load', () => {
+      try {
+        if (iframe.contentWindow.location.href === 'about:blank') return;
+      } catch (error) {
+        // Cross-origin access means the iframe navigated away from the initial blank page.
+      }
+      window.setTimeout(finish, 400);
+    });
     document.body.append(iframe, fallbackForm);
     fallbackForm.submit();
-    window.setTimeout(finish, 2800);
+    window.setTimeout(() => {
+      if (completed) return;
+      completed = true;
+      fallbackForm.remove();
+      iframe.remove();
+      reject(new Error('Lead submission fallback timed out.'));
+    }, 5000);
   });
 
   const sendLead = async (payload) => {
