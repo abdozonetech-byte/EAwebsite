@@ -181,7 +181,10 @@
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (submitButton.disabled) return;
-    if (form.elements.website.value || form.elements.company.value) return;
+    if (form.elements.contact_url_check.value) {
+      console.warn('Honeypot triggered; submission ignored.');
+      return;
+    }
 
     const data = validate();
     if (!data) {
