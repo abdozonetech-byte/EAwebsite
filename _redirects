@@ -1,3 +1,4 @@
+# Core canonical routes
 /index.html  /  301
 /index-resume-one-page.html  /  301
 /insights.html  /insights/  301
@@ -7,3 +8,63 @@
 /diagnostic/  /reserver-diagnostic/  301
 /about  /about-elboubakry-abdessamad  301
 /about/  /about-elboubakry-abdessamad  301
+/about-elboubakry-abdessamad/  /about-elboubakry-abdessamad  301
+
+# CRM canonical routes
+/crm  /crm/  301
+/crm/login  /crm/login/  301
+
+# Restored Meta Ads cost guide: old directory route -> current clean URL
+/insights/combien-coute-campagne-meta-ads-maroc/  /insights/combien-coute-campagne-meta-ads-maroc  301
+/insights/combien-coute-campagne-meta-ads-maroc/index.html  /insights/combien-coute-campagne-meta-ads-maroc  301
+
+# Historical service pages removed during the July 2026 flattening migration.
+# Each URL now goes directly to the closest surviving, indexable guide.
+/services  /#homeservices  301
+/services/  /#homeservices  301
+/services/index.html  /#homeservices  301
+
+/services/automatisation-marketing-ia-maroc  /insights/automatisation-marketing-maroc  301
+/services/automatisation-marketing-ia-maroc/  /insights/automatisation-marketing-maroc  301
+/services/automatisation-marketing-ia-maroc.html  /insights/automatisation-marketing-maroc  301
+/services/automatisation-marketing-ia-maroc/index.html  /insights/automatisation-marketing-maroc  301
+
+/services/consultant-marketing-digital-maroc  /insights/consultant-marketing-digital-maroc  301
+/services/consultant-marketing-digital-maroc/  /insights/consultant-marketing-digital-maroc  301
+/services/consultant-marketing-digital-maroc.html  /insights/consultant-marketing-digital-maroc  301
+/services/consultant-marketing-digital-maroc/index.html  /insights/consultant-marketing-digital-maroc  301
+
+/services/content-marketing-maroc  /insights/seo-content-strategy-maroc  301
+/services/content-marketing-maroc/  /insights/seo-content-strategy-maroc  301
+/services/content-marketing-maroc.html  /insights/seo-content-strategy-maroc  301
+/services/content-marketing-maroc/index.html  /insights/seo-content-strategy-maroc  301
+
+/services/generation-leads-maroc  /insights/generation-leads-qualifies-maroc  301
+/services/generation-leads-maroc/  /insights/generation-leads-qualifies-maroc  301
+/services/generation-leads-maroc.html  /insights/generation-leads-qualifies-maroc  301
+/services/generation-leads-maroc/index.html  /insights/generation-leads-qualifies-maroc  301
+
+/services/google-ads-maroc  /insights/publicite-digitale-maroc-meta-google-tiktok  301
+/services/google-ads-maroc/  /insights/publicite-digitale-maroc-meta-google-tiktok  301
+/services/google-ads-maroc.html  /insights/publicite-digitale-maroc-meta-google-tiktok  301
+/services/google-ads-maroc/index.html  /insights/publicite-digitale-maroc-meta-google-tiktok  301
+
+/services/landing-page-lead-generation-maroc  /insights/landing-page-generation-leads-maroc  301
+/services/landing-page-lead-generation-maroc/  /insights/landing-page-generation-leads-maroc  301
+/services/landing-page-lead-generation-maroc.html  /insights/landing-page-generation-leads-maroc  301
+/services/landing-page-lead-generation-maroc/index.html  /insights/landing-page-generation-leads-maroc  301
+
+/services/meta-ads-maroc  /insights/meta-ads-leads-qualifies-maroc  301
+/services/meta-ads-maroc/  /insights/meta-ads-leads-qualifies-maroc  301
+/services/meta-ads-maroc.html  /insights/meta-ads-leads-qualifies-maroc  301
+/services/meta-ads-maroc/index.html  /insights/meta-ads-leads-qualifies-maroc  301
+
+/services/seo-maroc  /insights/seo-maroc-visibilite-entreprise  301
+/services/seo-maroc/  /insights/seo-maroc-visibilite-entreprise  301
+/services/seo-maroc.html  /insights/seo-maroc-visibilite-entreprise  301
+/services/seo-maroc/index.html  /insights/seo-maroc-visibilite-entreprise  301
+
+# Historical article URL normalization. Keep static rules above dynamic rules.
+/insights/:slug.html  /insights/:slug  301
+/insights/:slug/index.html  /insights/:slug  301
+/insights/:slug/  /insights/:slug  301

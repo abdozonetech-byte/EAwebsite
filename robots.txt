@@ -1,17 +1,9 @@
 User-agent: *
 Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
+Disallow: /crm/
+Disallow: /api/crm/
+Disallow: /docs/
+Disallow: /evidence/
 
 User-agent: GPTBot
 Disallow: /

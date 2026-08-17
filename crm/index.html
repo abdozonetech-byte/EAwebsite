@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="referrer" content="no-referrer">
+  <title>Elboubakry Leads CRM</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/crm/assets/crm.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="brand-mark">E.</span><div><strong>Elboubakry.</strong><small>LEADS CRM</small></div></div>
+      <nav class="nav" aria-label="CRM navigation"><div class="nav-label" data-i18n="workspace">WORKSPACE</div><button data-view="dashboard"><i>D</i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i>L</i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i>A</i><span data-i18n="appointments">Appointments</span></button><button data-view="calendar"><i>C</i><span data-i18n="calendar">Calendar</span></button><button data-view="settings"><i>S</i><span data-i18n="settings">Settings</span></button></nav>
+      <div class="profile"><div class="profile-row"><span class="avatar">EA</span><div><strong>Elboubakry Abdessamad</strong><small data-i18n="administrator">Administrator</small></div></div><button class="logout" id="logoutButton" type="button">&larr; <span data-i18n="logout">Log out</span></button></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><label class="global-search"><span aria-hidden="true">Q</span><input id="globalSearch" data-i18n-placeholder="search" placeholder="Search leads, companies, cities..." autocomplete="off"></label><div class="top-actions"><span class="mode-pill"><span class="live-dot"></span><span data-i18n="demoData">Demo data</span></span><div class="language-switch" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button></div><span class="avatar">EA</span></div></header>
+      <div class="content" id="appContent" tabindex="-1"></div>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobile CRM navigation"><button data-view="dashboard"><i>D</i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i>L</i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i>A</i><span data-i18n="appointments">Appointments</span></button><button data-view="calendar"><i>C</i><span data-i18n="calendar">Calendar</span></button><button data-view="settings"><i>S</i><span data-i18n="settings">Settings</span></button></nav>
+
+  <button class="backdrop" id="drawerBackdrop" type="button" aria-label="Close lead details" aria-hidden="true" tabindex="-1"></button>
+  <aside class="drawer" id="leadDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true"></aside>
+  <button class="modal-backdrop" id="modalBackdrop" type="button" aria-label="Close dialog" aria-hidden="true" tabindex="-1"></button>
+  <section class="modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true"></section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/crm/assets/crm.js" defer></script>
+</body>
+</html>

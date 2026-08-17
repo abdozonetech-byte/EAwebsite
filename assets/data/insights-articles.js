@@ -35,34 +35,40 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
   {
     "id": "landing-page-generation-leads-maroc",
     "slug": "landing-page-generation-leads-maroc",
-    "title": "Landing page au Maroc : transformer le trafic en demandes qualifiées",
+    "title": "Landing page au Maroc : construire un parcours qui transforme le trafic en leads qualifiés",
     "category": "Publicité Digitale",
-    "excerpt": "Découvrez pourquoi une landing page bien structurée peut aider les entreprises marocaines à transformer le trafic publicitaire en demandes qualifiées.",
-    "readingTime": "4 min",
+    "excerpt": "Guide pratique pour construire une landing page au Maroc : promesse, preuve, CTA, formulaire, WhatsApp, tracking, qualification et tests.",
+    "readingTime": "9 min",
     "keywords": [
-      "Landing page au Maroc"
+      "landing page Maroc",
+      "génération leads Maroc",
+      "landing page conversion Maroc"
     ]
   },
   {
     "id": "seo-content-strategy-maroc",
     "slug": "seo-content-strategy-maroc",
-    "title": "SEO au Maroc : construire une visibilité durable avec le contenu",
+    "title": "SEO au Maroc : construire une stratégie de contenu utile, distincte et reliée au business",
     "category": "SEO & Contenu",
-    "excerpt": "Guide pour améliorer la visibilité d’une entreprise marocaine grâce au SEO, aux contenus utiles, aux pages structurées et à l’optimisation pour les moteurs de recherche et l’AI SEO.",
-    "readingTime": "4 min",
+    "excerpt": "Construire une stratégie SEO au Maroc autour d’intentions claires, de contenu distinct, d’un maillage utile, de Search Console et d’une architecture qui soutient les offres.",
+    "readingTime": "10 min",
     "keywords": [
-      "SEO au Maroc"
+      "SEO Maroc",
+      "stratégie contenu Maroc",
+      "maillage interne SEO Maroc"
     ]
   },
   {
     "id": "consultant-marketing-digital-maroc",
     "slug": "consultant-marketing-digital-maroc",
-    "title": "Consultant marketing digital au Maroc",
+    "title": "Consultant marketing digital au Maroc : structurer acquisition, conversion et mesure",
     "category": "Marketing Local Maroc",
-    "excerpt": "Elboubakry Abdessamad accompagne les entreprises au Maroc dans leur stratégie marketing digital, publicité en ligne, landing pages, SEO, analytics, automatisation et génération de leads.",
-    "readingTime": "4 min",
+    "excerpt": "Un guide pour choisir et cadrer un accompagnement marketing digital au Maroc : diagnostic, acquisition, landing pages, SEO, tracking, CRM et priorités de croissance.",
+    "readingTime": "8 min",
     "keywords": [
-      "Consultant marketing digital au Maroc"
+      "consultant marketing digital Maroc",
+      "accompagnement marketing digital Maroc",
+      "stratégie acquisition Maroc"
     ]
   },
   {
@@ -90,12 +96,14 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
   {
     "id": "consultant-marketing-digital-casablanca",
     "slug": "consultant-marketing-digital-casablanca",
-    "title": "Consultant marketing digital à Casablanca",
+    "title": "Consultant marketing digital à Casablanca : construire un parcours d’acquisition local mesurable",
     "category": "Marketing Local Maroc",
-    "excerpt": "Découvrez comment Elboubakry Abdessamad accompagne les entreprises à Casablanca et au Maroc en stratégie digitale, publicité en ligne, landing pages, SEO, analytics et génération de leads.",
-    "readingTime": "4 min",
+    "excerpt": "Une approche locale pour les entreprises à Casablanca : visibilité, acquisition, landing pages, WhatsApp, SEO local, tracking et suivi des demandes.",
+    "readingTime": "8 min",
     "keywords": [
-      "Consultant marketing digital à Casablanca"
+      "consultant marketing digital Casablanca",
+      "marketing digital Casablanca",
+      "génération leads Casablanca"
     ]
   },
   {
@@ -112,12 +120,15 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
   {
     "id": "tracking-kpi-marketing",
     "slug": "tracking-kpi-marketing",
-    "title": "Pourquoi le tracking change la qualité de vos décisions marketing",
+    "title": "Tracking marketing : relier campagnes, leads et KPI pour prendre de meilleures décisions",
     "category": "Analytics & Tracking",
-    "excerpt": "Sans mesure claire, une campagne peut sembler bonne tout en créant de mauvaises décisions. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
-    "readingTime": "5 min",
+    "excerpt": "Construire un plan de mesure marketing : événements, UTM, GA4, formulaires, WhatsApp, CRM, qualité des leads et KPI de décision.",
+    "readingTime": "9 min",
     "keywords": [
-      "Pourquoi le tracking change la qualité de vos"
+      "tracking marketing",
+      "KPI marketing",
+      "GA4 leads Maroc",
+      "attribution marketing"
     ]
   },
   {
@@ -220,14 +231,28 @@ window.ELBOUBAKRY_INSIGHTS_ARTICLES = [
     ]
   },
   {
+    "id": "combien-coute-campagne-meta-ads-maroc",
+    "slug": "combien-coute-campagne-meta-ads-maroc",
+    "title": "Combien coûte une campagne Meta Ads au Maroc ?",
+    "category": "Publicité Digitale",
+    "excerpt": "Comprendre le budget média, les créatifs, la landing page, le tracking et le suivi commercial qui composent le coût réel d’une campagne Meta Ads au Maroc.",
+    "readingTime": "6 min",
+    "keywords": [
+      "Coût campagne Meta Ads Maroc",
+      "Budget Facebook Ads Maroc"
+    ]
+  },
+  {
     "id": "meta-ads-leads-qualifies-maroc",
     "slug": "meta-ads-leads-qualifies-maroc",
-    "title": "Structurer une campagne Meta Ads qui génère des leads qualifiés au Maroc",
+    "title": "Meta Ads au Maroc : construire une campagne orientée leads qualifiés, pas seulement formulaires",
     "category": "Publicité Digitale",
-    "excerpt": "Comment relier ciblage, message, landing page et suivi commercial pour éviter de gaspiller le budget. Conseil pratique pour PME, entrepreneurs et marques au Maroc.",
-    "readingTime": "5 min",
+    "excerpt": "Une méthode pour relier offre, créatifs, landing page, qualification, WhatsApp, tracking et CRM afin d’évaluer la vraie qualité des leads Meta Ads.",
+    "readingTime": "9 min",
     "keywords": [
-      "Structurer une campagne Meta Ads qui génère d"
+      "Meta Ads Maroc",
+      "leads qualifiés Meta Ads Maroc",
+      "Facebook Ads leads Maroc"
     ]
   },
   {

@@ -1,0 +1,17 @@
+# Local secrets and Cloudflare development state
+.env*
+!.env.example
+.dev.vars*
+.wrangler/
+
+# Package/development artifacts
+node_modules/
+coverage/
+playwright-report/
+test-results/
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

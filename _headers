@@ -53,3 +53,32 @@
 
 /*.ico
   Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
+
+/crm/*
+  Cache-Control: private, no-store, max-age=0
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+  Referrer-Policy: no-referrer
+
+/api/crm/*
+  Cache-Control: private, no-store, max-age=0
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+# Keep private/internal project material out of search results.
+/docs/*
+  Cache-Control: private, no-store, max-age=0
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/evidence/*
+  Cache-Control: private, no-store, max-age=0
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+# Legacy compatibility assets exist only to resolve historical 404 reports.
+/assets/js/elboubakry-mockup-carousel.js
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/assets/js/vendor/ajax-form.js
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+# Prevent the production Pages subdomain from competing with the custom domain.
+https://eawebsite.pages.dev/*
+  X-Robots-Tag: noindex, nofollow, noarchive
