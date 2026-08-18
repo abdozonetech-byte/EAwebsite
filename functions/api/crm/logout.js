@@ -1,22 +1,13 @@
-const COOKIE_NAME = "elboubakry_crm_session";
+import { COOKIE_NAME } from "../../_lib/auth.js";
+import { json } from "../../_lib/http.js";
 
 function response() {
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: {
-      "Cache-Control": "private, no-store, max-age=0",
-      "Content-Type": "application/json; charset=utf-8",
-      "Set-Cookie": `${COOKIE_NAME}=; Path=/crm; Max-Age=0; HttpOnly; Secure; SameSite=Strict`,
-      "X-Content-Type-Options": "nosniff",
-      "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet",
-    },
-  });
+  const headers = new Headers({ "Set-Cookie": `${COOKIE_NAME}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict` });
+  headers.append("Set-Cookie", `${COOKIE_NAME}=; Path=/crm; Max-Age=0; HttpOnly; Secure; SameSite=Strict`);
+  return json({ ok: true }, 200, headers);
 }
 
 export function onRequest(context) {
   if (context.request.method === "POST") return response();
-  return new Response(JSON.stringify({ ok: false, message: "Method not allowed." }), {
-    status: 405,
-    headers: { "Content-Type": "application/json; charset=utf-8", Allow: "POST", "Cache-Control": "no-store" },
-  });
+  return json({ ok: false, message: "Method not allowed." }, 405, { Allow: "POST" });
 }

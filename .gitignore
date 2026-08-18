@@ -1,10 +1,14 @@
 # Local secrets and Cloudflare development state
-.env*
+.env
+.env.*
 !.env.example
-.dev.vars*
+.dev.vars
+.dev.vars.*
+.wrangler
 .wrangler/
 
 # Package/development artifacts
+node_modules
 node_modules/
 coverage/
 playwright-report/

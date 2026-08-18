@@ -1,63 +1,7 @@
-const COOKIE_NAME = "elboubakry_crm_session";
-const SESSION_TTL_SECONDS = 24 * 60 * 60;
+import { COOKIE_NAME, SESSION_TTL_SECONDS, safeEqual, signSession } from "../../_lib/auth.js";
+import { json, sameOrigin } from "../../_lib/http.js";
+
 const MAX_BODY_BYTES = 4096;
-const textEncoder = new TextEncoder();
-
-function bytesToBase64Url(bytes) {
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
-async function sha256(value) {
-  return new Uint8Array(await crypto.subtle.digest("SHA-256", textEncoder.encode(value)));
-}
-
-async function safeEqual(left, right) {
-  const [leftHash, rightHash] = await Promise.all([sha256(left), sha256(right)]);
-  let diff = 0;
-  for (let index = 0; index < leftHash.length; index += 1) diff |= leftHash[index] ^ rightHash[index];
-  return diff === 0;
-}
-
-async function signSession(username, secret) {
-  const now = Math.floor(Date.now() / 1000);
-  const payload = { v: 1, sub: username, iat: now, exp: now + SESSION_TTL_SECONDS };
-  const payloadEncoded = bytesToBase64Url(textEncoder.encode(JSON.stringify(payload)));
-  const key = await crypto.subtle.importKey(
-    "raw",
-    textEncoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const signature = new Uint8Array(await crypto.subtle.sign("HMAC", key, textEncoder.encode(payloadEncoded)));
-  return `${payloadEncoded}.${bytesToBase64Url(signature)}`;
-}
-
-function json(body, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "Cache-Control": "private, no-store, max-age=0",
-      "Content-Type": "application/json; charset=utf-8",
-      "Referrer-Policy": "no-referrer",
-      "X-Content-Type-Options": "nosniff",
-      "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet",
-      ...extraHeaders,
-    },
-  });
-}
-
-function sameOrigin(request) {
-  const origin = request.headers.get("Origin");
-  if (!origin) return true;
-  try {
-    return new URL(origin).origin === new URL(request.url).origin;
-  } catch {
-    return false;
-  }
-}
 
 async function handlePost(context) {
   const { request, env } = context;
@@ -97,7 +41,7 @@ async function handlePost(context) {
   }
 
   const token = await signSession(username, String(env.CRM_SESSION_SECRET));
-  const cookie = `${COOKIE_NAME}=${token}; Path=/crm; Max-Age=${SESSION_TTL_SECONDS}; HttpOnly; Secure; SameSite=Strict`;
+  const cookie = `${COOKIE_NAME}=${token}; Path=/; Max-Age=${SESSION_TTL_SECONDS}; HttpOnly; Secure; SameSite=Strict`;
   return json({ ok: true }, 200, { "Set-Cookie": cookie });
 }
 
