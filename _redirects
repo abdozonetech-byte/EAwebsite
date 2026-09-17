@@ -27,6 +27,22 @@
 /insights/landing-page-generation-leads-maroc.html  /insights/landing-page-generation-leads-maroc  301
 /insights/clarifier-offre-message-tunnel/  /insights/clarifier-offre-message-tunnel  301
 
+# Deleted local lead-generation articles -> closest current national guides
+/insights/generation-leads-qualifies-casablanca  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-casablanca.html  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-casablanca/  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-casablanca/index.html  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-marrakech  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-marrakech.html  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-marrakech/  /insights/generation-leads-qualifies-maroc  301
+/insights/generation-leads-qualifies-marrakech/index.html  /insights/generation-leads-qualifies-maroc  301
+
+# Deleted Facebook Ads troubleshooting article -> closest current Meta Ads guide
+/insights/pourquoi-publicites-facebook-ne-generent-pas-clients  /insights/meta-ads-leads-qualifies-maroc  301
+/insights/pourquoi-publicites-facebook-ne-generent-pas-clients.html  /insights/meta-ads-leads-qualifies-maroc  301
+/insights/pourquoi-publicites-facebook-ne-generent-pas-clients/  /insights/meta-ads-leads-qualifies-maroc  301
+/insights/pourquoi-publicites-facebook-ne-generent-pas-clients/index.html  /insights/meta-ads-leads-qualifies-maroc  301
+
 # Historical service pages removed during the July 2026 flattening migration.
 # Each URL now goes directly to the closest surviving, indexable guide.
 /services  /#homeservices  301
