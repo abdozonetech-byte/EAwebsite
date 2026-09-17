@@ -403,6 +403,28 @@ const robotsText = fs.readFileSync(robotsFile, 'utf8');
 if (!robotsText.includes(`Sitemap: ${SITE_ORIGIN}/sitemap.xml`)) {
   report('robots.txt', 'does not advertise the canonical sitemap URL');
 }
+const universalRobotsBlock = robotsText.match(
+  /User-agent:\s*\*\s*\r?\n([\s\S]*?)(?=\r?\nUser-agent:|\r?\nSitemap:|$)/i,
+)?.[1] || '';
+if (!/^Allow:\s*\/$/im.test(universalRobotsBlock)) {
+  report('robots.txt', 'the universal crawler group must explicitly allow /');
+}
+const universalDisallows = [...universalRobotsBlock.matchAll(/^Disallow:\s*(\S+)\s*$/gim)]
+  .map((match) => match[1]);
+for (const privatePath of ['/crm/', '/api/crm/', '/docs/', '/evidence/']) {
+  if (!universalDisallows.includes(privatePath)) {
+    report('robots.txt', `missing private-path disallow: ${privatePath}`);
+  }
+}
+for (const sitemapUrl of sitemapUrls) {
+  const sitemapPath = new URL(sitemapUrl).pathname;
+  const blockingRule = universalDisallows.find(
+    (disallowedPath) => disallowedPath === '/' || sitemapPath.startsWith(disallowedPath),
+  );
+  if (blockingRule) {
+    report('robots.txt', `${sitemapPath} is blocked by Disallow: ${blockingRule}`);
+  }
+}
 
 const headersFile = path.join(root, '_headers');
 const headersText = fs.readFileSync(headersFile, 'utf8');
