@@ -198,10 +198,23 @@ for (const file of htmlFiles) {
 const sitemapFile = path.join(root, 'sitemap.xml');
 const sitemap = fs.readFileSync(sitemapFile, 'utf8');
 const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1].trim());
+const sitemapLastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)]
+  .map((match) => match[1].trim());
 const uniqueSitemapUrls = new Set(sitemapUrls);
 
 if (uniqueSitemapUrls.size !== sitemapUrls.length) {
   report('sitemap.xml', 'contains duplicate <loc> values');
+}
+if (sitemapLastmods.length !== sitemapUrls.length) {
+  report('sitemap.xml', `expected one <lastmod> per URL, found ${sitemapLastmods.length} for ${sitemapUrls.length} URLs`);
+}
+const today = new Date().toISOString().slice(0, 10);
+for (const lastmod of sitemapLastmods) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(lastmod) || Number.isNaN(Date.parse(`${lastmod}T00:00:00Z`))) {
+    report('sitemap.xml', `invalid <lastmod> date: ${lastmod}`);
+  } else if (lastmod > today) {
+    report('sitemap.xml', `<lastmod> date is in the future: ${lastmod}`);
+  }
 }
 
 for (const [canonical, owner] of indexableCanonicalOwners) {
