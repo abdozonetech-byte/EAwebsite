@@ -18,6 +18,9 @@
 /insights/combien-coute-campagne-meta-ads-maroc/  /insights/combien-coute-campagne-meta-ads-maroc  301
 /insights/combien-coute-campagne-meta-ads-maroc/index.html  /insights/combien-coute-campagne-meta-ads-maroc  301
 
+# Search Console legacy alias: keep explicit before the generic article rules
+/insights/landing-page-generation-leads-maroc.html  /insights/landing-page-generation-leads-maroc  301
+
 # Historical service pages removed during the July 2026 flattening migration.
 # Each URL now goes directly to the closest surviving, indexable guide.
 /services  /#homeservices  301
