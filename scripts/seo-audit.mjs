@@ -236,6 +236,31 @@ for (const [canonical, owner] of indexableCanonicalOwners) {
   }
 }
 
+const insightsCatalogFile = 'assets/data/insights-articles.js';
+const insightsCatalog = fs.readFileSync(path.join(root, insightsCatalogFile), 'utf8');
+const insightsSlugs = [...insightsCatalog.matchAll(/"slug"\s*:\s*"([^"]+)"/g)]
+  .map((match) => match[1]);
+if (new Set(insightsSlugs).size !== insightsSlugs.length) {
+  report(insightsCatalogFile, 'contains duplicate article slugs');
+}
+for (const slug of insightsSlugs) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    report(insightsCatalogFile, `invalid article slug: ${slug}`);
+    continue;
+  }
+  const route = `/insights/${slug}`;
+  const canonical = `${SITE_ORIGIN}${route}`;
+  if (!routeCandidates(route).some((candidate) => existingFiles.has(candidate))) {
+    report(insightsCatalogFile, `article slug has no matching page: ${slug}`);
+  }
+  if (redirectMatchers.some(({ matches }) => matches.test(route))) {
+    report(insightsCatalogFile, `article slug points to a redirect: ${route}`);
+  }
+  if (!uniqueSitemapUrls.has(canonical)) {
+    report(insightsCatalogFile, `article slug is missing from sitemap.xml: ${canonical}`);
+  }
+}
+
 for (const sitemapUrl of sitemapUrls) {
   let url;
   try {
@@ -314,5 +339,6 @@ if (errors.length) {
 
 console.log(
   `SEO audit passed: ${htmlFiles.length} HTML files, ${sitemapUrls.length} sitemap URLs, ` +
-  `${redirectSources.length} redirect rules, and ${existingFiles.size} repository files checked.`,
+  `${insightsSlugs.length} dynamic article links, ${redirectSources.length} redirect rules, ` +
+  `and ${existingFiles.size} repository files checked.`,
 );
