@@ -68,6 +68,12 @@ const redirectMatchers = redirectSources.map((source) => ({
 
 const canonicalOwners = new Map();
 const titleOwners = new Map();
+const expectedNoindexFiles = new Set([
+  'mentions-legales.html',
+  'politique-confidentialite.html',
+  'politique-cookies.html',
+  'merci/index.html',
+]);
 
 for (const file of htmlFiles) {
   const relativeFile = path.relative(root, file).split(path.sep).join('/');
@@ -88,6 +94,10 @@ for (const file of htmlFiles) {
     .map((tag) => attribute(tag, 'href'))
     .filter(Boolean);
   const h1Count = (html.match(/<h1\b/gi) || []).length;
+
+  if (expectedNoindexFiles.has(relativeFile) && indexable) {
+    report(relativeFile, 'private or utility page must remain noindex');
+  }
 
   if (indexable) {
     if (!title) report(relativeFile, 'indexable page has no <title>');
