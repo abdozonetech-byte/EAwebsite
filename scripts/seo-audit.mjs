@@ -210,6 +210,14 @@ for (const sitemapUrl of sitemapUrls) {
     report('sitemap.xml', `URL must use ${SITE_ORIGIN}: ${sitemapUrl}`);
     continue;
   }
+  if (url.pathname !== '/' && url.pathname.endsWith('/')) {
+    const noSlashPath = url.pathname.slice(0, -1);
+    const canonicalRedirect = redirectRules.find(({ source }) => source === noSlashPath);
+    const redirectPath = canonicalRedirect?.target?.split('#')[0].split('?')[0];
+    if (redirectPath !== url.pathname) {
+      report('_redirects', `${noSlashPath} must redirect directly to ${url.pathname}`);
+    }
+  }
   if (redirectMatchers.some(({ matches }) => matches.test(url.pathname))) {
     report('sitemap.xml', `URL redirects instead of resolving canonically: ${sitemapUrl}`);
   }
