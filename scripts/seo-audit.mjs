@@ -69,8 +69,26 @@ const redirectMatchers = redirectSources.map((source) => ({
   source,
   matches: redirectMatcher(source),
 }));
+const seenRedirectSources = new Set();
 
-for (const { source, target } of redirectRules) {
+for (const { source, target, status } of redirectRules) {
+  if (!source?.startsWith('/')) {
+    report('_redirects', `redirect source must start with /: ${source || '(missing)'}`);
+  }
+  if (!target?.startsWith('/')) {
+    report('_redirects', `${source} must redirect to a local absolute path`);
+  }
+  if (status !== '301') {
+    report('_redirects', `${source} must use permanent status 301, found ${status || '(missing)'}`);
+  }
+  if (seenRedirectSources.has(source)) {
+    report('_redirects', `duplicate redirect source: ${source}`);
+  }
+  seenRedirectSources.add(source);
+  const directTargetPath = target?.split('#')[0].split('?')[0];
+  if (directTargetPath === source) {
+    report('_redirects', `self-redirect detected: ${source}`);
+  }
   if (!target?.startsWith('/') || /[:*]/.test(target)) continue;
   const targetPath = target.split('#')[0].split('?')[0] || '/';
   const chainedRule = redirectMatchers.find(
