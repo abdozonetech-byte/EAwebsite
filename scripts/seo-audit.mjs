@@ -87,6 +87,7 @@ for (const { source, target } of redirectRules) {
 const canonicalOwners = new Map();
 const indexableCanonicalOwners = new Map();
 const titleOwners = new Map();
+let structuredDataUrlsChecked = 0;
 const expectedNoindexFiles = new Set([
   '404.html',
   'crm/index.html',
@@ -161,10 +162,30 @@ for (const file of htmlFiles) {
   }
 
   for (const script of html.matchAll(/<script\b([^>]*)type=["']application\/ld\+json["']([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    let structuredData;
     try {
-      JSON.parse(script[3].trim());
+      structuredData = JSON.parse(script[3].trim());
     } catch (error) {
       report(relativeFile, `invalid JSON-LD: ${error.message}`);
+      continue;
+    }
+    const values = [structuredData];
+    while (values.length) {
+      const value = values.pop();
+      if (Array.isArray(value)) {
+        values.push(...value);
+      } else if (value && typeof value === 'object') {
+        values.push(...Object.values(value));
+      } else if (typeof value === 'string' && value.startsWith(`${SITE_ORIGIN}/`)) {
+        structuredDataUrlsChecked += 1;
+        const structuredUrl = new URL(value);
+        if (redirectMatchers.some(({ matches }) => matches.test(structuredUrl.pathname))) {
+          report(relativeFile, `JSON-LD URL redirects instead of resolving canonically: ${value}`);
+        }
+        if (!routeCandidates(structuredUrl.pathname).some((candidate) => existingFiles.has(candidate))) {
+          report(relativeFile, `JSON-LD URL points to a missing local target: ${value}`);
+        }
+      }
     }
   }
 
@@ -339,6 +360,7 @@ if (errors.length) {
 
 console.log(
   `SEO audit passed: ${htmlFiles.length} HTML files, ${sitemapUrls.length} sitemap URLs, ` +
-  `${insightsSlugs.length} dynamic article links, ${redirectSources.length} redirect rules, ` +
+  `${insightsSlugs.length} dynamic article links, ${structuredDataUrlsChecked} structured-data URLs, ` +
+  `${redirectSources.length} redirect rules, ` +
   `and ${existingFiles.size} repository files checked.`,
 );
