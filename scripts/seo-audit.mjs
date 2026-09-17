@@ -204,6 +204,18 @@ if (!robotsText.includes(`Sitemap: ${SITE_ORIGIN}/sitemap.xml`)) {
   report('robots.txt', 'does not advertise the canonical sitemap URL');
 }
 
+const headersFile = path.join(root, '_headers');
+const headersText = fs.readFileSync(headersFile, 'utf8');
+for (const assetRoute of ['/assets/css/*', '/assets/js/*']) {
+  const escapedRoute = assetRoute.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const block = headersText.match(
+    new RegExp(`^${escapedRoute}\\r?\\n((?:[ \\t]+[^\\r\\n]+(?:\\r?\\n|$))*)`, 'm'),
+  )?.[1] || '';
+  if (!/^\s*X-Robots-Tag:\s*[^\r\n]*\bnoindex\b/im.test(block)) {
+    report('_headers', `${assetRoute} must send X-Robots-Tag: noindex`);
+  }
+}
+
 if (errors.length) {
   console.error(`SEO audit failed with ${errors.length} issue${errors.length === 1 ? '' : 's'}:`);
   for (const error of errors) console.error(`- ${error}`);
