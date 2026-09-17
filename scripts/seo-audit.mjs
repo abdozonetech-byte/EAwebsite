@@ -87,6 +87,7 @@ for (const { source, target } of redirectRules) {
 const canonicalOwners = new Map();
 const titleOwners = new Map();
 const expectedNoindexFiles = new Set([
+  '404.html',
   'mentions-legales.html',
   'politique-confidentialite.html',
   'politique-cookies.html',
@@ -170,6 +171,9 @@ for (const file of htmlFiles) {
 
   for (const reference of references) {
     if (/^(?:https?:|mailto:|tel:|data:|javascript:|#)/i.test(reference)) continue;
+    if (relativeFile === '404.html' && !reference.startsWith('/')) {
+      report(relativeFile, `404 page reference must be root-relative: ${reference}`);
+    }
     const route = resolveReference(relativeFile, reference);
     if (!route) continue;
 
