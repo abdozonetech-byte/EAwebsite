@@ -106,6 +106,7 @@ const canonicalOwners = new Map();
 const indexableCanonicalOwners = new Map();
 const titleOwners = new Map();
 const descriptionOwners = new Map();
+const h1Owners = new Map();
 let structuredDataUrlsChecked = 0;
 const expectedNoindexFiles = new Set([
   '404.html',
@@ -140,7 +141,12 @@ for (const file of htmlFiles) {
     .filter((tag) => attribute(tag, 'property')?.toLowerCase() === 'og:url')
     .map((tag) => attribute(tag, 'content'))
     .filter(Boolean);
-  const h1Count = (html.match(/<h1\b/gi) || []).length;
+  const h1Matches = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)];
+  const h1Count = h1Matches.length;
+  const h1Text = h1Matches[0]?.[1]
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim() || '';
 
   if (robotsTags.length !== 1) {
     report(relativeFile, `expected 1 robots meta tag, found ${robotsTags.length}`);
@@ -164,6 +170,7 @@ for (const file of htmlFiles) {
       report(relativeFile, `og:url does not match canonical: ${openGraphUrls[0]} != ${canonicals[0]}`);
     }
     if (h1Count !== 1) report(relativeFile, `expected 1 <h1>, found ${h1Count}`);
+    if (h1Count === 1 && !h1Text) report(relativeFile, 'H1 must not be empty');
   }
 
   for (const canonical of canonicals) {
@@ -204,6 +211,14 @@ for (const file of htmlFiles) {
       report(relativeFile, `meta description duplicates ${previousOwner}`);
     }
     descriptionOwners.set(description[0], relativeFile);
+  }
+
+  if (indexable && h1Text) {
+    const previousOwner = h1Owners.get(h1Text);
+    if (previousOwner && previousOwner !== relativeFile) {
+      report(relativeFile, `H1 duplicates ${previousOwner}: ${h1Text}`);
+    }
+    h1Owners.set(h1Text, relativeFile);
   }
 
   for (const script of html.matchAll(/<script\b([^>]*)type=["']application\/ld\+json["']([^>]*)>([\s\S]*?)<\/script>/gi)) {
