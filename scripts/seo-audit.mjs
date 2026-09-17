@@ -176,11 +176,24 @@ for (const file of htmlFiles) {
   ].filter(Boolean);
 
   for (const reference of references) {
-    if (/^(?:https?:|mailto:|tel:|data:|javascript:|#)/i.test(reference)) continue;
+    if (/^(?:mailto:|tel:|data:|javascript:|#)/i.test(reference)) continue;
     if (relativeFile === '404.html' && !reference.startsWith('/')) {
       report(relativeFile, `404 page reference must be root-relative: ${reference}`);
     }
-    const route = resolveReference(relativeFile, reference);
+    let route;
+    if (/^https?:/i.test(reference)) {
+      let absoluteUrl;
+      try {
+        absoluteUrl = new URL(reference);
+      } catch {
+        report(relativeFile, `invalid absolute URL: ${reference}`);
+        continue;
+      }
+      if (absoluteUrl.origin !== SITE_ORIGIN) continue;
+      route = absoluteUrl.pathname;
+    } else {
+      route = resolveReference(relativeFile, reference);
+    }
     if (!route) continue;
 
     const redirect = redirectMatchers.find(({ matches }) => matches.test(route));
