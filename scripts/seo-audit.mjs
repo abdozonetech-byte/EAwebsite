@@ -85,6 +85,7 @@ for (const { source, target } of redirectRules) {
 }
 
 const canonicalOwners = new Map();
+const indexableCanonicalOwners = new Map();
 const titleOwners = new Map();
 const expectedNoindexFiles = new Set([
   '404.html',
@@ -146,6 +147,9 @@ for (const file of htmlFiles) {
       report(relativeFile, `canonical duplicates ${previousOwner}: ${canonical}`);
     }
     canonicalOwners.set(canonical, relativeFile);
+    if (indexable && canonicalUrl.origin === SITE_ORIGIN && !canonicalUrl.search && !canonicalUrl.hash) {
+      indexableCanonicalOwners.set(canonical, relativeFile);
+    }
   }
 
   if (indexable && title) {
@@ -200,6 +204,12 @@ if (uniqueSitemapUrls.size !== sitemapUrls.length) {
   report('sitemap.xml', 'contains duplicate <loc> values');
 }
 
+for (const [canonical, owner] of indexableCanonicalOwners) {
+  if (!uniqueSitemapUrls.has(canonical)) {
+    report('sitemap.xml', `missing indexable canonical from ${owner}: ${canonical}`);
+  }
+}
+
 for (const sitemapUrl of sitemapUrls) {
   let url;
   try {
@@ -229,7 +239,10 @@ for (const sitemapUrl of sitemapUrls) {
     continue;
   }
   const html = fs.readFileSync(path.join(root, target), 'utf8');
-  if (/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) {
+  const targetRobotsTag = tags(html, 'meta')
+    .find((tag) => attribute(tag, 'name')?.toLowerCase() === 'robots');
+  const targetRobotsContent = targetRobotsTag ? attribute(targetRobotsTag, 'content') || '' : '';
+  if (/\bnoindex\b/i.test(targetRobotsContent)) {
     report('sitemap.xml', `URL points to a noindex page: ${sitemapUrl}`);
   }
   const canonicalTags = tags(html, 'link')
