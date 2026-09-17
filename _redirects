@@ -24,6 +24,12 @@
 /services/  /#homeservices  301
 /services/index.html  /#homeservices  301
 
+# Historical root-level AI assistant page -> closest surviving guide
+/assistant-ia-maroc  /insights/ia-business-petite-entreprise  301
+/assistant-ia-maroc/  /insights/ia-business-petite-entreprise  301
+/assistant-ia-maroc.html  /insights/ia-business-petite-entreprise  301
+/assistant-ia-maroc/index.html  /insights/ia-business-petite-entreprise  301
+
 /services/automatisation-marketing-ia-maroc  /insights/automatisation-marketing-maroc  301
 /services/automatisation-marketing-ia-maroc/  /insights/automatisation-marketing-maroc  301
 /services/automatisation-marketing-ia-maroc.html  /insights/automatisation-marketing-maroc  301
