@@ -121,8 +121,9 @@ for (const file of htmlFiles) {
   const html = fs.readFileSync(file, 'utf8');
   const metaTags = tags(html, 'meta');
   const linkTags = tags(html, 'link');
-  const robots = metaTags
-    .find((tag) => attribute(tag, 'name')?.toLowerCase() === 'robots');
+  const robotsTags = metaTags
+    .filter((tag) => attribute(tag, 'name')?.toLowerCase() === 'robots');
+  const robots = robotsTags[0];
   const robotsContent = robots ? attribute(robots, 'content') || '' : '';
   const indexable = !/\bnoindex\b/i.test(robotsContent);
   const title = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || '';
@@ -140,8 +141,17 @@ for (const file of htmlFiles) {
     .filter(Boolean);
   const h1Count = (html.match(/<h1\b/gi) || []).length;
 
+  if (robotsTags.length !== 1) {
+    report(relativeFile, `expected 1 robots meta tag, found ${robotsTags.length}`);
+  }
   if (expectedNoindexFiles.has(relativeFile) && indexable) {
     report(relativeFile, 'private or utility page must remain noindex');
+  }
+  if (!expectedNoindexFiles.has(relativeFile) && !indexable) {
+    report(relativeFile, 'public page must not contain noindex');
+  }
+  if (indexable && /\bnofollow\b/i.test(robotsContent)) {
+    report(relativeFile, 'indexable page must not contain nofollow');
   }
 
   if (indexable) {
