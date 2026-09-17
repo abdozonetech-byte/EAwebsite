@@ -88,6 +88,8 @@ const canonicalOwners = new Map();
 const titleOwners = new Map();
 const expectedNoindexFiles = new Set([
   '404.html',
+  'crm/index.html',
+  'crm/login/index.html',
   'mentions-legales.html',
   'politique-confidentialite.html',
   'politique-cookies.html',
@@ -246,13 +248,22 @@ if (!robotsText.includes(`Sitemap: ${SITE_ORIGIN}/sitemap.xml`)) {
 
 const headersFile = path.join(root, '_headers');
 const headersText = fs.readFileSync(headersFile, 'utf8');
-for (const assetRoute of ['/assets/css/*', '/assets/js/*']) {
-  const escapedRoute = assetRoute.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const noindexHeaderRoutes = [
+  '/assets/css/*',
+  '/assets/js/*',
+  '/crm/*',
+  '/merci/',
+  '/mentions-legales',
+  '/politique-confidentialite',
+  '/politique-cookies',
+];
+for (const route of noindexHeaderRoutes) {
+  const escapedRoute = route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const block = headersText.match(
     new RegExp(`^${escapedRoute}\\r?\\n((?:[ \\t]+[^\\r\\n]+(?:\\r?\\n|$))*)`, 'm'),
   )?.[1] || '';
   if (!/^\s*X-Robots-Tag:\s*[^\r\n]*\bnoindex\b/im.test(block)) {
-    report('_headers', `${assetRoute} must send X-Robots-Tag: noindex`);
+    report('_headers', `${route} must send X-Robots-Tag: noindex`);
   }
 }
 

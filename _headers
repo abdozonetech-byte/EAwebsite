@@ -23,6 +23,16 @@
 
 /merci/
   Cache-Control: private, no-store, max-age=0
+  X-Robots-Tag: noindex, follow, noarchive
+
+/mentions-legales
+  X-Robots-Tag: noindex, follow, noarchive
+
+/politique-confidentialite
+  X-Robots-Tag: noindex, follow, noarchive
+
+/politique-cookies
+  X-Robots-Tag: noindex, follow, noarchive
 
 /robots.txt
   Cache-Control: public, max-age=0, must-revalidate
