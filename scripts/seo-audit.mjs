@@ -116,6 +116,10 @@ for (const file of htmlFiles) {
     .filter((tag) => (attribute(tag, 'rel') || '').toLowerCase().split(/\s+/).includes('canonical'))
     .map((tag) => attribute(tag, 'href'))
     .filter(Boolean);
+  const openGraphUrls = metaTags
+    .filter((tag) => attribute(tag, 'property')?.toLowerCase() === 'og:url')
+    .map((tag) => attribute(tag, 'content'))
+    .filter(Boolean);
   const h1Count = (html.match(/<h1\b/gi) || []).length;
 
   if (expectedNoindexFiles.has(relativeFile) && indexable) {
@@ -126,6 +130,10 @@ for (const file of htmlFiles) {
     if (!title) report(relativeFile, 'indexable page has no <title>');
     if (description.length !== 1) report(relativeFile, `expected 1 meta description, found ${description.length}`);
     if (canonicals.length !== 1) report(relativeFile, `expected 1 canonical, found ${canonicals.length}`);
+    if (openGraphUrls.length !== 1) report(relativeFile, `expected 1 og:url, found ${openGraphUrls.length}`);
+    if (canonicals.length === 1 && openGraphUrls.length === 1 && openGraphUrls[0] !== canonicals[0]) {
+      report(relativeFile, `og:url does not match canonical: ${openGraphUrls[0]} != ${canonicals[0]}`);
+    }
     if (h1Count !== 1) report(relativeFile, `expected 1 <h1>, found ${h1Count}`);
   }
 
