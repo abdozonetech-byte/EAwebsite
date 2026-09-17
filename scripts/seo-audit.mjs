@@ -105,6 +105,7 @@ for (const { source, target, status } of redirectRules) {
 const canonicalOwners = new Map();
 const indexableCanonicalOwners = new Map();
 const titleOwners = new Map();
+const descriptionOwners = new Map();
 let structuredDataUrlsChecked = 0;
 const expectedNoindexFiles = new Set([
   '404.html',
@@ -195,6 +196,14 @@ for (const file of htmlFiles) {
       report(relativeFile, `title duplicates ${previousOwner}: ${title}`);
     }
     titleOwners.set(title, relativeFile);
+  }
+
+  if (indexable && description.length === 1) {
+    const previousOwner = descriptionOwners.get(description[0]);
+    if (previousOwner && previousOwner !== relativeFile) {
+      report(relativeFile, `meta description duplicates ${previousOwner}`);
+    }
+    descriptionOwners.set(description[0], relativeFile);
   }
 
   for (const script of html.matchAll(/<script\b([^>]*)type=["']application\/ld\+json["']([^>]*)>([\s\S]*?)<\/script>/gi)) {
