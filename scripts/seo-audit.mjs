@@ -123,6 +123,10 @@ for (const file of htmlFiles) {
   const html = fs.readFileSync(file, 'utf8');
   const metaTags = tags(html, 'meta');
   const linkTags = tags(html, 'link');
+  const htmlTags = tags(html, 'html');
+  const charsetTags = metaTags.filter((tag) => attribute(tag, 'charset'));
+  const viewportTags = metaTags
+    .filter((tag) => attribute(tag, 'name')?.toLowerCase() === 'viewport');
   const robotsTags = metaTags
     .filter((tag) => attribute(tag, 'name')?.toLowerCase() === 'robots');
   const robots = robotsTags[0];
@@ -162,6 +166,15 @@ for (const file of htmlFiles) {
   }
 
   if (indexable) {
+    if (htmlTags.length !== 1 || attribute(htmlTags[0], 'lang')?.toLowerCase() !== 'fr') {
+      report(relativeFile, 'indexable page must declare exactly one <html lang="fr">');
+    }
+    if (charsetTags.length !== 1 || attribute(charsetTags[0], 'charset')?.toLowerCase() !== 'utf-8') {
+      report(relativeFile, 'indexable page must declare exactly one UTF-8 charset');
+    }
+    if (viewportTags.length !== 1) {
+      report(relativeFile, `indexable page must declare exactly one viewport meta tag, found ${viewportTags.length}`);
+    }
     if (!title) report(relativeFile, 'indexable page has no <title>');
     if (description.length !== 1) report(relativeFile, `expected 1 meta description, found ${description.length}`);
     if (canonicals.length !== 1) report(relativeFile, `expected 1 canonical, found ${canonicals.length}`);
