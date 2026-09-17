@@ -56,15 +56,33 @@ const existingFiles = new Set(
 );
 
 const redirectFile = path.join(root, '_redirects');
-const redirectSources = fs.readFileSync(redirectFile, 'utf8')
+const redirectRules = fs.readFileSync(redirectFile, 'utf8')
   .split(/\r?\n/)
   .map((line) => line.trim())
   .filter((line) => line && !line.startsWith('#'))
-  .map((line) => line.split(/\s+/)[0]);
+  .map((line) => {
+    const [source, target, status] = line.split(/\s+/);
+    return { source, target, status };
+  });
+const redirectSources = redirectRules.map(({ source }) => source);
 const redirectMatchers = redirectSources.map((source) => ({
   source,
   matches: redirectMatcher(source),
 }));
+
+for (const { source, target } of redirectRules) {
+  if (!target?.startsWith('/') || /[:*]/.test(target)) continue;
+  const targetPath = target.split('#')[0].split('?')[0] || '/';
+  const chainedRule = redirectMatchers.find(
+    ({ source: candidate, matches }) => candidate !== source && matches.test(targetPath),
+  );
+  if (chainedRule) {
+    report('_redirects', `${source} redirects through ${chainedRule.source} instead of resolving directly`);
+  }
+  if (!routeCandidates(targetPath).some((candidate) => existingFiles.has(candidate))) {
+    report('_redirects', `${source} points to missing target ${target}`);
+  }
+}
 
 const canonicalOwners = new Map();
 const titleOwners = new Map();
