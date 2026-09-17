@@ -25,6 +25,7 @@
 
 # Search Console legacy alias: keep explicit before the generic article rules
 /insights/landing-page-generation-leads-maroc.html  /insights/landing-page-generation-leads-maroc  301
+/insights/clarifier-offre-message-tunnel/  /insights/clarifier-offre-message-tunnel  301
 
 # Historical service pages removed during the July 2026 flattening migration.
 # Each URL now goes directly to the closest surviving, indexable guide.
