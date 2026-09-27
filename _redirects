@@ -49,12 +49,13 @@
 /insights/pourquoi-publicites-facebook-ne-generent-pas-clients/  /insights/meta-ads-leads-qualifies-maroc  301
 /insights/pourquoi-publicites-facebook-ne-generent-pas-clients/index.html  /insights/meta-ads-leads-qualifies-maroc  301
 
-# Historical service pages removed during the July 2026 flattening migration.
-# Each URL now goes directly to the closest surviving, indexable guide.
-/services  /#homeservices  301
-/services/  /#homeservices  301
-/services.html  /#homeservices  301
-/services/index.html  /#homeservices  301
+# Canonical services hub
+/services  /services/  301
+/services.html  /services/  301
+/services/index.html  /services/  301
+
+# Historical service detail pages removed during the July 2026 flattening migration.
+# Each URL still goes directly to the closest surviving, indexable guide.
 
 # Historical root-level AI assistant page -> closest surviving guide
 /assistant-ia-maroc  /insights/ia-business-petite-entreprise  301
