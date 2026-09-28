@@ -54,6 +54,10 @@
 /services.html  /services/  301
 /services/index.html  /services/  301
 
+# Canonical portfolio hub
+/projets  /projets/  301
+/projets/index.html  /projets/  301
+
 # Historical service detail pages removed during the July 2026 flattening migration.
 # Each URL still goes directly to the closest surviving, indexable guide.
 

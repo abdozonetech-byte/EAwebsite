@@ -8,4 +8,8 @@ Disallow: /evidence/
 User-agent: GPTBot
 Disallow: /
 
+# Search visibility in ChatGPT without authorizing training use.
+User-agent: OAI-SearchBot
+Allow: /
+
 Sitemap: https://elboubakry.com/sitemap.xml
