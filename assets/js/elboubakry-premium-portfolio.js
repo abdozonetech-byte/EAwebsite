@@ -1,4 +1,26 @@
 (() => {
+  const header = document.querySelector('.ea-header');
+  const progress = document.createElement('div');
+  progress.className = 'ea-scroll-progress';
+  progress.setAttribute('aria-hidden', 'true');
+  document.body.prepend(progress);
+
+  let scrollTicking = false;
+  const updateScrollEffects = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const value = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+    progress.style.setProperty('--ea-scroll-progress', String(value));
+    header?.classList.toggle('is-scrolled', window.scrollY > 16);
+    scrollTicking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    window.requestAnimationFrame(updateScrollEffects);
+  }, { passive: true });
+  updateScrollEffects();
+
   const menuButton = document.querySelector('.ea-menu-button');
   const navigation = document.querySelector('.ea-nav');
 

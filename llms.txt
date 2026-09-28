@@ -8,7 +8,7 @@
 - Activité : consultant marketing digital, gestion de projet digital, développement web assisté par IA et automatisation
 - Zone : Casablanca et Maroc, avec accompagnement à distance selon le projet
 - Langues : arabe, français et anglais
-- Profil complet : https://elboubakry.com/about-elboubakry-abdessamad
+- [Profil complet](https://elboubakry.com/about-elboubakry-abdessamad)
 
 ## Services
 
@@ -18,19 +18,19 @@
 - Landing pages, conversion et génération de leads
 - Google Analytics, Google Search Console, Meta Pixel et UTM
 - CRM, formulaires, API et automatisation marketing
-- Services détaillés : https://elboubakry.com/services/
+- [Services détaillés](https://elboubakry.com/services/)
 
 ## Projets et méthode
 
-- Portfolio : https://elboubakry.com/projets/
+- [Portfolio](https://elboubakry.com/projets/)
 - La méthode suit quatre étapes : écoute, plan, mise en oeuvre et suivi.
 - Les démonstrations de portfolio n'utilisent pas de résultats clients inventés ni de chiffres sans source.
 
 ## Ressources
 
-- Guides marketing au Maroc : https://elboubakry.com/insights/
-- Diagnostic : https://elboubakry.com/reserver-diagnostic/
-- Contact professionnel : https://elboubakry.com/#contact
+- [Guides marketing au Maroc](https://elboubakry.com/insights/)
+- [Réserver un diagnostic](https://elboubakry.com/reserver-diagnostic/)
+- [Contact professionnel](https://elboubakry.com/#contact)
 
 ## Source canonique
 
