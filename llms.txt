@@ -23,6 +23,7 @@
 ## Projets et méthode
 
 - [Portfolio](https://elboubakry.com/projets/)
+- [Projet IA et automatisation](https://elboubakry.com/projets/#ia-automatisation)
 - La méthode suit quatre étapes : écoute, plan, mise en oeuvre et suivi.
 - Les démonstrations de portfolio n'utilisent pas de résultats clients inventés ni de chiffres sans source.
 
