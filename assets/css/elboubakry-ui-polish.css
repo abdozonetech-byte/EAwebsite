@@ -1,0 +1,189 @@
+:root {
+  --ea-blue: #0b55ff;
+  --ea-ink: #10172f;
+  --ea-line: #dce4f7;
+  --ea-soft: #eef4ff;
+  --ea-shadow: 0 18px 50px rgba(22, 46, 94, .1);
+}
+
+.ea-btn-svg,
+.ea-value-icon svg,
+.ea-home-service-links svg,
+.ea-profile-capabilities svg,
+.ea-offer-number svg,
+.ea-fit-icon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ea-btn-svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+}
+
+.rs-banner-btn .rs-btn {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-transform: none;
+}
+
+.ea-transform-values > div {
+  position: relative;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.ea-transform-values > div:hover {
+  z-index: 1;
+  transform: translateY(-4px);
+  border-color: rgba(11, 85, 255, .25);
+  box-shadow: var(--ea-shadow);
+}
+
+.ea-value-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 1px solid #d9e4ff;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #fff, #e7efff);
+  color: var(--ea-blue);
+  box-shadow: 0 8px 20px rgba(11, 85, 255, .09);
+}
+
+.ea-value-icon svg { width: 21px; height: 21px; }
+
+.ea-home-service-links a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 15px;
+  transition: transform .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.ea-home-service-links a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(11, 85, 255, .35);
+  color: var(--ea-blue);
+  box-shadow: 0 10px 24px rgba(22, 46, 94, .09);
+}
+
+.ea-home-service-links svg { width: 17px; height: 17px; color: var(--ea-blue); }
+
+.ea-profile-capabilities article,
+.ea-offer-card,
+.ea-services-fit-grid article,
+.ea-services-process-grid article,
+.ea-home-guide-card {
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.ea-profile-capabilities article:hover,
+.ea-offer-card:hover,
+.ea-services-fit-grid article:hover,
+.ea-services-process-grid article:hover,
+.ea-home-guide-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(11, 85, 255, .25);
+  box-shadow: var(--ea-shadow);
+}
+
+.ea-profile-capabilities article > span svg { width: 27px; height: 27px; }
+
+.ea-offer-number {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  overflow: visible;
+  background: linear-gradient(145deg, #fff, #dce8ff);
+  box-shadow: 0 10px 24px rgba(11, 85, 255, .12);
+}
+
+.ea-offer-number svg { width: 27px; height: 27px; }
+
+.ea-offer-number small {
+  position: absolute;
+  right: -8px;
+  bottom: -7px;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--ea-blue);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.ea-fit-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  margin-bottom: 16px;
+  border: 1px solid #d9e4ff;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fff, #e7efff);
+  color: var(--ea-blue);
+}
+
+.ea-fit-icon svg { width: 27px; height: 27px; }
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(11, 85, 255, .42);
+  outline-offset: 4px;
+}
+
+.ea-services-nav,
+#header-sticky {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+#homeprofile,
+#homeguides,
+#homefaq,
+#homeservices,
+#offres { scroll-margin-top: 100px; }
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .rs-header-btn.d-sm-block { display: none !important; }
+}
+
+@media (max-width: 767px) {
+  .ea-transform-values > div:hover,
+  .ea-profile-capabilities article:hover,
+  .ea-offer-card:hover,
+  .ea-services-fit-grid article:hover,
+  .ea-services-process-grid article:hover,
+  .ea-home-guide-card:hover { transform: none; }
+
+  .ea-home-service-links a { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
