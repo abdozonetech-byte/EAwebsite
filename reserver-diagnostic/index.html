@@ -40,7 +40,7 @@
     "jobTitle": "Consultant Marketing Digital"
   },
   "inLanguage": "fr-FR",
-  "dateModified": "2026-07-26"
+  "dateModified": "2026-09-28"
 }</script>
 <script type="application/ld+json">
   {
@@ -96,8 +96,8 @@
   </script>
 <script src="../assets/js/tracking-config.js?v=20260726-perf1"></script>
 <script defer="" src="../assets/js/analytics.js?v=20260726-perf1"></script>
-<link href="../assets/lead-page/reserver-diagnostic.css?v=20260726-perf1" rel="stylesheet"/>
-<script defer="" src="../assets/lead-page/reserver-diagnostic.js?v=20260811-leadfix3"></script>
+<link href="../assets/lead-page/reserver-diagnostic.css?v=20260928-ux2" rel="stylesheet"/>
+<script defer="" src="../assets/lead-page/reserver-diagnostic.js?v=20260928-ux2"></script>
 <meta content="Elboubakry Abdessamad" name="author"/>
 <meta content="1200" property="og:image:width"/>
 <meta content="630" property="og:image:height"/>
@@ -105,6 +105,7 @@
 <meta content="Elboubakry Abdessamad — Consultant Marketing Digital au Maroc" name="twitter:image:alt"/><link href="../assets/css/elboubakry-performance.css?v=20260726-perf1" rel="stylesheet"/></head>
 <body>
 <a class="skip-link" href="#diagnostic-form">Aller au formulaire</a>
+<div aria-hidden="true" class="page-progress"></div>
 <div class="site-shell">
 <header aria-label="En-tête principal" class="site-header">
 <a aria-label="Retour au portfolio Elboubakry Abdessamad" class="brand" href="/#homeonepage">
@@ -129,8 +130,12 @@
 <div class="hero-heading">
 <h1 id="page-title">Clarifiez vos priorités <span>marketing</span> avant d’investir davantage.</h1>
 <p>Présentez-moi brièvement votre projet. Je vous recontacte pour un échange ciblé afin d’identifier les actions les plus utiles pour améliorer votre acquisition, votre conversion et votre suivi.</p>
+<div class="hero-actions">
+<a class="primary-action" href="#diagnostic-card">Commencer mon diagnostic <span aria-hidden="true">↗</span></a>
+<span class="hero-proof">Environ 1 minute · Réponse personnalisée</span>
 </div>
-<ul aria-label="Avantages du diagnostic" class="trust-pills">
+</div>
+<ul aria-label="Avantages du diagnostic" class="trust-pills" data-reveal>
 <li>
 <span class="icon-box"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M20 12v8H4v-8m-2-5h20v5H2V7Zm10 13V7m-4 0c-2.7 0-4-1.2-4-2.5S9.3 2 12 7Zm0 0c2.7 0 4-1.2 4-2.5S14.7 2 12 7Z"></path></svg></span>
 <span><strong>100% gratuit</strong><small>Aucun paiement demandé</small></span>
@@ -145,11 +150,12 @@
 </li>
 </ul>
 </div>
-<aside aria-labelledby="form-title" class="form-card">
+<aside aria-labelledby="form-title" class="form-card" id="diagnostic-card">
 <div class="form-heading">
 <span class="form-badge">Demande confidentielle</span>
 <h2 id="form-title">Parlons de votre projet</h2>
 <p>Quatre informations suffisent pour préparer un premier échange clair et pertinent.</p>
+<div aria-label="Informations sur le formulaire" class="form-meta"><span>4 champs</span><span>≈ 1 minute</span></div>
 </div>
 <form data-defer-submit-tracking="true" id="diagnostic-form" novalidate="">
 <input aria-hidden="true" autocomplete="off" class="honeypot" name="contact_url_check" tabindex="-1" type="text"/>
@@ -211,7 +217,7 @@
 <div aria-live="polite" class="form-status" id="form-status" role="status"></div>
 </form>
 </aside>
-<section aria-labelledby="clarity-title" class="clarity-card">
+<section aria-labelledby="clarity-title" class="clarity-card" data-reveal>
 <div class="section-kicker">Pendant l’échange</div>
 <h2 id="clarity-title">Nous allons surtout clarifier ce qui peut réellement faire avancer votre projet.</h2>
 <div class="clarity-grid">
@@ -230,7 +236,7 @@
 </div>
 </section>
 </section>
-<section aria-label="À propos du consultant" class="credibility">
+<section aria-label="À propos du consultant" class="credibility" data-reveal>
 <div class="consultant">
 <img alt="Elboubakry Abdessamad" decoding="async" height="80" loading="lazy" src="../assets/images/elboubakry-growth-portrait.webp" width="80"/>
 <div>
@@ -245,7 +251,7 @@
 <div><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 20V10m6 10V4m6 16v-7m4 7H2"></path></svg><strong>Suivi mesurable</strong></div>
 </div>
 </section>
-<section aria-labelledby="process-title" class="process-section">
+<section aria-labelledby="process-title" class="process-section" data-reveal>
 <div class="process-heading">
 <p class="section-kicker">Comment ça se passe ?</p>
 <h2 id="process-title">Une démarche simple, claire et sans engagement.</h2>
@@ -256,7 +262,24 @@
 <article><span>3</span><h3>Nous fixons les priorités</h3><p>Nous identifions les points à travailler en premier selon votre situation.</p></article>
 </div>
 </section>
+<section aria-labelledby="faq-title" class="faq-section" data-reveal>
+<div class="faq-heading">
+<p class="section-kicker">Questions fréquentes</p>
+<h2 id="faq-title">Tout ce qu’il faut savoir avant de commencer.</h2>
+<p>Des réponses directes pour avancer en toute confiance.</p>
+</div>
+<div class="faq-list">
+<details open><summary>Le diagnostic marketing est-il vraiment gratuit ?</summary><p>Oui. Le diagnostic est gratuit et sans engagement. Il sert à clarifier votre situation et les priorités marketing les plus utiles pour votre projet.</p></details>
+<details><summary>Que va-t-on analyser pendant l’échange ?</summary><p>Selon votre contexte, l’échange peut couvrir votre offre, vos canaux d’acquisition, votre parcours de conversion, l’IA, l’automatisation et les indicateurs à suivre.</p></details>
+<details><summary>Mes informations sont-elles confidentielles ?</summary><p>Oui. Elles sont utilisées uniquement pour comprendre votre demande et vous recontacter. Elles ne sont ni vendues ni utilisées pour des envois non sollicités.</p></details>
+</div>
+</section>
+<section aria-labelledby="final-cta-title" class="final-cta" data-reveal>
+<div><span>Votre prochaine étape</span><h2 id="final-cta-title">Transformons vos questions en priorités claires.</h2><p>Partagez quatre informations et recevez un premier retour adapté à votre contexte.</p></div>
+<a class="primary-action primary-action-light" href="#diagnostic-card">Demander mon diagnostic <span aria-hidden="true">↗</span></a>
+</section>
 </main>
+<a class="mobile-form-cta" href="#diagnostic-card"><span>Diagnostic gratuit</span><strong>Commencer · 1 min</strong></a>
 <footer class="site-footer">
 <a class="footer-brand" href="/#homeonepage">
 <img alt="" decoding="async" height="34" loading="lazy" src="../assets/images/logo-e-blue.png" width="34"/>

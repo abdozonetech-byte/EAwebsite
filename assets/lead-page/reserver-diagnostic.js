@@ -5,6 +5,39 @@
   const form = document.getElementById('diagnostic-form');
   if (!form) return;
 
+  document.documentElement.classList.add('js-reveal');
+  const progress = document.querySelector('.page-progress');
+  const mobileCta = document.querySelector('.mobile-form-cta');
+  const revealItems = document.querySelectorAll('[data-reveal]');
+
+  const updateProgress = () => {
+    if (!progress) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+  };
+  updateProgress();
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    if (mobileCta) {
+      const formObserver = new IntersectionObserver(([entry]) => {
+        mobileCta.classList.toggle('is-hidden', entry.isIntersecting);
+      }, { threshold: 0.08 });
+      formObserver.observe(form);
+    }
+  } else {
+    revealItems.forEach((item) => item.classList.add('is-visible'));
+  }
+
   const submitButton = form.querySelector('.submit-button');
   const statusBox = document.getElementById('form-status');
   const startedAt = Date.now();

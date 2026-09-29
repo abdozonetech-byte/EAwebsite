@@ -39,6 +39,17 @@ body::before {
   background-size: 44px 44px;
   mask-image: linear-gradient(to bottom, #000 0%, transparent 72%);
 }
+.page-progress {
+  position: fixed;
+  z-index: 120;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), #6f8dff);
+  transform: scaleX(0);
+  transform-origin: left;
+}
 img { display: block; max-width: 100%; }
 a { color: inherit; }
 button, input, select { font: inherit; }
@@ -141,6 +152,26 @@ main { padding: 8px 34px 40px; }
   font-weight: 600;
   line-height: 1.75;
 }
+.hero-actions { display: flex; align-items: center; gap: 18px; margin-top: 24px; }
+.primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 15px;
+  color: #fff;
+  background: linear-gradient(135deg, #2f69ef, #1d55dc);
+  box-shadow: 0 16px 32px rgba(40,100,237,.24);
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.primary-action:hover { transform: translateY(-2px); box-shadow: 0 20px 38px rgba(40,100,237,.3); }
+.primary-action span { font-size: 18px; line-height: 1; }
+.hero-proof { color: #65728a; font-size: 12px; font-weight: 800; }
 .trust-pills {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
@@ -227,8 +258,9 @@ main { padding: 8px 34px 40px; }
   background: var(--surface);
   box-shadow: var(--shadow);
   backdrop-filter: blur(14px);
+  scroll-margin-top: 12px;
 }
-.form-heading { margin-bottom: 23px; }
+.form-heading { margin-bottom: 18px; }
 .form-badge {
   display: inline-flex;
   padding: 7px 10px;
@@ -247,7 +279,9 @@ main { padding: 8px 34px 40px; }
   letter-spacing: -0.035em;
 }
 .form-heading p { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.65; font-weight: 600; }
-#diagnostic-form { display: grid; gap: 14px; }
+.form-meta { display: flex; gap: 8px; margin-top: 13px; }
+.form-meta span { padding: 6px 9px; border: 1px solid #dbe7fb; border-radius: 999px; color: #53617a; background: #fbfdff; font-size: 10.5px; font-weight: 850; }
+#diagnostic-form { display: grid; gap: 12px; }
 .honeypot { position: absolute!important; width: 1px!important; height: 1px!important; opacity: 0!important; pointer-events: none!important; }
 .field { display: grid; gap: 7px; }
 .field label { font-size: 13px; font-weight: 850; }
@@ -267,7 +301,7 @@ main { padding: 8px 34px 40px; }
 }
 .control input, .control select {
   width: 100%;
-  min-height: 52px;
+  min-height: 49px;
   padding: 0 16px 0 48px;
   border: 1px solid #dce6f7;
   border-radius: 15px;
@@ -298,7 +332,9 @@ main { padding: 8px 34px 40px; }
   box-shadow: 0 0 0 4px rgba(40,100,237,.12);
 }
 .control input[aria-invalid="true"], .control select[aria-invalid="true"] { border-color: #e23a4b; box-shadow: 0 0 0 4px rgba(226,58,75,.08); }
-.field-error { min-height: 16px; margin: 0; color: #cf2f41; font-size: 11.5px; font-weight: 750; }
+.field-error { margin: 0; color: #cf2f41; font-size: 11.5px; font-weight: 750; }
+.field-error:empty { display: none; }
+.field-error:not(:empty) { min-height: 16px; }
 .privacy-note {
   display: flex;
   align-items: flex-start;
@@ -367,6 +403,44 @@ main { padding: 8px 34px 40px; }
 .process-grid h3 { margin: 18px 0 0; font-size: 17px; letter-spacing: -.02em; }
 .process-grid p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.65; font-weight: 600; }
 
+.faq-section {
+  display: grid;
+  grid-template-columns: minmax(260px,.75fr) minmax(0,1.25fr);
+  gap: 50px;
+  padding: 62px 0 76px;
+  border-top: 1px solid rgba(40,100,237,.12);
+}
+.faq-heading { max-width: 450px; }
+.faq-heading h2 { margin: 11px 0 0; font-size: clamp(2rem,4vw,3rem); line-height: 1.08; letter-spacing: -.04em; }
+.faq-heading > p:last-child { margin: 15px 0 0; color: var(--muted); font-size: 14px; line-height: 1.65; font-weight: 600; }
+.faq-list { display: grid; gap: 11px; }
+.faq-list details { border: 1px solid rgba(40,100,237,.13); border-radius: 18px; background: rgba(255,255,255,.86); box-shadow: var(--shadow-soft); overflow: hidden; }
+.faq-list summary { position: relative; padding: 20px 54px 20px 21px; cursor: pointer; font-size: 15px; font-weight: 900; list-style: none; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { position: absolute; top: 50%; right: 20px; content: "+"; color: var(--blue); font-size: 24px; font-weight: 500; transform: translateY(-52%); }
+.faq-list details[open] summary::after { content: "−"; }
+.faq-list details p { margin: 0; padding: 0 21px 20px; color: var(--muted); font-size: 13.5px; line-height: 1.7; font-weight: 600; }
+
+.final-cta { display: flex; align-items: center; justify-content: space-between; gap: 36px; margin-bottom: 46px; padding: 32px 36px; border-radius: 26px; color: #fff; background: linear-gradient(135deg,#0b1b3e,#164fcf); box-shadow: 0 26px 70px rgba(19,54,130,.22); }
+.final-cta span { color: #a9c2ff; font-size: 11px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
+.final-cta h2 { max-width: 680px; margin: 8px 0 0; font-size: clamp(1.75rem,3vw,2.5rem); line-height: 1.08; letter-spacing: -.035em; }
+.final-cta p { margin: 11px 0 0; color: #dbe6ff; font-size: 13.5px; line-height: 1.6; font-weight: 600; }
+.primary-action-light { flex: 0 0 auto; color: var(--blue-dark); background: #fff; box-shadow: none; }
+.mobile-form-cta { display: none; }
+
+.js-reveal [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+.js-reveal [data-reveal].is-visible { opacity: 1; transform: none; }
+
+@media (min-width: 1160px) {
+  #diagnostic-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #diagnostic-form .privacy-note,
+  #diagnostic-form .submit-button,
+  #diagnostic-form .response-time,
+  #diagnostic-form .form-status { grid-column: 1 / -1; }
+  .control input, .control select { padding-left: 43px; }
+  .control > svg { left: 14px; }
+}
+
 .site-footer {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -405,6 +479,8 @@ main { padding: 8px 34px 40px; }
   .trust-pills { grid-template-columns: repeat(3, minmax(0,1fr)); }
   .credibility { grid-template-columns: 1fr; }
   .process-grid { grid-template-columns: 1fr; }
+  .faq-section { grid-template-columns: 1fr; gap: 26px; }
+  .final-cta { align-items: flex-start; flex-direction: column; }
   .site-footer { grid-template-columns: 1fr; justify-items: center; text-align: center; }
   .footer-brand, .site-footer nav { justify-self: center; }
 }
@@ -418,6 +494,9 @@ main { padding: 8px 34px 40px; }
   .hero-heading { margin-top: 18px; }
   .hero-heading h1 { font-size: clamp(2.35rem, 12vw, 3.2rem); line-height: 1.02; }
   .hero-heading p { margin-top: 18px; font-size: 15px; line-height: 1.7; }
+  .hero-actions { align-items: stretch; flex-direction: column; gap: 11px; margin-top: 20px; }
+  .primary-action { width: 100%; }
+  .hero-proof { text-align: center; }
   .trust-pills { grid-template-columns: 1fr; }
   .clarity-card { padding: 20px; }
   .clarity-card > h2 { font-size: 19px; }
@@ -428,6 +507,32 @@ main { padding: 8px 34px 40px; }
   .expertise-list { grid-template-columns: 1fr; }
   .process-section { padding: 58px 0 42px; }
   .process-grid article { padding: 20px; }
+  .faq-section { padding: 50px 0 58px; }
+  .faq-list summary { padding-block: 18px; }
+  .final-cta { margin-bottom: 78px; padding: 26px 22px; }
+  .mobile-form-cta {
+    position: fixed;
+    z-index: 90;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,.24);
+    border-radius: 18px;
+    color: #fff;
+    background: rgba(10,24,56,.94);
+    box-shadow: 0 20px 45px rgba(7,17,38,.3);
+    backdrop-filter: blur(16px);
+    text-decoration: none;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .mobile-form-cta span { font-size: 11px; font-weight: 750; color: #bcd0ff; }
+  .mobile-form-cta strong { font-size: 13px; }
+  .mobile-form-cta.is-hidden { opacity: 0; transform: translateY(130%); pointer-events: none; }
   .site-footer { padding-inline: 16px; }
 }
 
