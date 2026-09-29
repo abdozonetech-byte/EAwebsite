@@ -89,6 +89,9 @@
   text-decoration: none;
   transition: color .25s ease;
 }
+.ea-shell-nav a.ea-nav-icon-link { display: inline-flex; align-items: center; gap: 7px; }
+.ea-nav-icon-link i { color: var(--ea-shell-blue); font-size: 17px; font-weight: 400; line-height: 1; transition: transform .22s ease; }
+.ea-nav-icon-link:hover i { transform: translateY(-1px) scale(1.06); }
 .ea-shell-nav a::after {
   position: absolute;
   right: 0;
