@@ -117,6 +117,13 @@ const expectedNoindexFiles = new Set([
   'politique-cookies.html',
   'merci/index.html',
 ]);
+const primaryNavigationFiles = new Set([
+  'index.html',
+  'projets/index.html',
+  'services/index.html',
+  'about-elboubakry-abdessamad.html',
+  'insights/index.html',
+]);
 
 for (const file of htmlFiles) {
   const relativeFile = path.relative(root, file).split(path.sep).join('/');
@@ -184,6 +191,21 @@ for (const file of htmlFiles) {
     }
     if (h1Count !== 1) report(relativeFile, `expected 1 <h1>, found ${h1Count}`);
     if (h1Count === 1 && !h1Text) report(relativeFile, 'H1 must not be empty');
+
+    const isInsightArticle = /^insights\/(?!index\.html$).+\.html$/.test(relativeFile);
+    if (primaryNavigationFiles.has(relativeFile) || isInsightArticle) {
+      const navIconCount = tags(html, 'svg').filter((tag) =>
+        (attribute(tag, 'class') || '').split(/\s+/).includes('ea-nav-icon'),
+      ).length;
+      if (navIconCount !== 6) {
+        report(relativeFile, `primary navigation must contain 6 self-contained SVG icons, found ${navIconCount}`);
+      }
+    }
+    if (isInsightArticle) {
+      if (!html.includes('data-shell-header')) report(relativeFile, 'insight article is missing the global header');
+      if (!html.includes('class="ea-shell-footer"')) report(relativeFile, 'insight article is missing the global footer');
+      if (!html.includes('id="main-content"')) report(relativeFile, 'insight article is missing the main-content landmark');
+    }
   }
 
   for (const canonical of canonicals) {

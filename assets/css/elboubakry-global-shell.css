@@ -55,6 +55,8 @@
   box-shadow: 0 14px 36px rgba(16,23,47,.08);
 }
 
+.ea-shell-header + main .ea-article-hero { padding-top: clamp(72px, 8vw, 108px); }
+
 .ea-shell-inner {
   display: grid;
   width: var(--ea-shell-container);
