@@ -55,6 +55,19 @@ const existingFiles = new Set(
   files.map((file) => path.relative(root, file).split(path.sep).join('/')),
 );
 
+const remixIconCssFile = 'assets/css/vendor/remixicon.css';
+const remixIconFontFile = 'assets/fonts/remixicon.woff2';
+const remixIconCss = fs.readFileSync(path.join(root, remixIconCssFile), 'utf8');
+if (!existingFiles.has(remixIconFontFile)) {
+  report(remixIconCssFile, `missing locally hosted icon font: ${remixIconFontFile}`);
+}
+if (!remixIconCss.includes('url("../../fonts/remixicon.woff2")')) {
+  report(remixIconCssFile, 'must load the local Remix Icon font');
+}
+if (/url\(["']?https?:\/\//i.test(remixIconCss)) {
+  report(remixIconCssFile, 'must not depend on an external icon-font URL');
+}
+
 const redirectFile = path.join(root, '_redirects');
 const redirectRules = fs.readFileSync(redirectFile, 'utf8')
   .split(/\r?\n/)
