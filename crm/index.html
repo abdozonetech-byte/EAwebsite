@@ -10,20 +10,31 @@
   <link rel="stylesheet" href="/crm/assets/crm.css">
 </head>
 <body>
+  <a class="skip-link" href="#appContent">Skip to CRM content</a>
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="icon-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+    <symbol id="icon-leads" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.36a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.63h.01A1.7 1.7 0 0 0 10 3.08V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.64a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.37 9v.01A1.7 1.7 0 0 0 20.92 10H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  </svg>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand"><span class="brand-mark">E.</span><div><strong>Elboubakry.</strong><small>LEADS CRM</small></div></div>
-      <nav class="nav" aria-label="CRM navigation"><div class="nav-label" data-i18n="workspace">WORKSPACE</div><button data-view="dashboard"><i>D</i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i>L</i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i>A</i><span data-i18n="appointments">Appointments</span></button><button data-view="calendar"><i>C</i><span data-i18n="calendar">Calendar</span></button><button data-view="settings"><i>S</i><span data-i18n="settings">Settings</span></button></nav>
-      <div class="profile"><div class="profile-row"><span class="avatar">EA</span><div><strong>Elboubakry Abdessamad</strong><small data-i18n="administrator">Administrator</small></div></div><button class="logout" id="logoutButton" type="button">&larr; <span data-i18n="logout">Log out</span></button></div>
+      <nav class="nav" aria-label="CRM navigation"><div class="nav-label" data-i18n="workspace">WORKSPACE</div><button data-view="dashboard"><i><svg><use href="#icon-dashboard"/></svg></i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i><svg><use href="#icon-leads"/></svg></i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i><svg><use href="#icon-calendar"/></svg></i><span data-i18n="appointments">Appointments</span></button><button data-view="settings"><i><svg><use href="#icon-settings"/></svg></i><span data-i18n="settings">Settings</span></button></nav>
+      <div class="profile"><div class="profile-row"><span class="avatar">EA</span><div><strong>Elboubakry Abdessamad</strong><small data-i18n="administrator">Administrator</small></div></div><button class="logout" id="logoutButton" type="button"><svg><use href="#icon-logout"/></svg><span data-i18n="logout">Log out</span></button></div>
     </aside>
 
     <main class="main">
-      <header class="topbar"><label class="global-search"><span aria-hidden="true">Q</span><input id="globalSearch" data-i18n-placeholder="search" placeholder="Search leads, companies, cities..." autocomplete="off"></label><div class="top-actions"><span class="mode-pill"><span class="live-dot"></span><span data-i18n="realData">Live Supabase data</span></span><div class="language-switch" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button></div><span class="avatar">EA</span></div></header>
+      <header class="topbar"><label class="global-search"><span aria-hidden="true"><svg><use href="#icon-search"/></svg></span><input id="globalSearch" data-i18n-placeholder="search" placeholder="Search leads, companies, cities..." autocomplete="off"></label><div class="top-actions"><span class="mode-pill"><span class="live-dot"></span><span data-i18n="realData">Live Supabase data</span></span><div class="language-switch" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button></div><span class="avatar">EA</span></div></header>
       <div class="content" id="appContent" tabindex="-1"></div>
     </main>
   </div>
 
-  <nav class="mobile-nav" aria-label="Mobile CRM navigation"><button data-view="dashboard"><i>D</i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i>L</i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i>A</i><span data-i18n="appointments">Appointments</span></button><button data-view="calendar"><i>C</i><span data-i18n="calendar">Calendar</span></button><button data-view="settings"><i>S</i><span data-i18n="settings">Settings</span></button></nav>
+  <nav class="mobile-nav" aria-label="Mobile CRM navigation"><button data-view="dashboard"><i><svg><use href="#icon-dashboard"/></svg></i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i><svg><use href="#icon-leads"/></svg></i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i><svg><use href="#icon-calendar"/></svg></i><span data-i18n="appointments">Appointments</span></button><button data-view="settings"><i><svg><use href="#icon-settings"/></svg></i><span data-i18n="settings">Settings</span></button></nav>
 
   <button class="backdrop" id="drawerBackdrop" type="button" aria-label="Close lead details" aria-hidden="true" tabindex="-1"></button>
   <aside class="drawer" id="leadDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true"></aside>
