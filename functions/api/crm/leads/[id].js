@@ -23,12 +23,22 @@ async function patchLead(context) {
   return json({ ok: true, lead: mapLead(rows[0]) });
 }
 
+async function deleteLead(context) {
+  await supabaseFetch(context.env, "leads", {
+    method: "DELETE",
+    search: { id: `eq.${context.params.id}` },
+    headers: { Prefer: "return=minimal" },
+  });
+  return json({ ok: true });
+}
+
 export async function onRequest(context) {
-  const guard = await requireCrmApi(context, ["GET", "PATCH"]);
+  const guard = await requireCrmApi(context, ["GET", "PATCH", "DELETE"]);
   if (guard) return guard;
   try {
     if (context.request.method === "GET") return getLeadDetails(context);
-    return patchLead(context);
+    if (context.request.method === "PATCH") return patchLead(context);
+    return deleteLead(context);
   } catch (error) {
     return supabaseErrorResponse(error);
   }
