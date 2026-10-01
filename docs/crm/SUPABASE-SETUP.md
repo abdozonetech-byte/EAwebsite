@@ -35,3 +35,9 @@ Keep the existing CRM authentication secrets configured in Cloudflare:
 The browser CRM calls authenticated `/api/crm/*` endpoints only. Cloudflare Pages Functions read `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` from `context.env` and call Supabase REST from the server side.
 
 The Supabase tables have row level security enabled and no public anon policies. The browser must not connect directly to Supabase for CRM data.
+
+## Website lead flow
+
+The diagnostic form posts to the same-origin `/api/leads` Pages Function. The function validates the request, rejects invalid or cross-site submissions, deduplicates recent phone submissions, and writes to `public.leads` with the server-only service-role key.
+
+The public browser never receives the Supabase URL or service-role key.

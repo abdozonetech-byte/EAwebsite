@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbw83pfpcjAKSgY3wLAzU9QJufvHwdK-Aj-ohZUZsyB8PnRBt_qJrNWYb8WwpJftOqeJ/exec';
+  const ENDPOINT = '/api/leads';
   const form = document.getElementById('diagnostic-form');
   if (!form) return;
 
@@ -127,72 +127,22 @@
     return data;
   };
 
-  const submitWithIframe = (payload) => new Promise((resolve, reject) => {
-    const frameName = `lead-submit-${Date.now()}`;
-    const iframe = document.createElement('iframe');
-    iframe.name = frameName;
-    iframe.title = 'Lead form submission';
-    iframe.hidden = true;
-
-    const fallbackForm = document.createElement('form');
-    fallbackForm.method = 'POST';
-    fallbackForm.action = ENDPOINT;
-    fallbackForm.target = frameName;
-    fallbackForm.hidden = true;
-
-    Object.entries(payload).forEach(([key, value]) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = value == null ? '' : String(value);
-      fallbackForm.appendChild(input);
-    });
-
-    let completed = false;
-    const finish = () => {
-      if (completed) return;
-      completed = true;
-      window.setTimeout(() => {
-        fallbackForm.remove();
-        iframe.remove();
-      }, 1200);
-      resolve();
-    };
-
-    iframe.addEventListener('load', () => {
-      try {
-        if (iframe.contentWindow.location.href === 'about:blank') return;
-      } catch (error) {
-        // Cross-origin access means the iframe navigated away from the initial blank page.
-      }
-      window.setTimeout(finish, 400);
-    });
-    document.body.append(iframe, fallbackForm);
-    fallbackForm.submit();
-    window.setTimeout(() => {
-      if (completed) return;
-      completed = true;
-      fallbackForm.remove();
-      iframe.remove();
-      reject(new Error('Lead submission fallback timed out.'));
-    }, 5000);
-  });
-
   const sendLead = async (payload) => {
-    const params = new URLSearchParams(payload);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
     try {
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 6500);
-      await fetch(ENDPOINT, {
+      const response = await fetch(ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors',
-        body: params,
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
         signal: controller.signal
       });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.ok === false) throw new Error(result.message || 'Lead submission failed.');
+      return result;
+    } finally {
       window.clearTimeout(timeout);
-    } catch (error) {
-      console.warn('Fetch submission failed; using form fallback.', error);
-      await submitWithIframe(payload);
     }
   };
 
@@ -239,20 +189,17 @@
       email: data.email,
       businessSector: data.sector,
       message: '',
-      website: '',
-      source: tracking.source,
-      status: 'New',
-      priority: 'Medium',
-      utm_source: tracking.utm_source,
-      utm_medium: tracking.utm_medium,
-      utm_campaign: tracking.utm_campaign,
-      utm_content: tracking.utm_content,
-      utm_term: tracking.utm_term,
+      contactUrlCheck: form.elements.contact_url_check.value,
+      acquisitionSource: tracking.source,
+      utmSource: tracking.utm_source,
+      utmMedium: tracking.utm_medium,
+      utmCampaign: tracking.utm_campaign,
+      utmContent: tracking.utm_content,
+      utmTerm: tracking.utm_term,
       fbclid: tracking.fbclid,
       gclid: tracking.gclid,
       referrer: tracking.referrer,
-      landingPageUrl: tracking.landingPageUrl,
-      adClickId: tracking.gclid || tracking.fbclid
+      landingPageUrl: tracking.landingPageUrl
     };
 
     const originalLabel = submitButton.querySelector('span').textContent;

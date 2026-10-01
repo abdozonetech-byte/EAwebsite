@@ -2,7 +2,8 @@
   "version": 1,
   "include": [
     "/crm/*",
-    "/api/crm/*"
+    "/api/crm/*",
+    "/api/leads"
   ],
   "exclude": []
 }
