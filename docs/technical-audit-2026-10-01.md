@@ -60,6 +60,25 @@ This removes one render-blocking request and approximately 18.8 KB of compressed
 
 Deployment status: not pushed.
 
+## Search Console follow-up — 7 October 2026
+
+The Page indexing report was reviewed after its 4 October update.
+
+- The submitted sitemap is healthy: `sitemap.xml` was read successfully on 5 October and reports 36 discovered pages.
+- Search Console reports 36 indexed pages.
+- The four high-value URLs listed in the historical 404 examples now return permanent redirects and finish on live HTTP 200 guides:
+  - `/services/generation-leads-maroc/`
+  - `/services/landing-page-lead-generation-maroc/`
+  - `/services/automatisation-marketing-ia-maroc/`
+  - `/assistant-ia-maroc/`
+- The remaining asset 404 examples are retired JavaScript and CSS files crawled in August. They are no longer referenced by the repository, and current assets already carry `X-Robots-Tag: noindex`; restoring obsolete runtime files would add risk without SEO value.
+- Privacy, legal, cookie-policy and thank-you URLs are intentionally excluded with `noindex`.
+- HTTPS reports no issues, Breadcrumb structured data reports five valid items and no invalid items, and Search Console reports no manual actions or security issues.
+- The Meta Ads cost guide appeared in the historical “Crawled - currently not indexed” examples. A new contextual internal link from the closely related qualified-leads guide now strengthens discovery and topical relevance.
+- ProfilePage structured data now has a stable entity ID, an explicit connection to the WebSite entity, an explicit main-entity relationship and a primary image with intrinsic dimensions.
+
+The sitemap modification dates were updated only for pages materially changed in this follow-up. Search Console validation and recrawling can take days or weeks; historical examples should not be treated as current live failures when the URLs now redirect successfully.
+
 ## Automated validation
 
 The repository audit passed with:
