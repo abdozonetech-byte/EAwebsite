@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import { ANALYSIS_STATUSES, normalizeAnalysisItem, normalizeEvidence, normalizeScore, toAnalysisRecord } from "../functions/_lib/lead-intelligence.js";
 import { TOOLS, TOOL_SCOPES } from "../functions/_lib/mcp-tools.js";
 import { onRequest as mcpRequest } from "../functions/mcp.js";
+import { onRequest as oauthMetadataRequest } from "../functions/.well-known/oauth-authorization-server.js";
+import { onRequest as registerRequest } from "../functions/oauth/register.js";
 
 const leadId = "123e4567-e89b-42d3-a456-426614174000";
 const valid = normalizeAnalysisItem({
@@ -63,8 +65,21 @@ const unauthorized = await mcpRequest({ request: new Request("https://elboubakry
 assert.equal(unauthorized.status, 401);
 assert.match(unauthorized.headers.get("WWW-Authenticate"), /oauth-protected-resource/);
 
+const oauthMetadata = await oauthMetadataRequest({ request: new Request("https://elboubakry.com/.well-known/oauth-authorization-server"), env: {} });
+assert.equal((await oauthMetadata.json()).registration_endpoint, "https://elboubakry.com/oauth/register");
+
+const rejectedRegistration = await registerRequest({
+  request: new Request("https://elboubakry.com/oauth/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ redirect_uris: ["https://attacker.example/callback"] }) }),
+  env: {},
+});
+assert.equal(rejectedRegistration.status, 400);
+assert.equal((await rejectedRegistration.json()).error, "invalid_redirect_uri");
+
 const migration003 = await readFile(new URL("../supabase/migrations/003_chatgpt_mcp_lead_intelligence.sql", import.meta.url), "utf8");
 assert.match(migration003, /drop view if exists public\.lead_intelligence_overview;/i);
 assert.match(migration003, /create view public\.lead_intelligence_overview/i);
+
+const migration004 = await readFile(new URL("../supabase/migrations/004_mcp_dynamic_client_registration.sql", import.meta.url), "utf8");
+assert.match(migration004, /create table if not exists public\.mcp_oauth_clients/i);
 
 console.log("CRM intelligence and MCP contract tests passed.");

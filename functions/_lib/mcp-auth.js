@@ -37,6 +37,32 @@ function configuredClient(env) {
   return { clientId, clientSecret, redirectUris };
 }
 
+async function resolveClient(env, clientId) {
+  const requestedId = String(clientId || "").trim();
+  if (!requestedId) return null;
+
+  try {
+    const configured = configuredClient(env);
+    if (await safeEqual(requestedId, configured.clientId)) {
+      return { ...configured, tokenEndpointAuthMethod: configured.clientSecret ? "client_secret_basic" : "none", clientName: "ChatGPT" };
+    }
+  } catch {
+    // A dynamically registered public client does not require static env vars.
+  }
+
+  const rows = await supabaseFetch(env, "mcp_oauth_clients", {
+    search: { select: "client_id,redirect_uris,token_endpoint_auth_method,client_name", client_id: `eq.${requestedId}`, limit: "1" },
+  });
+  if (!rows.length) return null;
+  return {
+    clientId: rows[0].client_id,
+    clientSecret: "",
+    redirectUris: Array.isArray(rows[0].redirect_uris) ? rows[0].redirect_uris : [],
+    tokenEndpointAuthMethod: rows[0].token_endpoint_auth_method || "none",
+    clientName: rows[0].client_name || "ChatGPT",
+  };
+}
+
 function parseClientCredentials(request, form) {
   let clientId = String(form.get("client_id") || "");
   let clientSecret = String(form.get("client_secret") || "");
@@ -57,10 +83,13 @@ function parseClientCredentials(request, form) {
 }
 
 async function validClientCredentials(request, form, env) {
-  const configured = configuredClient(env);
   const provided = parseClientCredentials(request, form);
+  const configured = await resolveClient(env, provided.clientId);
+  if (!configured) return { ok: false, clientId: provided.clientId, configured: null };
   const idOk = await safeEqual(provided.clientId, configured.clientId);
-  const secretOk = configured.clientSecret ? await safeEqual(provided.clientSecret, configured.clientSecret) : true;
+  const secretOk = configured.tokenEndpointAuthMethod === "none"
+    ? !provided.clientSecret
+    : Boolean(configured.clientSecret) && await safeEqual(provided.clientSecret, configured.clientSecret);
   return { ok: idOk && secretOk, clientId: provided.clientId, configured };
 }
 
@@ -100,6 +129,7 @@ export {
   issueTokens,
   parseScopes,
   randomToken,
+  resolveClient,
   sha256Base64Url,
   sha256Hex,
   validClientCredentials,
