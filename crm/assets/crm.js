@@ -2,7 +2,7 @@
   "use strict";
 
   const LANG_KEY = "elboubakry-crm-language";
-  const VALID_VIEWS = new Set(["dashboard", "leads", "appointments", "settings"]);
+  const VALID_VIEWS = new Set(["dashboard", "leads", "intelligence", "appointments", "settings"]);
   const STATUS_ORDER = ["new", "contacted", "follow_up", "appointment", "no_show", "won", "not_interested"];
   const PRIORITIES = ["low", "medium", "high"];
   const SECTORS = [
@@ -42,7 +42,7 @@
 
   const strings = {
     en: {
-      workspace: "WORKSPACE", dashboard: "Dashboard", leads: "Leads", appointments: "Appointments", calendar: "Calendar", settings: "Settings", administrator: "Administrator", logout: "Log out", search: "Search leads, companies, cities...", realData: "Live Supabase data",
+      workspace: "WORKSPACE", dashboard: "Dashboard", leads: "Leads", intelligence: "Codex to ChatGPT", appointments: "Appointments", calendar: "Calendar", settings: "Settings", administrator: "Administrator", logout: "Log out", search: "Search leads, companies, cities...", realData: "Live Supabase data",
       commandCenter: "LEAD COMMAND CENTER", greeting: "Good afternoon, Abdessamad.", dashboardSubtitle: "Here is what needs attention across your client pipeline.", newLead: "+ New lead",
       totalLeads: "Total leads", totalHelp: "All received leads", new: "New", newHelp: "Requests to qualify", contacted: "Contacted", contactedHelp: "Clients contacted", followUp: "Follow up", followUpHelp: "Follow-ups to plan", appointment: "Appointment", appointmentHelp: "Lead has an appointment", noShow: "No-show", noShowHelp: "Missed appointments", won: "Won clients", wonHelp: "Final conversions", notInterested: "Not interested", notInterestedHelp: "Closed as not interested", today: "Today", todayHelp: "Appointments today",
       priorities: "PRIORITIES", handleNow: "Handle now", newToQualify: "New lead to qualify", followUpAction: "Follow-up due", highPriority: "High-priority opportunity", agenda: "AGENDA", upcomingAppointments: "Upcoming appointments", schedule: "+ Schedule", recent: "RECENT ACTIVITY", latestLeads: "Latest website leads", viewAll: "View all", noPriorityLeads: "No priority leads yet", noPriorityLeadsText: "New and follow-up leads will appear here when they need attention.",
@@ -59,7 +59,7 @@
       low: "Low", medium: "Medium", high: "High",
     },
     fr: {
-      workspace: "ESPACE DE TRAVAIL", dashboard: "Tableau de bord", leads: "Leads", appointments: "Rendez-vous", calendar: "Calendrier", settings: "Paramètres", administrator: "Administrateur", logout: "Déconnexion", search: "Rechercher leads, entreprises, villes...", realData: "Données Supabase en direct",
+      workspace: "ESPACE DE TRAVAIL", dashboard: "Tableau de bord", leads: "Leads", intelligence: "Codex vers ChatGPT", appointments: "Rendez-vous", calendar: "Calendrier", settings: "Paramètres", administrator: "Administrateur", logout: "Déconnexion", search: "Rechercher leads, entreprises, villes...", realData: "Données Supabase en direct",
       commandCenter: "CENTRE DE PILOTAGE LEADS", greeting: "Bonjour, Abdessamad.", dashboardSubtitle: "Voici ce qui demande votre attention dans le pipeline clients.", newLead: "+ Nouveau lead",
       totalLeads: "Total leads", totalHelp: "Tous les leads reçus", new: "Nouveaux", newHelp: "Demandes à qualifier", contacted: "Contactés", contactedHelp: "Clients contactés", followUp: "À relancer", followUpHelp: "Relances à planifier", appointment: "Rendez-vous", appointmentHelp: "Lead avec rendez-vous", noShow: "No-show", noShowHelp: "Rendez-vous manqués", won: "Clients finaux", wonHelp: "Conversions finales", notInterested: "Non intéressés", notInterestedHelp: "Clôturés comme non intéressés", today: "Aujourd'hui", todayHelp: "Rendez-vous aujourd'hui",
       priorities: "PRIORITÉS", handleNow: "À traiter maintenant", newToQualify: "Nouveau lead à qualifier", followUpAction: "Relance à effectuer", highPriority: "Opportunité prioritaire", agenda: "AGENDA", upcomingAppointments: "Prochains rendez-vous", schedule: "+ Planifier", recent: "ACTIVITÉ RÉCENTE", latestLeads: "Derniers leads du site", viewAll: "Voir tout", noPriorityLeads: "Aucun lead prioritaire", noPriorityLeadsText: "Les nouveaux leads et relances apparaîtront ici lorsqu'une action sera nécessaire.",
@@ -78,7 +78,8 @@
   };
 
   let locale = localStorage.getItem(LANG_KEY) === "fr" ? "fr" : "en";
-  let currentView = location.hash.slice(1) === "calendar" ? "appointments" : (VALID_VIEWS.has(location.hash.slice(1)) ? location.hash.slice(1) : "dashboard");
+  const initialHashView = location.hash.slice(1).split("/")[0];
+  let currentView = initialHashView === "calendar" ? "appointments" : (VALID_VIEWS.has(initialHashView) ? initialHashView : "dashboard");
   let currentCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   let filters = { query: "", status: "all", sector: "all", source: "all" };
   let state = { loading: true, error: "", dashboard: null, leads: [], appointments: [], databaseStatus: "checking", leadDetails: new Map() };
@@ -189,6 +190,7 @@
       if (currentView === "dashboard") await refreshDashboard();
       else if (currentView === "leads") await refreshLeads();
       else if (currentView === "appointments" || currentView === "calendar") await refreshAppointments();
+      else if (currentView === "intelligence") await window.CrmIntelligence?.refresh();
       render();
     } catch (error) {
       showToast(error.message || t("loadError"));
@@ -309,7 +311,8 @@
     document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => { element.placeholder = t(element.dataset.i18nPlaceholder); });
     if (currentView !== "leads") globalSearch.value = "";
     else globalSearch.value = filters.query;
-    content.innerHTML = currentView === "dashboard" ? renderDashboard() : currentView === "leads" ? renderLeads() : currentView === "appointments" ? renderAppointments() : renderSettings();
+    content.innerHTML = currentView === "dashboard" ? renderDashboard() : currentView === "leads" ? renderLeads() : currentView === "intelligence" ? window.CrmIntelligence.render({ locale }) : currentView === "appointments" ? renderAppointments() : renderSettings();
+    if (currentView === "intelligence") window.CrmIntelligence.mount({ locale });
     document.title = `${t(currentView)} | Elboubakry Leads CRM`;
   }
 
@@ -633,7 +636,7 @@
     searchTimer = setTimeout(() => refreshLeads().then(render).catch((error) => showToast(error.message || t("loadError"))), 250);
   });
   document.getElementById("logoutButton").addEventListener("click", async () => { try { await fetch("/api/crm/logout", { method: "POST", credentials: "same-origin", headers: { Accept: "application/json" } }); } catch { showToast(t("logoutFailed")); } finally { location.assign("/crm/login/"); } });
-  window.addEventListener("hashchange", () => { const hash = location.hash.slice(1); const next = hash === "calendar" ? "appointments" : hash; if (VALID_VIEWS.has(next) && next !== currentView) { currentView = next; render(); if (next === "settings") refreshHealth(); } });
+  window.addEventListener("hashchange", () => { const hash = location.hash.slice(1).split("/")[0]; const next = hash === "calendar" ? "appointments" : hash; if (VALID_VIEWS.has(next) && next !== currentView) { currentView = next; render(); if (next === "settings") refreshHealth(); } else if (next === "intelligence") { window.CrmIntelligence?.mount({ locale }); } });
   function trapDialogFocus(event, container) {
     if (event.key !== "Tab" || !container) return;
     const focusable = [...container.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter((element) => element.offsetParent !== null);

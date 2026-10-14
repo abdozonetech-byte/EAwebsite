@@ -82,9 +82,46 @@ async function supabaseFetchAll(env, path, options = {}, pageSize = 1000, maxRow
   return rows;
 }
 
+async function supabaseFetchPage(env, path, options = {}, offset = 0, limit = 25) {
+  const { url, key } = getSupabaseConfig(env);
+  const endpoint = new URL(`${url}/rest/v1/${path.replace(/^\/+/, "")}`);
+  if (options.search) {
+    for (const [name, value] of Object.entries(options.search)) {
+      if (value !== undefined && value !== null && value !== "") endpoint.searchParams.set(name, String(value));
+    }
+  }
+  const safeOffset = Math.max(0, Math.floor(Number(offset) || 0));
+  const safeLimit = Math.max(1, Math.min(100, Math.floor(Number(limit) || 25)));
+  let response;
+  try {
+    response = await fetch(endpoint.toString(), {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        Prefer: "count=exact",
+        Range: `${safeOffset}-${safeOffset + safeLimit - 1}`,
+        ...(options.headers || {}),
+      },
+    });
+  } catch {
+    throw new SupabaseError(UNAVAILABLE_MESSAGE, 503);
+  }
+  const data = await parseResponse(response);
+  if (!response.ok) {
+    const status = response.status >= 500 ? 503 : response.status;
+    throw new SupabaseError(status === 503 ? UNAVAILABLE_MESSAGE : "Invalid CRM database request.", status);
+  }
+  const range = response.headers.get("Content-Range") || "";
+  const totalPart = range.split("/")[1];
+  const total = totalPart && totalPart !== "*" ? Number(totalPart) : Array.isArray(data) ? data.length : 0;
+  return { rows: Array.isArray(data) ? data : [], total: Number.isFinite(total) ? total : 0 };
+}
+
 function supabaseErrorResponse(error) {
   if (error instanceof SupabaseError) return json({ ok: false, message: error.message }, error.status);
   return json({ ok: false, message: UNAVAILABLE_MESSAGE }, 503);
 }
 
-export { CONFIG_MESSAGE, SupabaseError, supabaseErrorResponse, supabaseFetch, supabaseFetchAll };
+export { CONFIG_MESSAGE, SupabaseError, supabaseErrorResponse, supabaseFetch, supabaseFetchAll, supabaseFetchPage };

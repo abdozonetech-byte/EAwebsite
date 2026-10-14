@@ -8,6 +8,7 @@
   <title>Elboubakry Leads CRM</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/crm/assets/crm.css">
+  <link rel="stylesheet" href="/crm/assets/crm-intelligence.css">
 </head>
 <body>
   <a class="skip-link" href="#appContent">Skip to CRM content</a>
@@ -26,11 +27,12 @@
     <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M4 19v1h16v-1"/></symbol>
     <symbol id="icon-file" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6zM14 2v5h5M9 12h6M9 16h6"/></symbol>
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="icon-ai" viewBox="0 0 24 24"><path d="M12 3a4 4 0 0 0-4 4v1a4 4 0 0 0-3 3.87A4 4 0 0 0 8 15.74V17a4 4 0 0 0 8 0v-1.26a4 4 0 0 0 3-3.87A4 4 0 0 0 16 8V7a4 4 0 0 0-4-4Z"/><path d="M9 10h6M12 7v10M8 14h8"/></symbol>
   </svg>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand"><span class="brand-mark">E.</span><div><strong>Elboubakry.</strong><small>LEADS CRM</small></div></div>
-      <nav class="nav" aria-label="CRM navigation"><div class="nav-label" data-i18n="workspace">WORKSPACE</div><button data-view="dashboard"><i><svg><use href="#icon-dashboard"/></svg></i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i><svg><use href="#icon-leads"/></svg></i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i><svg><use href="#icon-calendar"/></svg></i><span data-i18n="appointments">Appointments</span></button><button data-view="settings"><i><svg><use href="#icon-settings"/></svg></i><span data-i18n="settings">Settings</span></button></nav>
+      <nav class="nav" aria-label="CRM navigation"><div class="nav-label" data-i18n="workspace">WORKSPACE</div><button data-view="dashboard"><i><svg><use href="#icon-dashboard"/></svg></i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i><svg><use href="#icon-leads"/></svg></i><span data-i18n="leads">Leads</span></button><button data-view="intelligence"><i><svg><use href="#icon-ai"/></svg></i><span data-i18n="intelligence">Codex to ChatGPT</span></button><button data-view="appointments"><i><svg><use href="#icon-calendar"/></svg></i><span data-i18n="appointments">Appointments</span></button><button data-view="settings"><i><svg><use href="#icon-settings"/></svg></i><span data-i18n="settings">Settings</span></button></nav>
       <div class="profile"><div class="profile-row"><span class="avatar">EA</span><div><strong>Elboubakry Abdessamad</strong><small data-i18n="administrator">Administrator</small></div></div><button class="logout" id="logoutButton" type="button"><svg><use href="#icon-logout"/></svg><span data-i18n="logout">Log out</span></button></div>
     </aside>
 
@@ -40,7 +42,7 @@
     </main>
   </div>
 
-  <nav class="mobile-nav" aria-label="Mobile CRM navigation"><button data-view="dashboard"><i><svg><use href="#icon-dashboard"/></svg></i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i><svg><use href="#icon-leads"/></svg></i><span data-i18n="leads">Leads</span></button><button data-view="appointments"><i><svg><use href="#icon-calendar"/></svg></i><span data-i18n="appointments">Appointments</span></button><button data-view="settings"><i><svg><use href="#icon-settings"/></svg></i><span data-i18n="settings">Settings</span></button></nav>
+  <nav class="mobile-nav" aria-label="Mobile CRM navigation"><button data-view="dashboard"><i><svg><use href="#icon-dashboard"/></svg></i><span data-i18n="dashboard">Dashboard</span></button><button data-view="leads"><i><svg><use href="#icon-leads"/></svg></i><span data-i18n="leads">Leads</span></button><button data-view="intelligence"><i><svg><use href="#icon-ai"/></svg></i><span data-i18n="intelligence">AI</span></button><button data-view="appointments"><i><svg><use href="#icon-calendar"/></svg></i><span data-i18n="appointments">Appointments</span></button><button data-view="settings"><i><svg><use href="#icon-settings"/></svg></i><span data-i18n="settings">Settings</span></button></nav>
 
   <button class="backdrop" id="drawerBackdrop" type="button" aria-label="Close lead details" aria-hidden="true" tabindex="-1"></button>
   <aside class="drawer" id="leadDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true"></aside>
@@ -48,6 +50,7 @@
   <section class="modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true"></section>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="/crm/assets/crm-data-transfer.js" defer></script>
+  <script src="/crm/assets/crm-intelligence.js" defer></script>
   <script src="/crm/assets/crm.js" defer></script>
 </body>
 </html>

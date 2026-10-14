@@ -1,6 +1,7 @@
 import { LEAD_STATUSES, cleanString, leadInsertPayload, mapLead, requireCrmApi } from "../../_lib/crm-api.js";
 import { json, readJsonBody } from "../../_lib/http.js";
 import { supabaseErrorResponse, supabaseFetch, supabaseFetchAll } from "../../_lib/supabase.js";
+import { scheduleLeadWhatsAppNotification } from "../../_lib/whatsapp.js";
 
 function searchTerm(value) {
   return cleanString(value, 120)?.replace(/[*,()]/g, " ").replace(/\s+/g, " ") || "";
@@ -30,7 +31,9 @@ async function postLead(context) {
   const payload = leadInsertPayload(parsed.body);
   if (payload.error) return json({ ok: false, message: payload.error }, 400);
   const rows = await supabaseFetch(context.env, "leads", { method: "POST", body: payload.data });
-  return json({ ok: true, lead: mapLead(rows[0]) }, 201);
+  const lead = mapLead(rows[0]);
+  scheduleLeadWhatsAppNotification(context, lead || payload.data);
+  return json({ ok: true, lead }, 201);
 }
 
 export async function onRequest(context) {

@@ -1,6 +1,7 @@
 import { cleanString } from "../_lib/crm-api.js";
 import { json, readJsonBody } from "../_lib/http.js";
 import { supabaseErrorResponse, supabaseFetch } from "../_lib/supabase.js";
+import { scheduleLeadWhatsAppNotification } from "../_lib/whatsapp.js";
 
 const SECTORS = new Set([
   "Santé / Cabinet médical",
@@ -100,7 +101,8 @@ export async function onRequest(context) {
     });
     if (duplicates.length) return json({ ok: true, duplicate: true }, 200);
 
-    await supabaseFetch(context.env, "leads", { method: "POST", body: payload.data });
+    const rows = await supabaseFetch(context.env, "leads", { method: "POST", body: payload.data });
+    scheduleLeadWhatsAppNotification(context, rows?.[0] || payload.data);
     return json({ ok: true }, 201);
   } catch (error) {
     return supabaseErrorResponse(error);

@@ -3,7 +3,10 @@
   "include": [
     "/crm/*",
     "/api/crm/*",
-    "/api/leads"
+    "/api/leads",
+    "/mcp",
+    "/oauth/*",
+    "/.well-known/*"
   ],
   "exclude": []
 }

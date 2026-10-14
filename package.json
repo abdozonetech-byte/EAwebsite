@@ -1,0 +1,9 @@
+{
+  "name": "elboubakry-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:crm-import": "node scripts/test-crm-import.mjs",
+    "test:crm-intelligence": "node scripts/test-crm-intelligence.mjs"
+  }
+}
