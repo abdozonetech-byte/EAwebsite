@@ -151,7 +151,11 @@ grant all on public.analysis_batches, public.analysis_batch_leads,
   to service_role;
 grant usage, select on sequence public.mcp_audit_log_id_seq to service_role;
 
-create or replace view public.lead_intelligence_overview
+-- PostgreSQL cannot use CREATE OR REPLACE VIEW when columns are inserted into
+-- the middle of an existing view. This view contains no stored data, so replace
+-- it explicitly while preserving the underlying lead and analysis tables.
+drop view if exists public.lead_intelligence_overview;
+create view public.lead_intelligence_overview
 with (security_invoker = true)
 as
 select

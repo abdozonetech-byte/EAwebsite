@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { ANALYSIS_STATUSES, normalizeAnalysisItem, normalizeEvidence, normalizeScore, toAnalysisRecord } from "../functions/_lib/lead-intelligence.js";
 import { TOOLS, TOOL_SCOPES } from "../functions/_lib/mcp-tools.js";
 import { onRequest as mcpRequest } from "../functions/mcp.js";
@@ -61,5 +62,9 @@ assert.equal((await toolsList.json()).result.tools.length, 10);
 const unauthorized = await mcpRequest({ request: new Request("https://elboubakry.com/mcp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "list_pending_leads", arguments: {} } }) }), env: {} });
 assert.equal(unauthorized.status, 401);
 assert.match(unauthorized.headers.get("WWW-Authenticate"), /oauth-protected-resource/);
+
+const migration003 = await readFile(new URL("../supabase/migrations/003_chatgpt_mcp_lead_intelligence.sql", import.meta.url), "utf8");
+assert.match(migration003, /drop view if exists public\.lead_intelligence_overview;/i);
+assert.match(migration003, /create view public\.lead_intelligence_overview/i);
 
 console.log("CRM intelligence and MCP contract tests passed.");
