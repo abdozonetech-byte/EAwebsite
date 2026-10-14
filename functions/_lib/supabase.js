@@ -65,9 +65,26 @@ async function supabaseFetch(env, path, options = {}) {
   return data;
 }
 
+async function supabaseFetchAll(env, path, options = {}, pageSize = 1000, maxRows = 10000) {
+  const rows = [];
+  for (let offset = 0; offset < maxRows; offset += pageSize) {
+    const page = await supabaseFetch(env, path, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Range: `${offset}-${Math.min(offset + pageSize - 1, maxRows - 1)}`,
+      },
+    });
+    if (!Array.isArray(page)) return page;
+    rows.push(...page);
+    if (page.length < pageSize) break;
+  }
+  return rows;
+}
+
 function supabaseErrorResponse(error) {
   if (error instanceof SupabaseError) return json({ ok: false, message: error.message }, error.status);
   return json({ ok: false, message: UNAVAILABLE_MESSAGE }, 503);
 }
 
-export { CONFIG_MESSAGE, SupabaseError, supabaseErrorResponse, supabaseFetch };
+export { CONFIG_MESSAGE, SupabaseError, supabaseErrorResponse, supabaseFetch, supabaseFetchAll };

@@ -1,6 +1,6 @@
 import { LEAD_STATUSES, cleanString, leadInsertPayload, mapLead, requireCrmApi } from "../../_lib/crm-api.js";
 import { json, readJsonBody } from "../../_lib/http.js";
-import { supabaseErrorResponse, supabaseFetch } from "../../_lib/supabase.js";
+import { supabaseErrorResponse, supabaseFetch, supabaseFetchAll } from "../../_lib/supabase.js";
 
 function searchTerm(value) {
   return cleanString(value, 120)?.replace(/[*,()]/g, " ").replace(/\s+/g, " ") || "";
@@ -20,7 +20,7 @@ async function getLeads(context) {
     const pattern = `*${query}*`;
     search.or = `(full_name.ilike.${pattern},phone.ilike.${pattern},email.ilike.${pattern},company_name.ilike.${pattern},city.ilike.${pattern},business_sector.ilike.${pattern},source.ilike.${pattern})`;
   }
-  const rows = await supabaseFetch(context.env, "leads", { search });
+  const rows = await supabaseFetchAll(context.env, "leads", { search }, 1000, 20000);
   return json({ ok: true, leads: rows.map(mapLead) });
 }
 

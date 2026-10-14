@@ -38,7 +38,9 @@ async function readJsonBody(request, maxBytes = 20000) {
   const contentLength = Number(request.headers.get("Content-Length") || 0);
   if (Number.isFinite(contentLength) && contentLength > maxBytes) return { ok: false, status: 400, message: "Invalid body." };
   try {
-    return { ok: true, body: await request.json() };
+    const raw = await request.text();
+    if (new TextEncoder().encode(raw).byteLength > maxBytes) return { ok: false, status: 400, message: "Invalid body." };
+    return { ok: true, body: JSON.parse(raw) };
   } catch {
     return { ok: false, status: 400, message: "Invalid body." };
   }

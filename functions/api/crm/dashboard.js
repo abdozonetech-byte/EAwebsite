@@ -1,6 +1,6 @@
 import { mapAppointment, mapLead, requireCrmApi } from "../../_lib/crm-api.js";
 import { json } from "../../_lib/http.js";
-import { supabaseErrorResponse, supabaseFetch } from "../../_lib/supabase.js";
+import { supabaseErrorResponse, supabaseFetchAll } from "../../_lib/supabase.js";
 
 function dayKey(date) {
   const value = new Date(date);
@@ -12,8 +12,8 @@ export async function onRequest(context) {
   if (guard) return guard;
   try {
     const [leadRows, appointmentRows] = await Promise.all([
-      supabaseFetch(context.env, "leads", { search: { select: "*", order: "created_at.desc" } }),
-      supabaseFetch(context.env, "appointments", { search: { select: "*,leads(*)", order: "starts_at.asc" } }),
+      supabaseFetchAll(context.env, "leads", { search: { select: "*", order: "created_at.desc" } }, 1000, 20000),
+      supabaseFetchAll(context.env, "appointments", { search: { select: "*,leads(*)", order: "starts_at.asc" } }, 1000, 20000),
     ]);
     const leads = leadRows.map(mapLead);
     const appointments = appointmentRows.map(mapAppointment);

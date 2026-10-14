@@ -16,7 +16,7 @@
     "Marque personnelle",
     "Autre",
   ];
-  const SOURCES = ["manual", "diagnostic_site", "whatsapp", "google_ads", "referral"];
+  const SOURCES = ["manual", "diagnostic_site", "casablanca_aesthetic_research", "spreadsheet_import", "whatsapp", "google_ads", "referral"];
   const ZERO_METRICS = { total: 0, new: 0, contacted: 0, followUp: 0, appointment: 0, noShow: 0, won: 0, notInterested: 0, today: 0 };
 
   const SECTOR_EN = {
@@ -36,6 +36,8 @@
     whatsapp: { en: "WhatsApp", fr: "WhatsApp" },
     google_ads: { en: "Google Ads", fr: "Google Ads" },
     referral: { en: "Referral", fr: "Recommandation" },
+    casablanca_aesthetic_research: { en: "Casablanca Aesthetic Research", fr: "Recherche esthétique Casablanca" },
+    spreadsheet_import: { en: "Spreadsheet import", fr: "Import tableur" },
   };
 
   const strings = {
@@ -83,6 +85,7 @@
   let toastTimer = null;
   let searchTimer = null;
   let lastFocused = null;
+  let transferState = { parsed: null, mappedRows: [], preview: null, duplicateAction: "skip" };
 
   const content = document.getElementById("appContent");
   const toast = document.getElementById("toast");
@@ -252,7 +255,7 @@
     if (state.error) return errorState(state.error);
     const sectorOptions = SECTORS.map((value) => `<option value="${esc(value)}" ${filters.sector === value ? "selected" : ""}>${esc(sectorLabel(value))}</option>`).join("");
     const sourceOptions = SOURCES.map((value) => `<option value="${esc(value)}" ${filters.source === value ? "selected" : ""}>${esc(sourceLabel(value))}</option>`).join("");
-    return `<div class="page-stack"><section class="page-header"><div><p class="eyebrow">${esc(t("leadsEyebrow"))}</p><h1>${esc(t("leadsTitle"))}</h1><p>${esc(t("leadsDescription"))}</p></div><div class="header-actions"><button class="button" data-action="add-lead" type="button">${icon("plus")} ${esc(t("newLead").replace(/^\+\s*/, ""))}</button></div></section><div class="status-tabs" role="tablist" aria-label="${esc(t("status"))}"><button role="tab" aria-selected="${filters.status === "all"}" type="button" data-status-tab="all" class="${filters.status === "all" ? "active" : ""}">${esc(t("allStatuses"))}</button>${STATUS_ORDER.map((value) => `<button role="tab" aria-selected="${filters.status === value}" type="button" data-status-tab="${value}" class="${filters.status === value ? "active" : ""}">${esc(statusLabel(value))}</button>`).join("")}</div><section class="panel"><div class="data-toolbar"><label class="toolbar-search"><span>${icon("search")}</span><input id="leadSearch" value="${esc(filters.query)}" placeholder="${esc(t("search"))}" autocomplete="off"></label><div class="filter-controls"><span class="filter-label">${esc(t("filters"))}</span><select id="sectorFilter"><option value="all">${esc(t("allSectors"))}</option>${sectorOptions}</select><select id="sourceFilter"><option value="all">${esc(t("allSources"))}</option>${sourceOptions}</select><button class="button button-ghost button-sm" data-action="clear-filters" type="button">${esc(t("clear"))}</button></div></div><div class="panel-header"><div><p class="eyebrow">${esc(t("lead"))}</p><h2>${state.leads.length} ${esc(t("results"))}</h2></div><span class="count-pill">${state.leads.length}</span></div>${renderLeadTable(state.leads, true)}</section></div>`;
+    return `<div class="page-stack"><section class="page-header"><div><p class="eyebrow">${esc(t("leadsEyebrow"))}</p><h1>${esc(t("leadsTitle"))}</h1><p>${esc(t("leadsDescription"))}</p></div><div class="header-actions transfer-actions"><button class="button button-secondary" data-action="import-leads" type="button">${icon("upload")} ${esc(locale === "fr" ? "Importer" : "Import")}</button><button class="button button-secondary" data-action="export-leads" type="button">${icon("download")} ${esc(locale === "fr" ? "Exporter" : "Export")}</button><button class="button" data-action="add-lead" type="button">${icon("plus")} ${esc(t("newLead").replace(/^\+\s*/, ""))}</button></div></section><div class="status-tabs" role="tablist" aria-label="${esc(t("status"))}"><button role="tab" aria-selected="${filters.status === "all"}" type="button" data-status-tab="all" class="${filters.status === "all" ? "active" : ""}">${esc(t("allStatuses"))}</button>${STATUS_ORDER.map((value) => `<button role="tab" aria-selected="${filters.status === value}" type="button" data-status-tab="${value}" class="${filters.status === value ? "active" : ""}">${esc(statusLabel(value))}</button>`).join("")}</div><section class="panel"><div class="data-toolbar"><label class="toolbar-search"><span>${icon("search")}</span><input id="leadSearch" value="${esc(filters.query)}" placeholder="${esc(t("search"))}" autocomplete="off"></label><div class="filter-controls"><span class="filter-label">${esc(t("filters"))}</span><select id="sectorFilter"><option value="all">${esc(t("allSectors"))}</option>${sectorOptions}</select><select id="sourceFilter"><option value="all">${esc(t("allSources"))}</option>${sourceOptions}</select><button class="button button-ghost button-sm" data-action="clear-filters" type="button">${esc(t("clear"))}</button></div></div><div class="panel-header"><div><p class="eyebrow">${esc(t("lead"))}</p><h2>${state.leads.length} ${esc(t("results"))}</h2></div><span class="count-pill">${state.leads.length}</span></div>${renderLeadTable(state.leads, true)}</section></div>`;
   }
 
   function renderAppointments() {
@@ -358,6 +361,46 @@
   }
   function closeModal() { document.body.classList.remove("modal-open"); modal.setAttribute("aria-hidden", "true"); modal.innerHTML = ""; if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus(); }
 
+  function importUploadTemplate() {
+    return `<div class="transfer-wizard"><div class="modal-header"><div><p class="eyebrow">${esc(locale === "fr" ? "IMPORTATION SÉCURISÉE" : "SECURE IMPORT")}</p><h2 id="modalTitle">${esc(locale === "fr" ? "Importer des leads" : "Import leads")}</h2></div><button class="close-button" type="button" data-action="close-modal" aria-label="${esc(t("close"))}">X</button></div><div class="modal-body"><div class="wizard-steps" aria-label="Import progress"><span class="active">1. ${esc(locale === "fr" ? "Fichier" : "Upload")}</span><span>2. ${esc(locale === "fr" ? "Colonnes" : "Mapping")}</span><span>3. ${esc(locale === "fr" ? "Contrôle" : "Validate")}</span><span>4. ${esc(locale === "fr" ? "Résultat" : "Result")}</span></div><label class="file-drop" for="leadImportFile">${icon("upload")}<strong>${esc(locale === "fr" ? "Choisir un fichier de prospects" : "Choose a prospect file")}</strong><span>XLSX, CSV, XLS, XLSB or ODS · max 5 MB · max 5,000 rows</span><input id="leadImportFile" type="file" accept=".xlsx,.csv,.xls,.xlsb,.ods" hidden></label><div class="transfer-note"><strong>${esc(locale === "fr" ? "Avant toute écriture" : "Before anything is written")}</strong><p>${esc(locale === "fr" ? "Vous verrez les colonnes, les erreurs et les doublons. L'importation exige une confirmation explicite." : "You will review field mapping, validation errors and duplicates. Importing requires explicit confirmation.")}</p></div></div></div>`;
+  }
+
+  function mappingSelect(field, label, sheet, required = false) {
+    const selected = sheet.mapping[field];
+    return `<div class="form-field"><label>${esc(label)}${required ? " *" : ""}</label><select name="map_${esc(field)}"><option value="-1">${esc(locale === "fr" ? "Ne pas importer" : "Do not import")}</option>${sheet.headers.map((header, index) => `<option value="${index}" ${selected === index ? "selected" : ""}>${esc(header)}</option>`).join("")}</select></div>`;
+  }
+
+  function importMappingTemplate() {
+    const parsed = transferState.parsed;
+    const sheet = parsed.sheets.find((item) => item.name === parsed.selectedSheet) || parsed.sheets[0];
+    const previewRows = sheet.rows.slice(sheet.headerRow + 1, sheet.headerRow + 5);
+    return `<div class="transfer-wizard"><div class="modal-header"><div><p class="eyebrow">${esc(locale === "fr" ? "ÉTAPE 2 SUR 4" : "STEP 2 OF 4")}</p><h2 id="modalTitle">${esc(locale === "fr" ? "Associer les colonnes" : "Map spreadsheet fields")}</h2><p class="modal-subtitle">${esc(parsed.fileName)}</p></div><button class="close-button" type="button" data-action="close-modal" aria-label="${esc(t("close"))}">X</button></div><div class="modal-body"><div class="wizard-steps"><span class="done">1. ${esc(locale === "fr" ? "Fichier" : "Upload")}</span><span class="active">2. ${esc(locale === "fr" ? "Colonnes" : "Mapping")}</span><span>3. ${esc(locale === "fr" ? "Contrôle" : "Validate")}</span><span>4. ${esc(locale === "fr" ? "Résultat" : "Result")}</span></div><form id="importMapForm"><div class="import-sheet-row"><div class="form-field"><label for="importSheet">${esc(locale === "fr" ? "Feuille" : "Worksheet")}</label><select id="importSheet">${parsed.sheets.map((item) => `<option value="${esc(item.name)}" ${item.name === sheet.name ? "selected" : ""}>${esc(item.name)}</option>`).join("")}</select></div><div class="file-summary">${icon("file")}<span><strong>${sheet.rows.length - sheet.headerRow - 1} ${esc(locale === "fr" ? "lignes détectées" : "rows detected")}</strong><small>${esc(locale === "fr" ? `En-têtes à la ligne ${sheet.headerRow + 1}` : `Headers on row ${sheet.headerRow + 1}`)}</small></span></div></div>${sheet.hasFormulas ? `<div class="import-alert error">${esc(locale === "fr" ? "Cette feuille contient des formules. Remplacez-les par leurs valeurs avant l'importation." : "This worksheet contains formulas. Replace them with values before importing.")}</div>` : ""}<div class="mapping-grid">${mappingSelect("fullName", t("fullName"), sheet, true)}${mappingSelect("company", t("company"), sheet)}${mappingSelect("phone", t("phone"), sheet)}${mappingSelect("email", t("email"), sheet)}${mappingSelect("website", locale === "fr" ? "Site web" : "Website", sheet)}${mappingSelect("city", t("city"), sheet)}${mappingSelect("businessSector", t("businessSector"), sheet)}${mappingSelect("source", t("source"), sheet)}${mappingSelect("status", t("status"), sheet)}${mappingSelect("priority", t("priority"), sheet)}${mappingSelect("message", t("message"), sheet)}</div><div class="mini-preview"><h3>${esc(locale === "fr" ? "Aperçu source" : "Source preview")}</h3><div class="table-wrap"><table class="data-table"><thead><tr>${sheet.headers.slice(0, 6).map((header) => `<th>${esc(header)}</th>`).join("")}</tr></thead><tbody>${previewRows.map((row) => `<tr>${sheet.headers.slice(0, 6).map((_, index) => `<td>${esc(row[index] || "-")}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div><div class="modal-actions"><button class="button button-secondary" type="button" data-action="restart-import">${esc(locale === "fr" ? "Changer de fichier" : "Change file")}</button><button class="button" type="submit">${esc(locale === "fr" ? "Valider et rechercher les doublons" : "Validate & check duplicates")}</button></div></form></div></div>`;
+  }
+
+  function importPreviewTemplate() {
+    const preview = transferState.preview;
+    const s = preview.summary;
+    const duplicateRows = preview.rows.filter((row) => row.duplicate);
+    const invalidRows = preview.rows.filter((row) => row.issues?.length);
+    return `<div class="transfer-wizard"><div class="modal-header"><div><p class="eyebrow">${esc(locale === "fr" ? "ÉTAPE 3 SUR 4" : "STEP 3 OF 4")}</p><h2 id="modalTitle">${esc(locale === "fr" ? "Contrôler avant import" : "Review before import")}</h2></div><button class="close-button" type="button" data-action="close-modal" aria-label="${esc(t("close"))}">X</button></div><div class="modal-body"><div class="wizard-steps"><span class="done">1. ${esc(locale === "fr" ? "Fichier" : "Upload")}</span><span class="done">2. ${esc(locale === "fr" ? "Colonnes" : "Mapping")}</span><span class="active">3. ${esc(locale === "fr" ? "Contrôle" : "Validate")}</span><span>4. ${esc(locale === "fr" ? "Résultat" : "Result")}</span></div><div class="import-summary-grid"><article><b>${s.total}</b><span>${esc(locale === "fr" ? "Lignes" : "Rows")}</span></article><article class="good"><b>${s.ready}</b><span>${esc(locale === "fr" ? "Prêtes" : "Ready")}</span></article><article class="warn"><b>${s.duplicates}</b><span>${esc(locale === "fr" ? "Doublons" : "Duplicates")}</span></article><article class="bad"><b>${s.invalid}</b><span>${esc(locale === "fr" ? "Invalides" : "Invalid")}</span></article></div><div class="form-field full"><label for="duplicateAction">${esc(locale === "fr" ? "Traitement des doublons" : "Duplicate handling")}</label><select id="duplicateAction"><option value="skip" ${transferState.duplicateAction === "skip" ? "selected" : ""}>${esc(locale === "fr" ? "Ignorer les doublons (recommandé)" : "Skip duplicates (recommended)")}</option><option value="update" ${transferState.duplicateAction === "update" ? "selected" : ""}>${esc(locale === "fr" ? "Mettre à jour les fiches existantes" : "Update existing CRM records")}</option><option value="import_anyway" ${transferState.duplicateAction === "import_anyway" ? "selected" : ""}>${esc(locale === "fr" ? "Importer quand même" : "Import duplicates anyway")}</option></select><small>${esc(locale === "fr" ? "Un changement relance le contrôle serveur." : "Changing this option re-runs the server check.")}</small></div>${invalidRows.length ? `<div class="import-alert error"><strong>${esc(locale === "fr" ? "Ces lignes seront ignorées" : "These rows will be skipped")}</strong><p>${invalidRows.slice(0, 8).map((row) => `#${row.index + 1}: ${row.issues.join(", ")}`).join(" · ")}</p><button class="text-button" type="button" data-action="download-errors">${esc(locale === "fr" ? "Télécharger le rapport d’erreurs" : "Download error report")}</button></div>` : ""}${duplicateRows.length ? `<div class="duplicate-list"><h3>${esc(locale === "fr" ? "Doublons détectés" : "Detected duplicates")}</h3>${duplicateRows.slice(0, 12).map((row) => `<div><span><strong>${esc(row.fullName)}</strong><small>${esc(row.duplicate.scope === "crm" ? (locale === "fr" ? "Déjà dans le CRM" : "Already in CRM") : (locale === "fr" ? "Doublon dans le fichier" : "Duplicate inside file"))}</small></span><em>${esc(row.duplicate.matchedBy)}</em></div>`).join("")}</div>` : `<div class="import-alert success">${icon("check")} ${esc(locale === "fr" ? "Aucun doublon détecté." : "No duplicates detected.")}</div>`}<label class="confirm-import"><input id="confirmImport" type="checkbox"><span><strong>${esc(locale === "fr" ? "Je confirme cette importation" : "I confirm this import")}</strong><small>${esc(locale === "fr" ? `${s.importable} ajout(s), ${s.updates} mise(s) à jour, ${s.skipped} ignoré(s).` : `${s.importable} insert(s), ${s.updates} update(s), ${s.skipped} skipped.`)}</small></span></label><div class="modal-actions"><button class="button button-secondary" type="button" data-action="back-to-mapping">${esc(locale === "fr" ? "Retour" : "Back")}</button><button class="button" type="button" data-action="commit-import">${esc(locale === "fr" ? "Importer maintenant" : "Import now")}</button></div></div></div>`;
+  }
+
+  function importResultTemplate(result) {
+    return `<div class="transfer-wizard"><div class="modal-header"><div><p class="eyebrow">${esc(locale === "fr" ? "IMPORT TERMINÉ" : "IMPORT COMPLETE")}</p><h2 id="modalTitle">${esc(locale === "fr" ? "Les leads sont dans le CRM" : "Leads are now in the CRM")}</h2></div><button class="close-button" type="button" data-action="close-modal" aria-label="${esc(t("close"))}">X</button></div><div class="modal-body result-state"><div class="result-icon">${icon("check")}</div><div class="import-summary-grid"><article class="good"><b>${result.inserted}</b><span>${esc(locale === "fr" ? "Ajoutés" : "Inserted")}</span></article><article><b>${result.updated}</b><span>${esc(locale === "fr" ? "Mis à jour" : "Updated")}</span></article><article class="warn"><b>${result.skipped}</b><span>${esc(locale === "fr" ? "Ignorés" : "Skipped")}</span></article></div><p>${esc(locale === "fr" ? "L'importation n'envoie aucun message WhatsApp automatique aux prospects." : "This import does not send automatic WhatsApp messages to prospects.")}</p><div class="modal-actions"><button class="button" type="button" data-action="finish-import">${esc(locale === "fr" ? "Voir les leads" : "View leads")}</button></div></div></div>`;
+  }
+
+  function exportTemplate() {
+    const columns = window.CrmDataTransfer?.EXPORT_COLUMNS || {};
+    return `<div class="transfer-wizard"><div class="modal-header"><div><p class="eyebrow">${esc(locale === "fr" ? "EXPORT CRM" : "CRM EXPORT")}</p><h2 id="modalTitle">${esc(locale === "fr" ? "Exporter les leads" : "Export leads")}</h2></div><button class="close-button" type="button" data-action="close-modal" aria-label="${esc(t("close"))}">X</button></div><div class="modal-body"><form id="exportForm"><div class="form-grid"><div class="form-field"><label>${esc(locale === "fr" ? "Périmètre" : "Scope")}</label><select name="scope"><option value="filtered">${esc(locale === "fr" ? `Vue filtrée (${state.leads.length})` : `Current filtered view (${state.leads.length})`)}</option><option value="all">${esc(locale === "fr" ? "Tous les leads" : "All leads")}</option></select></div><div class="form-field"><label>${esc(locale === "fr" ? "Format" : "Format")}</label><select name="format"><option value="xlsx">Excel (.xlsx)</option><option value="csv">CSV (.csv)</option></select></div></div><fieldset class="export-columns"><legend>${esc(locale === "fr" ? "Colonnes" : "Columns")}</legend>${Object.entries(columns).map(([key, label]) => `<label><input type="checkbox" name="columns" value="${esc(key)}" ${["fullName","company","phone","email","businessSector","city","source","status","priority","createdAt"].includes(key) ? "checked" : ""}><span>${esc(label)}</span></label>`).join("")}</fieldset><div class="transfer-note"><strong>${esc(locale === "fr" ? "Export sécurisé" : "Safe export")}</strong><p>${esc(locale === "fr" ? "Les téléphones restent du texte et les valeurs pouvant déclencher une formule sont neutralisées." : "Phone numbers remain text and formula-like values are neutralized.")}</p></div><div class="modal-actions"><button class="button button-secondary" type="button" data-action="close-modal">${esc(t("cancel"))}</button><button class="button" type="submit">${icon("download")} ${esc(locale === "fr" ? "Télécharger" : "Download")}</button></div></form></div></div>`;
+  }
+
+  async function previewImport(duplicateAction = "skip") {
+    transferState.duplicateAction = duplicateAction;
+    const preview = await api("leads/import", { method: "POST", body: { mode: "preview", duplicateAction, rows: transferState.mappedRows } });
+    transferState.preview = preview;
+    openModal(importPreviewTemplate());
+  }
+
   function leadFormTemplate(lead = null) {
     const editing = Boolean(lead?.id);
     const value = (key) => esc(lead?.[key] || "");
@@ -416,6 +459,19 @@
     const name = action.dataset.action;
     if (name === "close-drawer") closeDrawer();
     else if (name === "close-modal") closeModal();
+    else if (name === "import-leads") { transferState = { parsed: null, mappedRows: [], preview: null, duplicateAction: "skip" }; openModal(importUploadTemplate()); }
+    else if (name === "export-leads") openModal(exportTemplate());
+    else if (name === "restart-import") openModal(importUploadTemplate());
+    else if (name === "back-to-mapping") openModal(importMappingTemplate());
+    else if (name === "download-errors") window.CrmDataTransfer.downloadErrorReport(transferState.preview.rows);
+    else if (name === "commit-import") {
+      if (!document.getElementById("confirmImport")?.checked) { showToast(locale === "fr" ? "Confirmez l’importation." : "Confirm the import first."); return; }
+      action.disabled = true; action.textContent = t("saving");
+      api("leads/import", { method: "POST", body: { mode: "commit", duplicateAction: transferState.duplicateAction, confirmation: transferState.preview.confirmation, rows: transferState.mappedRows } })
+        .then(async (data) => { await Promise.all([refreshLeads(), refreshDashboard()]); render(); openModal(importResultTemplate(data.result)); })
+        .catch((error) => { action.disabled = false; action.textContent = locale === "fr" ? "Importer maintenant" : "Import now"; showToast(error.message || t("databaseError")); });
+    }
+    else if (name === "finish-import") { closeModal(); filters = { query: "", status: "all", sector: "all", source: transferState.mappedRows[0]?.source || "all" }; refreshLeads().then(render).catch((error) => showToast(error.message || t("loadError"))); }
     else if (name === "add-lead") openModal(leadFormTemplate());
     else if (name === "add-appointment") openModal(appointmentFormTemplate(action.dataset.leadId || ""));
     else if (name === "edit-lead") { const lead = getLead(action.dataset.leadId); if (lead) openModal(leadFormTemplate(lead)); }
@@ -438,7 +494,24 @@
   document.getElementById("drawerBackdrop").addEventListener("click", closeDrawer);
   document.getElementById("modalBackdrop").addEventListener("click", closeModal);
 
-  document.addEventListener("change", (event) => {
+  document.addEventListener("change", async (event) => {
+    if (event.target.id === "leadImportFile") {
+      const file = event.target.files?.[0]; if (!file) return;
+      const drop = event.target.closest(".file-drop"); drop?.classList.add("loading");
+      try { transferState.parsed = await window.CrmDataTransfer.readFile(file); openModal(importMappingTemplate()); }
+      catch (error) { drop?.classList.remove("loading"); showToast(error.message || (locale === "fr" ? "Fichier invalide." : "Invalid file.")); }
+      return;
+    }
+    if (event.target.id === "importSheet") {
+      transferState.parsed.selectedSheet = event.target.value;
+      const sheet = transferState.parsed.sheets.find((item) => item.name === event.target.value); if (sheet) sheet.mapping = window.CrmDataTransfer.detectMapping(sheet.headers);
+      openModal(importMappingTemplate()); return;
+    }
+    if (event.target.id === "duplicateAction") {
+      event.target.disabled = true;
+      try { await previewImport(event.target.value); } catch (error) { showToast(error.message || t("databaseError")); event.target.disabled = false; }
+      return;
+    }
     if (event.target.id === "statusFilter") { filters.status = event.target.value; refreshLeads().then(render).catch((error) => showToast(error.message || t("loadError"))); return; }
     if (event.target.id === "sectorFilter") { filters.sector = event.target.value; refreshLeads().then(render).catch((error) => showToast(error.message || t("loadError"))); return; }
     if (event.target.id === "sourceFilter") { filters.source = event.target.value; refreshLeads().then(render).catch((error) => showToast(error.message || t("loadError"))); return; }
@@ -456,6 +529,34 @@
   });
 
   document.addEventListener("submit", async (event) => {
+    if (event.target.id === "importMapForm") {
+      event.preventDefault();
+      const form = event.target; const formData = new FormData(form);
+      const mapping = {};
+      for (const field of ["fullName","company","phone","email","website","city","businessSector","source","status","priority","message"]) mapping[field] = Number(formData.get(`map_${field}`));
+      if (mapping.fullName < 0) { showToast(locale === "fr" ? "Associez la colonne du nom." : "Map the full-name column."); return; }
+      setFormPending(form, true);
+      try {
+        const casablancaAesthetic = /casablanca.*aesthetic/i.test(transferState.parsed.fileName);
+        transferState.mappedRows = window.CrmDataTransfer.mapRows(transferState.parsed, transferState.parsed.selectedSheet, mapping, { city: casablancaAesthetic ? "Casablanca" : "", businessSector: casablancaAesthetic ? "Santé / Cabinet médical" : "", source: casablancaAesthetic ? "casablanca_aesthetic_research" : "spreadsheet_import", status: "new" });
+        if (!transferState.mappedRows.length) throw new Error(locale === "fr" ? "Aucune ligne à importer." : "No data rows to import.");
+        await previewImport("skip");
+      } catch (error) { setFormPending(form, false); showToast(error.message || t("databaseError")); }
+      return;
+    }
+    if (event.target.id === "exportForm") {
+      event.preventDefault();
+      const form = event.target; const formData = new FormData(form); const columns = formData.getAll("columns");
+      if (!columns.length) { showToast(locale === "fr" ? "Choisissez au moins une colonne." : "Choose at least one column."); return; }
+      setFormPending(form, true);
+      try {
+        await window.CrmDataTransfer.ensureSpreadsheetLibrary();
+        const leads = formData.get("scope") === "all" ? (await api("leads")).leads : state.leads;
+        window.CrmDataTransfer.exportLeads(leads, formData.get("format"), columns);
+        closeModal(); showToast(locale === "fr" ? `${leads.length} leads exportés.` : `${leads.length} leads exported.`);
+      } catch (error) { setFormPending(form, false); showToast(error.message || t("databaseError")); }
+      return;
+    }
     if (event.target.id === "leadForm") {
       event.preventDefault();
       const form = event.target;
