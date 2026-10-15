@@ -5,6 +5,7 @@ import { TOOLS, TOOL_SCOPES } from "../functions/_lib/mcp-tools.js";
 import { onRequest as mcpRequest } from "../functions/mcp.js";
 import { onRequest as oauthMetadataRequest } from "../functions/.well-known/oauth-authorization-server.js";
 import { onRequest as registerRequest } from "../functions/oauth/register.js";
+import { analysisPrompt, discoveryPrompt, parseJsonOutput, startResearchResponse, validateAnalysisOutput } from "../functions/_lib/openai-intelligence.js";
 
 const leadId = "123e4567-e89b-42d3-a456-426614174000";
 const valid = normalizeAnalysisItem({
@@ -75,11 +76,39 @@ const rejectedRegistration = await registerRequest({
 assert.equal(rejectedRegistration.status, 400);
 assert.equal((await rejectedRegistration.json()).error, "invalid_redirect_uri");
 
+const parsedAi = parseJsonOutput({ output: [{ type: "message", content: [{ type: "output_text", text: `\`\`\`json\n${JSON.stringify({ analyses: [{ ...valid, lead_id: leadId }] })}\n\`\`\`` }] }] });
+assert.equal(parsedAi.analyses[0].lead_id, leadId);
+assert.equal(validateAnalysisOutput(parsedAi, [leadId]).length, 1);
+assert.match(analysisPrompt({ instructions: "Verify sources" }, [{ lead_id: leadId, leads: { full_name: "Example", city: "Casablanca" } }]), /Return ONLY valid JSON/);
+assert.match(discoveryPrompt({ category: "Aesthetic clinic", city: "Casablanca" }), /review queue/i);
+await assert.rejects(() => startResearchResponse({}, "test"), /not configured/i);
+const originalFetch = globalThis.fetch;
+let capturedOpenAiRequest;
+globalThis.fetch = async (url, options) => {
+  capturedOpenAiRequest = { url, options };
+  return new Response(JSON.stringify({ id: "resp_test", status: "queued", model: "gpt-5.5" }), { status: 200, headers: { "Content-Type": "application/json" } });
+};
+try {
+  const started = await startResearchResponse({ OPENAI_API_KEY: "server-only-test-key" }, "Research this business");
+  assert.equal(started.id, "resp_test");
+  assert.equal(capturedOpenAiRequest.url, "https://api.openai.com/v1/responses");
+  const requestBody = JSON.parse(capturedOpenAiRequest.options.body);
+  assert.equal(requestBody.background, true);
+  assert.equal(requestBody.tools[0].type, "web_search");
+  assert.equal(requestBody.tools[0].user_location.country, "MA");
+  assert.equal(capturedOpenAiRequest.options.headers.Authorization, "Bearer server-only-test-key");
+} finally {
+  globalThis.fetch = originalFetch;
+}
+
 const migration003 = await readFile(new URL("../supabase/migrations/003_chatgpt_mcp_lead_intelligence.sql", import.meta.url), "utf8");
 assert.match(migration003, /drop view if exists public\.lead_intelligence_overview;/i);
 assert.match(migration003, /create view public\.lead_intelligence_overview/i);
 
 const migration004 = await readFile(new URL("../supabase/migrations/004_mcp_dynamic_client_registration.sql", import.meta.url), "utf8");
 assert.match(migration004, /create table if not exists public\.mcp_oauth_clients/i);
+
+const migration005 = await readFile(new URL("../supabase/migrations/005_openai_backend_jobs.sql", import.meta.url), "utf8");
+assert.match(migration005, /analysis_batches add column if not exists ai_response_id/i);
 
 console.log("CRM intelligence and MCP contract tests passed.");

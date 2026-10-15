@@ -46,11 +46,9 @@ export async function onRequest(context) {
       body: { p_batch_code: randomCode(), p_lead_ids: leadIds, p_created_by: "crm", p_instructions: instructions },
     });
     const batch = Array.isArray(rows) ? rows[0] : rows;
-    const batchCode = batch?.batch_code;
     return json({
       ok: true,
-      batch: { id: batch?.id, code: batchCode, status: batch?.status || "queued", totalLeads: Number(batch?.total_leads || leadIds.length) },
-      chatgptInstruction: `Use the connected Elboubakry CRM app. Open research batch ${batchCode}, analyze every queued lead using verifiable public sources, ask for confirmation before writes, and save the structured analysis plus Markdown report back to the CRM. Mark anything unverifiable as UNKNOWN.`,
+      batch: { id: batch?.id, code: batch?.batch_code, status: batch?.status || "queued", totalLeads: Number(batch?.total_leads || leadIds.length) },
     }, 201);
   } catch (error) {
     return supabaseErrorResponse(error);

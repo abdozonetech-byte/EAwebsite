@@ -1,12 +1,12 @@
 (() => {
   "use strict";
 
-  const state = { locale: "en", loading: true, error: "", leads: [], categories: [], batches: [], discoveryBatches: [], discoveryCandidates: [], discoveryBatch: null, discoverySelected: new Set(), discoveryPreview: null, summary: {}, pagination: { page: 1, pages: 1, total: 0 }, filters: { search: "", status: "all", category: "all", sort: "recent_analysis" }, selected: new Set(), detail: null, timer: null };
+  const state = { locale: "en", loading: true, error: "", leads: [], categories: [], batches: [], discoveryBatches: [], discoveryCandidates: [], discoveryBatch: null, discoverySelected: new Set(), discoveryPreview: null, summary: {}, pagination: { page: 1, pages: 1, total: 0 }, filters: { search: "", status: "all", category: "all", sort: "recent_analysis" }, selected: new Set(), detail: null, timer: null, jobTimer: null, jobRetries: 0 };
   let mounted = false;
 
   const words = {
-    en: { eyebrow: "CHATGPT MCP LEAD INTELLIGENCE", title: "Codex to ChatGPT", subtitle: "Queue CRM leads, research them in your connected ChatGPT conversation, and see verified intelligence return automatically.", prepare: "Prepare ChatGPT Analysis", find: "Find New Leads", total: "Total leads", completed: "Analyzed leads", queued: "Awaiting ChatGPT", processing: "In progress", notAnalyzed: "Unanalyzed", failed: "Failed analyses", high: "High opportunity", search: "Search businesses, cities...", allStatuses: "All research statuses", allCategories: "All categories", sortRecent: "Recent analyses", sortOpportunity: "Highest opportunity", sortNewest: "Newest leads", selectPage: "Select page", selected: "selected", lead: "Business", category: "Category", status: "Research status", scores: "Scores", action: "Action", noData: "No leads match these filters.", one: "Prepare", view: "View intelligence", previous: "Previous", next: "Next", recentBatches: "Recent research batches", noBatches: "No research batch yet.", copy: "Copy instruction", copied: "Instruction copied.", close: "Close", back: "Back to intelligence", download: "Download Markdown", current: "Current digital situation", website: "Website analysis", landing: "Landing-page opportunities", seo: "SEO analysis", geo: "GEO analysis", social: "Social media analysis", marketing: "Marketing opportunities", crmAi: "CRM & AI opportunities", services: "Recommended services", plan: "Action plan", evidence: "Supporting evidence", report: "Full Markdown report", unknown: "Not researched yet", researchDate: "Research date", confidence: "Confidence" },
-    fr: { eyebrow: "INTELLIGENCE LEADS CHATGPT MCP", title: "Codex vers ChatGPT", subtitle: "Mettez les leads en file, analysez-les dans votre conversation ChatGPT connectée et consultez automatiquement les résultats vérifiés.", prepare: "Préparer l’analyse ChatGPT", find: "Trouver de nouveaux leads", total: "Total leads", completed: "Leads analysés", queued: "En attente ChatGPT", processing: "En cours", notAnalyzed: "Non analysés", failed: "Analyses échouées", high: "Forte opportunité", search: "Rechercher entreprises, villes...", allStatuses: "Tous les statuts", allCategories: "Toutes les catégories", sortRecent: "Analyses récentes", sortOpportunity: "Meilleure opportunité", sortNewest: "Nouveaux leads", selectPage: "Sélectionner la page", selected: "sélectionnés", lead: "Entreprise", category: "Catégorie", status: "Statut recherche", scores: "Scores", action: "Action", noData: "Aucun lead pour ces filtres.", one: "Préparer", view: "Voir l’intelligence", previous: "Précédent", next: "Suivant", recentBatches: "Lots de recherche récents", noBatches: "Aucun lot de recherche.", copy: "Copier l’instruction", copied: "Instruction copiée.", close: "Fermer", back: "Retour à l’intelligence", download: "Télécharger Markdown", current: "Situation digitale actuelle", website: "Analyse du site", landing: "Opportunités landing pages", seo: "Analyse SEO", geo: "Analyse GEO", social: "Analyse réseaux sociaux", marketing: "Opportunités marketing", crmAi: "Opportunités CRM & IA", services: "Services recommandés", plan: "Plan d’action", evidence: "Sources", report: "Rapport Markdown complet", unknown: "Pas encore analysé", researchDate: "Date de recherche", confidence: "Confiance" },
+    en: { eyebrow: "AI LEAD INTELLIGENCE", title: "AI Intelligence", subtitle: "Run secure OpenAI research directly from the CRM backend and save verified results automatically.", prepare: "Run AI Analysis", find: "Find New Leads", total: "Total leads", completed: "Analyzed leads", queued: "Awaiting AI", processing: "In progress", notAnalyzed: "Unanalyzed", failed: "Failed analyses", high: "High opportunity", search: "Search businesses, cities...", allStatuses: "All research statuses", allCategories: "All categories", sortRecent: "Recent analyses", sortOpportunity: "Highest opportunity", sortNewest: "Newest leads", selectPage: "Select page", selected: "selected", lead: "Business", category: "Category", status: "Research status", scores: "Scores", action: "Action", noData: "No leads match these filters.", one: "Analyze", view: "View intelligence", previous: "Previous", next: "Next", recentBatches: "Recent research batches", noBatches: "No research batch yet.", close: "Close", back: "Back to intelligence", download: "Download Markdown", current: "Current digital situation", website: "Website analysis", landing: "Landing-page opportunities", seo: "SEO analysis", geo: "GEO analysis", social: "Social media analysis", marketing: "Marketing opportunities", crmAi: "CRM & AI opportunities", services: "Recommended services", plan: "Action plan", evidence: "Supporting evidence", report: "Full Markdown report", unknown: "Not researched yet", researchDate: "Research date", confidence: "Confidence" },
+    fr: { eyebrow: "INTELLIGENCE LEADS IA", title: "Intelligence IA", subtitle: "Lancez la recherche OpenAI directement depuis le backend CRM et enregistrez automatiquement les résultats vérifiés.", prepare: "Lancer l’analyse IA", find: "Trouver de nouveaux leads", total: "Total leads", completed: "Leads analysés", queued: "En attente IA", processing: "En cours", notAnalyzed: "Non analysés", failed: "Analyses échouées", high: "Forte opportunité", search: "Rechercher entreprises, villes...", allStatuses: "Tous les statuts", allCategories: "Toutes les catégories", sortRecent: "Analyses récentes", sortOpportunity: "Meilleure opportunité", sortNewest: "Nouveaux leads", selectPage: "Sélectionner la page", selected: "sélectionnés", lead: "Entreprise", category: "Catégorie", status: "Statut recherche", scores: "Scores", action: "Action", noData: "Aucun lead pour ces filtres.", one: "Analyser", view: "Voir l’intelligence", previous: "Précédent", next: "Suivant", recentBatches: "Lots de recherche récents", noBatches: "Aucun lot de recherche.", close: "Fermer", back: "Retour à l’intelligence", download: "Télécharger Markdown", current: "Situation digitale actuelle", website: "Analyse du site", landing: "Opportunités landing pages", seo: "Analyse SEO", geo: "Analyse GEO", social: "Analyse réseaux sociaux", marketing: "Opportunités marketing", crmAi: "Opportunités CRM & IA", services: "Services recommandés", plan: "Plan d’action", evidence: "Sources", report: "Rapport Markdown complet", unknown: "Pas encore analysé", researchDate: "Date de recherche", confidence: "Confiance" },
   };
 
   const t = (key) => words[state.locale]?.[key] || words.en[key] || key;
@@ -37,7 +37,7 @@
   }
 
   function statusMeta(status) {
-    const map = { not_analyzed: [state.locale === "fr" ? "Non analysé" : "Not analyzed", "neutral"], queued: [state.locale === "fr" ? "En attente ChatGPT" : "Awaiting ChatGPT", "queued"], processing: [state.locale === "fr" ? "Analyse en cours" : "Analysis in progress", "processing"], completed: [state.locale === "fr" ? "Analyse terminée" : "Analysis completed", "completed"], failed: [state.locale === "fr" ? "Analyse échouée" : "Analysis failed", "failed"] };
+    const map = { not_analyzed: [state.locale === "fr" ? "Non analysé" : "Not analyzed", "neutral"], queued: [state.locale === "fr" ? "En attente IA" : "Awaiting AI", "queued"], processing: [state.locale === "fr" ? "Analyse en cours" : "Analysis in progress", "processing"], completed: [state.locale === "fr" ? "Analyse terminée" : "Analysis completed", "completed"], failed: [state.locale === "fr" ? "Analyse échouée" : "Analysis failed", "failed"] };
     return map[status] || map.not_analyzed;
   }
 
@@ -99,19 +99,16 @@
 
   function prepareDialog(scope, leadIds = [], category = "") {
     const count = scope === "selected" || scope === "one" ? leadIds.length : scope === "category" ? state.pagination.total : state.summary.total;
-    return `<div class="modal-header"><div><p class="eyebrow">RESEARCH QUEUE</p><h2 id="modalTitle">${t("prepare")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><div class="intel-confirm-visual">${icon("ai")}</div><h3>${state.locale === "fr" ? "Créer un lot de recherche sécurisé ?" : "Create a secure research batch?"}</h3><p>${count} ${state.locale === "fr" ? "lead(s) seront mis en attente pour votre conversation ChatGPT connectée." : "lead(s) will be queued for your connected ChatGPT conversation."}</p><div class="intel-safety-note">${state.locale === "fr" ? "Aucune conversation ChatGPT ne sera lancée en arrière-plan. Vous démarrez la recherche dans ChatGPT." : "No ChatGPT conversation starts in the background. You initiate the research inside ChatGPT."}</div><div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" data-intel-action="confirm-prepare" data-scope="${scope}" data-ids="${esc(leadIds.join(","))}" data-category="${esc(category)}">${t("prepare")}</button></div></div>`;
+    return `<div class="modal-header"><div><p class="eyebrow">BACKEND AI RESEARCH</p><h2 id="modalTitle">${t("prepare")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><div class="intel-confirm-visual">${icon("ai")}</div><h3>${state.locale === "fr" ? "Lancer la recherche depuis le CRM ?" : "Run research directly from the CRM?"}</h3><p>${count} ${state.locale === "fr" ? "lead(s) seront analysés par OpenAI avec recherche web et sources vérifiables." : "lead(s) will be analyzed by OpenAI with web research and verifiable sources."}</p><div class="intel-safety-note">${state.locale === "fr" ? "Cette action utilise votre crédit API OpenAI. La clé reste secrète côté serveur." : "This action uses your OpenAI API credit. The key stays secret on the server."}</div><div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" data-intel-action="confirm-prepare" data-scope="${scope}" data-ids="${esc(leadIds.join(","))}" data-category="${esc(category)}">${t("prepare")}</button></div></div>`;
   }
 
-  function preparedDialog(data) {
-    return `<div class="modal-header"><div><p class="eyebrow">BATCH READY</p><h2 id="modalTitle">${esc(data.batch.code)}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><div class="result-icon">✓</div><p>${data.batch.totalLeads} leads are awaiting ChatGPT research.</p><label class="form-field"><span>Instruction for ChatGPT</span><textarea id="chatgptInstruction" rows="7" readonly>${esc(data.chatgptInstruction)}</textarea></label><div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" data-intel-action="copy-instruction">${t("copy")}</button></div></div>`;
+  function jobDialog(job) {
+    const finished = ["completed", "partial"].includes(job.status); const failed = job.status === "failed";
+    return `<div class="modal-header"><div><p class="eyebrow">AI RESEARCH JOB</p><h2 id="modalTitle">${esc(job.batchCode || "Research")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><div class="intel-job-visual ${finished ? "done" : failed ? "error" : ""}">${finished ? "✓" : failed ? "!" : `<span></span>`}</div><h3>${finished ? (state.locale === "fr" ? "Recherche terminée" : "Research completed") : failed ? (state.locale === "fr" ? "La recherche a échoué" : "Research failed") : (state.locale === "fr" ? "Recherche en cours…" : "Research in progress…")}</h3><p>${failed ? esc(job.error || "AI automation failed.") : finished ? (job.kind === "discovery" ? `${Number(job.saved || 0)} candidates are ready for review.` : `${Number(job.completed || 0)} of ${Number(job.total || job.completed || 0)} analyses saved.`) : (state.locale === "fr" ? "Le backend recherche, vérifie les sources et enregistre les résultats. Vous pouvez fermer cette fenêtre." : "The backend is researching, verifying sources, and saving results. You can close this window.")}</p>${job.model ? `<div class="intel-safety-note">Model: ${esc(job.model)} · Status: ${esc(job.status)}</div>` : ""}<div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button>${finished && job.kind === "discovery" ? `<button class="button" data-intel-action="review-discovery" data-id="${esc(job.batchId)}">Review candidates</button>` : ""}</div></div>`;
   }
 
   function findDialog() {
     return `<div class="modal-header"><div><p class="eyebrow">COMPLIANT LEAD DISCOVERY</p><h2 id="modalTitle">${t("find")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><form id="intelFindForm" class="form-grid"><label class="form-field"><span>Business category</span><input name="category" required placeholder="Aesthetic clinics"></label><label class="form-field"><span>City</span><input name="city" required value="Casablanca"></label><label class="form-field"><span>Business type</span><input name="businessType" placeholder="Clinic, school, restaurant..."></label><label class="form-field"><span>Keywords</span><input name="keywords" placeholder="booking, local business..."></label><div class="intel-safety-note full">Candidates will be saved to a review queue. They are never inserted as CRM leads automatically.</div><div class="modal-actions full"><button type="button" class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" type="submit">Create discovery batch</button></div></form></div>`;
-  }
-
-  function discoveryReady(data) {
-    return `<div class="modal-header"><div><p class="eyebrow">DISCOVERY BATCH READY</p><h2 id="modalTitle">${esc(data.batch.code)}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><p>Open ChatGPT and use this instruction. Proposed businesses will return to the CRM review queue.</p><label class="form-field"><span>Instruction for ChatGPT</span><textarea id="chatgptInstruction" rows="7" readonly>${esc(data.chatgptInstruction)}</textarea></label><div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" data-intel-action="copy-instruction">${t("copy")}</button></div></div>`;
   }
 
   function discoveryReviewDialog() {
@@ -142,19 +139,35 @@
 
   async function prepare(scope, ids, category) {
     const button = document.querySelector('[data-intel-action="confirm-prepare"]'); if (button) button.disabled = true;
-    try { const data = await api("intelligence/prepare", { method: "POST", body: { scope, leadIds: ids, category } }); state.selected.clear(); openModal(preparedDialog(data)); await refresh(1); }
+    try { const data = await api("intelligence/prepare", { method: "POST", body: { scope, leadIds: ids, category } }); state.selected.clear(); await startAutomation("analysis", data.batch); await refresh(1); }
     catch (error) { toast(error.message); if (button) button.disabled = false; }
+  }
+
+  async function startAutomation(kind, batch) {
+    clearTimeout(state.jobTimer);
+    state.jobRetries = 0;
+    const data = await api("intelligence/automation", { method: "POST", body: { kind, batchId: batch.id } });
+    openModal(jobDialog(data.job));
+    if (!["completed", "partial", "failed"].includes(data.job.status)) state.jobTimer = setTimeout(() => pollAutomation(kind, batch.id), 4000);
+  }
+
+  async function pollAutomation(kind, batchId) {
+    try {
+      const data = await api(`intelligence/automation?kind=${encodeURIComponent(kind)}&batchId=${encodeURIComponent(batchId)}`);
+      if (document.getElementById("appModal")?.getAttribute("aria-hidden") === "false") openModal(jobDialog(data.job));
+      if (["completed", "partial", "failed"].includes(data.job.status)) { await refresh(1); return; }
+      state.jobTimer = setTimeout(() => pollAutomation(kind, batchId), 5000);
+    } catch (error) {
+      state.jobRetries += 1;
+      toast(error.message);
+      if (state.jobRetries <= 6) state.jobTimer = setTimeout(() => pollAutomation(kind, batchId), 10000);
+    }
   }
 
   async function viewLead(id) {
     state.loading = true; renderInto();
     try { const data = await api(`intelligence/leads/${encodeURIComponent(id)}`); state.detail = data.lead; state.loading = false; renderInto(); history.replaceState(null, "", `#intelligence/lead/${id}`); window.scrollTo(0, 0); }
     catch (error) { state.loading = false; toast(error.message); state.detail = null; renderInto(); }
-  }
-
-  async function copyInstruction() {
-    const text = document.getElementById("chatgptInstruction")?.value || "";
-    try { await navigator.clipboard.writeText(text); toast(t("copied")); } catch { const area = document.getElementById("chatgptInstruction"); area?.select(); document.execCommand("copy"); toast(t("copied")); }
   }
 
   function downloadReport() {
@@ -176,7 +189,6 @@
     else if (action === "prepare-all") openModal(prepareDialog("all"));
     else if (action === "prepare-category") openModal(prepareDialog("category", [], state.filters.category));
     else if (action === "confirm-prepare") prepare(target.dataset.scope, (target.dataset.ids || "").split(",").filter(Boolean), target.dataset.category || "");
-    else if (action === "copy-instruction") copyInstruction();
     else if (action === "view") viewLead(target.dataset.id);
     else if (action === "back") { state.detail = null; history.replaceState(null, "", "#intelligence"); renderInto(); window.scrollTo(0, 0); }
     else if (action === "download") downloadReport();
@@ -199,7 +211,7 @@
   async function submit(event) {
     if (event.target.id !== "intelFindForm") return; event.preventDefault();
     const form = event.target; const data = Object.fromEntries(new FormData(form)); form.querySelectorAll("button,input").forEach((node) => { node.disabled = true; });
-    try { const result = await api("intelligence/find", { method: "POST", body: data }); openModal(discoveryReady(result)); }
+    try { const result = await api("intelligence/find", { method: "POST", body: data }); await startAutomation("discovery", result.batch); await refresh(1); }
     catch (error) { toast(error.message); form.querySelectorAll("button,input").forEach((node) => { node.disabled = false; }); }
   }
 

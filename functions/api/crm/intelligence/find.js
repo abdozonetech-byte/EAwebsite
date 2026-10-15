@@ -39,7 +39,7 @@ export async function onRequest(context) {
       body: { batch_code: randomCode(), category: criteria.category || null, city: criteria.city, keywords: criteria.keywords || null, business_type: criteria.businessType || null },
     });
     const row = rows[0];
-    return json({ ok: true, batch: { id: row.id, code: row.batch_code, status: row.status, ...criteria }, chatgptInstruction: `Use the connected Elboubakry CRM app to research discovery batch ${row.batch_code}. Propose compliant public business candidates with evidence URLs. Do not scrape restricted platforms and do not save candidates as CRM leads; submit them for review only.` }, 201);
+    return json({ ok: true, batch: { id: row.id, code: row.batch_code, status: row.status, ...criteria } }, 201);
   } catch (error) {
     return supabaseErrorResponse(error);
   }
