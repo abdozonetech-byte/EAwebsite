@@ -34,3 +34,15 @@ The implementation preserves the reference composition: a pale neutral page back
 3. Motion pass removed the supporting sentence and converted the static grid into a seamless, pauseable left-to-right client loop.
 
 final result: passed
+
+## CRM usability update — 2026-10-15
+
+- Shared dashboard, leads, appointments and settings styles now use readable text sizes, consistent spacing, larger controls and responsive action rows.
+- AI Intelligence adds a three-step research indicator, a rotating ring for indeterminate work and a 0–100 completion animation once the server reports a terminal result. Partial results are explicitly identified. No elapsed-time percentage is presented as measured progress.
+- Detail scores count up to their saved values, stop there and respect reduced-motion preferences. Returning to the same score does not replay the animation.
+- An active-job button lets users reopen progress after closing the modal. Polling no longer replaces discovery forms or unrelated dialogs. Poll failures can be reconnected through that button.
+- Search focus and caret survive intelligence refreshes. Lead table rows support Enter and Space; active navigation and filter controls expose accessible names.
+- Browser checks with synthetic sample leads: all five navigation screens at 1440px, 390px and 320px with no document-level horizontal overflow; score endpoints 46/82/71; completion ring 100; background polling preserved a discovery form; reduced-motion preference rendered final scores immediately; search cursor position preserved.
+- Syntax checks, CRM intelligence/import regression suites and the deployment SEO audit passed. Workbook-specific import verification was skipped because the original workbook was unavailable.
+- Browser preview uses synthetic API responses only. No production lead data was changed and no paid AI requests were made. This does not establish live OpenAI billing or service availability.
+- Local sample preview: http://127.0.0.1:4178/crm/#intelligence. Preview server is in `/tmp/elboubakry-crm-ux-preview.mjs`, outside the production repository.

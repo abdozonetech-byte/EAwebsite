@@ -3,6 +3,8 @@
 
   const state = { locale: "en", loading: true, error: "", leads: [], categories: [], batches: [], discoveryBatches: [], discoveryCandidates: [], discoveryBatch: null, discoverySelected: new Set(), discoveryPreview: null, summary: {}, pagination: { page: 1, pages: 1, total: 0 }, filters: { search: "", status: "all", category: "all", sort: "recent_analysis" }, selected: new Set(), detail: null, timer: null, jobTimer: null, jobRetries: 0 };
   let mounted = false;
+  let activeJob = null;
+  let modalFocus = null;
 
   const words = {
     en: { eyebrow: "AI LEAD INTELLIGENCE", title: "AI Intelligence", subtitle: "Run secure OpenAI research directly from the CRM backend and save verified results automatically.", prepare: "Run AI Analysis", find: "Find New Leads", total: "Total leads", completed: "Analyzed leads", queued: "Awaiting AI", processing: "In progress", notAnalyzed: "Unanalyzed", failed: "Failed analyses", high: "High opportunity", search: "Search businesses, cities...", allStatuses: "All research statuses", allCategories: "All categories", sortRecent: "Recent analyses", sortOpportunity: "Highest opportunity", sortNewest: "Newest leads", selectPage: "Select page", selected: "selected", lead: "Business", category: "Category", status: "Research status", scores: "Scores", action: "Action", noData: "No leads match these filters.", one: "Analyze", view: "View intelligence", previous: "Previous", next: "Next", recentBatches: "Recent research batches", noBatches: "No research batch yet.", close: "Close", back: "Back to intelligence", download: "Download Markdown", current: "Current digital situation", website: "Website analysis", landing: "Landing-page opportunities", seo: "SEO analysis", geo: "GEO analysis", social: "Social media analysis", marketing: "Marketing opportunities", crmAi: "CRM & AI opportunities", services: "Recommended services", plan: "Action plan", evidence: "Supporting evidence", report: "Full Markdown report", unknown: "Not researched yet", researchDate: "Research date", confidence: "Confidence" },
@@ -29,11 +31,31 @@
 
   function openModal(body) {
     const modal = document.getElementById("appModal");
+    const wasOpen = document.body.classList.contains("modal-open");
+    if (!wasOpen) modalFocus = document.activeElement;
     modal.innerHTML = body; modal.setAttribute("aria-hidden", "false"); document.body.classList.add("modal-open");
+    if (!wasOpen) modal.querySelector("input,select,textarea,button")?.focus();
+    updateJobNotice();
   }
 
   function closeModal() {
     document.body.classList.remove("modal-open"); document.getElementById("appModal")?.setAttribute("aria-hidden", "true");
+    modalFocus?.isConnected && modalFocus.focus();
+    updateJobNotice();
+  }
+
+  function updateJobNotice() {
+    let notice = document.getElementById("intelJobNotice");
+    if (!activeJob) return;
+    if (!notice) {
+      notice = document.createElement("button");
+      notice.id = "intelJobNotice"; notice.className = "ux-job-notice";
+      notice.dataset.intelAction = "track-job"; notice.type = "button";
+      document.body.append(notice);
+    }
+    const terminal = ["completed", "partial", "failed"].includes(activeJob.status);
+    notice.innerHTML = `${icon("ai")}<span><strong>${esc(state.locale === "fr" ? (terminal ? "Résultats de l’analyse IA" : "Analyse IA en cours") : (terminal ? "AI research results" : "AI research is running"))}</strong><small>${esc(activeJob.batchCode || "")} · ${esc(state.locale === "fr" ? "Voir le suivi" : "View progress")}</small></span>`;
+    notice.hidden = document.body.classList.contains("modal-open") || (terminal && activeJob.seen);
   }
 
   function statusMeta(status) {
@@ -83,7 +105,18 @@
   }
 
   function render() { return state.detail ? detail() : dashboard(); }
-  function renderInto() { const node = document.getElementById("appContent"); if (node && location.hash.startsWith("#intelligence")) node.innerHTML = render(); }
+  function renderInto() {
+    const node = document.getElementById("appContent");
+    if (!node || !location.hash.startsWith("#intelligence")) return;
+    const focused = document.activeElement;
+    const restore = node.contains(focused) && focused.id ? { id: focused.id, start: focused.selectionStart, end: focused.selectionEnd } : null;
+    node.innerHTML = render();
+    if (restore) {
+      const replacement = document.getElementById(restore.id);
+      replacement?.focus({ preventScroll: true });
+      if (replacement?.setSelectionRange && restore.start !== null && restore.start !== undefined) replacement.setSelectionRange(restore.start, restore.end);
+    }
+  }
 
   async function refresh(page = state.pagination.page || 1) {
     state.loading = !state.leads.length; state.error = ""; renderInto();
@@ -104,7 +137,16 @@
 
   function jobDialog(job) {
     const finished = ["completed", "partial"].includes(job.status); const failed = job.status === "failed";
-    return `<div class="modal-header"><div><p class="eyebrow">AI RESEARCH JOB</p><h2 id="modalTitle">${esc(job.batchCode || "Research")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><div class="intel-job-visual ${finished ? "done" : failed ? "error" : ""}">${finished ? "✓" : failed ? "!" : `<span></span>`}</div><h3>${finished ? (state.locale === "fr" ? "Recherche terminée" : "Research completed") : failed ? (state.locale === "fr" ? "La recherche a échoué" : "Research failed") : (state.locale === "fr" ? "Recherche en cours…" : "Research in progress…")}</h3><p>${failed ? esc(job.error || "AI automation failed.") : finished ? (job.kind === "discovery" ? `${Number(job.saved || 0)} candidates are ready for review.` : `${Number(job.completed || 0)} of ${Number(job.total || job.completed || 0)} analyses saved.`) : (state.locale === "fr" ? "Le backend recherche, vérifie les sources et enregistre les résultats. Vous pouvez fermer cette fenêtre." : "The backend is researching, verifying sources, and saving results. You can close this window.")}</p>${job.model ? `<div class="intel-safety-note">Model: ${esc(job.model)} · Status: ${esc(job.status)}</div>` : ""}<div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button>${finished && job.kind === "discovery" ? `<button class="button" data-intel-action="review-discovery" data-id="${esc(job.batchId)}">Review candidates</button>` : ""}</div></div>`;
+    const fr = state.locale === "fr";
+    const queued = ["starting", "queued", "awaiting_chatgpt"].includes(job.status);
+    const total = Math.max(0, Number(job.total || 0));
+    const processed = Math.max(0, Number(job.completed || 0)) + Math.max(0, Number(job.failed || 0));
+    const progress = finished ? 100 : total && processed ? Math.min(99, Math.round(processed / total * 100)) : null;
+    const title = failed ? (fr ? "Analyse interrompue" : "Research stopped") : job.status === "partial" ? (fr ? "Terminé · à vérifier" : "Finished · needs review") : finished ? (fr ? "Votre analyse est prête" : "Your research is ready") : queued ? (fr ? "Préparation de l’analyse" : "Preparing your research") : (fr ? "Analyse des sources publiques" : "Researching public sources");
+    const steps = fr ? ["Préparer", "Rechercher", "Enregistrer"] : ["Prepare", "Research", "Save results"];
+    const current = finished ? 3 : queued ? 0 : 1;
+    const summary = failed ? esc(job.error || (fr ? "Réessayez depuis la liste des leads." : "Try again from the leads list.")) : finished ? (job.kind === "discovery" ? `${Number(job.saved || 0)} ${fr ? "entreprises prêtes à vérifier." : "businesses ready for your review."}` : `${Number(job.completed || 0)} / ${total} ${fr ? "analyses enregistrées" : "analyses saved"}${Number(job.failed || 0) ? ` · ${Number(job.failed)} ${fr ? "échouées" : "failed"}` : ""}.`) : (fr ? "Les sources sont recherchées et les résultats seront enregistrés. Le temps varie selon les entreprises." : "Sources are being researched and results will be saved. Timing varies by business.");
+    return `<div class="modal-header"><div><p class="eyebrow">${fr ? "SUIVI DE L’ANALYSE IA" : "AI RESEARCH PROGRESS"}</p><h2 id="modalTitle">${fr ? "Votre assistant de recherche" : "Your research assistant"}</h2></div><button class="close-button" data-intel-action="close" aria-label="${t("close")}">×</button></div><div class="modal-body ux-job" data-job-id="${esc(job.batchId)}"><div class="ux-job-ring ${failed ? "failed" : finished ? "done" : progress === null ? "pending" : ""}" data-job-progress role="progressbar" aria-label="${fr ? "Progression de l’analyse" : "Research progress"}" aria-valuemin="0" aria-valuemax="100" ${progress === null ? `aria-valuetext="${esc(title)}"` : `aria-valuenow="${progress}"`} style="--progress:${progress ?? 0}"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ux-ring-track" cx="60" cy="60" r="52"/><circle class="ux-ring-value" cx="60" cy="60" r="52" pathLength="100"/></svg><div aria-hidden="true"><strong>${failed ? "!" : progress === null ? "AI" : `<span data-job-count="${progress}">${progress}</span>%`}</strong><small>${finished ? (fr ? "terminé" : "complete") : failed ? (fr ? "interrompu" : "stopped") : (fr ? "en cours" : "working")}</small></div></div><h3 role="status">${title}</h3><p>${summary}</p><ol class="ux-job-steps">${steps.map((step, index) => `<li class="${index < current ? "done" : index === current && !failed ? "active" : ""}">${index < current ? "✓" : `0${index + 1}`} · ${step}</li>`).join("")}</ol><p class="ux-job-summary">${esc(job.batchCode || "")}${job.model ? ` · ${esc(job.model)}` : ""}</p>${!finished && !failed ? `<p class="ux-job-summary">${fr ? "Vous pouvez fermer cette fenêtre et continuer à utiliser le CRM." : "You can close this window and keep using the CRM."}</p>` : ""}<div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${finished || failed ? t("close") : (fr ? "Continuer dans le CRM" : "Continue in CRM")}</button>${finished && job.kind === "discovery" ? `<button class="button" data-intel-action="review-discovery" data-id="${esc(job.batchId)}">${fr ? "Vérifier les entreprises" : "Review businesses"}</button>` : ""}</div></div>`;
   }
 
   function findDialog() {
@@ -146,7 +188,16 @@
   async function startAutomation(kind, batch) {
     clearTimeout(state.jobTimer);
     state.jobRetries = 0;
-    const data = await api("intelligence/automation", { method: "POST", body: { kind, batchId: batch.id } });
+    activeJob = { kind, batchId: batch.id, batchCode: batch.code, status: "starting" };
+    openModal(jobDialog(activeJob));
+    let data;
+    try { data = await api("intelligence/automation", { method: "POST", body: { kind, batchId: batch.id } }); }
+    catch (error) {
+      activeJob = { ...activeJob, status: "failed", error: error.message, seen: true };
+      openModal(jobDialog(activeJob));
+      throw error;
+    }
+    activeJob = data.job;
     openModal(jobDialog(data.job));
     if (!["completed", "partial", "failed"].includes(data.job.status)) state.jobTimer = setTimeout(() => pollAutomation(kind, batch.id), 4000);
   }
@@ -154,13 +205,23 @@
   async function pollAutomation(kind, batchId) {
     try {
       const data = await api(`intelligence/automation?kind=${encodeURIComponent(kind)}&batchId=${encodeURIComponent(batchId)}`);
-      if (document.getElementById("appModal")?.getAttribute("aria-hidden") === "false") openModal(jobDialog(data.job));
+      activeJob = data.job;
+      const jobIsOpen = document.querySelector("[data-job-id]")?.dataset.jobId === batchId && document.body.classList.contains("modal-open");
+      if (jobIsOpen) {
+        const focusAction = document.activeElement?.dataset.intelAction;
+        openModal(jobDialog(data.job));
+        if (focusAction) document.querySelector(`[data-intel-action="${focusAction}"]`)?.focus();
+        if (["completed", "partial", "failed"].includes(data.job.status)) activeJob.seen = true;
+      }
+      state.jobRetries = 0;
+      updateJobNotice();
       if (["completed", "partial", "failed"].includes(data.job.status)) { await refresh(1); return; }
       state.jobTimer = setTimeout(() => pollAutomation(kind, batchId), 5000);
     } catch (error) {
       state.jobRetries += 1;
       toast(error.message);
       if (state.jobRetries <= 6) state.jobTimer = setTimeout(() => pollAutomation(kind, batchId), 10000);
+      else toast(state.locale === "fr" ? "Suivi en pause. Cliquez sur le suivi IA pour reprendre." : "Live updates paused. Open AI progress to reconnect.");
     }
   }
 
@@ -178,7 +239,12 @@
   function click(event) {
     const target = event.target.closest("[data-intel-action]"); if (!target) return;
     const action = target.dataset.intelAction;
-    if (action === "close") closeModal();
+    if (action === "track-job" && activeJob) {
+      activeJob.seen = true;
+      openModal(jobDialog(activeJob));
+      if (!["completed", "partial", "failed"].includes(activeJob.status)) { clearTimeout(state.jobTimer); state.jobRetries = 0; pollAutomation(activeJob.kind, activeJob.batchId); }
+    }
+    else if (action === "close") closeModal();
     else if (action === "retry") refresh(1);
     else if (action === "find") openModal(findDialog());
     else if (action === "review-discovery") openDiscoveryReview(target.dataset.id);
@@ -217,7 +283,7 @@
 
   function mount({ locale = "en" } = {}) {
     state.locale = locale === "fr" ? "fr" : "en";
-    if (!mounted) { document.addEventListener("click", click); document.addEventListener("change", change); document.addEventListener("input", input); document.addEventListener("submit", submit); mounted = true; }
+    if (!mounted) { document.addEventListener("click", click); document.addEventListener("change", change); document.addEventListener("input", input); document.addEventListener("submit", submit); new MutationObserver(updateJobNotice).observe(document.body, { attributes: true, attributeFilter: ["class"] }); mounted = true; }
     const match = location.hash.match(/^#intelligence\/lead\/([0-9a-f-]{36})$/i);
     if (match) viewLead(match[1]); else if (!state.leads.length && !state.error) refresh(1); else renderInto();
   }
