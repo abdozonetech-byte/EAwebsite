@@ -3,6 +3,7 @@ import { webcrypto } from 'node:crypto';
 import { onRequest } from '../functions/api/crm/intelligence/leads/[id]/project.js';
 import { signSession } from '../functions/_lib/auth.js';
 import { PROJECT_SCHEMAS, projectPrompt, projectType, projectResearchPrompt, validateProjectResearch, validateProjectOutput } from '../functions/_lib/lead-project.js';
+import { presenceFixture } from './test-crm-presence.mjs';
 if (!globalThis.crypto) globalThis.crypto = webcrypto;
 const leadId='123e4567-e89b-42d3-a456-426614174000', requestId='123e4567-e89b-42d3-a456-426614174001', generationId='123e4567-e89b-42d3-a456-426614174002';
 const env={CRM_USERNAME:'test',CRM_SESSION_SECRET:'local-test-secret',SUPABASE_URL:'https://database.test',SUPABASE_SERVICE_ROLE_KEY:'fake-db-key',OPENAI_API_KEY:'fake-openai-key'};
@@ -20,6 +21,7 @@ assert(!prompt.includes('PRIVATE-PHONE'));assert(!prompt.includes('PRIVATE-EMAIL
 assert.equal(PROJECT_SCHEMAS.mockup.additionalProperties,false);
 const originalFetch=globalThis.fetch;
 let openaiStarts=0, snapshots=0, rows=[], feedback=[], responseStatus='completed';
+let structuredOutput=solution;
 const research={identity_status:'verified',business_name:'Business',summary:'Official business services and contact journey.',findings:['The contact page provides a business enquiry entry point.'],evidence:[{url:'https://example.com/contact',title:'Business contact',claim:'A public contact page.'}]};
 const researchResponse={status:'completed',output:[{type:'web_search_call',action:{sources:[{url:'https://example.com/contact'}]}}],output_text:JSON.stringify(research)};
 assert.equal(projectType('mockup','booking_page'),'booking_page');assert.equal(projectType('solution','invalid'),null);
@@ -38,12 +40,12 @@ globalThis.fetch=async(url,opts={})=>{
       openaiStarts++;
       assert.equal(body.background,true);
       if(body.tools){assert.equal(body.tools[0].type,'web_search');assert.equal(body.tool_choice,'required');}
-      else {assert.equal(body.text.format.type,'json_schema');assert.equal(body.text.format.strict,true);assert(body.input.includes('Official business services'));}
+      else {assert.equal(body.text.format.type,'json_schema');assert.equal(body.text.format.strict,true);assert(body.input.includes('Official business services'));structuredOutput=body.text.format.schema.properties.channels?presenceFixture:solution;}
       assert(!opts.body.includes('PRIVATE-PHONE'));assert(!opts.body.includes('PRIVATE-EMAIL'));
       return respond({id:body.tools?'resp_research123':'resp_project123',status:'queued',model:'test-model'});
     }
     snapshots++;
-    return respond(u.pathname.endsWith('resp_research123') ? {...researchResponse,status:responseStatus} : {status:responseStatus,output_text:JSON.stringify(solution)});
+    return respond(u.pathname.endsWith('resp_research123') ? {...researchResponse,status:responseStatus} : {status:responseStatus,output_text:JSON.stringify(structuredOutput)});
   }
   assert.equal(u.host,'database.test');
   const table=u.pathname.split('/').pop();
@@ -56,7 +58,7 @@ globalThis.fetch=async(url,opts={})=>{
   if(table==='lead_project_generations'){
     let filtered=rows.filter(r=>(!u.searchParams.get('request_id')||u.searchParams.get('request_id')===`eq.${r.request_id}`)&&(!u.searchParams.get('id')||u.searchParams.get('id')===`eq.${r.id}`)&&(!u.searchParams.get('lead_id')||u.searchParams.get('lead_id')===`eq.${r.lead_id}`)&&(!u.searchParams.get('kind')||u.searchParams.get('kind')===`eq.${r.kind}`)&&(!u.searchParams.get('status')||(u.searchParams.get('status').startsWith('in.')?u.searchParams.get('status').includes(r.status):u.searchParams.get('status')===`eq.${r.status}`)));
     filtered=filtered.filter(r=>(!u.searchParams.has('response_id')||(u.searchParams.get('response_id')==='is.null'?r.response_id==null:u.searchParams.get('response_id')===`eq.${r.response_id}`))&&(!u.searchParams.has('output->>phase')||u.searchParams.get('output->>phase')===`eq.${r.output?.phase}`));
-    if(method==='POST'){const row={id:rows.length?'123e4567-e89b-42d3-a456-426614174077':generationId,...body,created_at:new Date().toISOString()};rows.push(row);return respond([row]);}
+    if(method==='POST'){const row={id:rows.length?crypto.randomUUID():generationId,...body,created_at:new Date().toISOString()};rows.push(row);return respond([row]);}
     if(method==='PATCH'){filtered.forEach(r=>Object.assign(r,body));return respond(filtered);}
     return respond(filtered);
   }
@@ -97,6 +99,13 @@ try{
   const startsBeforeUncertain=openaiStarts;
   await call('GET',null,'?poll=1');assert.equal(openaiStarts,startsBeforeUncertain,'Uncertain business identity must not generate content');
   assert.equal(rows.at(-1).status,'failed');assert(rows.at(-1).error.includes('identified'));
+  research.identity_status='verified';researchResponse.output_text=JSON.stringify(research);
+  const presenceStart=await(await call('POST',{...startBody,projectType:'presence',requestId:crypto.randomUUID()})).json();
+  await call('GET',null,'?poll=1');
+  const presenceDone=await(await call('GET',null,'?poll=1')).json();
+  const presence=presenceDone.generations.find(g=>g.id===presenceStart.generation.id);
+  assert.equal(presence.status,'completed');assert.equal(presence.output._purpose,'presence');assert.equal(presence.output.channels.length,6);assert.equal(presence.output.channels[0].score,62);assert(presence.output.email_body.includes('Abdessamad'));
+  assert.equal(JSON.stringify(rows[0].output),priorOutput,'Presence generation does not overwrite prior versions');
   assert(!requests.some(r=>r.method==='DELETE'),'No record deletion');
   assert(!requests.some(r=>['leads','lead_analyses'].includes(r.path.split('/').pop())&&r.method!=='GET'),'Existing leads and research are read-only');
   console.log('CRM project tests passed: auth, validation, strict schemas, contact privacy, idempotency, active-job reuse, saved results, evidence restrictions, feedback ownership and no lead mutations.');

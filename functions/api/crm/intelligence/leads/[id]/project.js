@@ -4,9 +4,13 @@ import { supabaseFetch, supabaseErrorResponse } from "../../../../../_lib/supaba
 import { openAiConfig, startResearchResponse, startProjectResponse, retrieveResearchResponse, parseJsonOutput } from "../../../../../_lib/openai-intelligence.js";
 import { ACTIVE, UUID, VISUAL_TYPES, PROJECT_SCHEMAS, projectType, projectResearchPrompt, validateProjectResearch, projectPrompt, validateProjectOutput, publicGeneration } from "../../../../../_lib/lead-project.js";
 import { latestLogo, decodeImageResult, saveAsset, assetUrl, assertVisualStorage } from "../../../../../_lib/project-assets.js";
-import { approveVisual } from "../../../../../_lib/project-visuals.js";
+import { PRESENCE_SCHEMA, presencePrompt, validatePresence } from "../../../../../_lib/lead-presence.js";
 
 async function poll(env, row, analysis, lead) {
+  if(row.kind==='mockup'&&ACTIVE.includes(row.status)&&['research','awaiting_approval'].includes(row.output?.phase)) {
+    const saved=await supabaseFetch(env,'lead_project_generations',{method:'PATCH',search:{id:`eq.${row.id}`,status:`eq.${row.status}`,'output->>phase':`eq.${row.output.phase}`},body:{status:'failed',error:'Mockup creation has been removed from this CRM. Saved data is preserved; no further image generation was started.',completed_at:new Date().toISOString()}});
+    return saved[0]||row;
+  }
   if (!ACTIVE.includes(row.status) || !row.response_id) return row;
   const response = await retrieveResearchResponse(env, row.response_id, row.output?.phase === "research");
   if (response.status === 'completed' && row.output?.phase === 'image') {
@@ -39,7 +43,7 @@ async function poll(env, row, analysis, lead) {
           supabaseFetch(env, "lead_project_generations", { search: { select: "output", lead_id: `eq.${row.lead_id}`, kind: "eq.solution", status: "eq.completed", order: "created_at.desc", limit: "1" } }),
         ]);
         let started;
-        try { started = await startProjectResponse(env, projectPrompt(row.kind, lead, analysis, feedback, projectType(row.kind, row.brief), row.locale, solutions[0]?.output, research), PROJECT_SCHEMAS[row.kind]); }
+        try { started = await startProjectResponse(env, row.brief==='presence'?presencePrompt(lead,research,feedback,row.locale):projectPrompt(row.kind, lead, analysis, feedback, projectType(row.kind, row.brief), row.locale, solutions[0]?.output, research), row.brief==='presence'?PRESENCE_SCHEMA:PROJECT_SCHEMAS[row.kind]); }
         catch (error) {
           const failed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, status: "eq.starting", response_id: "is.null" }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
           return failed[0] || claimed[0];
@@ -48,7 +52,7 @@ async function poll(env, row, analysis, lead) {
         return saved[0] || claimed[0];
       }
       const research = row.output?.research;
-      const output = validateProjectOutput(row.kind, parseJsonOutput(response), research?.evidence || analysis?.evidence || []);
+      const output = row.brief==='presence'?validatePresence(parseJsonOutput(response),research,row.locale):validateProjectOutput(row.kind, parseJsonOutput(response), research?.evidence || analysis?.evidence || []);
       update = { status: "completed", output: { ...output, ...(research ? { _research: research } : {}), _type: projectType(row.kind, row.brief) }, completed_at: new Date().toISOString(), error: null };
     }
     catch (error) { update = { status: "failed", error: error.message, completed_at: new Date().toISOString() }; }
@@ -76,7 +80,7 @@ export async function onRequest(context) {
       const parsed = await readJsonBody(context.request, 16000);
       if (!parsed.ok) return json({ ok: false, message: parsed.message }, parsed.status);
       const body = parsed.body;
-      if(body?.action==='approve-mockup') return await approveVisual(context.env,lead,body);
+      if(body?.action==='approve-mockup'||(body?.action==='generate'&&body.kind==='mockup')) return json({message:'Mockups have been removed from this CRM. Use online presence and message drafting instead.'},410);
       if(body?.action==='cancel-mockup') {
         if(!UUID.test(String(body.generationId||''))) return json({message:'Invalid mockup ID.'},400);
         const cancelled=await supabaseFetch(context.env,'lead_project_generations',{method:'PATCH',search:{id:`eq.${body.generationId}`,lead_id:`eq.${id}`,kind:'eq.mockup',status:'eq.queued','output->>phase':'eq.awaiting_approval'},body:{status:'failed',error:'Mockup recommendation dismissed by the user. No image was generated.',completed_at:new Date().toISOString()}});
@@ -109,7 +113,7 @@ export async function onRequest(context) {
         throw error;
       }
       let started;
-      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis,visual)); }
+      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis,visual,body.projectType==='presence')); }
       catch (error) {
         await supabaseFetch(context.env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${reserved.id}` }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
         return json({ ok: false, message: error.message }, 502);

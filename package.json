@@ -6,6 +6,7 @@
     "test:crm-import": "node scripts/test-crm-import.mjs",
     "test:crm-intelligence": "node scripts/test-crm-intelligence.mjs",
     "test:crm-project": "node scripts/test-crm-project.mjs",
-    "test:crm-visuals": "node scripts/test-crm-visuals.mjs"
+    "test:crm-visuals": "node scripts/test-crm-visuals.mjs",
+    "test:crm-presence": "node scripts/test-crm-presence.mjs"
   }
 }
