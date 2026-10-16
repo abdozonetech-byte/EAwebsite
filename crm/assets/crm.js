@@ -304,7 +304,8 @@
     document.documentElement.lang = locale;
     localStorage.setItem(LANG_KEY, locale);
     currentView = VALID_VIEWS.has(currentView) ? currentView : "dashboard";
-    if (location.hash.slice(1) !== currentView) history.replaceState(null, "", `#${currentView}`);
+    const intelligenceDetail = currentView === "intelligence" && /^#intelligence\/lead\/[0-9a-f-]{36}$/i.test(location.hash);
+    if (location.hash.slice(1) !== currentView && !intelligenceDetail) history.replaceState(null, "", `#${currentView}`);
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === currentView));
     document.querySelectorAll("[data-lang]").forEach((button) => { const active = button.dataset.lang === locale; button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); });
     document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.dataset.i18n); });

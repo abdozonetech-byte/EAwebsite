@@ -96,12 +96,16 @@
     }).join("");
   }
 
-  function detail() {
+  function detailBase() {
     const lead = state.detail; if (!lead) return dashboard();
     const [label, tone] = statusMeta(lead.analysisStatus);
     const section = (title, value) => `<article class="intel-analysis-card"><h2>${esc(title)}</h2><p>${esc(value || t("unknown"))}</p></article>`;
     const list = (title, values) => `<article class="intel-analysis-card"><h2>${esc(title)}</h2>${values?.length ? `<ol>${values.map((value) => `<li>${esc(value)}</li>`).join("")}</ol>` : `<p>${t("unknown")}</p>`}</article>`;
     return `<section class="page-stack intelligence-page"><button class="intel-back" data-intel-action="back">← ${t("back")}</button><header class="intel-detail-hero"><div><span class="intel-status ${tone}"><i></i>${esc(label)}</span><h1>${esc(lead.company || lead.fullName)}</h1><p>${esc(lead.businessSector || "—")} · ${esc(lead.city || "—")}</p>${lead.website ? `<a href="${esc(lead.website)}" target="_blank" rel="noopener noreferrer">${esc(lead.website)} ↗</a>` : ""}</div><div class="header-actions">${lead.reportMarkdown ? `<button class="button button-secondary" data-intel-action="download" data-id="${lead.id}">${icon("download")} ${t("download")}</button>` : ""}</div></header><div class="intel-detail-meta"><span>${t("researchDate")} <b>${formatDate(lead.researchedAt)}</b></span><span>${t("confidence")} <b>${esc(lead.researchConfidence || "—")}</b></span>${lead.batchCode ? `<span>Batch <b>${esc(lead.batchCode)}</b></span>` : ""}</div><div class="intel-score-cards"><article><span>Digital maturity</span><b>${lead.digitalMaturityScore ?? "—"}<small>/100</small></b><p>${esc(lead.scoreExplanations?.digital_maturity || "Heuristic assessment, not a sales probability.")}</p></article><article><span>Business opportunity</span><b>${lead.opportunityScore ?? "—"}<small>/100</small></b><p>${esc(lead.scoreExplanations?.business_opportunity || "Heuristic assessment, not a sales probability.")}</p></article><article><span>Sales priority</span><b>${lead.salesPriorityScore ?? "—"}<small>/100</small></b><p>${esc(lead.scoreExplanations?.sales_priority || "Heuristic assessment, not a closing probability.")}</p></article></div><div class="intel-analysis-grid">${section(t("current"), lead.currentSituation)}${section(t("website"), lead.websiteAnalysis)}${section(t("landing"), lead.landingPageAnalysis)}${section(t("seo"), lead.seoAnalysis)}${section(t("geo"), lead.geoAnalysis)}${section(t("social"), lead.socialAnalysis)}${section(t("marketing"), lead.marketingAnalysis)}${section(t("crmAi"), lead.crmAutomationAnalysis)}${list(t("services"), lead.recommendedServices)}${list(t("plan"), lead.actionPlan)}</div><article class="panel intel-evidence"><h2>${t("evidence")}</h2>${lead.evidence?.length ? `<div>${lead.evidence.map((item) => `<a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer"><strong>${esc(item.title || new URL(item.url).hostname)}</strong><span>${esc(item.claim || item.url)}</span></a>`).join("")}</div>` : `<p>${t("unknown")}</p>`}</article>${lead.reportMarkdown ? `<article class="panel intel-report"><h2>${t("report")}</h2><div class="intel-markdown">${safeMarkdown(lead.reportMarkdown)}</div></article>` : ""}</section>`;
+  }
+
+  function detail() {
+    return detailBase().replace('<div class="intel-analysis-grid">', `<section id="leadProjectWorkspace" aria-label="Project workspace"></section><div class="intel-analysis-grid">`);
   }
 
   function render() { return state.detail ? detail() : dashboard(); }
@@ -111,6 +115,7 @@
     const focused = document.activeElement;
     const restore = node.contains(focused) && focused.id ? { id: focused.id, start: focused.selectionStart, end: focused.selectionEnd } : null;
     node.innerHTML = render();
+    if (state.detail) window.CrmProject?.mount(state.detail);
     if (restore) {
       const replacement = document.getElementById(restore.id);
       replacement?.focus({ preventScroll: true });

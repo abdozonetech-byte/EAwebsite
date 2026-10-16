@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test:crm-import": "node scripts/test-crm-import.mjs",
-    "test:crm-intelligence": "node scripts/test-crm-intelligence.mjs"
+    "test:crm-intelligence": "node scripts/test-crm-intelligence.mjs",
+    "test:crm-project": "node scripts/test-crm-project.mjs"
   }
 }

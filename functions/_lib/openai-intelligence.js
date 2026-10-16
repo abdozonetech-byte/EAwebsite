@@ -71,6 +71,20 @@ async function retrieveResearchResponse(env, responseId) {
   return openAiRequest(env, `/responses/${encodeURIComponent(safeId)}`);
 }
 
+async function startProjectResponse(env, input, schema) {
+  const config = openAiConfig(env);
+  const response = await openAiRequest(env, "/responses", {
+    method: "POST",
+    body: {
+      model: config.model, background: true, store: true,
+      reasoning: { effort: "medium" }, max_output_tokens: 12000,
+      input, text: { format: { type: "json_schema", name: "crm_project", strict: true, schema } },
+    },
+  });
+  if (!/^resp_[A-Za-z0-9_-]+$/.test(response.id || "")) throw new Error("OpenAI did not return a valid project job.");
+  return { id: response.id, model: response.model || config.model, status: response.status || "queued" };
+}
+
 function responseOutputText(response) {
   if (typeof response?.output_text === "string" && response.output_text.trim()) return response.output_text.trim();
   const chunks = [];
@@ -143,5 +157,6 @@ export {
   responseOutputText,
   retrieveResearchResponse,
   startResearchResponse,
+  startProjectResponse,
   validateAnalysisOutput,
 };

@@ -46,3 +46,12 @@ final result: passed
 - Syntax checks, CRM intelligence/import regression suites and the deployment SEO audit passed. Workbook-specific import verification was skipped because the original workbook was unavailable.
 - Browser preview uses synthetic API responses only. No production lead data was changed and no paid AI requests were made. This does not establish live OpenAI billing or service availability.
 - Local sample preview: http://127.0.0.1:4178/crm/#intelligence. Preview server is in `/tmp/elboubakry-crm-ux-preview.mjs`, outside the production repository.
+
+## Lead project workspace — 2026-10-16
+
+- Added a dedicated workspace between the saved intelligence scores and original research cards: problem/solution plans, responsive landing-page mockups, contact drafts and version-linked feedback.
+- Existing lead records and research remain read-only in the new API. New project versions and feedback are stored separately using additive migration 006 (prepared, not applied to production during this local implementation).
+- Desktop 1440px and mobile 390px/320px: all four project sections fit without document-level horizontal overflow. The scrollable section navigation is constrained to the workspace. Direct lead URLs survive refresh.
+- Local browser checks confirmed feedback saving, completion of a simulated mockup job, preservation of the earlier version, and valid WhatsApp/mailto draft links. Exported standalone mockup HTML contains a restrictive content policy, no scripts, escaped content and embedded styles.
+- Backend tests cover authenticated access, explicit generation confirmation, duplicate request reuse, no second job while one is active, validation and evidence restrictions, feedback ownership and retention of completed versions after a failed revision. No production leads were changed and no live API generation was run.
+- Saved local preview server: `../crm-design-preview.mjs`, outside the deployable repository. Its top banner explicitly identifies sample data. Preview starts with `node ../crm-design-preview.mjs` and binds only to 127.0.0.1:4178.
