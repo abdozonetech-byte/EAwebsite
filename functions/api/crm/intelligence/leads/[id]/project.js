@@ -2,16 +2,35 @@ import { requireCrmApi } from "../../../../../_lib/crm-api.js";
 import { json, readJsonBody } from "../../../../../_lib/http.js";
 import { supabaseFetch, supabaseErrorResponse } from "../../../../../_lib/supabase.js";
 import { openAiConfig, startResearchResponse, startProjectResponse, retrieveResearchResponse, parseJsonOutput } from "../../../../../_lib/openai-intelligence.js";
-import { ACTIVE, UUID, PROJECT_SCHEMAS, projectType, projectResearchPrompt, validateProjectResearch, projectPrompt, validateProjectOutput, publicGeneration } from "../../../../../_lib/lead-project.js";
+import { ACTIVE, UUID, VISUAL_TYPES, PROJECT_SCHEMAS, projectType, projectResearchPrompt, validateProjectResearch, projectPrompt, validateProjectOutput, publicGeneration } from "../../../../../_lib/lead-project.js";
+import { latestLogo, decodeImageResult, saveAsset, assetUrl, assertVisualStorage } from "../../../../../_lib/project-assets.js";
+import { approveVisual } from "../../../../../_lib/project-visuals.js";
 
 async function poll(env, row, analysis, lead) {
   if (!ACTIVE.includes(row.status) || !row.response_id) return row;
   const response = await retrieveResearchResponse(env, row.response_id, row.output?.phase === "research");
+  if (response.status === 'completed' && row.output?.phase === 'image') {
+    let bytes;
+    try { bytes=decodeImageResult(response); }
+    catch(error) {
+      const saved=await supabaseFetch(env,'lead_project_generations',{method:'PATCH',search:{id:`eq.${row.id}`,response_id:`eq.${row.response_id}`,status:'in.(queued,in_progress)'},body:{status:'failed',error:error.message,completed_at:new Date().toISOString()}});
+      return saved[0]||row;
+    }
+    // Storage retries reuse the same finished image, never start another paid response.
+    const asset=await saveAsset(env,row.lead_id,'mockup',bytes,row.id);
+    const saved=await supabaseFetch(env,'lead_project_generations',{method:'PATCH',search:{id:`eq.${row.id}`,response_id:`eq.${row.response_id}`,status:'in.(queued,in_progress)'},body:{status:'completed',error:null,completed_at:new Date().toISOString(),output:{render_mode:'image',image_asset_id:asset.id,image_url:assetUrl(row.lead_id,asset.id),download_url:assetUrl(row.lead_id,asset.id,true),logo_asset_id:row.output.logo_asset_id,_type:row.output.selected_type,_research:row.output.research,disclaimer:row.output.logo_asset_id?'AI-generated concept. Check logo lettering and visual accuracy before sharing.':'Proposed branding concept; no official logo was supplied.'}}});
+    return saved[0]||row;
+  }
   let update;
   if (response.status === "completed") {
     try {
       if (row.output?.phase === "research") {
         const research = validateProjectResearch(parseJsonOutput(response), response);
+        if (row.output.render_mode === 'image') {
+          if (!research.recommended_mockup_type) throw new Error('The research did not return a valid mockup recommendation. No image was generated.');
+          const saved=await supabaseFetch(env,'lead_project_generations',{method:'PATCH',search:{id:`eq.${row.id}`,response_id:`eq.${row.response_id}`,status:'in.(queued,in_progress)','output->>phase':'eq.research'},body:{status:'queued',response_id:null,output:{...row.output,phase:'awaiting_approval',research}}});
+          return saved[0]||row;
+        }
         // Only one concurrent poll may start the second paid phase.
         const claimed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, lead_id: `eq.${row.lead_id}`, response_id: `eq.${row.response_id}`, status: "in.(queued,in_progress)", "output->>phase": "eq.research" }, body: { status: "starting", response_id: null, output: { phase: "preparing_generation", research } } });
         if (!claimed.length) return row;
@@ -57,6 +76,12 @@ export async function onRequest(context) {
       const parsed = await readJsonBody(context.request, 16000);
       if (!parsed.ok) return json({ ok: false, message: parsed.message }, parsed.status);
       const body = parsed.body;
+      if(body?.action==='approve-mockup') return await approveVisual(context.env,lead,body);
+      if(body?.action==='cancel-mockup') {
+        if(!UUID.test(String(body.generationId||''))) return json({message:'Invalid mockup ID.'},400);
+        const cancelled=await supabaseFetch(context.env,'lead_project_generations',{method:'PATCH',search:{id:`eq.${body.generationId}`,lead_id:`eq.${id}`,kind:'eq.mockup',status:'eq.queued','output->>phase':'eq.awaiting_approval'},body:{status:'failed',error:'Mockup recommendation dismissed by the user. No image was generated.',completed_at:new Date().toISOString()}});
+        return cancelled.length?json({ok:true}):json({message:'Only a recommendation awaiting approval can be dismissed.'},409);
+      }
       if (body?.action === "feedback") {
         if (!Number.isInteger(body.rating) || body.rating < 1 || body.rating > 5 || typeof body.body !== "string" || !body.body.trim() || body.body.length > 4000) return json({ ok: false, message: "Choose a rating and write feedback (up to 4,000 characters)." }, 400);
         if (body.generationId) {
@@ -68,20 +93,23 @@ export async function onRequest(context) {
         return json({ ok: true });
       }
       if (body?.action !== "generate" || !["solution", "mockup"].includes(body.kind) || !projectType(body.kind, body.projectType) || !UUID.test(String(body.requestId || "")) || !["fr", "en"].includes(body.locale) || body.confirmCost !== true) return json({ ok: false, message: "Invalid generation request." }, 400);
+      const visual=body.kind==='mockup' && body.visualMockup===true;
+      if(visual && body.projectType!=='auto' && !Object.hasOwn(VISUAL_TYPES,body.projectType||'')) return json({message:'Choose a supported visual mockup type.'},400);
       openAiConfig(context.env); // Validate configuration before reserving a job.
       const previous = await supabaseFetch(context.env, "lead_project_generations", { search: { select: "*", request_id: `eq.${body.requestId}`, lead_id: `eq.${id}`, limit: "1" } });
       if (previous.length) return json({ ok: true, generation: publicGeneration(previous[0]) });
       const active = await supabaseFetch(context.env, "lead_project_generations", { search: { select: "*", lead_id: `eq.${id}`, status: `in.(${ACTIVE.join(",")})`, limit: "1" } });
       if (active.length) return json({ ok: true, generation: publicGeneration(active[0]) });
+      if(visual) await Promise.all([latestLogo(context.env,id),assertVisualStorage(context.env)]); // Check private storage before spending research credit.
       let reserved;
       try {
-        [reserved] = await supabaseFetch(context.env, "lead_project_generations", { method: "POST", body: { lead_id: id, request_id: body.requestId, kind: body.kind, brief: projectType(body.kind, body.projectType), locale: body.locale, status: "starting", output: { phase: "research" } } });
+        [reserved] = await supabaseFetch(context.env, "lead_project_generations", { method: "POST", body: { lead_id: id, request_id: body.requestId, kind: body.kind, brief: projectType(body.kind, body.projectType), locale: body.locale, status: "starting", output: { phase: "research", ...(visual?{render_mode:'image'}:{}) } } });
       } catch (error) {
         if (error.status === 409) return json({ ok: false, message: "A generation is already starting. Refresh the project workspace." }, 409);
         throw error;
       }
       let started;
-      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis)); }
+      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis,visual)); }
       catch (error) {
         await supabaseFetch(context.env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${reserved.id}` }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
         return json({ ok: false, message: error.message }, 502);

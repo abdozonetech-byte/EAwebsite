@@ -85,6 +85,19 @@ async function startProjectResponse(env, input, schema) {
   return { id: response.id, model: response.model || config.model, status: response.status || "queued" };
 }
 
+async function startVisualResponse(env, prompt, logoDataUrl = null) {
+  const config = openAiConfig(env);
+  const content = [{type:'input_text',text:prompt}, ...(logoDataUrl ? [{type:'input_image',image_url:logoDataUrl,detail:'high'}] : [])];
+  const response = await openAiRequest(env,'/responses',{method:'POST',body:{
+    model:config.model,background:true,store:true,
+    input:[{role:'user',content}],
+    tools:[{type:'image_generation',model:String(env.OPENAI_IMAGE_MODEL || 'gpt-image-1.5'),quality:'medium',size:'1536x1024',output_format:'png'}],
+    tool_choice:{type:'image_generation'},max_tool_calls:1,
+  }});
+  if(!/^resp_[A-Za-z0-9_-]+$/.test(response.id || '')) throw new Error('OpenAI did not return a valid image job.');
+  return {id:response.id,status:response.status||'queued',model:response.model||config.model};
+}
+
 function responseOutputText(response) {
   if (typeof response?.output_text === "string" && response.output_text.trim()) return response.output_text.trim();
   const chunks = [];
@@ -158,5 +171,6 @@ export {
   retrieveResearchResponse,
   startResearchResponse,
   startProjectResponse,
+  startVisualResponse,
   validateAnalysisOutput,
 };

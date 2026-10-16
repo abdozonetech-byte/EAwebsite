@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const state = { lead: null, data: null, loading: false, error: "", tab: "solution", timer: null, busy: false, draft: "", rating: "5", device: "desktop", selected: {}, message: "", request: null, feedbackVersion: null };
+  const state = { lead: null, data: null, loading: false, error: "", tab: "solution", timer: null, busy: false, draft: "", rating: "5", device: "desktop", selected: {}, message: "", request: null, feedbackVersion: null, logo: null, logoLoading: false };
   const active = (item) => ["starting", "queued", "in_progress"].includes(item.status);
   const fr = () => document.documentElement.lang === "fr";
   const tr = (en, french) => fr() ? french : en;
@@ -32,7 +32,7 @@
       const finished = data.generations.find(g => g.status === "completed" && state.data?.generations.some(old => old.id === g.id && active(old)));
       if (finished) state.message = finished.kind === "mockup" ? tr("New mockup saved. Earlier versions are still available.", "Nouvelle maquette enregistrée. Les versions précédentes sont conservées.") : tr("Solution plan saved. Your outreach drafts are ready.", "Plan de solutions enregistré. Vos brouillons de contact sont prêts.");
       state.data = data; state.error = ""; state.loading = false; render();
-      if (data.generations.some(active)) state.timer = setTimeout(() => refresh(true), 4500);
+      if (data.generations.some(g => active(g) && g.phase !== "awaiting_approval")) state.timer = setTimeout(() => refresh(true), 4500);
     } catch (error) {
       if (state.lead?.id !== id) return;
       state.error = error.message; state.loading = false; render();
@@ -48,7 +48,7 @@
 
   function empty(kind) {
     const isMockup = kind === "mockup";
-    return `<div class="project-empty">${svg(isMockup ? "layout" : "spark")}<h3>${isMockup ? tr("Show what better could look like", "Montrez à quoi pourrait ressembler le projet") : tr("Turn this research into a clear proposal", "Transformez la recherche en proposition concrète")}</h3><p>${isMockup ? tr("Generate a landing-page concept with tailored copy, services and a visual direction.", "Créez un concept de landing page avec un message, des services et une direction visuelle adaptés.") : tr("Get paired problems and solutions, recommended services, next steps and outreach drafts.", "Obtenez les problèmes et solutions, services, prochaines étapes et messages de contact.")}</p>${action(`generate-${kind}`, isMockup ? tr("Generate mockup", "Générer la maquette") : tr("Generate solution plan", "Générer le plan de solutions"), isMockup ? "layout" : "spark", false)}</div>`;
+    return `<div class="project-empty">${svg(isMockup ? "layout" : "spark")}<h3>${isMockup ? tr("Show what better could look like", "Montrez à quoi pourrait ressembler le projet") : tr("Turn this research into a clear proposal", "Transformez la recherche en proposition concrète")}</h3><p>${isMockup ? tr("Create branded visual mockups for devices, clothing, cups, packaging and more. AI recommends the type; you approve it before generation.", "Créez des visuels de marque : appareils, vêtements, tasses, packaging et plus. L’IA recommande le type ; vous le validez avant la génération.") : tr("Get paired problems and solutions, recommended services, next steps and outreach drafts.", "Obtenez les problèmes et solutions, services, prochaines étapes et messages de contact.")}</p>${action(`generate-${kind}`, isMockup ? tr("Generate mockup", "Générer la maquette") : tr("Generate solution plan", "Générer le plan de solutions"), isMockup ? "layout" : "spark", false)}</div>`;
   }
 
   function solution() {
@@ -76,6 +76,12 @@
   function mockup() {
     const result = selected("mockup");
     if (!result) return empty("mockup");
+    if(result.output.render_mode === 'image') {
+      const p=result.output;
+      const download=p.preview_placeholder?`<button class="button button-secondary" disabled>${tr('Download available after real generation','Téléchargement après génération réelle')}</button>`:`<a class="button" href="${esc(p.download_url)}" download>${svg('copy')}${tr('Download PNG','Télécharger PNG')}</a>`;
+      const visual=p.preview_placeholder?`<div class="project-visual-placeholder">${svg('layout')}<h3>${tr('Your generated image will appear here','Votre image générée apparaîtra ici')}</h3><p>${tr('LOCAL UI DEMO · No AI image generated or API credit used.','DÉMO LOCALE · Aucune image IA générée ni crédit API utilisé.')}</p></div>`:`<img src="${esc(p.image_url)}" alt="${esc(tr('Proposed branded mockup for ','Concept de maquette pour ')+(state.lead.company||state.lead.fullName||'this business'))}">`;
+      return `<div class="project-result-top">${versions('mockup')}<div class="project-actions">${download}${action('generate-mockup',tr('Change type / new version','Changer le type / nouvelle version'),'layout')}</div></div><div class="project-image-heading"><span class="eyebrow">${esc(visualLabel(p._type))}</span><h3>${tr('Your branded mockup','Votre maquette de marque')}</h3><p>${esc(p.disclaimer)}</p></div><figure class="project-image-result">${visual}</figure><p class="project-caption">${tr('AI-generated visual concepts are not actual product photographs. Review text and logo accuracy before sharing.','Les concepts générés par IA ne sont pas des photos de produits réels. Vérifiez le texte et le logo avant de partager.')}</p>`;
+    }
     return `<div class="project-result-top">${versions("mockup")}<div class="project-device"><button type="button" data-project-action="device-desktop" aria-pressed="${state.device === "desktop"}">${tr("Desktop", "Ordinateur")}</button><button type="button" data-project-action="device-mobile" aria-pressed="${state.device === "mobile"}">${tr("Mobile", "Mobile")}</button></div>${action("download-mockup", tr("Download HTML", "Télécharger HTML"), "layout")}</div><p class="project-caption">${tr("AI-generated design concept. Proposed copy and layout, ready to discuss with your lead.", "Concept de design généré par IA. Message et mise en page proposés pour échanger avec votre lead.")}</p><div class="project-canvas ${state.device === "mobile" ? "is-mobile" : ""}">${mockupMarkup(result.output)}</div><div class="project-sales"><h3>${tr("Design direction", "Direction visuelle")}</h3><p>${esc(result.output.design_rationale)}</p></div>`;
   }
 
@@ -113,6 +119,12 @@
       host.querySelector(".project-progress strong").textContent = tr("Researching this business online…", "Recherche de cette entreprise en ligne…");
       host.querySelector(".project-progress p").textContent = tr("Checking identity, services and public sources before creating your project.", "Vérification de l’identité, des services et des sources publiques avant la création du projet.");
     }
+    if(job?.phase === 'awaiting_approval') {
+      host.querySelector('.project-progress').innerHTML = `<div><strong>${tr('AI recommendation ready','Recommandation IA prête')}</strong><p>${esc(visualLabel(job.recommendation.type))} · ${esc(job.recommendation.reason)}</p></div>${action('generate-mockup',tr('Review & choose type','Vérifier et choisir le type'),'layout',false)}`;
+    } else if(job?.phase === 'image' || job?.phase === 'preparing_image') {
+      host.querySelector('.project-progress strong').textContent = tr('Generating your mockup image…','Génération de votre image…');
+      host.querySelector('.project-progress p').textContent = tr('Using the approved type and saved logo. Previous versions remain available.','Utilisation du type approuvé et du logo enregistré. Vos anciennes versions restent disponibles.');
+    }
     const research = ["solution", "mockup"].includes(state.tab) && selected(state.tab)?.output?._research;
     if (research) {
       const panel = document.createElement("article"); panel.className = "project-sales";
@@ -132,8 +144,28 @@
   }
 
   let modalFocus;
+  const visualOptions = () => [['devices',tr('Website / mobile app on devices','Site / application sur appareils')],['cup',tr('Cup / mug','Gobelet / tasse')],['clothing',tr('Clothing / uniform','Vêtements / uniforme')],['packaging',tr('Packaging / bag / bottle','Packaging / sac / bouteille')],['stationery',tr('Business cards / stationery','Cartes de visite / papeterie')],['signage',tr('Storefront / signage','Vitrine / signalétique')],['branding',tr('Complete branding presentation','Présentation de marque complète')]];
+  const visualLabel = key => visualOptions().find(item=>item[0]===key)?.[1] || key || '';
+  async function loadLogo() {
+    const id=state.lead.id;
+    try {
+      const response=await fetch(`/api/crm/intelligence/leads/${id}/assets`,{credentials:'same-origin'});
+      const data=await response.json();if(response.ok && state.lead?.id===id) state.logo=data.logo;
+    } catch { /* Older deployments can still render existing research and concepts. */ }
+  }
+  function visualDialog() {
+    modalFocus=document.activeElement;
+    const modal=document.getElementById('appModal');
+    const pending=state.data?.generations.find(g=>g.phase==='awaiting_approval'&&active(g));
+    const running=state.data?.generations.some(g=>active(g)&&g!==pending);
+    const currentType=pending?(pending.projectType==='auto'?pending.recommendation.type:pending.projectType):(selected('mockup')?.output?._type||'auto');
+    const options=[...(!pending?[['auto',tr('Let AI recommend the best type','Laisser l’IA recommander le type')]]:[]),...visualOptions()];
+    modal.innerHTML=`<div class="modal-header"><div><p class="eyebrow">${tr('BRAND MOCKUP STUDIO','STUDIO DE MAQUETTES')}</p><h2 id="modalTitle">${pending?tr('Review your AI recommendation','Vérifiez la recommandation IA'):tr('Create a branded visual','Créer un visuel de marque')}</h2></div><button class="close-button" data-project-action="close" type="button" aria-label="${tr('Close','Fermer')}">×</button></div><div class="modal-body"><ol class="project-visual-steps"><li>${tr('1 · Logo','1 · Logo')}</li><li>${tr('2 · AI recommendation','2 · Recommandation IA')}</li><li>${tr('3 · Generate & download','3 · Générer et télécharger')}</li></ol><section class="project-brand"><div class="project-logo-preview">${state.logo?`<img src="${esc(state.logo.url)}" alt="${tr('Saved project logo','Logo du projet enregistré')}">`:svg('layout')}</div><div><strong>${tr('Project logo','Logo du projet')}</strong><p id="projectLogoStatus">${state.logo?tr('Saved for this lead. Upload to replace for future versions.','Enregistré pour ce lead. Importez un fichier pour les prochaines versions.'):tr('Optional. Without a logo, the design uses proposed business-name typography.','Facultatif. Sans logo, le concept utilise le nom de l’entreprise.')}</p><label class="project-upload-label">${tr('Upload logo','Importer le logo')}<input id="projectLogoFile" type="file" accept="image/png,image/jpeg,image/webp"></label><small>${tr('PNG, JPG or WebP · up to 6 MB · saved as a resized PNG. Only upload a logo you can use.','PNG, JPG ou WebP · 6 Mo max · enregistré en PNG redimensionné. Utilisez un logo autorisé.')}</small></div></section><form id="projectVisualForm" data-generation-id="${pending?.id||''}">${pending?`<div class="project-recommendation"><span class="eyebrow">${tr('AI RECOMMENDS','L’IA RECOMMANDE')}</span><h3>${esc(visualLabel(pending.recommendation.type))}</h3><p>${esc(pending.recommendation.reason)}</p><small>${tr('Based on fresh business research. You can change the type below.','Basé sur une recherche récente. Vous pouvez changer le type ci-dessous.')}</small></div>`:`<p>${tr('No prompt needed. First, AI researches this business and recommends a suitable visual. You review the choice before image generation.','Aucun prompt nécessaire. L’IA recherche l’entreprise et recommande un visuel adapté. Vous vérifiez le choix avant la génération de l’image.')}</p>`}<label class="form-field"><span>${tr('Mockup type','Type de maquette')}</span><select name="projectType">${options.map(([key,label])=>`<option value="${key}"${key===currentType?' selected':''}>${esc(label)}</option>`).join('')}</select></label><label class="form-field"><span>${tr('Output language','Langue du résultat')}</span><select name="locale"><option value="fr"${(pending?.locale|| (fr()?'fr':'en'))==='fr'?' selected':''}>Français</option><option value="en"${(pending?.locale||(fr()?'fr':'en'))==='en'?' selected':''}>English</option></select></label><label class="project-cost"><input name="confirmCost" type="checkbox" required><span>${pending?tr('Use my OpenAI API credit to generate one image with the chosen type and saved logo.','Utiliser mon crédit API OpenAI pour générer une image avec le type choisi et le logo enregistré.'):tr('Use my OpenAI API credit for business research and a recommendation. Image generation requires a separate approval.','Utiliser mon crédit API OpenAI pour la recherche et la recommandation. La génération d’image nécessite une validation séparée.')}</span></label><p id="projectVisualError" role="alert"></p><div class="modal-actions">${pending?`<button class="button button-secondary" type="button" data-project-action="dismiss-mockup">${tr('Dismiss recommendation','Ignorer la recommandation')}</button>`:action('close',tr('Cancel','Annuler'))}<button class="button" type="submit"${running||state.logoLoading?' disabled':''}>${svg('spark')}${pending?tr('Generate image & save','Générer et enregistrer l’image'):tr('Research & recommend','Rechercher et recommander')}</button></div></form></div>`;
+    state.request=crypto.randomUUID();modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');modal.querySelector('[name="projectType"]').focus();
+  }
   function close() { document.body.classList.remove("modal-open"); document.getElementById("appModal").setAttribute("aria-hidden", "true"); modalFocus?.isConnected && modalFocus.focus(); }
   function generateDialog(kind) {
+    if(kind==='mockup') return visualDialog();
     modalFocus = document.activeElement;
     const modal = document.getElementById("appModal");
     const busy = state.data?.generations?.some(active);
@@ -162,6 +194,11 @@
     const button = event.target.closest("[data-project-action]");
     if (!button) return;
     const name = button.dataset.projectAction;
+    if(name==='dismiss-mockup') {
+      const generationId=document.getElementById('projectVisualForm')?.dataset.generationId;if(!generationId)return;
+      button.disabled=true;
+      try{await api('POST',{action:'cancel-mockup',generationId});close();await refresh();}catch(error){document.getElementById('projectVisualError').textContent=error.message;button.disabled=false;}return;
+    }
     if (name.startsWith("tab-")) {
       if (name === "tab-feedback") state.feedbackVersion = selected(state.tab)?.id || null;
       state.tab = name.slice(4); state.message = ""; render(); return;
@@ -186,12 +223,34 @@
   document.addEventListener("click", click);
   document.addEventListener("input", event => { if (event.target.id === "projectFeedbackBody") { state.draft = event.target.value; const count = event.target.nextElementSibling; if (count) count.textContent = `${state.draft.length}/4000`; } });
   document.addEventListener("change", event => {
+    if(event.target.id==='projectLogoFile') uploadLogo(event.target.files?.[0]);
     if (event.target.id === "projectRating") state.rating = event.target.value;
     if (event.target.dataset.projectVersion) { state.selected[event.target.dataset.projectVersion] = event.target.value; render(); }
   });
+  async function uploadLogo(file) {
+    if(!file||state.logoLoading)return;
+    const id=state.lead.id,status=document.getElementById('projectLogoStatus'),submit=document.querySelector('#projectVisualForm [type="submit"]');
+    const fileInput=document.getElementById('projectLogoFile');if(fileInput)fileInput.disabled=true;
+    state.logoLoading=true;if(submit)submit.disabled=true;
+    try{
+      if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>6291456) throw new Error(tr('Choose PNG, JPG or WebP, up to 6 MB.','Choisissez PNG, JPG ou WebP, 6 Mo maximum.'));
+      status.textContent=tr('Preparing and saving logo…','Préparation et enregistrement du logo…');
+      const bitmap=await createImageBitmap(file);
+      const scale=Math.min(1,1024/Math.max(bitmap.width,bitmap.height));
+      const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+      if(!blob||blob.size>2097152)throw new Error(tr('Logo is too large after conversion. Try a simpler or smaller image.','Logo trop volumineux après conversion. Essayez une image plus petite.'));
+      const response=await fetch(`/api/crm/intelligence/leads/${id}/assets`,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'image/png'},body:blob});const data=await response.json();
+      if(!response.ok)throw new Error(data.message||'Logo upload failed.');
+      if(state.lead.id!==id)return;
+      state.logo=data.logo;
+      if(status.isConnected){status.textContent=tr('Logo saved. It will be used for the next image.','Logo enregistré. Il sera utilisé pour la prochaine image.');document.querySelector('.project-logo-preview').innerHTML=`<img src="${esc(data.logo.url)}" alt="${tr('Saved project logo','Logo du projet enregistré')}">`;}
+    }catch(error){if(status?.isConnected)status.textContent=error.message;}
+    finally{state.logoLoading=false;if(fileInput?.isConnected)fileInput.disabled=false;if(submit?.isConnected)submit.disabled=state.data?.generations.some(g=>active(g)&&g.phase!=='awaiting_approval')||false;}
+  }
   document.addEventListener("submit", async event => {
     const form = event.target;
-    if (!["projectFeedbackForm", "projectGenerateForm"].includes(form.id)) return;
+    if (!["projectFeedbackForm", "projectGenerateForm", "projectVisualForm"].includes(form.id)) return;
     event.preventDefault();
     if (state.busy) return;
     const leadId = state.lead.id; state.busy = true;
@@ -201,6 +260,13 @@
         await api("POST", { action: "feedback", rating: Number(state.rating), body: state.draft, generationId: state.feedbackVersion }, false, leadId);
         if (state.lead.id !== leadId) return;
         state.draft = ""; state.message = tr("Feedback saved. It will guide the next generation.", "Retour enregistré. Il guidera la prochaine génération.");
+      } else if(form.id==='projectVisualForm') {
+        if(state.logoLoading) return;
+        const data=new FormData(form);form.querySelector('[type="submit"]').disabled=true;
+        const generationId=form.dataset.generationId;
+        const response=await api('POST',{action:generationId?'approve-mockup':'generate',...(generationId?{generationId}:{kind:'mockup',visualMockup:true,requestId:state.request}),projectType:data.get('projectType'),locale:data.get('locale'),confirmCost:data.has('confirmCost')},false,leadId);
+        if(state.lead.id!==leadId)return;
+        state.selected.mockup=response.generation.id;state.tab='mockup';close();
       } else {
         const data = new FormData(form);
         form.querySelector('[type="submit"]').disabled = true;
@@ -212,15 +278,15 @@
       await refresh(true);
     } catch (error) {
       if (state.lead.id !== leadId) return;
-      const field = document.getElementById("projectGenerateError");
-      if (form.id === "projectGenerateForm" && field) { field.textContent = error.message; form.querySelector('[type="submit"]').disabled = false; }
+      const field = document.getElementById(form.id==='projectVisualForm'?'projectVisualError':"projectGenerateError");
+      if (["projectGenerateForm","projectVisualForm"].includes(form.id) && field) { field.textContent = error.message; form.querySelector('[type="submit"]').disabled = false; }
       else state.error = error.message;
     } finally { if (state.lead.id === leadId) { state.busy = false; render(); } }
   });
   window.CrmProject = {
     mount(lead) {
       if (state.lead?.id === lead.id) { state.lead = lead; render(); return; }
-      clearTimeout(state.timer); state.lead = lead; state.data = null; state.error = ""; state.loading = true; state.tab = "solution"; state.selected = {}; state.feedbackVersion = null; state.draft = ""; state.message = ""; state.busy = false; render(); refresh(true);
+      clearTimeout(state.timer); state.lead = lead; state.data = null; state.error = ""; state.loading = true; state.tab = "solution"; state.selected = {}; state.feedbackVersion = null; state.draft = ""; state.message = ""; state.busy = false; state.logo=null; render(); refresh(true); loadLogo();
     },
   };
 })();
