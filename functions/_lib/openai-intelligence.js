@@ -65,10 +65,10 @@ async function startResearchResponse(env, input) {
   return { id: response.id, status: response.status, model: response.model || config.model };
 }
 
-async function retrieveResearchResponse(env, responseId) {
+async function retrieveResearchResponse(env, responseId, includeSources = false) {
   const safeId = String(responseId || "").trim();
   if (!/^resp_[A-Za-z0-9_-]+$/.test(safeId)) throw new Error("Invalid OpenAI response identifier.");
-  return openAiRequest(env, `/responses/${encodeURIComponent(safeId)}`);
+  return openAiRequest(env, `/responses/${encodeURIComponent(safeId)}${includeSources ? "?include%5B%5D=web_search_call.action.sources" : ""}`);
 }
 
 async function startProjectResponse(env, input, schema) {

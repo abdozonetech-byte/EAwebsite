@@ -1,21 +1,43 @@
 import { requireCrmApi } from "../../../../../_lib/crm-api.js";
 import { json, readJsonBody } from "../../../../../_lib/http.js";
 import { supabaseFetch, supabaseErrorResponse } from "../../../../../_lib/supabase.js";
-import { openAiConfig, startProjectResponse, retrieveResearchResponse, parseJsonOutput } from "../../../../../_lib/openai-intelligence.js";
-import { ACTIVE, UUID, PROJECT_SCHEMAS, projectPrompt, validateProjectOutput, publicGeneration } from "../../../../../_lib/lead-project.js";
+import { openAiConfig, startResearchResponse, startProjectResponse, retrieveResearchResponse, parseJsonOutput } from "../../../../../_lib/openai-intelligence.js";
+import { ACTIVE, UUID, PROJECT_SCHEMAS, projectType, projectResearchPrompt, validateProjectResearch, projectPrompt, validateProjectOutput, publicGeneration } from "../../../../../_lib/lead-project.js";
 
-async function poll(env, row, analysis) {
+async function poll(env, row, analysis, lead) {
   if (!ACTIVE.includes(row.status) || !row.response_id) return row;
-  const response = await retrieveResearchResponse(env, row.response_id);
+  const response = await retrieveResearchResponse(env, row.response_id, row.output?.phase === "research");
   let update;
   if (response.status === "completed") {
-    try { update = { status: "completed", output: validateProjectOutput(row.kind, parseJsonOutput(response), analysis?.evidence || []), completed_at: new Date().toISOString(), error: null }; }
+    try {
+      if (row.output?.phase === "research") {
+        const research = validateProjectResearch(parseJsonOutput(response), response);
+        // Only one concurrent poll may start the second paid phase.
+        const claimed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, lead_id: `eq.${row.lead_id}`, response_id: `eq.${row.response_id}`, status: "in.(queued,in_progress)", "output->>phase": "eq.research" }, body: { status: "starting", response_id: null, output: { phase: "preparing_generation", research } } });
+        if (!claimed.length) return row;
+        const [feedback, solutions] = await Promise.all([
+          supabaseFetch(env, "lead_project_feedback", { search: { select: "rating,body", lead_id: `eq.${row.lead_id}`, order: "created_at.desc", limit: "8" } }),
+          supabaseFetch(env, "lead_project_generations", { search: { select: "output", lead_id: `eq.${row.lead_id}`, kind: "eq.solution", status: "eq.completed", order: "created_at.desc", limit: "1" } }),
+        ]);
+        let started;
+        try { started = await startProjectResponse(env, projectPrompt(row.kind, lead, analysis, feedback, projectType(row.kind, row.brief), row.locale, solutions[0]?.output, research), PROJECT_SCHEMAS[row.kind]); }
+        catch (error) {
+          const failed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, status: "eq.starting", response_id: "is.null" }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
+          return failed[0] || claimed[0];
+        }
+        const saved = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, status: "eq.starting" }, body: { response_id: started.id, model: started.model, status: started.status === "queued" ? "queued" : "in_progress", output: { phase: "generation", research } } });
+        return saved[0] || claimed[0];
+      }
+      const research = row.output?.research;
+      const output = validateProjectOutput(row.kind, parseJsonOutput(response), research?.evidence || analysis?.evidence || []);
+      update = { status: "completed", output: { ...output, ...(research ? { _research: research } : {}), _type: projectType(row.kind, row.brief) }, completed_at: new Date().toISOString(), error: null };
+    }
     catch (error) { update = { status: "failed", error: error.message, completed_at: new Date().toISOString() }; }
   } else if (["failed", "cancelled", "incomplete"].includes(response.status)) {
-    update = { status: "failed", error: "AI generation could not finish. Your previous results are preserved. Try a shorter brief or check API credit.", completed_at: new Date().toISOString() };
+    update = { status: "failed", error: "AI research or generation could not finish. Your previous results are preserved. Check the business details or API credit.", completed_at: new Date().toISOString() };
   } else update = { status: response.status === "queued" ? "queued" : "in_progress" };
   // A concurrent poll cannot overwrite a completed output.
-  const saved = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, lead_id: `eq.${row.lead_id}`, status: `in.(${ACTIVE.join(",")})` }, body: update });
+  const saved = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, lead_id: `eq.${row.lead_id}`, response_id: `eq.${row.response_id}`, status: `in.(${ACTIVE.join(",")})` }, body: update });
   return saved[0] || row;
 }
 
@@ -45,26 +67,21 @@ export async function onRequest(context) {
         await supabaseFetch(context.env, "lead_project_feedback", { method: "POST", body: { lead_id: id, generation_id: body.generationId || null, rating: body.rating, body: body.body.trim() } });
         return json({ ok: true });
       }
-      if (body?.action !== "generate" || !["solution", "mockup"].includes(body.kind) || !UUID.test(String(body.requestId || "")) || typeof body.brief !== "string" || body.brief.length > 3000 || !["fr", "en"].includes(body.locale) || body.confirmCost !== true) return json({ ok: false, message: "Invalid generation request." }, 400);
+      if (body?.action !== "generate" || !["solution", "mockup"].includes(body.kind) || !projectType(body.kind, body.projectType) || !UUID.test(String(body.requestId || "")) || !["fr", "en"].includes(body.locale) || body.confirmCost !== true) return json({ ok: false, message: "Invalid generation request." }, 400);
       openAiConfig(context.env); // Validate configuration before reserving a job.
       const previous = await supabaseFetch(context.env, "lead_project_generations", { search: { select: "*", request_id: `eq.${body.requestId}`, lead_id: `eq.${id}`, limit: "1" } });
       if (previous.length) return json({ ok: true, generation: publicGeneration(previous[0]) });
       const active = await supabaseFetch(context.env, "lead_project_generations", { search: { select: "*", lead_id: `eq.${id}`, status: `in.(${ACTIVE.join(",")})`, limit: "1" } });
       if (active.length) return json({ ok: true, generation: publicGeneration(active[0]) });
-      const [feedback, solutions] = await Promise.all([
-        supabaseFetch(context.env, "lead_project_feedback", { search: { select: "rating,body", lead_id: `eq.${id}`, order: "created_at.desc", limit: "8" } }),
-        supabaseFetch(context.env, "lead_project_generations", { search: { select: "output", lead_id: `eq.${id}`, kind: "eq.solution", status: "eq.completed", order: "created_at.desc", limit: "1" } }),
-      ]);
-      if (!analysis?.current_situation && !body.brief.trim()) return json({ ok: false, message: "Analyze this lead or add a project brief before generating." }, 400);
       let reserved;
       try {
-        [reserved] = await supabaseFetch(context.env, "lead_project_generations", { method: "POST", body: { lead_id: id, request_id: body.requestId, kind: body.kind, brief: body.brief.trim(), locale: body.locale, status: "starting" } });
+        [reserved] = await supabaseFetch(context.env, "lead_project_generations", { method: "POST", body: { lead_id: id, request_id: body.requestId, kind: body.kind, brief: projectType(body.kind, body.projectType), locale: body.locale, status: "starting", output: { phase: "research" } } });
       } catch (error) {
         if (error.status === 409) return json({ ok: false, message: "A generation is already starting. Refresh the project workspace." }, 409);
         throw error;
       }
       let started;
-      try { started = await startProjectResponse(context.env, projectPrompt(body.kind, lead, analysis, feedback, body.brief.trim(), body.locale, solutions[0]?.output), PROJECT_SCHEMAS[body.kind]); }
+      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis)); }
       catch (error) {
         await supabaseFetch(context.env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${reserved.id}` }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
         return json({ ok: false, message: error.message }, 502);
@@ -78,7 +95,7 @@ export async function onRequest(context) {
       supabaseFetch(context.env, "lead_project_feedback", { search: { select: "id,generation_id,rating,body,created_at", lead_id: `eq.${id}`, order: "created_at.desc", limit: "20" } }),
     ]);
     const shouldPoll = new URL(context.request.url).searchParams.get("poll") === "1";
-    for (let index = 0; index < history.length; index++) if (shouldPoll && ACTIVE.includes(history[index].status)) history[index] = await poll(context.env, history[index], analysis);
+    for (let index = 0; index < history.length; index++) if (shouldPoll && ACTIVE.includes(history[index].status)) history[index] = await poll(context.env, history[index], analysis, lead);
     return json({ ok: true, contact: { phone: lead.phone || "", email: lead.email || "" }, generations: history.map(publicGeneration), feedback });
   } catch (error) {
     if (error.status) return supabaseErrorResponse(error);
