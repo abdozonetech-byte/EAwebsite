@@ -1,5 +1,18 @@
 # Design QA — client references
 
+## 2026-10-16 — Local discovery geography (local only)
+
+Release: production migration 008 succeeded; post-migration checks returned 37 leads, 37 intelligence rows, five added columns and zero anon/authenticated view grants. No paid research or lead import was run. The notes below describe pre-release development verification.
+
+- Redesigned Find New Leads with numbered business/location sections, category suggestions with custom input, city suggestions, country, neighbourhood, optional keywords and explicit API-credit confirmation. Added subtle motion and reduced-motion support.
+- Google Maps links use official Maps URLs (`api=1`) with encoded terms. Near me leaves location choice to Google Maps; it does not collect device coordinates in the CRM. This is a Maps launch integration, NOT Places API ingestion or scraping. No Maps results are automatically stored. AI discovery researches public sources and requires review/approval.
+- City/country filters work in both Leads and AI Intelligence. Intelligence filtering happens before database pagination/count. Unknown-country leads remain accessible via All countries / Country not recorded. Optional country can be corrected in the lead editor. Existing countries are not inferred or backfilled.
+- Migration 008 passed on isolated PostgreSQL/PGlite using migrations 001–003, including rerun, original view column order, preserved lead count, country constraints, service-role grants and invoker security. It has NOT been run in production. Apply before deploying this code. No live data changes or paid research tests.
+- Discovery tests cover validation, authenticated API handlers, credit confirmation, country persistence, review-only preview, approved import, actual paginated query filters, safe Maps URLs and bilingual UI. Existing import/intelligence/project/presence/retired-visual/SEO tests passed. Original XLSX-specific validation remains skipped (file unavailable).
+- Browser QA on sample-only localhost: desktop modal, small-screen scrolling, updated Maps queries, unknown-country filters return the correct sample in both Leads and Intelligence, optional empty country in manual entry, and French labels/country names. No JavaScript errors observed. Not published in this task.
+
+## Earlier client-reference QA
+
 - Source: user-supplied partner-grid reference (`codex-clipboard-37ee029c-82ed-4b48-8ac9-7446723dacc6.png`)
 - Implementation: `http://127.0.0.1:4174/#references`
 - Desktop validation: 1440 × 780 CSS pixels, normal density

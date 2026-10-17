@@ -93,7 +93,7 @@
     return `<section class="page-stack intelligence-page"><button class="intel-back" data-intel-action="back">← ${t("back")}</button><header class="intel-detail-hero"><div><span class="intel-status ${tone}"><i></i>${esc(label)}</span><h1>${esc(lead.company || lead.fullName)}</h1><p>${esc(lead.businessSector || "—")} · ${esc(lead.city || "—")}</p>${website ? `<a href="${esc(website)}" target="_blank" rel="noopener noreferrer">${state.locale === "fr" ? "Ouvrir le site enregistré" : "Open saved website"} ↗</a>` : ""}</div></header><div class="intel-detail-meta"><span>${t("researchDate")} <b>${formatDate(lead.researchedAt)}</b></span><span>${t("confidence")} <b>${esc(lead.researchConfidence || "—")}</b></span></div><section id="leadProjectWorkspace" aria-label="Business presence and contact"></section></section>`;
   }
 
-  function render() { return state.detail ? detail() : dashboard(); }
+  function render() { return state.detail ? detail() : dashboard().replace('<div class="intel-selection">', `${window.CrmDiscovery?.filters(state.filters, state.locale) || ""}<div class="intel-selection">`); }
   function renderInto() {
     const node = document.getElementById("appContent");
     if (!node || !location.hash.startsWith("#intelligence")) return;
@@ -114,6 +114,8 @@
     if (state.filters.search) query.set("search", state.filters.search);
     if (state.filters.status !== "all") query.set("analysisStatus", state.filters.status);
     if (state.filters.category !== "all") query.set("category", state.filters.category);
+    if (state.filters.city) query.set("city", state.filters.city);
+    if (state.filters.country) query.set("country", state.filters.country);
     try {
       const [leadData, categoryData, batchData, discoveryData] = await Promise.all([api(`intelligence/leads?${query}`), api("intelligence/categories"), api("intelligence/batches?pageSize=8"), api("intelligence/find")]);
       state.leads = leadData.leads; state.summary = leadData.summary; state.pagination = leadData.pagination; state.categories = categoryData.categories; state.batches = batchData.batches; state.discoveryBatches = discoveryData.batches || []; state.loading = false; renderInto();
@@ -140,11 +142,12 @@
   }
 
   function findDialog() {
-    return `<div class="modal-header"><div><p class="eyebrow">COMPLIANT LEAD DISCOVERY</p><h2 id="modalTitle">${t("find")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><form id="intelFindForm" class="form-grid"><label class="form-field"><span>Business category</span><input name="category" required placeholder="Aesthetic clinics"></label><label class="form-field"><span>City</span><input name="city" required value="Casablanca"></label><label class="form-field"><span>Business type</span><input name="businessType" placeholder="Clinic, school, restaurant..."></label><label class="form-field"><span>Keywords</span><input name="keywords" placeholder="booking, local business..."></label><div class="intel-safety-note full">Candidates will be saved to a review queue. They are never inserted as CRM leads automatically.</div><div class="modal-actions full"><button type="button" class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" type="submit">Create discovery batch</button></div></form></div>`;
+    return window.CrmDiscovery.dialog(state.locale);
   }
 
   function discoveryReviewDialog() {
-    const batch = state.discoveryBatch; const candidates = state.discoveryCandidates;
+    const batch = state.discoveryBatch;
+    const candidates = state.discoveryCandidates.map(candidate => ({ ...candidate, city: [candidate.city, candidate.country || (state.locale === "fr" ? "Pays non renseigné" : "Country not recorded")].filter(Boolean).join(" · ") }));
     return `<div class="modal-header"><div><p class="eyebrow">REVIEW BEFORE SAVING</p><h2 id="modalTitle">${esc(batch?.code || "Discovery candidates")}</h2></div><button class="close-button" data-intel-action="close">×</button></div><div class="modal-body"><p>${state.locale === "fr" ? "Sélectionnez les entreprises à valider. Les doublons seront détectés avant tout enregistrement." : "Select candidates to validate. CRM duplicates are detected before anything is saved."}</p><div class="intel-candidate-list">${candidates.length ? candidates.map((candidate) => `<label><input type="checkbox" data-discovery-select="${candidate.id}"${state.discoverySelected.has(candidate.id) ? " checked" : ""}><span><strong>${esc(candidate.businessName)}</strong><small>${esc(candidate.category || "—")} · ${esc(candidate.city || "—")}</small><a href="${esc(candidate.sourceUrl)}" target="_blank" rel="noopener noreferrer">Evidence source ↗</a></span></label>`).join("") : `<div class="empty-state"><p>No candidates available.</p></div>`}</div><div class="modal-actions"><button class="button button-secondary" data-intel-action="close">${t("close")}</button><button class="button" data-intel-action="preview-discovery" ${state.discoverySelected.size ? "" : "disabled"}>${state.locale === "fr" ? "Valider la sélection" : "Validate selected"}</button></div></div>`;
   }
 
@@ -232,6 +235,8 @@
     else if (action === "close") closeModal();
     else if (action === "retry") refresh(1);
     else if (action === "find") openModal(findDialog());
+    else if (action === "apply-location") { state.filters.city = document.getElementById("intelCity")?.value.trim() || ""; state.filters.country = document.getElementById("intelCountry")?.value || ""; refresh(1); }
+    else if (action === "clear-location") { state.filters.city = ""; state.filters.country = ""; refresh(1); }
     else if (action === "review-discovery") openDiscoveryReview(target.dataset.id);
     else if (action === "preview-discovery") previewDiscovery();
     else if (action === "commit-discovery") commitDiscovery();
@@ -260,9 +265,11 @@
 
   async function submit(event) {
     if (event.target.id !== "intelFindForm") return; event.preventDefault();
-    const form = event.target; const data = Object.fromEntries(new FormData(form)); form.querySelectorAll("button,input").forEach((node) => { node.disabled = true; });
+    if (!event.target.reportValidity()) return;
+    if (!event.target.querySelector('[name="confirmAi"]')?.checked) { toast(state.locale === "fr" ? "Confirmez l’utilisation du crédit API." : "Confirm API credit usage first."); return; }
+    const form = event.target; const data = Object.fromEntries(new FormData(form)); form.querySelectorAll("button,input,select").forEach((node) => { node.disabled = true; });
     try { const result = await api("intelligence/find", { method: "POST", body: data }); await startAutomation("discovery", result.batch); await refresh(1); }
-    catch (error) { toast(error.message); form.querySelectorAll("button,input").forEach((node) => { node.disabled = false; }); }
+    catch (error) { toast(error.message); form.querySelectorAll("button,input,select").forEach((node) => { node.disabled = false; }); }
   }
 
   function mount({ locale = "en" } = {}) {

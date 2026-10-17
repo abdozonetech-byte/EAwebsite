@@ -32,6 +32,7 @@ function mapLead(row) {
     company: row.company_name || "",
     businessSector: row.business_sector || "",
     city: row.city || "",
+    country: row.country || "",
     source: row.source || "manual",
     status: row.status || "new",
     priority: row.priority || "medium",
@@ -73,6 +74,7 @@ function mapAppointment(row) {
 }
 
 function leadInsertPayload(body) {
+  if (body?.country && !/^[A-Z]{2}$/.test(body.country)) return { error: "Use a two-letter uppercase country code." };
   const fullName = cleanString(body?.fullName, 120);
   if (!fullName) return { error: "Invalid body." };
   const status = cleanString(body?.status, 40) || "new";
@@ -86,6 +88,7 @@ function leadInsertPayload(body) {
       company_name: cleanString(body?.company, 160),
       business_sector: cleanString(body?.businessSector, 160),
       city: cleanString(body?.city, 100),
+      country: /^[A-Z]{2}$/.test(body?.country || "") ? body.country : null,
       source: cleanString(body?.source, 80) || "manual",
       status,
       priority,
@@ -112,11 +115,13 @@ function leadUpdatePayload(body) {
     company: ["company_name", 160],
     businessSector: ["business_sector", 160],
     city: ["city", 100],
+    country: ["country", 2],
     source: ["source", 80],
     message: ["message", 4000],
     nextFollowUpAt: ["next_follow_up_at", 80],
   };
   const data = {};
+  if (body?.country && !/^[A-Z]{2}$/.test(body.country)) return { error: "Use a two-letter uppercase country code." };
   for (const [source, [target, max]] of Object.entries(fields)) {
     if (Object.prototype.hasOwnProperty.call(body || {}, source)) data[target] = cleanString(body[source], max);
   }

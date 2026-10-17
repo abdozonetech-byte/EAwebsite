@@ -20,16 +20,17 @@ export async function onRequest(context) {
       supabaseFetchAll(context.env, "leads", { search: { select: "id,full_name,company_name,phone,email,city,landing_page_url,status,priority,source,business_sector,message", order: "created_at.desc" } }, 1000, 20000),
     ]);
     const byCandidate = new Map(candidates.map((row) => [row.id, row]));
-    const prepared = candidates.map(candidateRow);
+    const prepared = candidates.map(candidate => ({ ...candidateRow(candidate), country: candidate.country || "" }));
     const analyzed = analyzeImportRows(prepared, existing).map((row) => ({ ...row, candidateId: prepared[row.index]?.candidateId }));
     const summary = { total: analyzed.length, ready: analyzed.filter((row) => row.disposition === "ready").length, duplicates: analyzed.filter((row) => row.disposition === "duplicate").length, invalid: analyzed.filter((row) => row.disposition === "invalid").length };
     const confirmation = `DISCOVERY_${context.params.id}_${summary.total}_${summary.ready}_${summary.duplicates}_${summary.invalid}`;
-    if (parsed.body?.mode !== "commit") return json({ ok: true, confirmation, summary, rows: analyzed.map((row) => ({ candidateId: row.candidateId, fullName: row.fullName, website: row.website, disposition: row.disposition, duplicate: row.duplicate, issues: row.issues })) });
+    if (parsed.body?.mode !== "commit") return json({ ok: true, confirmation, summary, rows: analyzed.map((row) => ({ candidateId: row.candidateId, fullName: row.fullName, city: row.city, country: row.country, website: row.website, disposition: row.disposition, duplicate: row.duplicate, issues: row.issues })) });
     if (parsed.body?.confirmation !== confirmation) return json({ ok: false, message: "Review changed. Preview again before saving." }, 409);
     let inserted = 0; let duplicates = 0; let rejected = 0;
     for (const row of analyzed) {
       if (row.disposition === "ready") {
-        const created = await supabaseFetch(context.env, "leads", { method: "POST", body: toLeadInsert(row) });
+        const candidate = byCandidate.get(row.candidateId);
+        const created = await supabaseFetch(context.env, "leads", { method: "POST", body: { ...toLeadInsert(row), country: candidate?.country || null } });
         await supabaseFetch(context.env, "lead_discovery_candidates", { method: "PATCH", search: { id: `eq.${row.candidateId}` }, body: { review_status: "approved", matched_lead_id: created[0]?.id || null, reviewed_at: new Date().toISOString() } });
         inserted += 1;
       } else if (row.disposition === "duplicate") {

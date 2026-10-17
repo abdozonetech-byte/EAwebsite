@@ -6,8 +6,9 @@ function cleanImportText(value, max = 1000) {
   return String(value).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 }
 
-function normalizeImportPhone(value) {
+function normalizeImportPhone(value, country = "MA") {
   let digits = cleanImportText(value, 80).replace(/\D/g, "");
+  if (country && country !== "MA") return digits.startsWith("00") ? digits.slice(2) : digits;
   if (digits.startsWith("00212")) digits = digits.slice(2);
   if (digits.startsWith("2120")) digits = `212${digits.slice(4)}`;
   if (digits.startsWith("0") && digits.length === 10) digits = `212${digits.slice(1)}`;
@@ -52,7 +53,7 @@ function isValidMoroccanPhone(value) {
 function normalizeImportRow(row, index = 0) {
   const fullName = cleanImportText(row?.fullName || row?.company, 120);
   const company = cleanImportText(row?.company, 160);
-  const phone = normalizeImportPhone(row?.phone);
+  const phone = normalizeImportPhone(row?.phone, row?.country);
   const email = normalizeImportEmail(row?.email);
   const website = normalizeImportUrl(row?.website || row?.landingPageUrl);
   const city = cleanImportText(row?.city || "Casablanca", 100);
@@ -64,7 +65,8 @@ function normalizeImportRow(row, index = 0) {
   const issues = [];
   if (fullName.length < 2) issues.push("missing_name");
   if (!phone && !email && !website) issues.push("missing_contact");
-  if (!isValidMoroccanPhone(phone)) issues.push("invalid_phone");
+  const internationalCountry = /^[A-Z]{2}$/.test(row?.country || "") && row.country !== "MA";
+  if (internationalCountry ? phone && !/^[1-9]\d{7,14}$/.test(phone) : !isValidMoroccanPhone(phone)) issues.push("invalid_phone");
   if (!isValidEmail(email)) issues.push("invalid_email");
   if ((row?.website || row?.landingPageUrl) && !website) issues.push("invalid_website");
   if (!new Set(["new", "contacted", "follow_up", "appointment", "no_show", "won", "not_interested"]).has(status)) issues.push("invalid_status");
@@ -77,6 +79,7 @@ function normalizeImportRow(row, index = 0) {
     email,
     website,
     city,
+    country: /^[A-Z]{2}$/.test(row?.country || "") ? row.country : "",
     businessSector,
     status,
     priority,
@@ -152,6 +155,7 @@ function toLeadInsert(row) {
     company_name: row.company || null,
     business_sector: row.businessSector || null,
     city: row.city || null,
+    ...(row.country ? { country: row.country } : {}),
     source: row.source || IMPORT_SOURCE,
     status: row.status || "new",
     priority: row.priority || "medium",

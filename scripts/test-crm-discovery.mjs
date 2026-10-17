@@ -1,0 +1,87 @@
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import { readFile } from 'node:fs/promises';
+import { webcrypto } from 'node:crypto';
+import { cleanDiscoveryCriteria, locationFilters } from '../functions/_lib/discovery-location.js';
+import { discoveryPrompt } from '../functions/_lib/openai-intelligence.js';
+import { normalizeImportRow, toLeadInsert } from '../functions/_lib/lead-import.js';
+import { leadInsertPayload, leadUpdatePayload } from '../functions/_lib/crm-api.js';
+import { signSession } from '../functions/_lib/auth.js';
+import { onRequest as findRequest } from '../functions/api/crm/intelligence/find.js';
+import { onRequest as leadsRequest } from '../functions/api/crm/intelligence/leads.js';
+import { onRequest as reviewRequest } from '../functions/api/crm/intelligence/discovery/[id]/review.js';
+if (!globalThis.crypto) globalThis.crypto = webcrypto;
+const criteria = {category:'Aesthetic clinics', city:'Casablanca', country:'MA', locality:'Maarif', keywords:'laser', businessType:'Independent clinic'};
+assert.deepEqual(cleanDiscoveryCriteria(criteria), criteria);
+for (const data of [{...criteria,country:'Morocco'}, {...criteria,country:''}, {...criteria,city:''}, {...criteria,category:''}]) assert.throws(()=>cleanDiscoveryCriteria(data));
+assert.equal(cleanDiscoveryCriteria({...criteria,country:'fr'}).country,'FR');
+assert.deepEqual(locationFilters(new URLSearchParams({city:'Casablanca',country:'MA'}),{}),{city:'ilike.Casablanca',country:'eq.MA'});
+assert.deepEqual(locationFilters(new URLSearchParams({country:'unknown'}),{}),{country:'is.null'});
+assert.deepEqual(locationFilters(new URLSearchParams(),{}),{});
+assert(!locationFilters(new URLSearchParams({city:'Casa*,(Rabat)'}),{}).city.includes('*'));
+const prompt = discoveryPrompt({...criteria,business_type:criteria.businessType});
+assert(prompt.includes('Maarif') && prompt.includes('"country":"MA"'));
+assert(prompt.includes('Do not assume the search country'));
+assert(prompt.includes('Do not claim Google Maps API access'));
+assert.equal(toLeadInsert(normalizeImportRow({fullName:'Example',city:'Paris',country:'FR',phone:'+33123456789',website:'https://example.com'})).country,'FR');
+assert.deepEqual(normalizeImportRow({fullName:'Example',city:'Paris',country:'FR',phone:'+33123456789'}).issues,[]);
+assert(normalizeImportRow({fullName:'Example',city:'Paris',country:'FR',phone:'0612345678'}).issues.includes('invalid_phone'));
+assert(leadInsertPayload({country:'Morocco'}).error);
+assert(leadUpdatePayload({country:'XXX'}).error);
+assert.equal(leadUpdatePayload({country:''}).data.country,null);
+
+const events = {};
+const sandbox = {window:{},URLSearchParams,Intl,document:{addEventListener:(event, handler)=>events[event]=handler}};
+vm.runInNewContext(await readFile(new URL('../crm/assets/crm-discovery.js',import.meta.url),'utf8'),sandbox);
+const ui = sandbox.window.CrmDiscovery;
+const maps = new URL(ui.mapsUrl(criteria));
+assert.equal(maps.origin,'https://www.google.com');
+assert.equal(maps.searchParams.get('api'),'1');
+assert.equal(maps.searchParams.get('query'),'Aesthetic clinics Independent clinic laser Maarif Casablanca Morocco');
+const nearby = ui.mapsUrl(criteria,true);
+assert(nearby.includes('near+me') && !nearby.includes('Casablanca') && !nearby.includes('Maarif'));
+assert(ui.mapsUrl({category:'a & b ? x=#'}).includes('a+%26+b+%3F+x%3D%23'));
+for (const locale of ['en','fr']) {
+  const html = ui.dialog(locale);
+  for (const field of ['category','city','country','locality','businessType','keywords','confirmAi']) assert(html.includes(`name="${field}"`));
+  assert(html.includes('type="checkbox" name="confirmAi" required'));
+  assert(!html.includes('navigator.geolocation'));
+  assert(ui.filters({city:'<script>',country:'MA'},locale).includes('&lt;script&gt;'));
+}
+
+// Exercise real API handlers with a stubbed database, never a live service.
+const env={CRM_USERNAME:'test',CRM_SESSION_SECRET:'test-secret',SUPABASE_URL:'https://database.test',SUPABASE_SERVICE_ROLE_KEY:'fake-key'};
+const cookie=`elboubakry_crm_session=${await signSession('test',env.CRM_SESSION_SECRET)}`;
+const id='123e4567-e89b-42d3-a456-426614174000';
+let calls=[];
+const originalFetch=globalThis.fetch;
+globalThis.fetch=async(input,options={})=>{
+  const url=new URL(input); assert.equal(url.origin,'https://database.test');
+  const body=options.body ? JSON.parse(options.body):null; calls.push({url,body,headers:options.headers,method:options.method||'GET'});
+  let data=[];
+  if(url.pathname.endsWith('/lead_discovery_batches')) data=[{id,batch_code:'TEST-DISC',status:'awaiting_chatgpt',...body}];
+  if(url.pathname.endsWith('/lead_intelligence_overview')) data=[{id,full_name:'Sample',city:'Casablanca',analysis_status:'not_analyzed'}];
+  if(url.pathname.endsWith('/lead_discovery_candidates') && options.method !== 'PATCH' && url.searchParams.has('id')) data=[{id,discovery_batch_id:id,business_name:'Sample Paris',city:'Paris',country:'FR',public_phone:'33123456789',website:'https://example.com/',source_url:'https://example.com/contact',review_status:'pending'}];
+  if(url.pathname.endsWith('/leads') && options.method==='POST') data=[{id,...body}];
+  return new Response(JSON.stringify(data),{status:200,headers:{'content-type':'application/json','content-range':'0-0/1'}});
+};
+function context(path,body) { return {env,params:{id},request:new Request(`https://crm.test/api/crm/${path}`,{method:body?'POST':'GET',headers:{cookie,origin:'https://crm.test',...(body?{'content-type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})})}; }
+try {
+  assert.equal((await findRequest(context('intelligence/find',criteria))).status,400);
+  assert.equal(calls.length,0);
+  const created=await findRequest(context('intelligence/find',{...criteria,confirmAi:'on'}));
+  assert.equal(created.status,201); assert.equal(calls[0].body.country,'MA'); assert.equal(calls[0].body.locality,'Maarif');
+  calls=[];
+  const list=await leadsRequest(context('intelligence/leads?city=Casablanca&country=MA&page=2&pageSize=10'));
+  assert.equal(list.status,200);
+  const query=calls.find(call=>call.url.searchParams.get('city'));
+  assert.equal(query.url.searchParams.get('city'),'ilike.Casablanca'); assert.equal(query.url.searchParams.get('country'),'eq.MA');
+  assert.equal(query.headers.Range,'10-19');
+  calls=[];
+  const preview=await (await reviewRequest(context(`intelligence/discovery/${id}/review`,{candidateIds:[id],mode:'preview'}))).json();
+  assert.equal(preview.rows[0].country,'FR'); assert.equal(preview.summary.ready,1);
+  assert(!calls.some(call=>call.method==='POST'));
+  await reviewRequest(context(`intelligence/discovery/${id}/review`,{candidateIds:[id],mode:'commit',confirmation:preview.confirmation}));
+  assert.equal(calls.find(call=>call.url.pathname.endsWith('/leads') && call.method==='POST').body.country,'FR');
+} finally {globalThis.fetch=originalFetch;}
+console.log('CRM discovery tests passed: Maps URL encoding, nearby privacy, bilingual form, AI consent, geography validation, paginated filters, and approval-only country preservation. No live API calls.');

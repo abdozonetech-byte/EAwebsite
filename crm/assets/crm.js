@@ -157,6 +157,8 @@
     if (filters.status !== "all") params.set("status", filters.status);
     if (filters.sector !== "all") params.set("sector", filters.sector);
     if (filters.source !== "all") params.set("source", filters.source);
+    if (filters.city) params.set("city", filters.city);
+    if (filters.country) params.set("country", filters.country);
     const data = await api(`leads${params.toString() ? `?${params}` : ""}`);
     state.leads = data.leads || [];
   }
@@ -314,6 +316,7 @@
     else globalSearch.value = filters.query;
     content.innerHTML = currentView === "dashboard" ? renderDashboard() : currentView === "leads" ? renderLeads() : currentView === "intelligence" ? window.CrmIntelligence.render({ locale }) : currentView === "appointments" ? renderAppointments() : renderSettings();
     if (currentView === "intelligence") window.CrmIntelligence.mount({ locale });
+    if (currentView === "leads" && window.CrmDiscovery) content.querySelector(".data-toolbar")?.insertAdjacentHTML("afterend", window.CrmDiscovery.filters(filters, locale).replaceAll('id="intel', 'id="leadLocation').replaceAll('data-intel-action=', 'data-action='));
     document.title = `${t(currentView)} | Elboubakry Leads CRM`;
   }
 
@@ -359,6 +362,12 @@
   function openModal(html) {
     lastFocused = document.activeElement;
     modal.innerHTML = html;
+    const leadForm = modal.querySelector("#leadForm");
+    if (leadForm && window.CrmDiscovery) {
+      const lead = state.leads.find(row => row.id === leadForm.dataset.recordId) || state.leadDetails.get(leadForm.dataset.recordId)?.lead;
+      leadForm.querySelector("#leadCity")?.closest(".form-field")?.insertAdjacentHTML("afterend", `<label class="form-field"><span>${locale === "fr" ? "Pays" : "Country"}</span><select name="country"><option value="">${locale === "fr" ? "Non renseigné" : "Not recorded"}</option>${window.CrmDiscovery.countries(lead?.country || "", locale)}</select></label>`);
+      if (!lead?.country) leadForm.querySelector('[name="country"]').value = "";
+    }
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
     modal.querySelector("input,select,textarea,button")?.focus();
@@ -461,6 +470,11 @@
     const leadTarget = event.target.closest("[data-lead-id]"); if (leadTarget && !event.target.closest("[data-action]")) { openLead(leadTarget.dataset.leadId); return; }
     const action = event.target.closest("[data-action]"); if (!action) return;
     const name = action.dataset.action;
+    if (name === "apply-location" || name === "clear-location") {
+      filters.city = name === "clear-location" ? "" : document.getElementById("leadLocationCity")?.value.trim() || "";
+      filters.country = name === "clear-location" ? "" : document.getElementById("leadLocationCountry")?.value || "";
+      refreshLeads().then(render).catch(error => showToast(error.message || t("loadError"))); return;
+    }
     if (name === "close-drawer") closeDrawer();
     else if (name === "close-modal") closeModal();
     else if (name === "import-leads") { transferState = { parsed: null, mappedRows: [], preview: null, duplicateAction: "skip" }; openModal(importUploadTemplate()); }
@@ -573,6 +587,7 @@
         const recordId = form.dataset.recordId;
         const body = { fullName: formData.get("fullName").trim(), phone: normalizePhone(formData.get("phone")), email: formData.get("email").trim(), company: formData.get("company").trim(), city: formData.get("city").trim(), businessSector: formData.get("businessSector"), source: formData.get("source") || "manual", priority: formData.get("priority") || "medium", message: formData.get("message").trim() };
         if (!recordId) body.status = "new";
+        body.country = formData.get("country") || "";
         const response = await api(recordId ? `leads/${encodeURIComponent(recordId)}` : "leads", { method: recordId ? "PATCH" : "POST", body });
         if (recordId && state.leadDetails.has(recordId)) state.leadDetails.set(recordId, { ...state.leadDetails.get(recordId), lead: response.lead });
         closeModal();

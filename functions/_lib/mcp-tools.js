@@ -51,6 +51,7 @@ const DISCOVERY_LEADS_SCHEMA = {
       business_name: { type: "string", maxLength: 160 },
       category: { type: "string", maxLength: 160 },
       city: { type: "string", maxLength: 100 },
+      country: { type: "string", maxLength: 2 },
       website: { type: "string" },
       public_phone: { type: "string" },
       public_email: { type: "string" },
@@ -190,10 +191,12 @@ async function proposeNewLeads(env, args, auth) {
     const sourceUrl = normalizeImportUrl(item?.source_url);
     const website = normalizeImportUrl(item?.website);
     const email = normalizeImportEmail(item?.public_email);
-    const phone = normalizeImportPhone(item?.public_phone);
+    const phone = normalizeImportPhone(item?.public_phone, item?.country);
     if (!businessName || !sourceUrl) { rejected.push({ index, reason: "missing_business_name_or_source_url" }); continue; }
-    const fingerprint = await sha256Hex(`${businessName.toLowerCase()}|${city.toLowerCase()}|${website || sourceUrl}`);
-    records.push({ discovery_batch_id: batch.id, business_name: businessName, category: cleanIntelligenceText(item?.category || category, 160) || null, city: cleanIntelligenceText(item?.city || city, 100) || null, website: website || null, public_phone: phone || null, public_email: email || null, source_url: sourceUrl, evidence_note: cleanIntelligenceText(item?.evidence_note, 1000) || null, fingerprint });
+    const candidateCity = cleanIntelligenceText(item?.city || city, 100);
+    const country = /^[A-Z]{2}$/.test(item?.country || "") ? item.country : null;
+    const fingerprint = await sha256Hex(`${businessName.toLowerCase()}|${candidateCity.toLowerCase()}|${website || sourceUrl}`);
+    records.push({ discovery_batch_id: batch.id, business_name: businessName, category: cleanIntelligenceText(item?.category || category, 160) || null, city: candidateCity || null, country, website: website || null, public_phone: phone || null, public_email: email || null, source_url: sourceUrl, evidence_note: cleanIntelligenceText(item?.evidence_note, 1000) || null, fingerprint });
   }
   if (!records.length) return toolError("No valid candidates were supplied.", { rejected });
   const saved = await supabaseFetch(env, "lead_discovery_candidates", { method: "POST", search: { on_conflict: "discovery_batch_id,fingerprint" }, prefer: "resolution=merge-duplicates,return=representation", body: records });

@@ -2,6 +2,7 @@ import { LEAD_STATUSES, cleanString, leadInsertPayload, mapLead, requireCrmApi }
 import { json, readJsonBody } from "../../_lib/http.js";
 import { supabaseErrorResponse, supabaseFetch, supabaseFetchAll } from "../../_lib/supabase.js";
 import { scheduleLeadWhatsAppNotification } from "../../_lib/whatsapp.js";
+import { locationFilters } from "../../_lib/discovery-location.js";
 
 function searchTerm(value) {
   return cleanString(value, 120)?.replace(/[*,()]/g, " ").replace(/\s+/g, " ") || "";
@@ -17,6 +18,7 @@ async function getLeads(context) {
   if (status && status !== "all" && LEAD_STATUSES.has(status)) search.status = `eq.${status}`;
   if (sector && sector !== "all") search.business_sector = `eq.${sector}`;
   if (source && source !== "all") search.source = `eq.${source}`;
+  locationFilters(url.searchParams, search);
   if (query) {
     const pattern = `*${query}*`;
     search.or = `(full_name.ilike.${pattern},phone.ilike.${pattern},email.ilike.${pattern},company_name.ilike.${pattern},city.ilike.${pattern},business_sector.ilike.${pattern},source.ilike.${pattern})`;

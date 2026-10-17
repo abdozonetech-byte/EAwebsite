@@ -1,6 +1,7 @@
 import { ANALYSIS_STATUSES, cleanIntelligenceText, mapIntelligenceRow } from "../../../_lib/lead-intelligence.js";
 import { requireCrmApi } from "../../../_lib/crm-api.js";
 import { json } from "../../../_lib/http.js";
+import { locationFilters } from "../../../_lib/discovery-location.js";
 import { supabaseErrorResponse, supabaseFetchAll, supabaseFetchPage } from "../../../_lib/supabase.js";
 
 function searchTerm(value) {
@@ -22,6 +23,7 @@ export async function onRequest(context) {
     const search = { select: "*", order: sort === "opportunity_desc" ? "opportunity_score.desc.nullslast,created_at.desc" : sort === "recent_analysis" ? "analysis_updated_at.desc.nullslast" : "created_at.desc" };
     if (analysisStatus && analysisStatus !== "all" && ANALYSIS_STATUSES.has(analysisStatus)) search.analysis_status = `eq.${analysisStatus}`;
     if (category && category !== "all") search.business_sector = `eq.${category}`;
+    locationFilters(url.searchParams, search);
     if (Number.isFinite(minOpportunity) && minOpportunity >= 0 && minOpportunity <= 100) search.opportunity_score = `gte.${minOpportunity}`;
     if (query) {
       const pattern = `*${query}*`;

@@ -183,6 +183,7 @@ function publicResearchLead(row) {
     company: row.company_name || "",
     category: row.business_sector || "",
     city: row.city || "",
+    country: row.country || "",
     website: row.landing_page_url || "",
     context: cleanIntelligenceText(row.message, 1200),
   };
@@ -195,6 +196,7 @@ function mapIntelligenceRow(row) {
     company: row.company_name || "",
     businessSector: row.business_sector || "",
     city: row.city || "",
+    country: row.country || "",
     website: row.landing_page_url || "",
     status: row.status || "new",
     priority: row.priority || "medium",

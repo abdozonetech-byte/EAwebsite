@@ -1,5 +1,17 @@
 # Direct AI research inside the CRM
 
+## Location-aware discovery — 2026-10-16
+
+Release verification: migration 008 applied successfully to production. Both leads and intelligence overview retained 37 rows; all five new table/view columns were verified; anon/authenticated view grants remain zero. Deployment verification is recorded in `design-qa.md`.
+
+Apply `supabase/migrations/008_discovery_location.sql` before publishing this code. It adds nullable `country` to leads, candidates and discovery batches, plus batch `locality`, preserving existing data and the intelligence view column order. Do not backfill country from a search preference. AI proposals may include a verified two-letter country code; review shows country and approved import preserves it.
+
+The form separates official Google Maps URL launch (no key, scraping or ingestion) from existing paid OpenAI public-source discovery (explicit checkbox). Google Maps handles its own Nearby location. The CRM never requests device coordinates; user-entered city/country/neighbourhood become research criteria. No strict radius/distance is promised. Automatic Maps results inside the CRM still require a separately authorized Google Places API connection, billing, attribution and storage-policy review. No Places key was configured in this update.
+
+Run `npm run test:crm-discovery`. Optional actual PostgreSQL test: install `@electric-sql/pglite` in a temporary directory, then run `node scripts/test-crm-location-migration.mjs /absolute/path/to/pglite/dist/index.js`. Tests use no live credentials or paid providers. See `design-qa.md` for coverage.
+
+## Existing backend architecture
+
 The CRM can run lead analysis and compliant public-business discovery directly from its Cloudflare backend. The user stays inside `/crm/#intelligence`; no ChatGPT browser tab, copied prompt, or manual import is required.
 
 ## Architecture
