@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:ai-budget": "node scripts/test-ai-budget.mjs",
     "test:crm-discovery": "node scripts/test-crm-discovery.mjs",
     "test:crm-import": "node scripts/test-crm-import.mjs",
     "test:crm-intelligence": "node scripts/test-crm-intelligence.mjs",

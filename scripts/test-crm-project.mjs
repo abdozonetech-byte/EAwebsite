@@ -106,6 +106,12 @@ try{
   const presence=presenceDone.generations.find(g=>g.id===presenceStart.generation.id);
   assert.equal(presence.status,'completed');assert.equal(presence.output._purpose,'presence');assert.equal(presence.output.channels.length,6);assert.equal(presence.output.channels[0].score,62);assert(presence.output.email_body.includes('Abdessamad'));
   assert.equal(JSON.stringify(rows[0].output),priorOutput,'Presence generation does not overwrite prior versions');
+  const beforeReuse = openaiStarts;
+  const reused = await (await call('POST',{action:'generate',kind:'solution',projectType:'presence',locale:'en',confirmCost:true,requestId:crypto.randomUUID()})).json();
+  assert.equal(reused.reused,true);assert.equal(openaiStarts,beforeReuse,'Recent unchanged presence check costs no new API call');
+  assert.equal(reused.generation.id,presence.id);
+  assert.equal(presence.output._usage.research.webToolCalls,1);
+  assert.equal(presence.output._usage.generation.totalTokens,null,'Missing provider usage is not invented');
   assert(!requests.some(r=>r.method==='DELETE'),'No record deletion');
   assert(!requests.some(r=>['leads','lead_analyses'].includes(r.path.split('/').pop())&&r.method!=='GET'),'Existing leads and research are read-only');
   console.log('CRM project tests passed: auth, validation, strict schemas, contact privacy, idempotency, active-job reuse, saved results, evidence restrictions, feedback ownership and no lead mutations.');

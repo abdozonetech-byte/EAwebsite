@@ -5,6 +5,7 @@ import { openAiConfig, startResearchResponse, startProjectResponse, retrieveRese
 import { ACTIVE, UUID, VISUAL_TYPES, PROJECT_SCHEMAS, projectType, projectResearchPrompt, validateProjectResearch, projectPrompt, validateProjectOutput, publicGeneration } from "../../../../../_lib/lead-project.js";
 import { latestLogo, decodeImageResult, saveAsset, assetUrl, assertVisualStorage } from "../../../../../_lib/project-assets.js";
 import { PRESENCE_SCHEMA, presencePrompt, validatePresence } from "../../../../../_lib/lead-presence.js";
+import { aiBudget, providerUsage, presenceCacheKey, reusablePresence } from "../../../../../_lib/ai-budget.js";
 
 async function poll(env, row, analysis, lead) {
   if(row.kind==='mockup'&&ACTIVE.includes(row.status)&&['research','awaiting_approval'].includes(row.output?.phase)) {
@@ -36,7 +37,8 @@ async function poll(env, row, analysis, lead) {
           return saved[0]||row;
         }
         // Only one concurrent poll may start the second paid phase.
-        const claimed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, lead_id: `eq.${row.lead_id}`, response_id: `eq.${row.response_id}`, status: "in.(queued,in_progress)", "output->>phase": "eq.research" }, body: { status: "starting", response_id: null, output: { phase: "preparing_generation", research } } });
+        const usage = { research: providerUsage(response) };
+        const claimed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, lead_id: `eq.${row.lead_id}`, response_id: `eq.${row.response_id}`, status: "in.(queued,in_progress)", "output->>phase": "eq.research" }, body: { status: "starting", response_id: null, output: { ...row.output, phase: "preparing_generation", research, usage } } });
         if (!claimed.length) return row;
         const [feedback, solutions] = await Promise.all([
           supabaseFetch(env, "lead_project_feedback", { search: { select: "rating,body", lead_id: `eq.${row.lead_id}`, order: "created_at.desc", limit: "8" } }),
@@ -48,12 +50,14 @@ async function poll(env, row, analysis, lead) {
           const failed = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, status: "eq.starting", response_id: "is.null" }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
           return failed[0] || claimed[0];
         }
-        const saved = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, status: "eq.starting" }, body: { response_id: started.id, model: started.model, status: started.status === "queued" ? "queued" : "in_progress", output: { phase: "generation", research } } });
+        const currentKey = row.brief === 'presence' ? await presenceCacheKey(lead, analysis, feedback, row.locale) : null;
+        const cacheKey = currentKey === row.output.initialCacheKey ? currentKey : null;
+        const saved = await supabaseFetch(env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${row.id}`, status: "eq.starting" }, body: { response_id: started.id, model: started.model, status: started.status === "queued" ? "queued" : "in_progress", output: { ...row.output, phase: "generation", research, usage, cacheKey } } });
         return saved[0] || claimed[0];
       }
       const research = row.output?.research;
       const output = row.brief==='presence'?validatePresence(parseJsonOutput(response),research,row.locale):validateProjectOutput(row.kind, parseJsonOutput(response), research?.evidence || analysis?.evidence || []);
-      update = { status: "completed", output: { ...output, ...(research ? { _research: research } : {}), _type: projectType(row.kind, row.brief) }, completed_at: new Date().toISOString(), error: null };
+      update = { status: "completed", output: { ...output, ...(research ? { _research: research } : {}), _type: projectType(row.kind, row.brief), _cacheKey: row.output?.cacheKey || null, _budget: row.output?.budget || null, _usage: { ...row.output?.usage, generation: providerUsage(response) } }, completed_at: new Date().toISOString(), error: null };
     }
     catch (error) { update = { status: "failed", error: error.message, completed_at: new Date().toISOString() }; }
   } else if (["failed", "cancelled", "incomplete"].includes(response.status)) {
@@ -71,7 +75,7 @@ export async function onRequest(context) {
   if (!UUID.test(id)) return json({ ok: false, message: "Invalid lead ID." }, 400);
   try {
     const [leads, analyses] = await Promise.all([
-      supabaseFetch(context.env, "leads", { search: { select: "id,full_name,company_name,business_sector,city,landing_page_url,phone,email", id: `eq.${id}`, limit: "1" } }),
+      supabaseFetch(context.env, "leads", { search: { select: "id,full_name,company_name,business_sector,city,country,landing_page_url,phone,email", id: `eq.${id}`, limit: "1" } }),
       supabaseFetch(context.env, "lead_analyses", { search: { select: "*", lead_id: `eq.${id}`, limit: "1" } }),
     ]);
     if (!leads.length) return json({ ok: false, message: "Lead not found." }, 404);
@@ -104,16 +108,28 @@ export async function onRequest(context) {
       if (previous.length) return json({ ok: true, generation: publicGeneration(previous[0]) });
       const active = await supabaseFetch(context.env, "lead_project_generations", { search: { select: "*", lead_id: `eq.${id}`, status: `in.(${ACTIVE.join(",")})`, limit: "1" } });
       if (active.length) return json({ ok: true, generation: publicGeneration(active[0]) });
+      const budget = aiBudget(context.env);
+      let initialCacheKey = null;
+      if (body.projectType === 'presence') {
+        const [feedback, recent] = await Promise.all([
+          supabaseFetch(context.env, 'lead_project_feedback', { search: { select: 'rating,body', lead_id: `eq.${id}`, order: 'created_at.desc', limit: '8' } }),
+          supabaseFetch(context.env, 'lead_project_generations', { search: { select: '*', lead_id: `eq.${id}`, brief: 'eq.presence', status: 'eq.completed', order: 'created_at.desc', limit: '20' } }),
+        ]);
+        const key = await presenceCacheKey(lead, analysis, feedback, body.locale);
+        initialCacheKey = key;
+        const reusable = recent.find(row => row.lead_id === id && row.locale === body.locale && reusablePresence(row, key, budget.reuseHours));
+        if (reusable) return json({ ok: true, reused: true, generation: publicGeneration(reusable) });
+      }
       if(visual) await Promise.all([latestLogo(context.env,id),assertVisualStorage(context.env)]); // Check private storage before spending research credit.
       let reserved;
       try {
-        [reserved] = await supabaseFetch(context.env, "lead_project_generations", { method: "POST", body: { lead_id: id, request_id: body.requestId, kind: body.kind, brief: projectType(body.kind, body.projectType), locale: body.locale, status: "starting", output: { phase: "research", ...(visual?{render_mode:'image'}:{}) } } });
+        [reserved] = await supabaseFetch(context.env, "lead_project_generations", { method: "POST", body: { lead_id: id, request_id: body.requestId, kind: body.kind, brief: projectType(body.kind, body.projectType), locale: body.locale, status: "starting", output: { phase: "research", budget, initialCacheKey, ...(visual?{render_mode:'image'}:{}) } } });
       } catch (error) {
         if (error.status === 409) return json({ ok: false, message: "A generation is already starting. Refresh the project workspace." }, 409);
         throw error;
       }
       let started;
-      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis,visual,body.projectType==='presence')); }
+      try { started = await startResearchResponse(context.env, projectResearchPrompt(lead, analysis,visual,body.projectType==='presence'), { country: lead.country, city: lead.city }); }
       catch (error) {
         await supabaseFetch(context.env, "lead_project_generations", { method: "PATCH", search: { id: `eq.${reserved.id}` }, body: { status: "failed", error: error.message, completed_at: new Date().toISOString() } });
         return json({ ok: false, message: error.message }, 502);

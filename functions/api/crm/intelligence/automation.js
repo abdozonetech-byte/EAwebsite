@@ -55,7 +55,7 @@ async function startAnalysis(env, batch) {
   }
   let started;
   try {
-    started = await startResearchResponse(env, analysisPrompt(batch, leads));
+    started = await startResearchResponse(env, analysisPrompt(batch, leads), { kind: "analysis", leadCount: leads.length });
   } catch (error) {
     await failJob(env, "analysis", batch, error.message);
     throw error;
@@ -68,7 +68,7 @@ async function startDiscovery(env, batch) {
   await supabaseFetch(env, "lead_discovery_batches", { method: "PATCH", search: { id: `eq.${batch.id}` }, body: { status: "in_progress", ai_status: "starting", ai_error: null } });
   let started;
   try {
-    started = await startResearchResponse(env, discoveryPrompt(batch));
+    started = await startResearchResponse(env, discoveryPrompt(batch), { kind: "discovery", country: batch.country, city: batch.city });
   } catch (error) {
     await failJob(env, "discovery", batch, error.message);
     throw error;
