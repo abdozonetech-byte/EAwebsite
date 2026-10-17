@@ -267,9 +267,11 @@
     if (event.target.id !== "intelFindForm") return; event.preventDefault();
     if (!event.target.reportValidity()) return;
     if (!event.target.querySelector('[name="confirmAi"]')?.checked) { toast(state.locale === "fr" ? "Confirmez l’utilisation du crédit API." : "Confirm API credit usage first."); return; }
-    const form = event.target; const data = Object.fromEntries(new FormData(form)); form.querySelectorAll("button,input,select").forEach((node) => { node.disabled = true; });
+    const form = event.target; const data = Object.fromEntries(new FormData(form));
+    const disabledBefore = new Set(form.querySelectorAll(":disabled"));
+    form.querySelectorAll("button,input,select").forEach((node) => { node.disabled = true; });
     try { const result = await api("intelligence/find", { method: "POST", body: data }); await startAutomation("discovery", result.batch); await refresh(1); }
-    catch (error) { toast(error.message); form.querySelectorAll("button,input,select").forEach((node) => { node.disabled = false; }); }
+    catch (error) { toast(error.message); form.querySelectorAll("button,input,select").forEach((node) => { node.disabled = disabledBefore.has(node); }); }
   }
 
   function mount({ locale = "en" } = {}) {

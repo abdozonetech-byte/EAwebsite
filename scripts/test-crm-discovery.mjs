@@ -32,6 +32,7 @@ assert.equal(leadUpdatePayload({country:''}).data.country,null);
 
 const events = {};
 const sandbox = {window:{},URLSearchParams,Intl,document:{addEventListener:(event, handler)=>events[event]=handler}};
+vm.runInNewContext(await readFile(new URL('../crm/assets/crm-discovery-options.js',import.meta.url),'utf8'),sandbox);
 vm.runInNewContext(await readFile(new URL('../crm/assets/crm-discovery.js',import.meta.url),'utf8'),sandbox);
 const ui = sandbox.window.CrmDiscovery;
 const maps = new URL(ui.mapsUrl(criteria));
@@ -44,10 +45,22 @@ assert(ui.mapsUrl({category:'a & b ? x=#'}).includes('a+%26+b+%3F+x%3D%23'));
 for (const locale of ['en','fr']) {
   const html = ui.dialog(locale);
   for (const field of ['category','city','country','locality','businessType','keywords','confirmAi']) assert(html.includes(`name="${field}"`));
+  for (const field of ['category','city','country','locality','businessType','keywords']) assert(html.includes(`<select name="${field}"`));
+  assert(!/<input[^>]*type="text"|<input[^>]*name="(?:category|city|locality|businessType|keywords)"/.test(html));
+  assert(html.includes('<select name="businessType" disabled>'));
   assert(html.includes('type="checkbox" name="confirmAi" required'));
   assert(!html.includes('navigator.geolocation'));
   assert(ui.filters({city:'<script>',country:'MA'},locale).includes('&lt;script&gt;'));
+  assert(ui.filters({city:'Casablanca',country:'MA'},locale).includes('<select id="intelCity"'));
 }
+assert(ui.cityChoices('MA').includes('Casablanca'));
+assert(!ui.cityChoices('FR').includes('Casablanca'));
+assert(ui.cityChoices('FR').includes('Paris'));
+assert(ui.cityChoices('MA','Legacy imported city').includes('Legacy imported city'));
+assert(ui.areaChoices('MA','Casablanca').includes('Maârif'));
+assert.equal(ui.areaChoices('FR','Paris').length,0);
+assert.equal(typeof events.change,'function');
+for(const country of Object.keys(sandbox.window.CrmDiscoveryOptions.cities)) assert(ui.countries(country,'en').includes(`value="${country}"`));
 
 // Exercise real API handlers with a stubbed database, never a live service.
 const env={CRM_USERNAME:'test',CRM_SESSION_SECRET:'test-secret',SUPABASE_URL:'https://database.test',SUPABASE_SERVICE_ROLE_KEY:'fake-key'};
@@ -84,4 +97,4 @@ try {
   await reviewRequest(context(`intelligence/discovery/${id}/review`,{candidateIds:[id],mode:'commit',confirmation:preview.confirmation}));
   assert.equal(calls.find(call=>call.url.pathname.endsWith('/leads') && call.method==='POST').body.country,'FR');
 } finally {globalThis.fetch=originalFetch;}
-console.log('CRM discovery tests passed: Maps URL encoding, nearby privacy, bilingual form, AI consent, geography validation, paginated filters, and approval-only country preservation. No live API calls.');
+console.log('CRM discovery tests passed: dropdown-only bilingual form, dependent option catalogs, legacy-city safety, Maps URL encoding, nearby privacy, AI consent, geography validation, paginated filters, and approval-only country preservation. No live API calls.');

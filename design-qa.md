@@ -1,5 +1,13 @@
 # Design QA — client references
 
+## 2026-10-17 — Dropdown-only discovery (local, not published)
+
+- Category, business type, city, neighbourhood and optional search focus are native selects like the existing country selector. No free-text fields remain in the discovery form. Search fields elsewhere still accept names/IDs; personal names, email and phone fields are intentionally unchanged.
+- Category changes reset the business type; country changes reset city/area; city changes reset area. Types stay disabled until a category is chosen. Areas without a curated list use a clearly labelled whole-city search; no guessed neighbourhood or distance is introduced.
+- Both location filter bars now use city selects. Country changes update city options without applying a filter until Apply is pressed. A currently selected legacy city is preserved even if absent from the curated catalog. Country not recorded / All countries remain available.
+- `crm-discovery-options.js` is an editable, bilingual curated catalog: major cities for existing country choices, Moroccan neighbourhoods for selected cities, 10 business categories, relevant business types and optional keyword presets. It is not an exhaustive geographic service or a Google Maps API response. No new database migration is required.
+- Discovery/intelligence/presence/SEO regression tests passed. Browser checked category/type dependency, Rabat → Agdal Maps query, France → Paris without Moroccan cities/areas, whole-city fallback, and native selects in the French UI. No production writes, paid AI calls, imports or publication.
+
 ## 2026-10-16 — Local discovery geography (local only)
 
 Release: production migration 008 succeeded; post-migration checks returned 37 leads, 37 intelligence rows, five added columns and zero anon/authenticated view grants. No paid research or lead import was run. The notes below describe pre-release development verification.
