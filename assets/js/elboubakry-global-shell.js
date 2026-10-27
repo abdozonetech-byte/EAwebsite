@@ -40,7 +40,7 @@
       document.body.style.overflow = open ? 'hidden' : '';
     });
     nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
-    window.addEventListener('resize', () => { if (window.innerWidth > 1020) close(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 1180) close(); });
   }
 
   const targets = document.querySelectorAll([

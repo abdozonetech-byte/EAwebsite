@@ -101,7 +101,7 @@ button, input, textarea, select { font: inherit; }
 .ea-logo span { color: var(--ea-blue); }
 
 .ea-nav { justify-self: center; }
-.ea-nav ul { display: flex; align-items: center; gap: clamp(20px, 2.5vw, 38px); margin: 0; padding: 0; list-style: none; }
+.ea-nav ul { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 20px); margin: 0; padding: 0; list-style: none; }
 .ea-nav a { position: relative; color: #414960; font-size: 14px; font-weight: 750; }
 .ea-nav a.ea-nav-icon-link { display: inline-flex; align-items: center; gap: 7px; }
 .ea-nav-icon-link :is(i, .ea-nav-icon) { width: 17px; height: 17px; flex: 0 0 17px; color: var(--ea-blue); font-size: 17px; font-weight: 400; line-height: 1; transition: transform .22s ease; }
@@ -492,7 +492,7 @@ button, input, textarea, select { font: inherit; }
 [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .65s ease, transform .65s ease; }
 [data-reveal].is-visible { opacity: 1; transform: none; }
 
-@media (max-width: 1020px) {
+@media (max-width: 1180px) {
   :root { --ea-container: min(100% - 36px, 920px); }
   .ea-header-inner { grid-template-columns: 1fr auto; }
   .ea-nav, .ea-header .ea-button-primary { display: none; }

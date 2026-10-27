@@ -79,7 +79,7 @@
 
 .ea-shell-logo span { color: var(--ea-shell-blue); }
 .ea-shell-nav { justify-self: center; }
-.ea-shell-nav ul { display: flex; margin: 0; padding: 0; align-items: center; gap: 34px; list-style: none; }
+.ea-shell-nav ul { display: flex; margin: 0; padding: 0; align-items: center; gap: 18px; list-style: none; }
 .ea-shell-nav a {
   position: relative;
   display: block;
@@ -168,7 +168,7 @@
 .ea-shell-reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
 .ea-shell-reveal.is-visible { opacity: 1; transform: none; }
 
-@media (max-width: 1020px) {
+@media (max-width: 1180px) {
   :root { --ea-shell-container: min(100% - 36px, 920px); }
   .ea-shell-inner { grid-template-columns: 1fr auto; }
   .ea-shell-nav,

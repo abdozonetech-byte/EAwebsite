@@ -46,7 +46,7 @@
     });
 
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 1020) closeMenu();
+      if (window.innerWidth > 1180) closeMenu();
     });
 
     document.addEventListener('keydown', (event) => {

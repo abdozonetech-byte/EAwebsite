@@ -1,0 +1,123 @@
+ELBOUBAKRY AI PROMPT LIBRARY — LOCAL IMPLEMENTATION REPORT
+27 October 2026
+
+STATUS
+Implemented locally. Not committed, pushed or deployed. No live database writes,
+paid AI calls, account creation, new dependencies or production CRM changes.
+
+ARCHITECTURE
+The existing website is static HTML/CSS/JavaScript, hosted on Cloudflare Pages;
+the private CRM uses server functions and Supabase. The library stays static and
+does not use the CRM or an AI API. Existing French navigation, navy/blue branding,
+SVG navigation icons, system typography and analytics loader are reused.
+No applicable EDOS files were found in the inspected workspace.
+
+DELIVERED
+- /prompts/ catalog and 16 individual /prompts/<slug>/ static detail routes.
+- 14 populated categories, actual content counts and creator attribution.
+- Compact prompt/result cards with distinct, task-specific example summaries.
+- Search across title, description, category, tags, prompt, use cases and model
+  capabilities; accent-insensitive, case-insensitive and debounced.
+- Category, model, difficulty and tag filters; editorial, alphabetical, update
+  date and difficulty sorting; pagination and URL query-state restoration.
+- Favorites saved on the current device, with handling for blocked/corrupt
+  storage. Unknown favorite IDs are ignored. No registration.
+- Two-column prompt/example detail view; single-column on narrow screens.
+- Variables inferred from uppercase placeholders, safe repeated replacement,
+  blank-placeholder preservation, original/customized copy, reset and live count.
+- Full original prompt and example copying, including multiline/code text.
+  Clipboard API failure falls back to selection copy, then a manual-copy dialog.
+- Accessible labels, visible focus, live status messages, pressed states,
+  keyboard search shortcut and Escape-to-close navigation on library pages.
+- Reduced-motion rules and restrained hover/copy/filter transitions.
+- Related resources, usage tips and prompt-engineering guidance.
+- Prompts IA navigation/footer links; contextual links from Guides and Services.
+- Shared compact-menu breakpoint increased to prevent the seventh item wrapping.
+- Per-page titles, descriptions, canonical/Open Graph/Twitter metadata,
+  LearningResource/CollectionPage/BreadcrumbList structured data, sitemap entries,
+  canonical redirects, cache policy and a resource entry in llms.txt.
+- Useful catalog, full prompts, examples and links are generated into HTML, not
+  dependent on client rendering for indexing or basic reading.
+
+CONTENT AND HONESTY
+The 84-prompt source HTML was not attached or found in the inspected workspace.
+This is therefore an explicitly labeled 16-prompt editorial starter collection,
+not an 84-prompt import. All 14 requested categories are represented. Each full
+example and catalog example summary is distinct. Examples are illustrative text,
+not model-tested outputs; media examples do not claim generated images/videos.
+Model compatibility indicates capabilities, not verified tests or guarantees.
+The reference prompts.chat URL could not be retrieved by the text web tool; no
+external live-browser session was opened. Implementation follows the supplied
+functional brief and existing site branding, not copied reference assets.
+
+PRIVACY
+Variable values live only in the current page's JavaScript memory. They are not
+stored locally or sent to an API. Only favorites use localStorage. No new custom
+tracking of searches, variable values or prompt contents was added. Existing
+site analytics configuration/behavior is unchanged. The local preview overrides
+tracking configuration to disable external analytics and blocks CRM/API routes.
+
+VALIDATION EXECUTED
+PASS npm run build:prompts
+PASS npm run test:prompts
+  Unique slugs; required fields; 14 populated categories; distinct examples;
+  static routes and JSON-LD; search/filter/URL behavior; HTML escaping; repeated
+  and empty variables; unavailable/corrupt favorite storage; full multiline copy;
+  rejected clipboard fallback and manual-copy signal using mocked DOM services.
+PASS npm run test:ai-budget
+PASS npm run test:crm-discovery
+PASS npm run test:crm-import
+  Workbook-specific check skipped because the original workbook is unavailable.
+PASS npm run test:crm-intelligence
+PASS npm run test:crm-project
+PASS npm run test:crm-presence
+PASS npm run test:crm-visuals
+PASS node scripts/seo-audit.mjs .
+  61 HTML files; 54 sitemap URLs; 519 structured-data URLs; 114 redirects.
+PASS git diff --check
+PASS Read-only comparison to HEAD: main content preserved on 34 navigation-only
+  pages. Guides/Services additionally received the requested resource callouts.
+  No diff in functions/, crm/ or supabase/.
+
+LOCAL BROWSER QA
+Verified search-to-result, synchronized query parameters, combined mobile
+category/difficulty filtering, favorite persistence across navigation and removal,
+empty-state recovery, pagination and query restoration on reload. Verified actual
+clipboard text for full original prompt, customized prompt and example; original
+remains unchanged and reset restores placeholders. Verified mobile menu/library
+link and Escape behavior. No JavaScript errors observed in inspected library views.
+Observed no horizontal overflow at 320, 390, 768, 1024 and 1440 px in the tested
+catalog/detail views; desktop detail columns and mobile stacked panels confirmed.
+Found/fixed CTA contrast and tablet navigation wrapping during QA.
+The browser blocked the separate localhost root-page navigation, so no new visual
+homepage regression claim is made; its main content preservation and static links
+were checked instead. No Lighthouse score, full WCAG certification, production
+deployment test or AI-model output validation is claimed.
+
+MAIN FILES
+assets/data/prompts.js             Editorial catalog and example content
+assets/js/prompt-library-core.js   Pure search/state/variable/storage/copy helpers
+assets/js/prompt-library-render.js Shared safe card renderer
+assets/js/prompt-library.js        Browser interactions, no AI requests
+assets/css/prompt-library.css      Scoped library design and responsive rules
+scripts/build-prompts.mjs         Static generation, navigation and SEO integration
+scripts/test-prompts.mjs          Content/helper/static-output validation
+scripts/preview-prompts.mjs       Loopback-only QA server, no production data
+prompts/                          Generated catalog and 16 detail pages
+
+MAINTENANCE
+Edit structured content, not generated prompt HTML. Preserve original content
+and metadata when the 84-prompt source is supplied, map categories explicitly,
+validate all examples and unique slugs, then rebuild and run validation. Add new
+examplePreview values alongside full examples. Keep updatedAt truthful. Bump
+library asset/import versions when releasing changes because site assets use
+immutable caching. Run the generator after future navigation/template updates.
+
+LOCAL COMMANDS
+npm run build:prompts
+npm run test:prompts
+node scripts/seo-audit.mjs .
+npm run preview:prompts
+Then open http://127.0.0.1:4180/prompts/ . Stop the preview with Ctrl+C.
+
+The user's explicit approval is still required before production deployment.

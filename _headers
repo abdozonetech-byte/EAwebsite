@@ -18,6 +18,9 @@
 /insights/
   Cache-Control: public, max-age=0, must-revalidate
 
+/prompts/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /reserver-diagnostic/
   Cache-Control: public, max-age=0, must-revalidate
 

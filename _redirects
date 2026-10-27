@@ -1,4 +1,7 @@
 # Core canonical routes
+/prompts  /prompts/  301
+/prompts/index.html  /prompts/  301
+/prompts/:slug/index.html  /prompts/:slug/  301
 /index.html  /  301
 /index-resume-one-page.html  /  301
 /insights  /insights/  301
@@ -125,3 +128,20 @@
 /insights/:slug.html  /insights/:slug  301
 /insights/:slug/index.html  /insights/:slug  301
 /insights/:slug/  /insights/:slug  301
+
+/prompts/audit-interface-mobile  /prompts/audit-interface-mobile/  301
+/prompts/feature-coding-sans-regression  /prompts/feature-coding-sans-regression/  301
+/prompts/storyboard-video-produit  /prompts/storyboard-video-produit/  301
+/prompts/validation-idee-business  /prompts/validation-idee-business/  301
+/prompts/direction-photo-produit  /prompts/direction-photo-produit/  301
+/prompts/calendrier-contenu-30-jours  /prompts/calendrier-contenu-30-jours/  301
+/prompts/landing-page-accessible  /prompts/landing-page-accessible/  301
+/prompts/workflow-qualification-crm  /prompts/workflow-qualification-crm/  301
+/prompts/plan-apprentissage-competence  /prompts/plan-apprentissage-competence/  301
+/prompts/audit-qualite-donnees  /prompts/audit-qualite-donnees/  301
+/prompts/sequence-pedagogique-active  /prompts/sequence-pedagogique-active/  301
+/prompts/planifier-semaine-realiste  /prompts/planifier-semaine-realiste/  301
+/prompts/preparer-entretien-star  /prompts/preparer-entretien-star/  301
+/prompts/comparer-sources-recherche  /prompts/comparer-sources-recherche/  301
+/prompts/brief-seo-local  /prompts/brief-seo-local/  301
+/prompts/plan-test-anti-regression  /prompts/plan-test-anti-regression/  301
