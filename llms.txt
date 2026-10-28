@@ -1,8 +1,10 @@
 # Elboubakry Abdessamad
 
 ## Ressources IA
-- [Bibliothèque de Prompts IA](https://elboubakry.com/prompts/): 210 prompts gratuits dans 14 catégories, exemples illustratifs non testés par un modèle, personnalisation locale sans API.
-- [Guide du prompt engineering](https://elboubakry.com/prompts/guide/): contexte, variables, itération et vérification des réponses IA.
+- [AI Prompt Library — English](https://elboubakry.com/prompts/): primary English edition, 210 free prompts across 14 categories, editorial illustrative examples and local customisation without AI API calls. No model-test claims.
+- [Bibliothèque de Prompts IA — Français](https://elboubakry.com/prompts/fr/): édition française préservée, 210 prompts avec exemples illustratifs et personnalisation locale.
+- [Prompt engineering guide — English](https://elboubakry.com/prompts/guide/): context, variables, iteration and independent verification.
+- [Guide du prompt engineering — Français](https://elboubakry.com/prompts/fr/guide/): contexte, variables, itération et vérification des réponses IA.
 
 > Portfolio professionnel d'Elboubakry Abdessamad, consultant marketing digital et spécialiste de l'IA appliquée au business, basé à Casablanca et actif auprès de projets au Maroc.
 

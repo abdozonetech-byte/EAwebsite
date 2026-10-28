@@ -5,8 +5,9 @@ export const extractVariables = prompt => [...new Set([...prompt.matchAll(variab
 export function customize(prompt, values) {
   return prompt.replace(variablePattern(),(match,key)=>String(values[key]||'').trim()||match);
 }
-export function safeReturnPath(value) {
-  try{const url=new URL(value,'https://local.invalid');return url.origin==='https://local.invalid'&&url.pathname==='/prompts/'&&!url.hash?url.pathname+url.search:'/prompts/';}catch{return '/prompts/';}
+export function safeReturnPath(value,fallback='/prompts/') {
+  const safeFallback=fallback==='/prompts/fr/'?fallback:'/prompts/';
+  try{const url=new URL(value,'https://local.invalid');return url.origin==='https://local.invalid'&&['/prompts/','/prompts/fr/'].includes(url.pathname)&&!url.hash?url.pathname+url.search:safeFallback;}catch{return safeFallback;}
 }
 export function readState(search, catalog) {
   const params=new URLSearchParams(search), allowed=(name,values)=>values.includes(params.get(name))?params.get(name):'';

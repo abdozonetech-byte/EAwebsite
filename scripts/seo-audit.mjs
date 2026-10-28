@@ -186,8 +186,9 @@ for (const file of htmlFiles) {
   }
 
   if (indexable) {
-    if (htmlTags.length !== 1 || attribute(htmlTags[0], 'lang')?.toLowerCase() !== 'fr') {
-      report(relativeFile, 'indexable page must declare exactly one <html lang="fr">');
+    const expectedLanguage = relativeFile.startsWith('prompts/') && !relativeFile.startsWith('prompts/fr/') ? 'en' : 'fr';
+    if (htmlTags.length !== 1 || attribute(htmlTags[0], 'lang')?.toLowerCase() !== expectedLanguage) {
+      report(relativeFile, `indexable page must declare exactly one <html lang="${expectedLanguage}">`);
     }
     if (charsetTags.length !== 1 || attribute(charsetTags[0], 'charset')?.toLowerCase() !== 'utf-8') {
       report(relativeFile, 'indexable page must declare exactly one UTF-8 charset');

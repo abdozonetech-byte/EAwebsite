@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {prompts,categories,models} from '../assets/data/prompts.js';
 import {legacyPrompts} from '../assets/data/prompt-categories/legacy.js';
-import {prompts as indexPrompts} from '../assets/data/prompt-index.js';
+import {prompts as indexPrompts} from '../assets/data/prompt-index-fr.js';
 import {learningTopics} from '../assets/data/prompt-learning.js';
 import {validateCatalog,customize,readState,stateQuery,filterPrompts,readFavorites,saveFavorites,escapeHTML,FAVORITES_KEY,copyText,extractVariables,safeReturnPath,normalize} from '../assets/js/prompt-library-core.js';
 import {card} from '../assets/js/prompt-library-render.js';
@@ -49,25 +49,25 @@ assert(!card({...prompts[0],title:'<img onerror=alert(1)>'}).includes('<img'));
 const formatted=formatExample('## Header\n\n| A | B |\n|---|---|\n| <img> | & |\n\n~~~html\n<script>alert(1)</script>\n~~~\n\n- First\n- Second');
 assert(formatted.includes('<h3>Header</h3>'));assert(formatted.includes('<th scope="col">A</th>'));assert(formatted.includes('&lt;script&gt;'));assert(!formatted.includes('<script>'));assert(!formatted.includes('<img>'));assert(formatted.includes('<ul>'));
 const root=new URL('../',import.meta.url),read=file=>fs.readFileSync(new URL(file,root),'utf8');
-const main=read('prompts/index.html'),sitemap=read('sitemap.xml');
+const main=read('prompts/fr/index.html'),sitemap=read('sitemap.xml');
 assert(main.includes('210</strong> prompts'));assert.equal((main.match(/class="pl-card"/g)||[]).length,8);
 assert.equal(indexPrompts.length,210);assert.equal(learningTopics.length,10);
 for(const p of prompts){
  const row=indexPrompts.find(q=>q.id===p.id);assert(row);assert(!('prompt' in row));assert(!('exampleResult' in row));
- assert(normalize(p.subcategory).split(/\s+/).every(word=>row.searchText.includes(word)));assert.deepEqual(JSON.parse(read(`assets/data/prompt-details/${p.slug}.json`)),p);
- assert(main.includes(`href="/prompts/${p.slug}/"`));
- const html=read(`prompts/${p.slug}/index.html`);
+ assert(normalize(p.subcategory).split(/\s+/).every(word=>row.searchText.includes(word)));assert.deepEqual(JSON.parse(read(`assets/data/prompt-details/fr/${p.slug}.json`)),p);
+ assert(main.includes(`href="/prompts/fr/${p.slug}/"`));
+ const html=read(`prompts/fr/${p.slug}/index.html`);
  assert(html.includes(escapeHTML(p.prompt)));assert(html.includes('Non testé avec un modèle IA'));assert(html.includes('id="pl-copy-example"'));
  const example=html.match(/id="pl-example-data">([\s\S]*?)<\/script>/)[1];assert.equal(JSON.parse(example),p.exampleResult);
  assert.equal((html.match(/data-variable=/g)||[]).length,p.variables.length);assert(html.includes('id="pl-back-results"'));
  assert(sitemap.includes(`https://elboubakry.com/prompts/${p.slug}/`));
  const schema=[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap(m=>JSON.parse(m[1]));
  assert.equal(schema[0]['@type'],'LearningResource');assert.equal(schema[0].text,p.prompt);
- for(const id of p.relatedPromptIds)assert(html.includes(`/prompts/${id}/`));
+ for(const id of p.relatedPromptIds)assert(html.includes(`/prompts/fr/${id}/`));
  assert.equal(new Set(p.relatedPromptIds).size,p.relatedPromptIds.length);
 }
 assert(sitemap.includes('https://elboubakry.com/prompts/guide/'));
-const guide=read('prompts/guide/index.html');for(const [i,t] of learningTopics.entries()){assert(guide.includes(`id="etape-${i+1}"`));assert(prompts.some(p=>p.slug===t[2]));}
+const guide=read('prompts/fr/guide/index.html');for(const [i,t] of learningTopics.entries()){assert(guide.includes(`id="etape-${i+1}"`));assert(prompts.some(p=>p.slug===t[2]));}
 const browser=read('assets/js/prompt-library.js');
 assert.equal((browser.match(/\bfetch\s*\(/g)||[]).length,1);assert(browser.includes('/assets/data/prompt-details/'));assert(!browser.includes('/api/'));
 assert(!/localStorage\.setItem.*values/.test(browser));assert(browser.includes("credentials:'omit'"));

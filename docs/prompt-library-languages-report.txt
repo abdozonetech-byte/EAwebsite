@@ -1,0 +1,74 @@
+PROMPT LIBRARY — ENGLISH DEFAULT AND FRENCH EDITION
+28 October 2026
+
+Implemented locally; not committed, pushed or deployed in this update.
+
+English is the default at /prompts/ and its existing detail/guide URLs.
+French remains available at /prompts/fr/ with corresponding detail/guide pages.
+There are 210 unique prompt identities, each with English and French editions:
+424 static pages total, not 420 different prompts.
+
+CONTENT
+- Added 210 editorial English adaptations, organised in 14 category source files
+  under assets/data/prompt-english/. These include English titles, full prompts,
+  named variables, illustrative examples and educational metadata.
+- English explanations are requested unless the task/user needs another language.
+- The original French source bodies and examples remain unchanged in the data.
+- English examples are illustrative, not executed model results or research.
+- No translation API, model calls, paid dependency or new database was added.
+
+UI AND NAVIGATION
+- Visible EN/FR links on the catalogue, each detail page and the learning guide.
+- Switching keeps the corresponding resource and category/model/level/sort/page
+  query state. Language-specific topic filters reset rather than carrying an
+  incompatible label. Search text is preserved, not automatically translated.
+- Detail back-to-results links are validated and use the selected language.
+- Favourites retain the existing shared IDs/storage key across both languages.
+- Prompts copied from cards load the appropriate static language-specific JSON.
+- English navigation labels, search, filters, statuses, copy/reset controls,
+  examples, guide, metadata and document language; French controls preserved.
+- The rest of the website and all CRM/database functionality are unchanged.
+- Existing slugs are retained to avoid breaking links; English is not forced
+  across unrelated French website pages.
+
+SEO
+- Self-canonicals for each edition and reciprocal en/fr hreflang links.
+- x-default points to English. Structured-data language and social locale agree.
+- Both editions are in the sitemap, with clean slash redirects.
+- SEO auditor now checks English for the primary library routes and French for
+  the French edition and existing French website, rather than requiring French
+  on every public page.
+- llms.txt identifies English as primary and links both guides/editions.
+
+VERIFICATION EXECUTED
+- npm run build:prompts: 212 English + 212 French pages.
+- npm run test:prompts: original tests plus new bilingual suite passed.
+- All 210 English/French entry pairs, IDs, examples, static copy payloads,
+  reciprocal alternate links, canonicals and schema languages validated.
+- English full-content search, safe return paths, literal variable replacement
+  and cross-language favourites covered by automated tests.
+- SEO audit passed: 468 HTML pages, 461 sitemap URLs, 521 redirect rules.
+- Node syntax checks passed on 24 relevant modules/scripts.
+- Targeted ESLint duplicate-key/unreachable/typeof checks passed. Older installed
+  ESLint cannot parse top-level await; the browser module and tests are instead
+  syntax-checked and executed with Node/browser. No TypeScript check is claimed.
+- Local browser: English default, full original/customised/example copying,
+  card copy, alphabetical filtering/pagination, same-resource language switching,
+  preserved filter/page state, shared favourites and English mobile-menu Escape.
+- Layout checked at 375, 768 and 1440px without page horizontal overflow.
+- No browser console errors observed. A temporary test favourite was removed.
+- git diff --check passed. No CRM files or functions changed.
+
+LIMITATIONS
+These are editorial English adaptations, not certified literal translations or
+model-evaluation evidence. No Lighthouse or full accessibility certification is
+claimed. Publication and live verification require the user's explicit approval.
+
+LOCAL PREVIEW
+cd /home/abdel/Documents/Codex/2026-09-27/wo/work/EAwebsite
+npm run build:prompts
+npm run test:prompts
+npm run preview:prompts
+Open http://127.0.0.1:4180/prompts/ or /prompts/fr/.
+The QA-owned preview server is stopped at handoff; rerun the command to view it.
+Screenshot: /tmp/prompt-library-english-default.png

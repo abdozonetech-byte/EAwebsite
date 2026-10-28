@@ -2,12 +2,22 @@
 (async function buildPlaybook(){
   const fs=await import('node:fs'),path=await import('node:path');
   const {fileURLToPath}=await import('node:url');
-  const {prompts,categories,models,levels}=await import('../assets/data/prompts.js');
-  const {learningTopics}=await import('../assets/data/prompt-learning.js');
+  const {prompts:frenchPrompts}=await import('../assets/data/prompts.js');
+  const {prompts:englishPrompts}=await import('../assets/data/prompts-en.js');
+  const {registryFor,libraryBase}=await import('../assets/data/prompt-locales.js');
+  const {englishMarkup}=await import('../assets/js/prompt-library-i18n.js');
+  const {learningTopics:frenchTopics}=await import('../assets/data/prompt-learning.js');
+  const {learningTopics:englishTopics}=await import('../assets/data/prompt-learning-en.js');
   const {escapeHTML:e,normalize,validateCatalog}=await import('../assets/js/prompt-library-core.js');
-  const {card,categoryName,favoriteButton}=await import('../assets/js/prompt-library-render.js');
+  const {card:renderCard,categoryName:categoryLabel,favoriteButton:renderFavorite}=await import('../assets/js/prompt-library-render.js');
   const {formatExample}=await import('./prompt-example-renderer.mjs');
-  const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://elboubakry.com',version='20261027-2';
+  const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://elboubakry.com',version='20261028-en1';
+  for(const language of ['en','fr']){
+  const prompts=language==='fr'?frenchPrompts:englishPrompts,learningTopics=language==='fr'?frenchTopics:englishTopics;
+  const {categories,models,levels}=registryFor(language),base=libraryBase(language);
+  const card=(p,saved=false,query='')=>renderCard(p,saved,query,language);
+  const categoryName=id=>categoryLabel(id,language),favoriteButton=p=>renderFavorite(p,false,language);
+  const localRoute=route=>language==='fr'?route.replace(/^\/prompts\/(?!fr\/)/,'/prompts/fr/'):route;
   validateCatalog(prompts,categories,models);
   for(const c of categories)if(prompts.filter(p=>p.category===c.id).length!==15)throw Error(`Expected 15 entries in ${c.id}`);
   const service=fs.readFileSync(path.join(root,'services/index.html'),'utf8');
@@ -18,7 +28,7 @@
   const options=items=>items.map(([key,label])=>`<option value="${e(key)}">${e(label)}</option>`).join('');
   const breadcrumbs=items=>({'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:items.map(([name,route],i)=>({'@type':'ListItem',position:i+1,name,item:origin+route}))});
   function layout(route,title,description,content,schema){
-    return `<!doctype html>
+    let html=`<!doctype html>
 <html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${e(title)} | Elboubakry</title><meta name="description" content="${e(description)}">
@@ -29,10 +39,16 @@
 <link rel="stylesheet" href="/assets/css/elboubakry-global-shell.css?v=20261027-nav1"><link rel="stylesheet" href="/assets/css/prompt-library.css?v=${version}">
 <script src="/assets/js/tracking-config.js?v=20260928-1"></script><script defer src="/assets/js/analytics.js?v=20261010-1"></script><script defer src="/assets/js/elboubakry-global-shell.js?v=20261027-nav1"></script>
 <script type="module" src="/assets/js/prompt-library.js?v=${version}"></script><script type="application/ld+json">${scriptJSON(schema)}</script>
-</head><body class="pl-page">${header}<main id="main-content">${content}</main>${footer}
+</head><body class="pl-page" data-pl-language="${language}">${header}<main id="main-content">${content}</main>${footer}
 <div class="pl-toast" id="pl-status" role="status" aria-live="polite" aria-atomic="true"></div>
 <dialog id="pl-copy-dialog" aria-labelledby="pl-copy-title"><h2 id="pl-copy-title">Copie manuelle</h2><p>La copie automatique est indisponible. Sélectionnez le texte et utilisez votre commande de copie.</p><textarea id="pl-copy-fallback" readonly aria-label="Texte à copier" rows="10"></textarea><form method="dialog"><button class="pl-button" type="submit">Fermer</button></form></dialog>
 </body></html>\n`;
+    if(language==='en')html=englishMarkup(html).replace('<html lang="fr">','<html lang="en">').replace('content="fr_MA"','content="en_US"').replaceAll('"inLanguage":"fr"','"inLanguage":"en"');
+    else html=html.replace(/\/prompts\/(?!fr\/)/g,'/prompts/fr/');
+    const suffix=route.replace(/^\/prompts\//,''),en='/prompts/'+suffix,fr='/prompts/fr/'+suffix;
+    const alternates=`<link rel="alternate" hreflang="en" href="${origin+en}"><link rel="alternate" hreflang="fr" href="${origin+fr}"><link rel="alternate" hreflang="x-default" href="${origin+en}">`;
+    const switcher=`<div class="pl-language-bar pl-container"><span>${language==='fr'?'L’anglais est la langue par défaut.':'English is the default language.'}</span><nav aria-label="${language==='fr'?'Langue de la bibliothèque':'Library language'}"><a data-pl-language-link="en" href="${en}" lang="en" hreflang="en"${language==='en'?' aria-current="page"':''}>EN <span>English</span></a><a data-pl-language-link="fr" href="${fr}" lang="fr" hreflang="fr"${language==='fr'?' aria-current="page"':''}>FR <span>Français</span></a></nav></div>`;
+    return html.replace('</head>',alternates+'</head>').replace('<main id="main-content">',switcher+'<main id="main-content">');
   }
   const creator=`<section class="pl-author"><span class="pl-eyebrow">Created & Curated by</span><h2>Elboubakry Abdessamad</h2><p>Une collection centrée sur les applications pratiques de l’IA, du marketing digital, de l’automatisation et du développement web.</p><strong>DIGITAL MARKETING × AI AUTOMATION</strong><div><a href="/about-elboubakry-abdessamad">Profil</a><a href="/services/">Services</a><a href="/insights/">Guides</a><a href="/#contact">Contact</a></div></section>`;
   const index=prompts.map(p=>{
@@ -40,9 +56,9 @@
     const searchText=[...new Set(normalize([title,description,category,categoryName(category),subcategory,...tags,p.prompt,...p.useCases,...compatibleModels.flatMap(m=>[m,models[m]])].join(' ')).split(/\s+/))].join(' ');
     return {id,slug,title,description,category,subcategory,tags,difficulty,compatibleModels,examplePreview,updatedAt,sourceType,promptPreview:p.prompt.slice(0,230)+'…',searchText};
   });
-  const detailsDir=path.join(root,'assets/data/prompt-details');fs.mkdirSync(detailsDir,{recursive:true});
+  const detailsDir=path.join(root,'assets/data/prompt-details',language);fs.mkdirSync(detailsDir,{recursive:true});
   for(const p of prompts)fs.writeFileSync(path.join(detailsDir,p.slug+'.json'),JSON.stringify(p)+'\n');
-  fs.writeFileSync(path.join(root,'assets/data/prompt-index.js'),'// Generated by build:prompts. Full bodies are loaded only on demand.\nexport const prompts='+JSON.stringify(index)+';\n');
+  fs.writeFileSync(path.join(root,`assets/data/prompt-index-${language}.js`),'// Generated by build:prompts. Full bodies are loaded only on demand.\nexport const prompts='+JSON.stringify(index)+';\n');
   const intro=`<section class="pl-hero pl-container"><div class="pl-hero-copy"><span class="pl-eyebrow">AI RESOURCES / THE PROMPT ENGINEERING PLAYBOOK</span><h1>Bibliothèque de<br><span>Prompts IA.</span></h1><p><strong>Des prompts professionnels pour ChatGPT, Claude, Gemini et les outils IA.</strong> Découvrez, personnalisez et copiez des prompts pour le marketing, le développement, les automatisations, le design et bien plus.</p><div class="pl-hero-meta"><span><strong>${prompts.length}</strong> prompts</span><span><strong>${categories.length}</strong> catégories</span><span>Gratuit · Sans inscription</span></div></div><aside class="pl-hero-demo" aria-label="Principe de la bibliothèque"><span class="pl-small-label">01 / Votre contexte</span><p>Un objectif, des informations utiles et des limites explicites.</p><span class="pl-demo-arrow" aria-hidden="true">↓</span><div><span class="pl-small-label">02 / Un livrable à vérifier</span><p>Un exemple concret, des critères de réussite et les incertitudes à conserver.</p></div></aside><div class="pl-attribution">Created & Curated by <a href="/about-elboubakry-abdessamad">Elboubakry Abdessamad</a><span>DIGITAL MARKETING × AI AUTOMATION</span></div></section>`;
   const catalog=`${intro}<section class="pl-catalog pl-container" data-library aria-labelledby="pl-catalog-title">
 <div class="pl-search-bar"><label class="pl-search"><span class="pl-small-label">Qu’aimeriez-vous créer ?</span><input id="pl-search" type="search" maxlength="200" placeholder="SEO, workflow CRM, code, entretien…" aria-label="Rechercher un prompt" autocomplete="off"><span class="pl-search-key" aria-hidden="true">/</span></label><button class="pl-button" type="button" id="pl-clear-search" hidden>Effacer</button><button class="pl-button" type="button" id="pl-favorites" aria-pressed="false">☆ Mes favoris <span id="pl-favorite-count">0</span></button></div>
@@ -51,7 +67,7 @@
 <div class="pl-results"><div class="pl-results-header"><div><span class="pl-eyebrow">Professional AI Prompts for Real-World Projects</span><h2 id="pl-catalog-title">Tous les prompts</h2><p id="pl-results-count" role="status" aria-live="polite">${prompts.length} prompts disponibles</p></div><label>Trier par<select id="pl-sort">${options([['recommended','Sélection éditoriale'],['alpha','Ordre alphabétique'],['updated','Mise à jour récente'],['difficulty','Niveau croissant']])}</select></label></div><div class="pl-grid" id="pl-grid">${prompts.slice(0,8).map(p=>card(p)).join('')}</div><nav id="pl-pagination" class="pl-pagination" aria-label="Pagination"></nav><noscript><p>Les filtres et la copie nécessitent JavaScript. Tous les prompts restent accessibles dans le répertoire ci-dessous.</p></noscript></div></div></section>
 <section class="pl-learning pl-container"><div><span class="pl-eyebrow">Apprendre à mieux demander</span><h2>Un prompt est un début, pas une preuve.</h2><p>Contexte, format, variables, itération et vérification : découvrez une méthode pratique pour évaluer les réponses.</p><a class="pl-button" href="/prompts/guide/">Lire le guide de prompt engineering ↗</a></div><ol><li><strong>Cadrez la tâche.</strong> Résultat, public et contraintes.</li><li><strong>Ajoutez votre contexte.</strong> Sans secrets ni données inutiles.</li><li><strong>Contrôlez la réponse.</strong> Sources, hypothèses et tests.</li></ol><p class="pl-note">Aucune API IA sur cette bibliothèque. Vos variables restent dans la page sans sauvegarde ni envoi. Seuls les favoris sont conservés localement quand le stockage est disponible.</p></section>
 <section class="pl-container pl-directory"><details><summary>Explorer les ${prompts.length} prompts par catégorie</summary><div class="pl-directory-grid">${categories.map(c=>`<section><h2>${e(c.label)}</h2><ul>${prompts.filter(p=>p.category===c.id).map(p=>`<li><a href="/prompts/${p.slug}/">${e(p.title)}</a></li>`).join('')}</ul></section>`).join('')}</div></details>${creator}</section>`;
-  function write(route,html){const file=path.join(root,route,'index.html');fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,html);}
+  function write(route,html){if(language==='fr')route=route.replace(/^prompts(?=\/|$)/,'prompts/fr');const file=path.join(root,route,'index.html');fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,html);}
   write('prompts',layout('/prompts/','Bibliothèque de Prompts IA — 210 prompts professionnels','210 prompts IA : marketing, code, automatisation, design et 10 autres catégories. Exemples illustratifs, variables et copie gratuite par Elboubakry Abdessamad.',catalog,[{'@context':'https://schema.org','@type':'CollectionPage','@id':origin+'/prompts/#page',url:origin+'/prompts/',name:'ELBOUBAKRY AI PROMPT LIBRARY',inLanguage:'fr',creator:{'@id':origin+'/#person'},isPartOf:{'@id':origin+'/#website'},mainEntity:{'@type':'ItemList',numberOfItems:prompts.length,itemListElement:prompts.map((p,i)=>({'@type':'ListItem',position:i+1,name:p.title,url:origin+'/prompts/'+p.slug+'/'}))}},breadcrumbs([['Accueil','/'],['Prompts IA','/prompts/']])]));
   for(const p of prompts){
     const related=p.relatedPromptIds.map(id=>prompts.find(q=>q.id===id));
@@ -70,13 +86,18 @@
   }
   const guide=`<article class="pl-container pl-guide"><nav class="pl-breadcrumb" aria-label="Fil d’Ariane"><a href="/">Accueil</a><span>/</span><a href="/prompts/">Prompts IA</a><span>/</span><span>Guide</span></nav><span class="pl-eyebrow">THE PROMPT ENGINEERING PLAYBOOK</span><h1>Le guide pratique du prompt engineering</h1><p class="pl-guide-intro">Une méthode pour demander, préciser, comparer et vérifier. Sans promesse de réponse infaillible ni classement universel des modèles.</p><nav class="pl-guide-toc" aria-label="Sommaire du guide"><ol>${learningTopics.map((t,i)=>`<li><a href="#etape-${i+1}">${e(t[0])}</a></li>`).join('')}</ol></nav>${learningTopics.map((t,i)=>`<section id="etape-${i+1}"><span class="pl-eyebrow">${String(i+1).padStart(2,'0')} / Méthode</span><h2>${e(t[0])}</h2><p>${e(t[1])}</p><a class="pl-text-link" href="/prompts/${t[2]}/">Essayer un prompt associé ↗</a></section>`).join('')}${creator}</article>`;
   write('prompts/guide',layout('/prompts/guide/','Guide du prompt engineering — Contexte, variables et vérification','Apprenez à cadrer une tâche IA, utiliser les variables, préciser un format et vérifier les réponses. Guide pratique par Elboubakry Abdessamad.',guide,[{'@context':'https://schema.org','@type':'LearningResource',url:origin+'/prompts/guide/',name:'Guide pratique du prompt engineering',inLanguage:'fr',isAccessibleForFree:true,creator:{'@id':origin+'/#person'}},breadcrumbs([['Accueil','/'],['Prompts IA','/prompts/'],['Guide','/prompts/guide/']])]));
-  const routes=['/prompts/','/prompts/guide/',...prompts.map(p=>'/prompts/'+p.slug+'/')];
+  const routes=['/prompts/','/prompts/guide/',...prompts.map(p=>'/prompts/'+p.slug+'/')].map(localRoute);
   let sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');
-  for(const route of routes)if(!sitemap.includes(`<loc>${origin}${route}</loc>`))sitemap=sitemap.replace('</urlset>',`<url><loc>${origin}${route}</loc><lastmod>2026-10-27</lastmod></url>\n</urlset>`);
+  for(const route of routes){
+    const loc=`<loc>${origin}${route}</loc>`;
+    if(!sitemap.includes(loc))sitemap=sitemap.replace('</urlset>',`<url>${loc}<lastmod>2026-10-28</lastmod></url>\n</urlset>`);
+    else{const start=sitemap.indexOf(loc),end=sitemap.indexOf('</url>',start);const entry=sitemap.slice(start,end).replace(/<lastmod>[^<]+<\/lastmod>/,'<lastmod>2026-10-28</lastmod>');sitemap=sitemap.slice(0,start)+entry+sitemap.slice(end);}
+  }
   fs.writeFileSync(path.join(root,'sitemap.xml'),sitemap);
   let redirects=fs.readFileSync(path.join(root,'_redirects'),'utf8');
   for(const route of routes.filter(r=>r!=='/prompts/')){const source=route.slice(0,-1);if(!redirects.includes(source+'  '))redirects+=`\n${source}  ${route}  301`;}
   fs.writeFileSync(path.join(root,'_redirects'),redirects.trimEnd()+'\n');
-  console.log(`Built ${prompts.length} prompts, ${categories.length} categories, ${routes.length} static pages; 16 existing bodies preserved, ${prompts.filter(p=>p.sourceType==='newly_authored').length} newly authored.`);
+  console.log(`Built ${language}: ${prompts.length} prompts, ${categories.length} categories, ${routes.length} static pages.`);
+  }
 })();
 
