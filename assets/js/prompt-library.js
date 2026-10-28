@@ -1,6 +1,7 @@
-import { prompts, categories, models } from '../data/prompts.js?v=20261027-1';
-import { readState,stateQuery,filterPrompts,customize,readFavorites,saveFavorites,copyText } from './prompt-library-core.js?v=20261027-1';
-import { card,categoryName } from './prompt-library-render.js?v=20261027-1';
+import { prompts } from '../data/prompt-index.js?v=20261027-2';
+import { categories, models } from '../data/prompt-registry.js?v=20261027-2';
+import { readState,stateQuery,filterPrompts,customize,readFavorites,saveFavorites,copyText,extractVariables,safeReturnPath } from './prompt-library-core.js?v=20261027-2';
+import { card,categoryName } from './prompt-library-render.js?v=20261027-2';
 const $=id=>document.getElementById(id), catalog=document.querySelector('[data-library]');
 let storage;try{storage=window.localStorage;}catch{storage=null;}
 let favorites=readFavorites(storage,prompts),state=readState(location.search,prompts),statusTimer;
@@ -13,29 +14,45 @@ function syncControls(){
 }
 function render(updateURL=false){
   const found=filterPrompts(prompts,state,favorites,Object.fromEntries(categories.map(c=>[c.id,c.label])),models),size=8,pages=Math.max(1,Math.ceil(found.length/size));state.page=Math.min(state.page,pages);
-  $('pl-grid').innerHTML=found.length?found.slice((state.page-1)*size,state.page*size).map(p=>card(p,favorites.includes(p.id))).join(''):`<div class="pl-empty"><h3>${state.fav?'Pas de favori correspondant.':'Aucun prompt correspondant.'}</h3><p>${state.fav?'Ajoutez un prompt avec l’étoile, ou élargissez vos filtres.':'Essayez un autre mot-clé ou retirez un filtre.'}</p><button type="button" class="pl-button" data-reset>Afficher tous les prompts</button></div>`;
+  $('pl-grid').innerHTML=found.length?found.slice((state.page-1)*size,state.page*size).map(p=>card(p,favorites.includes(p.id),stateQuery(state))).join(''):`<div class="pl-empty"><h3>${state.fav?'Pas de favori correspondant.':'Aucun prompt correspondant.'}</h3><p>${state.fav?'Ajoutez un prompt avec l’étoile, ou élargissez vos filtres.':'Essayez un autre mot-clé ou retirez un filtre.'}</p><button type="button" class="pl-button" data-reset>Afficher tous les prompts</button></div>`;
   $('pl-catalog-title').textContent=state.fav?'Vos favoris':state.category?categoryName(state.category):'Tous les prompts';
   $('pl-results-count').textContent=`${found.length} résultat${found.length!==1?'s':''} sur ${prompts.length} prompts${pages>1?` · Page ${state.page}/${pages}`:''}`;
-  $('pl-pagination').innerHTML=pages>1?`${state.page>1?`<button type="button" class="pl-button" data-page="${state.page-1}" aria-label="Page précédente">← Précédent</button>`:''}<span>Page ${state.page} sur ${pages}</span>${state.page<pages?`<button type="button" class="pl-button" data-page="${state.page+1}" aria-label="Page suivante">Suivant →</button>`:''}`:'';
+  $('pl-pagination').innerHTML=pages>1?`${state.page>1?`<button type="button" class="pl-button" data-page="${state.page-1}" aria-label="Page précédente">← Précédent</button>`:''}<label>Page <select id="pl-page-select" aria-label="Aller à la page">${Array.from({length:pages},(_,i)=>`<option value="${i+1}"${i+1===state.page?' selected':''}>${i+1} / ${pages}</option>`).join('')}</select></label>${state.page<pages?`<button type="button" class="pl-button" data-page="${state.page+1}" aria-label="Page suivante">Suivant →</button>`:''}`:'';
   syncControls();syncFavorites();if(updateURL)history.replaceState(null,'',location.pathname+stateQuery(state));
+  document.querySelector('meta[name="robots"]').content=stateQuery(state)?'noindex, follow':'index, follow, max-image-preview:large';
 }
 async function copy(text,button){
   const done=await copyText(text,{clipboard:navigator.clipboard,document,restoreFocus:()=>button.focus({preventScroll:true})});
   if(done){notify('Texte copié. Vérifiez-le avant utilisation.');button.classList.add('pl-copied');setTimeout(()=>button.classList.remove('pl-copied'),1400);}
   else{const dialog=$('pl-copy-dialog');$('pl-copy-fallback').value=text;dialog.showModal();$('pl-copy-fallback').focus();$('pl-copy-fallback').select();notify('Copie automatique indisponible. Le texte est prêt pour une copie manuelle.');}
 }
-const detail=document.querySelector('[data-prompt-id]'),prompt=detail?prompts.find(p=>p.id===detail.dataset.promptId):null;
+const detail=document.querySelector('[data-prompt-id]');
+const original=detail?$('pl-original').textContent:'';
+const prompt=detail?{...prompts.find(p=>p.id===detail.dataset.promptId),prompt:original,variables:extractVariables(original),exampleResult:JSON.parse($('pl-example-data').textContent)}:null;
+const fullPromptCache=new Map();
+async function fullPrompt(id){
+  if(prompt?.id===id)return prompt;
+  if(!prompts.some(p=>p.id===id))throw new Error('Prompt introuvable.');
+  if(!fullPromptCache.has(id))fullPromptCache.set(id,(async()=>{
+    const response=await fetch(`/assets/data/prompt-details/${encodeURIComponent(id)}.json?v=20261027-2`,{credentials:'omit'});
+    if(!response.ok)throw new Error('Chargement impossible. Ouvrez la page de détail pour lire et copier le texte.');
+    const data=await response.json();if(data.id!==id||typeof data.prompt!=='string')throw new Error('Contenu invalide.');return data;
+  })().catch(error=>{fullPromptCache.delete(id);throw error;}));
+  return fullPromptCache.get(id);
+}
+if(detail)$('pl-back-results').href=safeReturnPath(new URLSearchParams(location.search).get('from')||'/prompts/');
 let values={};
 function updateCustomized(){const complete=prompt.variables.filter(key=>String(values[key]||'').trim()).length;$('pl-customized').textContent=customize(prompt.prompt,values);$('pl-variable-status').textContent=`${complete}/${prompt.variables.length} variables complétées${complete<prompt.variables.length?' · Les champs vides conservent leur emplacement.':''}`;}
 document.addEventListener('click',async event=>{
   const button=event.target.closest('button');if(!button)return;
-  if(button.hasAttribute('data-copy')){const p=prompts.find(p=>p.id===button.dataset.copy);if(p)await copy(p.prompt,button);return;}
+  if(button.hasAttribute('data-copy')){button.disabled=true;const label=button.textContent;button.textContent='Chargement…';try{const p=await fullPrompt(button.dataset.copy);button.textContent=label;button.disabled=false;await copy(p.prompt,button);}catch(error){notify(error.message);}finally{button.textContent=label;button.disabled=false;}return;}
   if(button.hasAttribute('data-favorite')){const id=button.dataset.favorite;if(!prompts.some(p=>p.id===id))return;favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];const saved=saveFavorites(storage,favorites);if(catalog&&state.fav){render();$('pl-favorites').focus({preventScroll:true});}else syncFavorites();notify(saved?'Favoris mis à jour sur cet appareil.':'Stockage indisponible : favoris conservés seulement pour cette visite.');return;}
   if(catalog){
     if(button.hasAttribute('data-category')){state.category=button.dataset.category;state.page=1;render(true);}
     if(button.id==='pl-favorites'){state.fav=!state.fav;state.page=1;render(true);}
     if(button.id==='pl-clear-search'){state.q='';state.page=1;render(true);$('pl-search').focus();}
     if(button.id==='pl-reset'||button.hasAttribute('data-reset')){state=readState('',prompts);render(true);if(button.hasAttribute('data-reset'))$('pl-search').focus();}
+    if(button.id==='pl-view-results'){$('pl-filter-panel').open=false;$('pl-catalog-title').scrollIntoView({block:'start'});}
     if(button.hasAttribute('data-page')){state.page=Number(button.dataset.page);render(true);$('pl-catalog-title').setAttribute('tabindex','-1');$('pl-catalog-title').focus({preventScroll:true});$('pl-catalog-title').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
   }
   if(prompt){
@@ -46,10 +63,10 @@ document.addEventListener('click',async event=>{
 });
 let inputTimer;
 document.addEventListener('input',event=>{if(catalog&&event.target.id==='pl-search'){clearTimeout(inputTimer);state.q=event.target.value;state.page=1;inputTimer=setTimeout(()=>render(true),100);}if(prompt&&event.target.hasAttribute('data-variable')){values[event.target.dataset.variable]=event.target.value;updateCustomized();}});
-document.addEventListener('change',event=>{if(catalog)for(const key of ['model','level','tag','sort'])if(event.target.id===`pl-${key}`){state[key]=event.target.value;state.page=1;render(true);}});
+document.addEventListener('change',event=>{if(catalog){for(const key of ['model','level','tag','sort'])if(event.target.id===`pl-${key}`){state[key]=event.target.value;state.page=1;render(true);}if(event.target.id==='pl-page-select'){state.page=Number(event.target.value);render(true);$('pl-catalog-title').setAttribute('tabindex','-1');$('pl-catalog-title').focus({preventScroll:true});$('pl-catalog-title').scrollIntoView({block:'start'});}}});
 window.addEventListener('popstate',()=>{if(catalog){clearTimeout(inputTimer);state=readState(location.search,prompts);render();}});
 window.addEventListener('storage',()=>{favorites=readFavorites(storage,prompts);if(catalog)render();else syncFavorites();});
 document.addEventListener('keydown',event=>{if(catalog&&event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!event.target.closest('input,textarea,select,[contenteditable="true"]')){event.preventDefault();$('pl-search').focus();}});
 document.addEventListener('keydown',event=>{const menu=document.querySelector('[data-shell-menu]');if(event.key==='Escape'&&menu?.getAttribute('aria-expanded')==='true'){menu.click();menu.focus();}});
-if(catalog){if(matchMedia('(max-width:760px)').matches)$('pl-filter-panel').open=false;render();}
+if(catalog){if(matchMedia('(max-width:900px)').matches)$('pl-filter-panel').open=false;render();}
 syncFavorites();if(prompt)updateCustomized();

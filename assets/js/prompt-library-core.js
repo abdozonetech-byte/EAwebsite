@@ -1,7 +1,12 @@
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const normalize = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
+export const variablePattern = () => /\[([A-Z][A-Z0-9_]*(?: [A-Z0-9_]+)*)\]/g;
+export const extractVariables = prompt => [...new Set([...prompt.matchAll(variablePattern())].map(match=>match[1]))];
 export function customize(prompt, values) {
-  return prompt.replace(/\[([A-Z][A-Z0-9_]*)\]/g,(match,key)=>String(values[key]||'').trim()||match);
+  return prompt.replace(variablePattern(),(match,key)=>String(values[key]||'').trim()||match);
+}
+export function safeReturnPath(value) {
+  try{const url=new URL(value,'https://local.invalid');return url.origin==='https://local.invalid'&&url.pathname==='/prompts/'&&!url.hash?url.pathname+url.search:'/prompts/';}catch{return '/prompts/';}
 }
 export function readState(search, catalog) {
   const params=new URLSearchParams(search), allowed=(name,values)=>values.includes(params.get(name))?params.get(name):'';
@@ -16,7 +21,7 @@ export function stateQuery(state) {
 }
 export function filterPrompts(catalog,state,favorites=[],categoryLabels={},modelLabels={}) {
   const words=normalize(state.q).split(/\s+/).filter(Boolean),ranks={beginner:0,intermediate:1,advanced:2};
-  const found=catalog.filter(p=>(!state.category||p.category===state.category)&&(!state.model||p.compatibleModels.includes(state.model))&&(!state.level||p.difficulty===state.level)&&(!state.tag||p.tags.includes(state.tag))&&(!state.fav||favorites.includes(p.id))&&words.every(word=>normalize([p.title,p.description,p.category,categoryLabels[p.category],...p.tags,p.prompt,...p.useCases,...p.compatibleModels.flatMap(m=>[m,modelLabels[m]])].join(' ')).includes(word)));
+  const found=catalog.filter(p=>(!state.category||p.category===state.category)&&(!state.model||p.compatibleModels.includes(state.model))&&(!state.level||p.difficulty===state.level)&&(!state.tag||p.tags.includes(state.tag))&&(!state.fav||favorites.includes(p.id))&&words.every(word=>(p.searchText||normalize([p.title,p.description,p.category,categoryLabels[p.category],...p.tags,p.prompt,...p.useCases,...p.compatibleModels.flatMap(m=>[m,modelLabels[m]])].join(' '))).includes(word)));
   return found.sort((a,b)=>state.sort==='alpha'?a.title.localeCompare(b.title,'fr'):state.sort==='updated'?b.updatedAt.localeCompare(a.updatedAt):state.sort==='difficulty'?ranks[a.difficulty]-ranks[b.difficulty]:0);
 }
 export const FAVORITES_KEY='ea-prompt-favorites-v1';
@@ -31,15 +36,19 @@ export async function copyText(text,{clipboard,document,restoreFocus=()=>{}}) {
   return done;
 }
 export function validateCatalog(catalog,categories,models) {
-  const seen=new Set();if(!catalog.length)throw new Error('Empty prompt catalog');
+  const seen=new Set(),titles=new Set(),bodies=new Set();if(!catalog.length)throw new Error('Empty prompt catalog');
   for(const p of catalog){
     if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(p.slug)||seen.has(p.slug)||p.id!==p.slug)throw new Error(`Invalid/duplicate slug: ${p.slug}`);seen.add(p.slug);
     if(!categories.some(c=>c.id===p.category))throw new Error(`Unknown category: ${p.slug}`);
+    if(titles.has(normalize(p.title))||bodies.has(normalize(p.prompt)))throw new Error(`Duplicate title/body: ${p.slug}`);titles.add(normalize(p.title));bodies.add(normalize(p.prompt));
     for(const key of ['title','description','prompt','exampleResult','examplePreview'])if(typeof p[key]!=='string'||!p[key].trim())throw new Error(`Missing ${key}: ${p.slug}`);
     if(p.exampleResult.length<200||p.exampleStatus!=='illustrative')throw new Error(`Incomplete/unlabeled example: ${p.slug}`);
-    for(const key of ['tags','useCases','tips','compatibleModels'])if(!Array.isArray(p[key])||!p[key].length)throw new Error(`Missing ${key}: ${p.slug}`);
+    for(const key of ['tags','useCases','tips','compatibleModels','howToUse','proTips','commonMistakes','relatedPromptIds'])if(!Array.isArray(p[key])||!p[key].length||p[key].some(item=>typeof item!=='string'||!item.trim()))throw new Error(`Missing ${key}: ${p.slug}`);
+    if(!p.subcategory||!p.accomplishes||!['revised','newly_authored','imported'].includes(p.sourceType)||!p.provenance?.origin||p.provenance.modelTested!==false)throw new Error(`Invalid provenance/education: ${p.slug}`);
+    if(p.prompt.length<300)throw new Error(`Prompt too short: ${p.slug}`);
+    if(p.relatedPromptIds.some(id=>id===p.id||!catalog.some(q=>q.id===id)))throw new Error(`Broken relation: ${p.slug}`);
     if(!['beginner','intermediate','advanced'].includes(p.difficulty)||p.compatibleModels.some(m=>!models[m]))throw new Error(`Invalid metadata: ${p.slug}`);
-    const variables=[...new Set([...p.prompt.matchAll(/\[([A-Z][A-Z0-9_]*)\]/g)].map(m=>m[1]))];
+    const variables=extractVariables(p.prompt);
     if(JSON.stringify(variables)!==JSON.stringify(p.variables))throw new Error(`Variable mismatch: ${p.slug}`);
     if(!/^\d{4}-\d{2}-\d{2}$/.test(p.updatedAt))throw new Error(`Invalid date: ${p.slug}`);
   }

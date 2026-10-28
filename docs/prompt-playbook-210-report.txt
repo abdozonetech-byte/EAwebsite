@@ -1,0 +1,117 @@
+ELBOUBAKRY AI PROMPT LIBRARY — IMPLEMENTATION REPORT
+Completed local QA: 28 October 2026
+Publication state: NOT committed, pushed or deployed in this task.
+
+CONTENT
+210 unique prompts and 210 distinct illustrative example results.
+16 existing prompt bodies and public detail URLs preserved unchanged.
+194 newly authored entries. The 16 preserved entries received revised educational metadata.
+14 categories, exactly 15 entries each:
+Design; Vibe Coding; Video; Business; Images; Marketing; Web Development;
+Automations; Learning; Data Science; Education; Productivity; Career; Research.
+Every entry has a subcategory, tags, difficulty, capability-based tool suggestions,
+description, objective, use cases, complete prompt, variables, example, usage
+instructions, professional tips, mistakes, related IDs, provenance and update date.
+No example was executed on an AI model. No generated image/video assets, invented
+testimonials, credentials, client outcomes or research citations are presented.
+
+DUPLICATION REVIEW
+Zero exact duplicate IDs, slugs, normalized titles, normalized prompt bodies or
+example bodies. All 210 entries pass structural validation.
+Task-level editorial review distinguishes related work: CV rewriting versus ATS
+review, meeting notes versus general task extraction, website security versus
+application hardening, research brief versus decision memo, information
+architecture versus landing-page wireframe, and code refactoring versus feature
+implementation. Their inputs, deliverables and examples differ.
+A lexical screen of title + description + example token sets found no pair above
+0.25 Jaccard similarity after common-word removal. This is a heuristic, not a
+model-based semantic guarantee or proof of optimal prompt performance.
+
+ARCHITECTURE AND FILES
+Source: assets/data/prompt-categories/ (14 category files, shared constructor and
+preserved legacy data); assets/data/prompts.js aggregates and relates entries.
+Registry: assets/data/prompt-registry.js.
+Learning content: assets/data/prompt-learning.js (10 practical sections).
+Generated lightweight search metadata: assets/data/prompt-index.js.
+Generated complete copy payloads: assets/data/prompt-details/ (210 JSON files).
+UI: assets/js/prompt-library.js, prompt-library-core.js, prompt-library-render.js;
+assets/css/prompt-library.css.
+Build: scripts/build-prompt-playbook.mjs; old build-prompts.mjs delegates to it.
+Safe restricted example formatter: scripts/prompt-example-renderer.mjs.
+Tests: scripts/test-prompts.mjs.
+Other modified integration files: package.json, sitemap.xml, _redirects, llms.txt,
+and the existing prompt-resource callout in insights/index.html.
+CRM code, CRM database and homepage content were not changed.
+No new dependency or paid service was added.
+
+ROUTES AND FEATURES
+212 static library pages: /prompts/, /prompts/guide/ and 210 detail routes.
+195 new routes beyond the previous 17-page starter library.
+Eight cards per page with 27-page catalog navigation and direct page selection.
+Search spans full prompt content through a normalized metadata index.
+Category, tool, level, theme, favorites and sorting filters retain URL state.
+Detail pages restore filters and pagination through a validated return path.
+Original/customized/example copy preserves complete multiline content.
+Card copy loads only its same-origin static JSON, with retry and error feedback.
+Clipboard API, selection fallback and manual-copy dialog are implemented.
+Variables with spaces, underscores and repeats are substituted literally; empty
+values retain placeholders. Values are neither stored nor sent to an AI API.
+Favorites use the existing storage key and degrade safely without storage.
+Code blocks, headings, lists and tables are escaped; no arbitrary HTML executes.
+Desktop prompt/result panels stack on mobile. Tablet filters collapse above a
+wider two-column grid. Creator sections and a ten-section guide are included.
+
+SEO AND SAFETY
+Static crawlable detail content; all 210 links in the catalog directory;
+canonical URLs, titles, descriptions, social metadata, breadcrumbs and
+LearningResource/CollectionPage structured data; sitemap and slash redirects.
+Filtered catalog URLs receive client-side noindex/follow with a clean canonical.
+No claim is made about rankings, indexation speed or AI-search inclusion.
+No AI API key, external research request or production database write is involved.
+
+CHECKS EXECUTED — PASSED
+- npm run build:prompts (210 entries, 212 generated pages).
+- npm run test:prompts (content, preserved bodies, complete metadata, variables,
+  static JSON parity, related IDs, guide, schema, routes, index search, sorting,
+  URL state, favorites, escaping, copies and clipboard failure fallbacks).
+- node scripts/seo-audit.mjs . (256 HTML files, 249 sitemap URLs,
+  2076 structured-data URLs, 309 redirect rules, 673 repository files).
+- Syntax checks: node --check across 28 relevant JS/MJS files.
+- ESLint 6.4.0 targeted no-dupe-keys, no-unreachable and valid-typeof checks on
+  source/build/browser modules. The top-level-await unit test is excluded from
+  this older ESLint parser and is instead syntax-checked and executed by Node.
+- git diff --check.
+- All seven existing suites: test:ai-budget, test:crm-discovery, test:crm-import,
+  test:crm-intelligence, test:crm-project, test:crm-visuals, test:crm-presence.
+  Workbook-specific CRM check skipped by the existing suite: workbook unavailable.
+- Local HTTP: /prompts/ returned 200; nonexistent prompt route returned 404.
+- Local browser: search, category and tool filters, alphabetical sort, pagination
+  to page 27 (two cards), exact original/customized/example copies, lazy catalog
+  copy, reset, favorite reload persistence, related/detail links and restored
+  filter/page state. No browser console errors observed.
+- Catalog checked at 375, 390, 430, 768, 1024 and 1440px: no page horizontal
+  overflow. Tablet card widths improved after visual inspection.
+- Detail checked at 1440/375px: side-by-side/stacked panels, associated labels,
+  code example and literal special characters. Mobile table scroll is contained
+  in its named focusable region. Guide anchors and mobile menu Escape tested.
+
+LIMITATIONS
+No TypeScript files or tsconfig exist for this feature; no TypeScript check was
+claimed. Targeted ESLint and Node syntax/tests are not a whole-repository lint.
+Lighthouse is not installed, so no Lighthouse scores are claimed.
+Local viewport/keyboard/label checks are not a complete WCAG certification,
+screen-reader audit, cross-browser/device lab or exhaustive review of all content.
+Examples are editorial illustrations, not model-evaluation evidence.
+Production headers/redirect behavior still require deployment verification after
+explicit approval. The local preview intentionally disables analytics and CRM.
+
+LOCAL PREVIEW
+cd /home/abdel/Documents/Codex/2026-09-27/wo/work/EAwebsite
+npm run build:prompts
+npm run test:prompts
+npm run preview:prompts
+Open http://127.0.0.1:4180/prompts/
+Stop the preview with Ctrl+C. The QA-owned server is stopped at task completion.
+
+Preview captures: /tmp/prompt-playbook-catalog-desktop.png
+                  /tmp/prompt-playbook-detail-desktop.png
