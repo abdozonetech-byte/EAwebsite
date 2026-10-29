@@ -3,14 +3,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {guides,projects} from '../assets/data/english-guides.js';
+import {languageAssets,languageControl} from './site-language-ui.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://elboubakry.com';
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const write=(p,s)=>{fs.mkdirSync(path.dirname(path.join(root,p)),{recursive:true});fs.writeFileSync(path.join(root,p),s);};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const template=read('en/services/index.html');
 const baseGraph=JSON.parse(template.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1])['@graph'].filter(x=>['Person','WebSite','ProfessionalService'].includes(x['@type']));
-const head=(fr,en)=>`<!-- content-language-head:start --><link rel="stylesheet" href="/assets/css/site-languages.css?v=20261029-4"><link rel="alternate" hreflang="fr" href="${origin}${fr}"><link rel="alternate" hreflang="en" href="${origin}${en}"><link rel="alternate" hreflang="x-default" href="${origin}${fr}"><!-- content-language-head:end -->`;
-const switcher=(fr,en,lang)=>`<!-- content-language-switch:start --><div class="ea-language-row"><div class="ea-container"><span>${lang==='en'?'English edition · French remains the main website language.':'Français reste la langue principale du site.'}</span><nav aria-label="${lang==='en'?'Website language':'Langue du site'}"><a href="${fr}" lang="fr" hreflang="fr"${lang==='fr'?' aria-current="page"':''}>FR <span>Français</span></a><a href="${en}" lang="en" hreflang="en"${lang==='en'?' aria-current="page"':''}>EN <span>English</span></a></nav></div></div><!-- content-language-switch:end -->`;
+const head=(fr,en)=>`<!-- content-language-head:start -->${languageAssets()}<link rel="alternate" hreflang="fr" href="${origin}${fr}"><link rel="alternate" hreflang="en" href="${origin}${en}"><link rel="alternate" hreflang="x-default" href="${origin}${fr}"><!-- content-language-head:end -->`;
+const switcher=(fr,en,lang)=>`<!-- content-language-switch:start -->${languageControl(fr,en,lang)}<!-- content-language-switch:end -->`;
 const cta=`<section class="ea-section ea-section-soft" id="contact"><div class="ea-container"><h2>Choose the next useful step.</h2><p>Discuss your objective and current obstacles before adding more tools, campaigns or complexity.</p><div class="ea-core-actions"><a class="ea-button ea-button-primary" href="/en/diagnostic/">Request a free diagnostic ↗</a><a class="ea-text-link" href="/en/services/">Explore services →</a></div></div></section>`;
 const hero=(label,title,intro)=>`<section class="ea-core-hero"><div class="ea-container"><nav class="ea-core-breadcrumb" aria-label="Breadcrumb"><a href="/en/">Home</a><span>/</span>${!['Projects','Guides'].includes(label)?'<a href="/en/guides/">Guides</a><span>/</span>':''}<span>${esc(label)}</span></nav><span class="ea-kicker">${esc(label)} · Morocco</span><h1>${esc(title)}</h1><p>${esc(intro)}</p></div></section>`;
 const guideCards=()=>`<div class="ea-core-grid">${guides.map(g=>`<article class="ea-core-card"><span class="ea-kicker">${esc(g.category)}</span><h3><a href="/en/guides/${g.slug}/">${esc(g.title)}</a></h3><p>${esc(g.description)}</p><a class="ea-text-link" href="/en/guides/${g.slug}/">Read guide →</a></article>`).join('')}</div>`;
@@ -59,7 +60,7 @@ for(const file of englishFiles){
  const own=pages.find(p=>p.guide&&file===p.en.slice(1)+'index.html');if(own)html=html.replace(`href="${own.en}">Read the French version`,`href="${own.fr}" hreflang="fr">Read the French version`);
  html=html.replaceAll('AI and business consulting (French)','AI and business consulting');
  html=html.replace(/<a\b[^>]*href="\/en\/(?:projects|guides)\/[^>]*>/g,tag=>tag.replace(/ hreflang="fr"/g,''));
- html=html.replace(/site-languages.css\?v=[^" ]+/g,'site-languages.css?v=20261029-4');
+ html=html.replace(/site-languages.css\?v=[^" ]+/g,'site-languages.css?v=20261029-5');
  html=html.replace('__PRESERVED_LANGUAGE_SWITCH__',languageSwitch);
  write(file,html);
 }

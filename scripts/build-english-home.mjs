@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {translations,faqs} from '../assets/data/english-home.js';
+import {languageAssets,languageControl} from './site-language-ui.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://elboubakry.com';
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
@@ -16,8 +17,8 @@ website.inLanguage=['fr','en'];
 frenchGraph['@graph']=frenchGraph['@graph'].filter(item=>item['@id']!==origin+'/#webpage');
 frenchGraph['@graph'].push({'@type':'WebPage','@id':origin+'/#webpage',url:origin+'/',name:'Consultant Marketing Digital & IA au Maroc | Elboubakry',inLanguage:'fr',isPartOf:{'@id':origin+'/#website'},about:{'@id':origin+'/#person'},workTranslation:{'@id':origin+'/en/#webpage'}});
 const alternates=`<link rel="alternate" hreflang="fr" href="${origin}/"><link rel="alternate" hreflang="en" href="${origin}/en/"><link rel="alternate" hreflang="x-default" href="${origin}/">`;
-function languageHead(){return `<!-- site-language-head:start --><link rel="stylesheet" href="/assets/css/site-languages.css?v=20261029-2">${alternates}<!-- site-language-head:end -->\n`;}
-function languageSwitch(language){return `<!-- site-language-switch:start --><div class="ea-language-row"><div class="ea-container"><span>${language==='en'?'English homepage · French remains the main website language.':'Français reste la langue principale du site.'}</span><nav aria-label="${language==='en'?'Website language':'Langue du site'}"><a href="/" lang="fr" hreflang="fr"${language==='fr'?' aria-current="page"':''}>FR <span>Français</span></a><a href="/en/" lang="en" hreflang="en"${language==='en'?' aria-current="page"':''}>EN <span>English</span></a></nav></div></div><!-- site-language-switch:end -->\n`;}
+function languageHead(){return `<!-- site-language-head:start -->${languageAssets()}${alternates}<!-- site-language-head:end -->\n`;}
+function languageSwitch(language){return `<!-- site-language-switch:start -->${languageControl('/','/en/',language)}<!-- site-language-switch:end -->\n`;}
 function integrate(html,language){return html.replace('</head>',languageHead()+'</head>').replace('  <main id="main-content">',languageSwitch(language)+'  <main id="main-content">');}
 const french=integrate(source.replace(graphMatch[0],`<script type="application/ld+json">${json(frenchGraph)}</script>`),'fr');
 

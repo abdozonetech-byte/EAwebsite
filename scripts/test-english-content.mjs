@@ -16,7 +16,7 @@ for(const [fr,en,file]of pairs){
   assert.equal((text.match(/content-language-head:start/g)||[]).length,1);
  }
  assert.equal((html.match(/<h1\b/g)||[]).length,1);assert(!/data-reveal/.test(html),'Long-form content does not wait for animation');
- assert(html.includes(`<a href="${fr}" lang="fr" hreflang="fr">FR`),'French switch must keep French destination');
+ assert(html.includes(`<a href="${fr}" lang="fr" hreflang="fr"`),'French switch must keep French destination');
  for(const match of html.matchAll(/href="#([^"\s]+)"/g))assert(html.includes(`id="${match[1]}"`),'Missing section: '+match[1]);
  for(const match of html.matchAll(/(?:href|src)="(\/[^"#?]*)/g)){
   const route=match[1];if(route==='/'||route.startsWith('//'))continue;

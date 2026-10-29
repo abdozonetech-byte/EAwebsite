@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {services,process as steps,audiences,skills,career,credentials,profileFaqs} from '../assets/data/english-core.js';
+import {languageAssets,languageControl} from './site-language-ui.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://elboubakry.com';
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const write=(p,text)=>{fs.mkdirSync(path.dirname(path.join(root,p)),{recursive:true});fs.writeFileSync(path.join(root,p),text);};
@@ -10,7 +11,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const home=read('en/index.html');
 const homeGraph=JSON.parse(home.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
 const alternates=(fr,en)=>`<link rel="alternate" hreflang="fr" href="${origin}${fr}"><link rel="alternate" hreflang="en" href="${origin}${en}"><link rel="alternate" hreflang="x-default" href="${origin}${fr}">`;
-const switcher=(fr,en,lang)=>`<!-- core-language-switch:start --><div class="ea-language-row"><div class="ea-container"><span>${lang==='en'?'English edition · French remains the main website language.':'Français reste la langue principale du site.'}</span><nav aria-label="${lang==='en'?'Website language':'Langue du site'}"><a href="${fr}" lang="fr" hreflang="fr"${lang==='fr'?' aria-current="page"':''}>FR <span>Français</span></a><a href="${en}" lang="en" hreflang="en"${lang==='en'?' aria-current="page"':''}>EN <span>English</span></a></nav></div></div><!-- core-language-switch:end -->`;
+const switcher=(fr,en,lang)=>`<!-- core-language-switch:start -->${languageControl(fr,en,lang)}<!-- core-language-switch:end -->`;
 const section=(title,body,soft=false,id='')=>`<section class="ea-section${soft?' ea-section-soft':''}"${id?` id="${id}"`:''}><div class="ea-container"><h2>${esc(title)}</h2>${body}</div></section>`;
 const cards=items=>`<div class="ea-core-grid">${items.map(([title,body])=>`<article class="ea-core-card"><h3>${esc(title)}</h3><p>${esc(body)}</p></article>`).join('')}</div>`;
 const contact=section('Let’s clarify the next useful step.',`<p>Describe your objective, current situation and what is getting in the way. We can discuss priorities before choosing an implementation.</p><div class="ea-core-actions"><a class="ea-button" href="mailto:abdozonetech@gmail.com?subject=Project%20enquiry">Email your project ↗</a><a class="ea-button ea-button-secondary" href="https://wa.me/212687321925?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20digital%20marketing%20or%20AI%20project." rel="noopener noreferrer">Open WhatsApp ↗</a><a class="ea-text-link" href="/reserver-diagnostic/" hreflang="fr">Diagnostic form (French) ↗</a></div><p class="ea-core-note">Review your message before sending. The diagnostic form and detailed guides are currently in French.</p>`,true,'contact');
@@ -31,7 +32,7 @@ const pages=[
 ];
 for(const page of pages){
  let french=read(page.file).replace(/<!-- core-language-(?:head|switch):start -->[\s\S]*?<!-- core-language-(?:head|switch):end -->/g,'');
- const head=`<!-- core-language-head:start --><link rel="stylesheet" href="/assets/css/site-languages.css?v=20261029-2">${alternates(page.fr,page.en)}<!-- core-language-head:end -->`;
+ const head=`<!-- core-language-head:start -->${languageAssets()}${alternates(page.fr,page.en)}<!-- core-language-head:end -->`;
  write(page.file,french.replace('</head>',head+'</head>').replace('<main id="main-content">',switcher(page.fr,page.en,'fr')+'<main id="main-content">'));
  let graph=structuredClone(homeGraph);
  graph['@graph']=graph['@graph'].filter(x=>!['WebPage','FAQPage'].includes(x['@type']));

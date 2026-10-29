@@ -1,7 +1,7 @@
 # Elboubakry Abdessamad
 
 ## Website languages
-- [French homepage](https://elboubakry.com/): primary website for digital marketing and applied-AI consulting in Morocco.
+- [French homepage](https://elboubakry.com/): French-language website for digital marketing and applied-AI consulting in Morocco.
 - [English homepage](https://elboubakry.com/en/): English introduction to Elboubakry Abdessamad, his Casablanca-based practice, services, process and contact options.
 - [English services](https://elboubakry.com/en/services/): digital strategy, advertising, SEO, analytics, business AI, CRM and automation in Morocco.
 - [English profile](https://elboubakry.com/en/about/): professional background, skills, education and consulting approach.

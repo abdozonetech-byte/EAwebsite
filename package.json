@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build:english": "node scripts/build-english-home.mjs && node scripts/build-english-core.mjs && node scripts/build-english-diagnostic.mjs && node scripts/build-english-content.mjs",
-    "test:english": "node scripts/test-english-home.mjs && node scripts/test-english-core.mjs && node scripts/test-english-diagnostic.mjs && node scripts/test-english-content.mjs",
+    "test:english": "node scripts/test-english-home.mjs && node scripts/test-english-core.mjs && node scripts/test-english-diagnostic.mjs && node scripts/test-english-content.mjs && node scripts/test-language-ui.mjs",
     "build:prompts": "node scripts/build-prompt-playbook.mjs",
     "preview:prompts": "node scripts/preview-prompts.mjs",
     "test:prompts": "node scripts/test-prompts.mjs && node scripts/test-prompt-languages.mjs",

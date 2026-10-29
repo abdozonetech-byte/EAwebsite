@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import {languageControl} from './site-language-ui.mjs';
+import {guides} from '../assets/data/english-guides.js';
+const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const french=['index.html','services/index.html','about-elboubakry-abdessamad.html','reserver-diagnostic/index.html','projets/index.html','insights/index.html',...guides.map(g=>g.fr.slice(1)+'.html')];
+const english=['en/index.html','en/services/index.html','en/about/index.html','en/diagnostic/index.html','en/projects/index.html','en/guides/index.html',...guides.map(g=>'en/guides/'+g.slug+'/index.html')];
+for(const file of [...french,...english]){
+ const html=read(file);
+ assert(!/French remains|langue principale|official language|langue officielle/i.test(html),'No language hierarchy statement: '+file);
+ assert.equal((html.match(/class="ea-language-switch"/g)||[]).length,1,file);
+ assert.equal((html.match(/src="\/assets\/js\/site-languages.js\?/g)||[]).length,1,file);
+ assert(html.includes(`data-language="${file.startsWith('en/')?'en':'fr'}"`));
+ assert(html.includes('class="ea-language-name">Français'));assert(html.includes('class="ea-language-name">English'));
+ assert(html.includes('title="Français"'));assert(html.includes('title="English"'));
+}
+assert(languageControl('/','/en/','en').includes('hreflang="en" aria-current="page"'));
+const script=read('assets/js/site-languages.js');
+assert(!/preventDefault\(|fetch\(|localStorage|location\s*=|setTimeout\(/.test(script),'No intercepted/delayed navigation, data calls or forced language preference');
+const listeners={},nav={dataset:{language:'fr'},attrs:{},setAttribute(k,v){this.attrs[k]=v;},removeAttribute(k){delete this.attrs[k];},querySelector(){return {lang:'fr'};}};
+const link={href:'https://elboubakry.com/en/',lang:'en',getAttribute:()=>null,closest:()=>nav};
+vm.runInNewContext(script,{URL,document:{addEventListener:(event,fn)=>listeners[event]=fn,querySelectorAll:()=>[nav]},window:{location:{href:'https://elboubakry.com/',origin:'https://elboubakry.com'},addEventListener:(event,fn)=>listeners[event]=fn}});
+const click=changes=>listeners.click({target:{closest:()=>link},button:0,...changes});
+click({ctrlKey:true});assert.equal(nav.dataset.language,'fr');
+click({button:1});assert.equal(nav.dataset.language,'fr');
+click({defaultPrevented:true});assert.equal(nav.dataset.language,'fr');
+click({});assert.equal(nav.dataset.language,'en');assert.equal(nav.attrs['aria-busy'],'true');
+listeners.pageshow();assert.equal(nav.dataset.language,'fr');assert(!nav.attrs['aria-busy']);
+link.getAttribute=()=> 'page';click({});assert.equal(nav.dataset.language,'fr');
+const css=read('assets/css/site-languages.css');assert(css.includes('prefers-reduced-motion:reduce'));assert(css.includes('@view-transition'));assert(css.includes('translateX(52px)'));assert(css.includes('min-height:44px'));
+console.log('PASS language UI: 18 neutral controls, accessible full names, paired URLs, slide state, modified-click behaviour, history restore, reduced-motion CSS and no navigation interception.');
