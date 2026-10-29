@@ -1,0 +1,47 @@
+English website — step 2
+Date: 2026-10-29
+Status: Local implementation only. Not committed, pushed or deployed.
+
+Added /en/services/ and /en/about/ using the existing portfolio shell, icons,
+colours, navigation and responsive layout. Services cover the four existing
+service families; profile includes current skills, all three career periods,
+four existing education/certification entries, and five translated FAQs.
+Claims are adapted from the existing French pages, not independently verified.
+
+English homepage navigation now links to these pages. Each French/English pair
+has self-canonicals, reciprocal fr/en/x-default links and a visible language
+selector. English pages include page-specific social metadata, breadcrumbs,
+stable Person identity, service data and matching visible/profile FAQ data.
+French source files are exactly preserved after excluding the additive language
+head/switch blocks. No automatic language redirects. Guides, project details,
+legal pages and the diagnostic form remain explicitly French-labelled.
+
+No CRM/database changes, production calls, deployments, paid API requests or
+messages sent. Email and WhatsApp controls open user-reviewed drafts only.
+
+Checks completed:
+- npm run build:english
+- npm run test:english
+- npm run test:prompts
+- node scripts/seo-audit.mjs . (471 HTML files; 464 sitemap URLs)
+- git diff --check
+- French source comparisons against HEAD (services and profile)
+- Browser FR -> EN and EN -> FR switches for both page pairs
+- Browser menu open and Escape close, English labels
+- Responsive layout checks at 375px and 768px for both pages
+- Desktop visual checks, 1440px services overflow check
+- Mobile service cards and contact actions visually inspected
+- No browser console errors observed
+
+Screenshots:
+/tmp/english-services-step2.png
+/tmp/english-profile-step2.png
+
+Next stage: English diagnostic/contact flow, preserving existing form validation,
+consent, CRM integration and submission semantics, followed by approved deployment.
+This work does not guarantee rankings, indexing or citations in AI answers.
+
+Primary guidance reviewed:
+https://developers.google.com/search/docs/specialty/international/localized-versions
+https://developers.google.com/search/docs/appearance/ai-features
+https://developers.google.com/search/docs/fundamentals/ai-optimization-guide

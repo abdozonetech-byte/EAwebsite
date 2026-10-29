@@ -1,0 +1,48 @@
+English website — step 3
+Date: 2026-10-29
+Status: Local implementation. No commit, push or deployment.
+
+Added English diagnostic enquiry at /en/diagnostic/ and English confirmation at
+/en/thank-you/. The existing French layout, form IDs, API endpoint, request
+fields, optional email, Moroccan phone validation, honeypot, duplicate-click
+protection, timeout and conversion-event contract are retained.
+
+The shared browser script selects messages and confirmation route by document
+language. English sector labels submit the exact existing French sector values
+accepted by /api/leads, preserving CRM categories. No database/API changes.
+Moroccan number guidance and an email alternative for other countries are visible.
+Privacy/legal destinations remain in French and are labelled accordingly.
+
+Added reciprocal language links, visible FR/EN switching, self-canonical metadata,
+English ContactPage/Breadcrumb/FAQ data matching visible content, and sitemap
+entry. Confirmation remains noindex, outside the sitemap, with a noindex header.
+English homepage/services/profile link to the new English enquiry form.
+
+Verification:
+- npm run build:english
+- npm run test:english (real form script executed with isolated DOM/mocked fetch)
+- English and French validation, invalid phone/email, optional email, supported
+  phone formats, exact backend-accepted payload, honeypot and duplicate clicks
+- Loading label, success redirect, failed-response/network recovery
+- Confirmation conversion guard: direct visit produces no conversion; successful
+  submission flag consumed once
+- npm run test:prompts (existing bilingual prompt-library regression checks)
+- node scripts/seo-audit.mjs . (473 HTML files and 465 sitemap URLs)
+- node --check assets/lead-page/reserver-diagnostic.js
+- git diff --check
+- Browser empty-submit validation and focus; FR/EN switch in both directions
+- Visual/mobile checks at 375px, tablet overflow at 768px, desktop at 1440px
+- Mobile anchor and floating CTA hide behaviour while the form is visible
+- English confirmation content inspected; no browser console errors observed
+
+No real lead submitted, CRM row created or notification sent. Local preview
+disables analytics and blocks API/CRM routes. The actual production submission
+and database connection have not been exercised during this step.
+
+Screenshots:
+/tmp/english-diagnostic-step3.png
+/tmp/english-diagnostic-mobile-step3.png
+
+Next: English project/guide navigation and priority content, or review and approval
+of the current core English pages for deployment. Indexing, rankings and AI answer
+citations are not guaranteed by this implementation.

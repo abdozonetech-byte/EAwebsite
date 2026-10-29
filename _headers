@@ -97,3 +97,6 @@
 # Prevent the production Pages subdomain from competing with the custom domain.
 https://eawebsite.pages.dev/*
   X-Robots-Tag: noindex, nofollow, noarchive
+
+/en/thank-you/
+  X-Robots-Tag: noindex, follow

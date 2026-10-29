@@ -129,6 +129,7 @@ const expectedNoindexFiles = new Set([
   'politique-confidentialite.html',
   'politique-cookies.html',
   'merci/index.html',
+  'en/thank-you/index.html',
 ]);
 const primaryNavigationFiles = new Set([
   'index.html',
@@ -186,7 +187,7 @@ for (const file of htmlFiles) {
   }
 
   if (indexable) {
-    const expectedLanguage = relativeFile.startsWith('prompts/') && !relativeFile.startsWith('prompts/fr/') ? 'en' : 'fr';
+    const expectedLanguage = relativeFile.startsWith('en/') || (relativeFile.startsWith('prompts/') && !relativeFile.startsWith('prompts/fr/')) ? 'en' : 'fr';
     if (htmlTags.length !== 1 || attribute(htmlTags[0], 'lang')?.toLowerCase() !== expectedLanguage) {
       report(relativeFile, `indexable page must declare exactly one <html lang="${expectedLanguage}">`);
     }

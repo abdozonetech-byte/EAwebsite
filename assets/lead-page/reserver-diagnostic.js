@@ -4,6 +4,18 @@
   const ENDPOINT = '/api/leads';
   const form = document.getElementById('diagnostic-form');
   if (!form) return;
+  const english = document.documentElement.lang === 'en';
+  const messages = {
+    'Veuillez entrer un nom valide.': 'Please enter a valid full name.',
+    'Veuillez entrer un numéro WhatsApp marocain valide.': 'Please enter a valid Moroccan WhatsApp number (06, 07 or +212).',
+    'Veuillez entrer une adresse email valide.': 'Please enter a valid email address.',
+    'Veuillez sélectionner votre secteur d’activité.': 'Please select your business sector.',
+    'Corrigez les champs indiqués pour continuer.': 'Please correct the highlighted fields to continue.',
+    'Merci de vérifier les informations avant l’envoi.': 'Please review your information before sending.',
+    'Envoi en cours...': 'Sending...',
+    'Une erreur est survenue. Veuillez réessayer ou me contacter sur WhatsApp.': 'Your request could not be sent. Please try again or contact me on WhatsApp.'
+  };
+  const t = (text) => english ? (messages[text] || text) : text;
 
   document.documentElement.classList.add('js-reveal');
   const progress = document.querySelector('.page-progress');
@@ -109,10 +121,10 @@
 
     let firstInvalid = null;
     const errors = {
-      name: isValidName(data.name) ? '' : 'Veuillez entrer un nom valide.',
-      phone: isValidPhone(fields.phone.value) ? '' : 'Veuillez entrer un numéro WhatsApp marocain valide.',
-      email: isValidEmail(data.email) ? '' : 'Veuillez entrer une adresse email valide.',
-      sector: data.sector ? '' : 'Veuillez sélectionner votre secteur d’activité.'
+      name: isValidName(data.name) ? '' : t('Veuillez entrer un nom valide.'),
+      phone: isValidPhone(fields.phone.value) ? '' : t('Veuillez entrer un numéro WhatsApp marocain valide.'),
+      email: isValidEmail(data.email) ? '' : t('Veuillez entrer une adresse email valide.'),
+      sector: data.sector ? '' : t('Veuillez sélectionner votre secteur d’activité.')
     };
 
     Object.entries(errors).forEach(([key, message]) => {
@@ -171,13 +183,13 @@
 
     const data = validate();
     if (!data) {
-      statusBox.textContent = 'Corrigez les champs indiqués pour continuer.';
+      statusBox.textContent = t('Corrigez les champs indiqués pour continuer.');
       statusBox.className = 'form-status error';
       return;
     }
 
     if (!hasUserInteracted && Date.now() - startedAt < 2500) {
-      statusBox.textContent = 'Merci de vérifier les informations avant l’envoi.';
+      statusBox.textContent = t('Merci de vérifier les informations avant l’envoi.');
       statusBox.className = 'form-status error';
       return;
     }
@@ -204,7 +216,7 @@
 
     const originalLabel = submitButton.querySelector('span').textContent;
     submitButton.disabled = true;
-    submitButton.querySelector('span').textContent = 'Envoi en cours...';
+    submitButton.querySelector('span').textContent = t('Envoi en cours...');
     statusBox.textContent = '';
     statusBox.className = 'form-status';
 
@@ -221,12 +233,12 @@
       } catch (trackingError) {
         console.warn('Lead tracking could not be stored.', trackingError);
       }
-      window.location.href = '/merci/';
+      window.location.href = english ? '/en/thank-you/' : '/merci/';
     } catch (error) {
       console.error(error);
       submitButton.disabled = false;
       submitButton.querySelector('span').textContent = originalLabel;
-      statusBox.textContent = 'Une erreur est survenue. Veuillez réessayer ou me contacter sur WhatsApp.';
+      statusBox.textContent = t('Une erreur est survenue. Veuillez réessayer ou me contacter sur WhatsApp.');
       statusBox.className = 'form-status error';
     }
   });

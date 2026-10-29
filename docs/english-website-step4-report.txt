@@ -1,0 +1,55 @@
+English website — step 4
+Date: 2026-10-29
+Status: Local implementation only. No commit, push or deployment.
+
+Added:
+- /en/projects/: the four existing demonstrations, original images, components,
+  intended value and explicit limits. Not presented as client performance cases.
+- /en/guides/: selected English collection, with a labelled link to the wider
+  French archive.
+- /en/guides/digital-marketing-consultant-morocco/
+- /en/guides/ai-business-consultant-morocco/
+- /en/guides/marketing-automation-morocco/
+
+The three articles are editorial English adaptations of the matching French
+guides. They include an author link, contents navigation, readable article layout,
+related guides, accessible native disclosure FAQs and an English diagnostic CTA.
+No market-size statistics, client results or ranking/citation guarantees invented.
+
+Updated English homepage/services/profile navigation and relevant content links.
+Five French/English page pairs have visible language navigation, self-canonicals,
+reciprocal fr/en/x-default alternates, matching metadata, breadcrumbs, stable
+author identity and appropriate CollectionPage/Article/FAQ data. Other French
+content remains intact. The guide archive is not claimed to be fully translated.
+
+Verification:
+- npm run build:english; repeat build produces identical English HTML
+- npm run test:english (all four test suites)
+- npm run test:prompts (existing bilingual library regression checks)
+- node scripts/seo-audit.mjs .: passed; 478 HTML files, 470 sitemap URLs
+- git diff --check
+- All five French files compared against HEAD after excluding additive language
+  blocks: source content unchanged
+- All five pages checked for overflow at 375px and 768px
+- Desktop projects and article typography inspected visually
+- Browser FR -> EN and EN -> FR verified for all five page pairs
+- Mobile menu open/Escape close; article contents link and FAQ disclosure verified
+- No browser console errors observed
+- Original project image paths and local link/anchor targets checked in tests
+
+Browser testing caught and fixed a navigation-rewrite bug affecting French return
+links. Regression assertions now verify that French switch destinations stay French.
+No CRM/API calls, leads, messages, paid AI requests or production changes.
+
+Screenshots:
+/tmp/english-projects-step4.png
+/tmp/english-guides-step4.png
+
+Primary SEO references reviewed:
+https://developers.google.com/search/docs/specialty/international/localized-versions
+https://developers.google.com/search/docs/appearance/ai-features
+
+Next: approve core English rollout for deployment, then verify live routes,
+redirects, headers and Search Console indexing signals. Additional French-only
+guides and legal pages can be translated incrementally. No indexing, ranking or
+AI-answer citation outcome is guaranteed.

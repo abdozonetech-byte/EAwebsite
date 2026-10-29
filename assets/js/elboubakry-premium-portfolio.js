@@ -23,13 +23,15 @@
 
   const menuButton = document.querySelector('.ea-menu-button');
   const navigation = document.querySelector('.ea-nav');
+  const english = document.documentElement.lang === 'en';
+  const menuLabel = (open) => english ? (open ? 'Close menu' : 'Open menu') : (open ? 'Fermer le menu' : 'Ouvrir le menu');
 
   const closeMenu = () => {
     if (!menuButton || !navigation) return;
     document.body.classList.remove('menu-open');
     navigation.classList.remove('is-open');
     menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.setAttribute('aria-label', 'Ouvrir le menu');
+    menuButton.setAttribute('aria-label', menuLabel(false));
   };
 
   if (menuButton && navigation) {
@@ -38,7 +40,7 @@
       document.body.classList.toggle('menu-open', willOpen);
       navigation.classList.toggle('is-open', willOpen);
       menuButton.setAttribute('aria-expanded', String(willOpen));
-      menuButton.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+      menuButton.setAttribute('aria-label', menuLabel(willOpen));
     });
 
     navigation.addEventListener('click', (event) => {

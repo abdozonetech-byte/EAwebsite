@@ -1,0 +1,44 @@
+English website — step 1
+Date: 2026-10-29
+Status: Implemented locally. Not committed, pushed or deployed.
+
+Scope
+- English homepage at /en/, retaining French as the primary language at /.
+- Visible FR/EN navigation, English mobile menu and labelled French-only links.
+- English project enquiry options through email and WhatsApp drafts. No messages sent.
+- Self-canonicals, reciprocal fr/en/x-default alternates, English metadata and sitemap entry.
+- Shared Person/ProfessionalService identities and factual Casablanca/Morocco service information.
+- Six visible English FAQs with matching structured data. No ranking or AI-citation guarantees.
+- French homepage body preserved except for the additive language selector.
+- CRM and production database untouched.
+
+Verification
+- npm run test:english: passed.
+- npm run test:prompts: passed, including bilingual prompt-library regression checks.
+- node scripts/seo-audit.mjs .: passed, 469 HTML files and 462 sitemap URLs.
+- git diff --check: passed.
+- English build is idempotent.
+- Browser responsive overflow checks: 375, 390, 430, 768, 1024 and 1440px passed.
+- Desktop, tablet and mobile hero/contact layouts inspected visually; no broken images observed.
+- English mobile menu opens, closes with Escape, and closes after section navigation.
+- FR -> EN and EN -> FR verified in browser.
+- No browser console errors observed during checks.
+- Fixed an existing local preview root-path containment check that incorrectly rejected /.
+- Preview analytics disabled and CRM/API routes blocked throughout testing.
+- Screenshot: /tmp/english-home-step1-desktop.png
+- Screenshot: /tmp/english-home-step1-mobile.png
+
+Next stages
+2. Translate core services and profile pages with equivalent reciprocal language metadata.
+3. Translate the diagnostic/contact conversion flow and check form behaviour.
+4. Prioritise English project/guide pages using search demand and business relevance.
+5. After approved deployment, verify live URLs, sitemap and indexing in Search Console.
+
+SEO/GEO reference principles
+https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites
+https://developers.google.com/search/docs/specialty/international/localized-versions
+https://developers.google.com/search/docs/appearance/ai-features
+
+Separate language URLs and useful, factual content support discoverability. Implementation
+does not guarantee indexing, rankings or inclusion in Google, ChatGPT or Gemini answers.
+No live Search Console settings or submissions were changed in this step.

@@ -1,5 +1,14 @@
 # Elboubakry Abdessamad
 
+## Website languages
+- [French homepage](https://elboubakry.com/): primary website for digital marketing and applied-AI consulting in Morocco.
+- [English homepage](https://elboubakry.com/en/): English introduction to Elboubakry Abdessamad, his Casablanca-based practice, services, process and contact options.
+- [English services](https://elboubakry.com/en/services/): digital strategy, advertising, SEO, analytics, business AI, CRM and automation in Morocco.
+- [English profile](https://elboubakry.com/en/about/): professional background, skills, education and consulting approach.
+- [English projects](https://elboubakry.com/en/projects/): four clearly labelled demonstrations, not client sales-performance case studies.
+- [English guides](https://elboubakry.com/en/guides/): selected English adaptations about digital marketing consulting, applied business AI and marketing automation in Morocco. The wider guide archive remains available in French.
+- [English diagnostic](https://elboubakry.com/en/diagnostic/): free marketing diagnostic enquiry for Morocco, with a Moroccan WhatsApp number required and email as an alternative for other countries.
+
 ## Ressources IA
 - [AI Prompt Library — English](https://elboubakry.com/prompts/): primary English edition, 210 free prompts across 14 categories, editorial illustrative examples and local customisation without AI API calls. No model-test claims.
 - [Bibliothèque de Prompts IA — Français](https://elboubakry.com/prompts/fr/): édition française préservée, 210 prompts avec exemples illustratifs et personnalisation locale.

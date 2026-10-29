@@ -26,3 +26,9 @@ jobs:
 
       - name: Audit SEO and internal references
         run: node scripts/seo-audit.mjs .
+
+      - name: Validate English pages and diagnostic form contract
+        run: npm run test:english
+
+      - name: Check bilingual prompt library regressions
+        run: npm run test:prompts
