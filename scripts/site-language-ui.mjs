@@ -1,5 +1,5 @@
 // Shared presentation only: paired URLs and SEO language signals stay unchanged.
-export const languageAssets=()=>'<link rel="stylesheet" href="/assets/css/site-languages.css?v=20261029-5"><script defer src="/assets/js/site-languages.js?v=20261029-5"></script>';
+export const languageAssets=()=>'<link rel="stylesheet" href="/assets/css/site-languages.css?v=20261030-1"><script defer src="/assets/js/site-languages.js?v=20261030-1"></script>';
 export function languageControl(fr,en,language){
  return `<div class="ea-language-row"><div class="ea-container"><div class="ea-language-control"><svg class="ea-language-globe" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a17 17 0 0 1 0 18 17 17 0 0 1 0-18Z"/></svg><nav class="ea-language-switch" data-language="${language}" aria-label="${language==='en'?'Website language':'Langue du site'}"><a href="${fr}" lang="fr" hreflang="fr"${language==='fr'?' aria-current="page"':''} title="Français">FR <span class="ea-language-name">Français</span></a><a href="${en}" lang="en" hreflang="en"${language==='en'?' aria-current="page"':''} title="English">EN <span class="ea-language-name">English</span></a></nav></div></div></div>`;
 }

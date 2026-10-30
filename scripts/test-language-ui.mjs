@@ -10,6 +10,7 @@ for(const file of [...french,...english]){
  const html=read(file);
  assert(!/French remains|langue principale|official language|langue officielle/i.test(html),'No language hierarchy statement: '+file);
  assert.equal((html.match(/class="ea-language-switch"/g)||[]).length,1,file);
+ assert(/<header\b[\s\S]*?class="ea-language-switch"[\s\S]*?<\/header>/.test(html),'Switch belongs inside navbar: '+file);
  assert.equal((html.match(/src="\/assets\/js\/site-languages.js\?/g)||[]).length,1,file);
  assert(html.includes(`data-language="${file.startsWith('en/')?'en':'fr'}"`));
  assert(html.includes('class="ea-language-name">Français'));assert(html.includes('class="ea-language-name">English'));

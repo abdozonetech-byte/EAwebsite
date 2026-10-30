@@ -60,7 +60,7 @@ for(const file of englishFiles){
  const own=pages.find(p=>p.guide&&file===p.en.slice(1)+'index.html');if(own)html=html.replace(`href="${own.en}">Read the French version`,`href="${own.fr}" hreflang="fr">Read the French version`);
  html=html.replaceAll('AI and business consulting (French)','AI and business consulting');
  html=html.replace(/<a\b[^>]*href="\/en\/(?:projects|guides)\/[^>]*>/g,tag=>tag.replace(/ hreflang="fr"/g,''));
- html=html.replace(/site-languages.css\?v=[^" ]+/g,'site-languages.css?v=20261029-5');
+ html=html.replace(/site-languages.css\?v=[^" ]+/g,'site-languages.css?v=20261030-1');
  html=html.replace('__PRESERVED_LANGUAGE_SWITCH__',languageSwitch);
  write(file,html);
 }
@@ -70,4 +70,17 @@ for(const page of pages){
  for(const rule of [`${page.en.slice(0,-1)}  ${page.en}  301`,`${page.en}index.html  ${page.en}  301`])if(!redirects.includes(rule))redirects+='\n'+rule;
 }
 write('sitemap.xml',sitemap);write('_redirects',redirects.trimEnd()+'\n');
-console.log('Built English projects, guide collection and three adapted guides; connected paired language links. No deployment.');
+// Place paired language anchors in the header at build time, not with client-side DOM moves.
+const pairedFiles=['index.html','services/index.html','about-elboubakry-abdessamad.html','reserver-diagnostic/index.html',...pages.map(p=>p.file),...englishFiles,'en/diagnostic/index.html'];
+for(const file of new Set(pairedFiles)){
+ let html=read(file);
+ const block=html.match(/<!-- (?:site|core|content|diagnostic)-language-switch:start -->[\s\S]*?<!-- (?:site|core|content|diagnostic)-language-switch:end -->/)?.[0];
+ if(!block)throw Error('Missing language switch: '+file);
+ html=html.replace(block,'');
+ html=html.replace(/<header\b[\s\S]*?<\/header>/,header=>{
+  if(header.includes('ea-menu-button'))return header.replace(/<button class="ea-menu-button"/,block+'<button class="ea-menu-button"');
+  return header.replace('</header>',block+'</header>');
+ });
+ write(file,html);
+}
+console.log('Built English projects, guide collection and three adapted guides; connected paired language links and navbar selectors. No deployment.');

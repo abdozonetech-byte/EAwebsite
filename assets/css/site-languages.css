@@ -43,3 +43,28 @@
  @keyframes ea-language-in{from{opacity:0}to{opacity:1}}
 }
 @media(prefers-reduced-motion:reduce){.ea-language-switch:before,.ea-language-row .ea-language-switch a{transition:none}.ea-language-row .ea-language-switch a:hover,.ea-language-row .ea-language-switch a:active{transform:none}}
+/* Header-native selector: no extra row, stable layout before scripts load. */
+.ea-header .ea-language-row,.site-header .ea-language-row,
+.ea-header .ea-language-row>.ea-container,.site-header .ea-language-row>.ea-container{display:contents}
+.ea-header-inner:has(.ea-language-control){grid-template-columns:auto minmax(0,1fr) auto auto;gap:18px}
+:is(.ea-header,.site-header) .ea-language-control{gap:5px;padding:2px 3px 2px 8px;box-shadow:none;flex-shrink:0;justify-self:end}
+:is(.ea-header,.site-header) .ea-language-globe{width:15px;height:15px}
+:is(.ea-header,.site-header) .ea-language-switch{grid-template-columns:44px 44px;padding:2px}
+:is(.ea-header,.site-header) .ea-language-switch:before{left:2px;top:2px;bottom:2px;width:44px}
+:is(.ea-header,.site-header) .ea-language-switch[data-language=en]:before{transform:translateX(44px)}
+:is(.ea-header,.site-header) .ea-language-switch a{width:44px;min-height:44px;font-size:11px}
+.site-header:has(.ea-language-control){gap:16px}
+.site-header:has(.ea-language-control) .back-link{margin-left:auto}
+@media(min-width:1181px) and (max-width:1500px){
+ .ea-header:has(.ea-language-control) .ea-button-primary{display:none}
+ .ea-header-inner:has(.ea-language-control){grid-template-columns:auto minmax(0,1fr) auto}
+}
+@media(max-width:1180px){.ea-header-inner:has(.ea-language-control){grid-template-columns:minmax(0,1fr) auto auto;gap:12px}}
+@media(max-width:600px){
+ .ea-header-inner:has(.ea-language-control){gap:8px}
+ .ea-header:has(.ea-language-control) .ea-logo{font-size:21px}
+ .ea-header:has(.ea-language-control) .ea-menu-button{width:44px;height:44px}
+ .site-header:has(.ea-language-control){flex-wrap:wrap;gap:12px}
+ .site-header:has(.ea-language-control) .back-link{order:3;flex-basis:100%;margin-left:0}
+ .site-header .ea-language-control{margin-left:auto}
+}
