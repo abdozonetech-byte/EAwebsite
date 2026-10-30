@@ -76,7 +76,7 @@ for(const file of new Set(pairedFiles)){
  let html=read(file);
  const block=html.match(/<!-- (?:site|core|content|diagnostic)-language-switch:start -->[\s\S]*?<!-- (?:site|core|content|diagnostic)-language-switch:end -->/)?.[0];
  if(!block)throw Error('Missing language switch: '+file);
- html=html.replace(block,'');
+ html=html.replace(block,'').replace(/<\/header>\s*(?=<main\b)/,'</header>\n  ');
  html=html.replace(/<header\b[\s\S]*?<\/header>/,header=>{
   if(header.includes('ea-menu-button'))return header.replace(/<button class="ea-menu-button"/,block+'<button class="ea-menu-button"');
   return header.replace('</header>',block+'</header>');

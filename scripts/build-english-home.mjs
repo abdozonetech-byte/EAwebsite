@@ -18,7 +18,7 @@ frenchGraph['@graph']=frenchGraph['@graph'].filter(item=>item['@id']!==origin+'/
 frenchGraph['@graph'].push({'@type':'WebPage','@id':origin+'/#webpage',url:origin+'/',name:'Consultant Marketing Digital & IA au Maroc | Elboubakry',inLanguage:'fr',isPartOf:{'@id':origin+'/#website'},about:{'@id':origin+'/#person'},workTranslation:{'@id':origin+'/en/#webpage'}});
 const alternates=`<link rel="alternate" hreflang="fr" href="${origin}/"><link rel="alternate" hreflang="en" href="${origin}/en/"><link rel="alternate" hreflang="x-default" href="${origin}/">`;
 function languageHead(){return `<!-- site-language-head:start -->${languageAssets()}${alternates}<!-- site-language-head:end -->\n`;}
-function languageSwitch(language){return `<!-- site-language-switch:start -->${languageControl('/','/en/',language)}<!-- site-language-switch:end -->\n`;}
+function languageSwitch(language){return `<!-- site-language-switch:start -->${languageControl('/','/en/',language)}<!-- site-language-switch:end -->`;}
 function integrate(html,language){return html.replace('</head>',languageHead()+'</head>').replace('  <main id="main-content">',languageSwitch(language)+'  <main id="main-content">');}
 const french=integrate(source.replace(graphMatch[0],`<script type="application/ld+json">${json(frenchGraph)}</script>`),'fr');
 
