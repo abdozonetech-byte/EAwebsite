@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:public-tracking": "node scripts/test-public-tracking.mjs",
     "build:english": "node scripts/build-english-home.mjs && node scripts/build-english-core.mjs && node scripts/build-english-diagnostic.mjs && node scripts/build-english-content.mjs",
     "test:english": "node scripts/test-english-home.mjs && node scripts/test-english-core.mjs && node scripts/test-english-diagnostic.mjs && node scripts/test-english-content.mjs && node scripts/test-language-ui.mjs",
     "build:prompts": "node scripts/build-prompt-playbook.mjs",

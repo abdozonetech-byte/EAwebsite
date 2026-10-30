@@ -5,6 +5,9 @@
  */
 (function () {
   'use strict';
+  // Public production pages only; previews and private workspaces aren't prospects.
+  if(!/^(www\.)?elboubakry\.com$/i.test(window.location.hostname)||/^\/(?:crm|admin|api)(?:\/|$)/i.test(window.location.pathname)||window.__elboubakryTrackingStarted)return;
+  window.__elboubakryTrackingStarted=true;
   var config = window.ELBOUBAKRY_TRACKING || {};
   var GA_MEASUREMENT_ID = config.GA4_MEASUREMENT_ID || 'G-XXXXXXXXXX';
   var META_PIXEL_ID = config.META_PIXEL_ID || 'PASTE_META_PIXEL_ID_HERE';
@@ -15,9 +18,8 @@
   var AI_REFERRERS = [
     {source:'chatgpt',pattern:/(^|\.)chatgpt\.com$|(^|\.)chat\.openai\.com$/i},
     {source:'gemini',pattern:/(^|\.)gemini\.google\.com$/i},
-    {source:'google_ai',pattern:/(^|\.)google\.[a-z.]+$/i},
     {source:'perplexity',pattern:/(^|\.)perplexity\.ai$/i},
-    {source:'copilot',pattern:/(^|\.)copilot\.microsoft\.com$|(^|\.)bing\.com$/i},
+    {source:'copilot',pattern:/(^|\.)copilot\.microsoft\.com$/i},
     {source:'claude',pattern:/(^|\.)claude\.ai$/i}
   ];
   var scrollDepthSent = {};
@@ -58,17 +60,17 @@
   function cleanText(value){return(value||'').replace(/\s+/g,' ').trim().slice(0,120);}
   function pagePath(){return window.location.pathname+window.location.hash;}
   function pageUrl(href){try{return new URL(href,window.location.href);}catch(error){return null;}}
-  function slugFromPath(){var file=window.location.pathname.split('/').pop()||'';return file.replace(/\.html$/,'');}
+  function slugFromPath(){var file=window.location.pathname.replace(/\/+$/,'').split('/').pop()||'';return file.replace(/\.html$/,'');}
   function pageTitle(){var heading=document.querySelector('h1');return cleanText(heading?heading.textContent:document.title);}
   function locationFromElement(element){if(element.dataset&&element.dataset.trackLocation)return element.dataset.trackLocation;if(element.closest('.rs-banner-one,.hero'))return'hero';if(element.closest('#footer-contact,footer'))return'footer';if(element.closest('#homecontact'))return'homepage_contact';if(element.closest('.ea-article-hero'))return'article_hero';if(element.closest('.ea-article-cta'))return'article_cta';if(element.closest('.ea-insights-cta'))return'insights_cta';if(element.closest('.ea-article-side-card'))return'sidebar';if(element.closest('.offcanvas-area'))return'mobile_menu';if(element.closest('header'))return'header';return'content';}
-  function ctaTypeFromHref(href){if(/linkedin\.com/i.test(href))return'linkedin';if(/wa\.me|whatsapp/i.test(href))return'whatsapp';if(/^mailto:/i.test(href))return'email';if(/reserver-diagnostic/i.test(href))return'diagnostic';if(/footer-contact|homecontact/i.test(href))return'consultation';return'internal';}
+  function ctaTypeFromHref(href){if(/linkedin\.com/i.test(href))return'linkedin';if(/wa\.me|whatsapp/i.test(href))return'whatsapp';if(/^mailto:/i.test(href))return'email';if(/reserver-diagnostic|\/en\/diagnostic(?:\/|$)/i.test(href))return'diagnostic';if(/footer-contact|homecontact/i.test(href))return'consultation';return'internal';}
   function isImportantInternalLink(link){var href=link.getAttribute('href')||'';if(!href||/^(mailto:|tel:|sms:|javascript:)/i.test(href))return false;var url=pageUrl(href);if(!url||url.origin!==window.location.origin)return false;var target=url.pathname+url.hash;return IMPORTANT_INTERNAL_PATHS.some(function(path){return target===path||target.endsWith(path);})||/\/insights\/.+\.html$/.test(url.pathname);}
   function trackEvent(eventName,parameters){var payload=Object.assign({page_path:pagePath(),page_title:pageTitle(),transport_type:'beacon'},parameters||{});if(ENABLE_GA4&&typeof window.gtag==='function')window.gtag('event',eventName,payload);window.dispatchEvent(new CustomEvent('elboubakry:tracking',{detail:{event:eventName,parameters:payload}}));}
   function aiReferral(){if(!document.referrer)return null;var referrer=pageUrl(document.referrer);if(!referrer)return null;var host=referrer.hostname.toLowerCase();for(var i=0;i<AI_REFERRERS.length;i+=1){if(AI_REFERRERS[i].pattern.test(host))return{source:AI_REFERRERS[i].source,host:host};}return null;}
   function trackAiReferral(){var referral=aiReferral();if(!referral)return;var key='elboubakry_ai_referral_'+referral.source+'_'+window.location.pathname;try{if(window.sessionStorage.getItem(key))return;window.sessionStorage.setItem(key,'1');}catch(error){}trackEvent('ai_referral_visit',{ai_source:referral.source,referrer_host:referral.host,landing_page:window.location.pathname,market:'morocco'});}
   function trackGeoLandingView(){var slug=slugFromPath();if(!SERVICE_PAGES[slug])return;var city=slug.indexOf('casablanca')!==-1?'casablanca':'morocco';trackEvent('geo_landing_view',{service_slug:SERVICE_PAGES[slug],market:'morocco',location_focus:city});}
   function trackScopedCta(text,href){var slug=slugFromPath();if(!SERVICE_PAGES[slug])return;trackEvent('service_cta_click',{service_slug:SERVICE_PAGES[slug],service_name:pageTitle(),cta_type:ctaTypeFromHref(href),button_text:text});}
-  function trackedEventForLink(link,href){var explicit=link.dataset?link.dataset.trackEvent:'';if(explicit)return explicit;if(/wa\.me|whatsapp/i.test(href))return'whatsapp_click';if(/linkedin\.com/i.test(href))return'linkedin_click';if(/^mailto:/i.test(href))return'email_click';if(/^tel:/i.test(href))return'phone_click';if(/reserver-diagnostic/i.test(href))return'diagnostic_cta_click';return'';}
+  function trackedEventForLink(link,href){var explicit=link.dataset?link.dataset.trackEvent:'';if(explicit)return explicit;if(/wa\.me|whatsapp/i.test(href))return'whatsapp_click';if(/linkedin\.com/i.test(href))return'linkedin_click';if(/^mailto:/i.test(href))return'email_click';if(/^tel:/i.test(href))return'phone_click';if(/reserver-diagnostic|\/en\/diagnostic(?:\/|$)/i.test(href))return'diagnostic_cta_click';return'';}
   function handleTrackedClick(event){var link=event.target.closest('a,button,[data-track-event]');if(!link)return;var href=link.getAttribute('href')||'';var text=cleanText((link.dataset&&link.dataset.trackLabel)||link.textContent||link.getAttribute('aria-label')||href);var location=locationFromElement(link);var tracked=trackedEventForLink(link,href);if(tracked){trackEvent(tracked,{location:location,button_text:text||tracked,link_url:href});trackScopedCta(text,href);}var url=pageUrl(href);if(url&&url.origin!==window.location.origin&&!/^(mailto:|tel:)/i.test(href))trackEvent('outbound_click',{link_url:url.href,link_text:text,location:location});if(isImportantInternalLink(link))trackEvent('internal_link_click',{target_page:url?url.pathname+url.hash:href,location:location,link_text:text});}
   function handleFormStart(event){var form=event.target&&event.target.closest?event.target.closest('form'):null;if(!form||formStarted.has(form))return;formStarted.add(form);trackEvent('form_start',{form_name:form.getAttribute('name')||form.id||'contact_form',location:locationFromElement(form)});}
   function hasRequiredContactMethod(form){if(!form.hasAttribute('data-custom-validation'))return true;var phone=form.querySelector('[name="phone"]');var email=form.querySelector('[name="email"]');return Boolean((phone&&cleanText(phone.value))||(email&&cleanText(email.value)));}

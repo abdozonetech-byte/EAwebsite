@@ -37,7 +37,7 @@
 <meta property="og:title" content="${e(title)}"><meta property="og:description" content="${e(description)}"><meta property="og:url" content="${origin+route}"><meta property="og:type" content="website"><meta property="og:locale" content="fr_MA"><meta property="og:site_name" content="Elboubakry"><meta property="og:image" content="${origin}/assets/images/elboubakry-social-card.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${e(title)}"><meta name="twitter:description" content="${e(description)}"><meta name="twitter:image" content="${origin}/assets/images/elboubakry-social-card.jpg">
 <link rel="stylesheet" href="/assets/css/elboubakry-global-shell.css?v=20261027-nav1"><link rel="stylesheet" href="/assets/css/prompt-library.css?v=${version}">
-<script src="/assets/js/tracking-config.js?v=20260928-1"></script><script defer src="/assets/js/analytics.js?v=20261010-1"></script><script defer src="/assets/js/elboubakry-global-shell.js?v=20261027-nav1"></script>
+<script src="/assets/js/tracking-config.js?v=20260928-1"></script><script defer src="/assets/js/analytics.js?v=20261030-quality1"></script><script defer src="/assets/js/elboubakry-global-shell.js?v=20261027-nav1"></script>
 <script type="module" src="/assets/js/prompt-library.js?v=${version}"></script><script type="application/ld+json">${scriptJSON(schema)}</script>
 </head><body class="pl-page" data-pl-language="${language}">${header}<main id="main-content">${content}</main>${footer}
 <div class="pl-toast" id="pl-status" role="status" aria-live="polite" aria-atomic="true"></div>

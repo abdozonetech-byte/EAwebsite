@@ -32,3 +32,6 @@ jobs:
 
       - name: Check bilingual prompt library regressions
         run: npm run test:prompts
+
+      - name: Validate public analytics attribution
+        run: node scripts/test-public-tracking.mjs
