@@ -35,3 +35,6 @@ jobs:
 
       - name: Validate public analytics attribution
         run: node scripts/test-public-tracking.mjs
+
+      - name: Protect historical routes and intentional search exclusions
+        run: npm run test:indexing

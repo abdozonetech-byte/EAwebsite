@@ -1,0 +1,22 @@
+{
+  "checked_on": "2026-11-01",
+  "property": "sc-domain:elboubakry.com",
+  "page_indexing_report_last_updated": "2026-10-23",
+  "scope": "All 87 example URLs from the five non-indexed groups; live HTTP checks and four canonical URL inspections",
+  "findings": {
+    "redirects": { "count": 54, "all_reach_http_200": true, "max_redirect_hops": 2, "action": "Preserved working canonical redirects; do not restart failed validation for intentional redirects." },
+    "historical_404": { "count": 20, "now_resolve": 7, "retired_resources_still_404": 13, "active_site_references_to_retired_resources": 0, "action": "Preserved legitimate 404s for 12 retired JS/CSS files and the historical Cloudflare email-protection route. No fake replacement pages or homepage redirects." },
+    "noindex": { "count": 8, "all_intentional": true, "action": "Preserved legal-page and thank-you exclusions, along with separate CRM/private-path protections." },
+    "crawled": { "count": 3, "action": "Both canonical content pages are already indexed. The third URL is a JS resource with an intentional noindex header." },
+    "discovered": { "count": 2, "action": "Portfolio already indexed. AI consultant page passed Google's live test and its indexing request was accepted." }
+  },
+  "url_inspections": [
+    { "url": "https://elboubakry.com/projets/", "google_status": "URL is on Google" },
+    { "url": "https://elboubakry.com/insights/combien-coute-campagne-meta-ads-maroc", "google_status": "URL is on Google" },
+    { "url": "https://elboubakry.com/insights/landing-page-generation-leads-maroc", "google_status": "URL is on Google" },
+    { "url": "https://elboubakry.com/insights/consultant-ia-business-maroc", "google_status": "Discovered - currently not indexed", "live_test": "URL is available to Google; Page can be indexed; one valid breadcrumb", "submission": "Indexing requested; added to a priority crawl queue" }
+  ],
+  "implementation": "Added an opt-in public HTTP audit, historical route/indexability regression tests, and CI coverage. No production content, redirect, privacy or CRM database changes were required.",
+  "verification": ["test:indexing", "test:english", "test:prompts", "test:public-tracking", "seo-audit.mjs", "87 public HTTP checks: no unexpected current URL errors"],
+  "remaining": "Google must recrawl the requested AI consultant page and refresh its historical report. Indexing is not guaranteed and intentional redirect/noindex/404 entries need not reach zero."
+}
