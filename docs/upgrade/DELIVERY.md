@@ -1,5 +1,7 @@
 # Website upgrade delivery
 
+> **Production update — 12 November 2026:** The owner subsequently authorized direct Cloudflare publication. Commit `eabff4f10d21f2cd6e8d3971bd4a83bc35744878` is now deployed to [elboubakry.com](https://elboubakry.com/) through Cloudflare Pages project `eawebsite`. [Deployment](https://2711bc5b.eawebsite.pages.dev): 58/58 live checks passed; project configuration and bindings were retained. [Evidence](cloudflare-deployment.json) records the previous deployment for rollback. GitHub remains unsynchronized because its authentication is blocked. The review-stage notes below describe the state before this later authorization. Real WebGPU generation testing remains pending.
+
 12 November 2026. Implemented locally in **EAwebsite**, branch `codex/professional-training-knowledge`, based on `e64a68d4313604fae0eff9bb8b38a9eba7bb2016`. Prepared as a review branch for GitHub. No production deployment, real contact submission or paid inference request was performed. The review commit uses `[CF-Pages-Skip]` to suppress automatic Cloudflare Pages deployment.
 
 The production-matching repository is `abdozonetech-byte/EAwebsite`. This upgrade preserves the existing operational features and keeps production deployment separate from the review branch.

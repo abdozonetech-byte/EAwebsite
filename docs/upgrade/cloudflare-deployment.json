@@ -1,0 +1,370 @@
+{
+  "date": "2026-11-12",
+  "project": "eawebsite",
+  "domain": "https://elboubakry.com",
+  "deploymentUrl": "https://2711bc5b.eawebsite.pages.dev",
+  "commit": "eabff4f10d21f2cd6e8d3971bd4a83bc35744878",
+  "previousDeployment": "a8687e7e-e32b-4807-bc68-fa2a03e06e88",
+  "checks": [
+    {
+      "route": "/",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "newIdentityVisible": true
+    },
+    {
+      "route": "/en/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/formations/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/en/training/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/formations/marketing-digital-acquisition/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/formations/developpement-ia-automatisation/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/formations/ia-pour-entreprise/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/en/training/marketing-digital-acquisition/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/en/training/developpement-ia-automatisation/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/en/training/ia-pour-entreprise/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/services/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/projets/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/prompts/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/reserver-diagnostic/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/ai/",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "localRuntimePolicy": true
+    },
+    {
+      "route": "/en/ai/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/assets/ai/app.js",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "matchesLocalAsset": true
+    },
+    {
+      "route": "/assets/ai/worker.js",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "matchesLocalAsset": true
+    },
+    {
+      "route": "/assets/css/professional.css",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "matchesLocalAsset": true
+    },
+    {
+      "route": "/assets/ai/knowledge.json",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "matchesLocalAsset": true,
+      "records": 204
+    },
+    {
+      "route": "/sitemap.xml",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "sitemapUrls": 480
+    },
+    {
+      "route": "/crm/",
+      "status": 302,
+      "expected": 302,
+      "passed": true,
+      "location": "https://elboubakry.com/crm/login/"
+    },
+    {
+      "route": "/crm/login/",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/api/crm/health",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "route": "/api/leads",
+      "status": 405,
+      "expected": 405,
+      "passed": true
+    },
+    {
+      "route": "/content/drafts/01-formation-marketing-digital-maroc.md",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "route": "/docs/upgrade/DELIVERY.md",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "route": "/insights/strategie-marketing-digital-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/publicite-digitale-maroc-meta-google-tiktok",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/generation-leads-qualifies-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/landing-page-generation-leads-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/seo-content-strategy-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/consultant-marketing-digital-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/analytics-tracking-marketing-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/automatisation-marketing-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/consultant-marketing-digital-casablanca",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/bons-kpi-performance",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/tracking-kpi-marketing",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/ia-business-petite-entreprise",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/confiance-levier-marketing",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/ia-strategie-marketing",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/landing-page-conversion-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/parcours-client-avant-pub",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/presence-digitale-credible",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/clarifier-offre-message-tunnel",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/generation-leads-pme-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/erreurs-budget-meta-ads",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/combien-coute-campagne-meta-ads-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/meta-ads-leads-qualifies-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/whatsapp-leads-qualifies",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/seo-maroc-visibilite-entreprise",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/seo-contenu-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/seo-local-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/growth-strategy-visibilite-croissance",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/strategie-digitale-pme-maroc",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/calendrier-contenu-vente",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "route": "/insights/video-courte-message",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    }
+  ],
+  "configurationUnchanged": true,
+  "browserConsoleWarningsOrErrors": [],
+  "githubPush": "blocked by GitHub authentication; direct Cloudflare deployment used"
+}
