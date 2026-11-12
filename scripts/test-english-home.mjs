@@ -10,7 +10,7 @@ for(const [language,html,route]of [['fr',french,'/'],['en',english,'/en/']]){
  for(const [code,path]of [['fr','/'],['en','/en/'],['x-default','/']])assert(html.includes(`hreflang="${code}" href="https://elboubakry.com${path}"`));
  assert.equal((html.match(/site-language-switch:start/g)||[]).length,1);assert.equal((html.match(/site-language-head:start/g)||[]).length,1);
  assert.equal((html.match(/<h1\b/g)||[]).length,1);assert(html.includes(`hreflang="${language}" aria-current="page"`));
- const header=html.match(/<header[\s\S]*?<\/header>/)[0];assert.equal((header.match(/class="ea-nav-icon"/g)||[]).length,8);
+ const header=html.match(/<header[\s\S]*?<\/header>/)[0];assert.equal((header.match(/class="ea-nav-icon"/g)||[]).length,7);
  const graph=schemas(html),person=graph.find(x=>x['@type']==='Person'),service=graph.find(x=>x['@type']==='ProfessionalService'),page=graph.find(x=>x['@type']==='WebPage');
  assert.equal(person['@id'],'https://elboubakry.com/#person');assert.equal(person.name,'Elboubakry Abdessamad');assert.equal(service['@id'],'https://elboubakry.com/#service');
  assert.equal(service.address.addressLocality,'Casablanca');assert.equal(service.address.addressCountry,'MA');assert(!service.address.streetAddress);

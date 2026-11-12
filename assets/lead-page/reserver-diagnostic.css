@@ -539,3 +539,14 @@ main { padding: 8px 34px 40px; }
 .privacy-note a { color: var(--blue); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .site-footer nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 16px; }
 @media (max-width: 760px) { .site-footer nav { justify-content: center; } }
+
+/* UI organisation pass — 2026-11-12
+   Label floor (12px) and readable grey for the booking page.
+   See docs/ui-ux-audit-2026-11-12.md, section 5. */
+.trust-pills small { font-size: 12px; line-height: 1.45; }
+.form-badge { font-size: 12px; }
+.form-meta span { font-size: 12px; }
+.field label small { color: #526079; font-size: 12px; }
+.privacy-note p { font-size: 12px; }
+.final-cta > div > span { font-size: 12px; }
+.consultant span { color: #526079; }

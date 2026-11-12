@@ -41,6 +41,13 @@
       navigation.classList.toggle('is-open', willOpen);
       menuButton.setAttribute('aria-expanded', String(willOpen));
       menuButton.setAttribute('aria-label', menuLabel(willOpen));
+      if (willOpen) {
+        const firstLink = navigation.querySelector('a');
+        if (firstLink) {
+          void navigation.offsetWidth; // force the display change before moving focus
+          firstLink.focus();
+        }
+      }
     });
 
     navigation.addEventListener('click', (event) => {
@@ -52,7 +59,10 @@
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeMenu();
+      if (event.key !== 'Escape') return;
+      const wasOpen = menuButton.getAttribute('aria-expanded') === 'true';
+      closeMenu();
+      if (wasOpen) menuButton.focus();
     });
   }
 

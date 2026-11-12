@@ -27,3 +27,124 @@
  .ea-header .ea-language-control{padding:2px}
  .ea-hero h1,.tr-hero h1,.tr-course-hero h1{font-size:2.25rem;overflow-wrap:anywhere}
 }
+
+/* ==========================================================================
+   UI SYSTEM — organisation pass — 2026-11-12
+   Documented scale for spacing, headings, surfaces and shell alignment.
+   Placed last so it wins over the earlier additive layers. Values are chosen
+   from the audit in docs/ui-ux-audit-2026-11-12.md; no copy or behaviour is
+   defined here.
+   ========================================================================== */
+:root{
+  --ui-space-1:4px; --ui-space-2:8px; --ui-space-3:12px; --ui-space-4:16px;
+  --ui-space-5:24px; --ui-space-6:32px; --ui-space-7:48px; --ui-space-8:64px;
+  --ui-section:clamp(64px,7vw,112px);
+  --ui-gutter:clamp(20px,4vw,48px);
+  --ui-radius-s:12px; --ui-radius-m:16px; --ui-radius-l:24px; --ui-radius-xl:28px;
+  --ui-text:#526079; --ui-meta:#5d6680; --ui-hairline:#dce5f7;
+  --ui-shadow-soft:0 10px 28px rgba(16,23,47,.06);
+  --ui-shadow-card:0 16px 40px rgba(16,23,47,.07);
+}
+
+/* 1 — Layout rhythm: one container, one section beat ---------------------- */
+.ea-container{width:min(1240px,calc(100% - (var(--ui-gutter) * 2)))}
+main > section{padding-block:var(--ui-section)}
+main > section#contact{padding-block:var(--ui-section)}
+main > section.ea-clients-section{padding-block:clamp(24px,3.2vw,40px)}
+.ea-clients-section .ea-container{padding-block:clamp(40px,4.5vw,64px);padding-inline:clamp(24px,4vw,64px)}
+main > section[id]{scroll-margin-top:calc(92px + var(--ui-space-4))}
+
+/* 2 — Heading tiers: section (major) / band / closing CTA ---------------- */
+.ea-hero h1{font-size:clamp(44px,4.4vw,63.36px);line-height:1.03;letter-spacing:-.045em}
+main > section h2{font-size:clamp(30px,3.3vw,44px);line-height:1.1;letter-spacing:-.04em}
+#projets h2,#expertises h2,#methode h2,.ea-method-copy h2{font-size:clamp(34px,4.6vw,66px);line-height:1.04}
+#references h2,.tr-preview .tr-heading h2,.ea-section-soft h2{font-size:clamp(28px,3.2vw,44px);line-height:1.12}
+#contact h2{font-size:clamp(32px,4.3vw,62px)}
+.ea-project h3{font-size:clamp(28px,3.2vw,44px);line-height:1.08}
+.ea-expertise h3,.tr-card h3,.ea-answer-card h3{font-size:20px;line-height:1.35}
+
+/* 3 — Label floor: nothing structural below 12px ------------------------- */
+.tr-label,.ea-kicker,.ea-skill-label{font-size:12px;line-height:1.5;letter-spacing:.11em}
+.ea-method-tags span{font-size:12px;line-height:1.4;padding:8px 14px}
+.ea-step-number{font-size:12px;color:var(--ui-meta)}
+.ea-project-number{font-size:14px}
+
+/* 4 — Hero balance ------------------------------------------------------ */
+.ea-hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(380px,.98fr)}
+@media(max-width:900px){.ea-hero-grid{grid-template-columns:1fr;gap:var(--ui-space-7)}}
+
+/* 5 — Project cards: equal columns, equal media ------------------------- */
+.ea-project{grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);min-height:420px}
+.ea-project:nth-child(even){grid-template-columns:minmax(0,1.28fr) minmax(0,.72fr)}
+.ea-project-copy{padding:clamp(28px,4.2vw,56px)}
+.ea-project-visual{min-height:420px}
+.ea-project-image{width:100%;height:100%;object-fit:cover}
+
+/* 6 — Card surfaces and spacing ---------------------------------------- */
+.ea-expertise,.ea-step,.tr-card{border-color:var(--ui-hairline);box-shadow:var(--ui-shadow-soft)}
+.ea-timeline{gap:var(--ui-space-3);padding:var(--ui-space-3);border-radius:var(--ui-radius-xl)}
+.ea-step{padding:var(--ui-space-5)}
+.ea-method-grid{gap:clamp(44px,5vw,72px)}
+main > section .ea-projects-stack{gap:var(--ui-space-5)}
+
+/* 7 — Pointer targets: standalone card links reach 44px ------------------ */
+.ea-project .ea-text-link,.tr-card .ea-text-link{display:inline-flex;align-items:center;min-height:44px}
+
+/* 8 — Footer: one alignment with the page container --------------------- */
+.ea-footer .tr-footer-links{max-width:min(1240px,calc(100% - (var(--ui-gutter) * 2)));margin:0 auto;padding:var(--ui-space-5) 0 0;border-top:1px solid var(--ui-hairline);text-align:left;font-size:13px}
+
+/* 9 — One focus treatment for the whole shell --------------------------- */
+:is(a,button,summary,input,select,textarea):focus-visible{outline:3px solid var(--ea-blue);outline-offset:3px}
+
+/* 10 — Small screens: keep the same rhythm, not a second system ---------- */
+@media(max-width:767px){
+  .ea-hero h1{font-size:clamp(38px,9.4vw,50px)}
+  main > section h2,#projets h2,#expertises h2,#methode h2,#references h2,.tr-preview .tr-heading h2,.ea-section-soft h2,.ea-method-copy h2{font-size:clamp(30px,8.4vw,40px)}
+  #contact h2{font-size:clamp(30px,8.4vw,40px)}
+  .ea-project,.ea-project:nth-child(even){grid-template-columns:1fr;min-height:0}
+  .ea-project-visual{min-height:0;aspect-ratio:4/3}
+  .ea-footer .tr-footer-links{text-align:left}
+}
+
+/* 11 — Rhythm correction: win over the component-level `.ea-section` rule -- */
+main > .ea-section{padding-block:var(--ui-section)}
+main > .ea-section.ea-clients-section{padding-block:clamp(24px,3.2vw,40px)}
+@media(max-width:767px){.ea-project-visual{aspect-ratio:3/2}}
+
+/* 12 — Inner-page shell alignment: pages that load only this sheet still get
+   the same container centring, footer alignment and label floor. ---------- */
+.ea-container{margin-inline:auto}
+.tr-card .tr-label{font-size:12px;line-height:1.6}
+.ea-shell-footer .tr-footer-links{max-width:min(1240px,calc(100% - (var(--ui-gutter) * 2)));margin:0 auto;padding:var(--ui-space-5) 0 0;border-top:1px solid var(--ui-hairline);text-align:left;font-size:13px}
+@media(max-width:767px){.ea-shell-footer .tr-footer-links{text-align:left}}
+
+/* 13 — Inner-page accent: the template accent (#5777ff) drops body-size text to
+   3.8:1 on white. Align it with the site's brand blue (#0b55ff, 5.6:1) so the
+   shell matches the homepage instead of introducing a second blue. --------- */
+:root{--rs-theme-primary:#0b55ff}
+
+/* 14 — Pages that use the 10px-root template render rem-based `tr-` typography
+   at ~62% of its intended size (a 12px cluster heading above 18px list items,
+   an 8.8px paragraph). Restore the intended px scale for those blocks. ----- */
+.tr-clusters h3{font-size:19px;line-height:1.3;letter-spacing:-.01em}
+.tr-clusters p{font-size:14px;line-height:1.7}
+.tr-related h2{font-size:26px!important;line-height:1.2}
+.tr-knowledge h2{font-size:clamp(26px,3vw,38px);line-height:1.15}
+
+/* 15 — Pointer targets: header links and card text links reach 24px --------- */
+.ea-nav a{display:inline-flex;align-items:center;min-height:24px}
+.ea-seo-path-grid article > a{display:inline-flex;align-items:center;min-height:24px}
+main .ea-text-link{display:inline-flex;align-items:center;min-height:24px}
+
+/* 16 — Insights "Ressource pratique" band sits directly in <main> while every
+   sibling is inside a Bootstrap container, so it rendered edge-to-edge with a
+   924px stretched kicker pill. Align it to the page grid and let the kicker
+   hug its label. ---------------------------------------------------------- */
+main > .ea-insights-cta{width:calc(100% - 36px);margin-inline:auto}
+main > .ea-insights-cta .ea-insights-kicker{justify-self:start}
+@media(min-width:576px){main > .ea-insights-cta{width:calc(100% - 36px);max-width:504px}}
+@media(min-width:720px){main > .ea-insights-cta{width:calc(100% - 30px);max-width:510px}}
+@media(min-width:768px){main > .ea-insights-cta{max-width:690px}}
+@media(min-width:992px){main > .ea-insights-cta{max-width:930px}}
+@media(min-width:1200px){main > .ea-insights-cta{max-width:1110px}}
+@media(min-width:1400px){main > .ea-insights-cta{max-width:1290px}}
