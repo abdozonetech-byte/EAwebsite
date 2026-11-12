@@ -13,7 +13,7 @@ jobs:
   audit:
     name: Validate indexability signals
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out repository
@@ -24,17 +24,14 @@ jobs:
         with:
           node-version: 24
 
-      - name: Audit SEO and internal references
-        run: node scripts/seo-audit.mjs .
+      - name: Install pinned dependencies
+        run: npm ci
 
-      - name: Validate English pages and diagnostic form contract
-        run: npm run test:english
+      - name: Check source and types
+        run: npm run lint && npm run typecheck
 
-      - name: Check bilingual prompt library regressions
-        run: npm run test:prompts
+      - name: Build public artifact and audit SEO
+        run: npm run build
 
-      - name: Validate public analytics attribution
-        run: node scripts/test-public-tracking.mjs
-
-      - name: Protect historical routes and intentional search exclusions
-        run: npm run test:indexing
+      - name: Run all regression groups
+        run: npm test

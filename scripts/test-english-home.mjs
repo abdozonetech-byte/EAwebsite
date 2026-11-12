@@ -10,7 +10,7 @@ for(const [language,html,route]of [['fr',french,'/'],['en',english,'/en/']]){
  for(const [code,path]of [['fr','/'],['en','/en/'],['x-default','/']])assert(html.includes(`hreflang="${code}" href="https://elboubakry.com${path}"`));
  assert.equal((html.match(/site-language-switch:start/g)||[]).length,1);assert.equal((html.match(/site-language-head:start/g)||[]).length,1);
  assert.equal((html.match(/<h1\b/g)||[]).length,1);assert(html.includes(`hreflang="${language}" aria-current="page"`));
- const header=html.match(/<header[\s\S]*?<\/header>/)[0];assert.equal((header.match(/class="ea-nav-icon"/g)||[]).length,7);
+ const header=html.match(/<header[\s\S]*?<\/header>/)[0];assert.equal((header.match(/class="ea-nav-icon"/g)||[]).length,8);
  const graph=schemas(html),person=graph.find(x=>x['@type']==='Person'),service=graph.find(x=>x['@type']==='ProfessionalService'),page=graph.find(x=>x['@type']==='WebPage');
  assert.equal(person['@id'],'https://elboubakry.com/#person');assert.equal(person.name,'Elboubakry Abdessamad');assert.equal(service['@id'],'https://elboubakry.com/#service');
  assert.equal(service.address.addressLocality,'Casablanca');assert.equal(service.address.addressCountry,'MA');assert(!service.address.streetAddress);
@@ -18,8 +18,8 @@ for(const [language,html,route]of [['fr',french,'/'],['en',english,'/en/']]){
  for(const match of html.matchAll(/href="#([^"\s]+)"/g))assert(html.includes(`id="${match[1]}"`),`Missing anchor ${match[1]}`);
  assert(!/aggregateRating|ratingValue|reviewCount/.test(JSON.stringify(graph)));
 }
-assert(french.includes('Consultant Marketing Digital &amp; IA'));assert(french.includes('href="/reserver-diagnostic/">Réserver un diagnostic'));
-assert(english.includes('Digital Marketing &amp; AI Consultant'));assert(english.includes('Based in Casablanca'));
+assert(french.includes('Consultant, Formateur &amp; Développeur IA'));assert(french.includes('href="/reserver-diagnostic/">Réserver un diagnostic'));
+assert(english.includes('Consultant, Trainer &amp; AI Developer'));assert(english.includes('Based in Casablanca'));
 assert(!/J’aide|Réserver un|Accompagnement|Projets sélectionnés|Compétence clé|Basé à|Consulter/.test(english));
 const faq=schemas(english).find(x=>x['@type']==='FAQPage');assert.equal(faq.mainEntity.length,faqs.length);
 for(const [question,answer]of faqs){assert(english.includes(`<h3>${question}</h3>`));assert(english.includes(`<p>${answer}</p>`));assert(faq.mainEntity.some(x=>x.name===question&&x.acceptedAnswer.text===answer));}

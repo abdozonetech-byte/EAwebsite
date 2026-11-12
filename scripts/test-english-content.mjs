@@ -27,7 +27,7 @@ for(const [fr,en,file]of pairs){
  const page=graph.find(x=>['CollectionPage','Article'].includes(x['@type']));assert.equal(page.url,origin+en);assert.equal(page.inLanguage,'en');assert.equal(page.translationOfWork['@id'],origin+fr);
  assert(!/aggregateRating|ratingValue|reviewCount/.test(JSON.stringify(graph)));
  assert(read('sitemap.xml').includes(`<loc>${origin}${en}</loc>`));
- assert.equal((html.match(/class="ea-nav-icon"/g)||[]).length,7);
+ assert.equal((html.match(/class="ea-nav-icon"/g)||[]).length,8);
  const guide=guides.find(g=>g.fr===fr);
  if(guide){
   assert.equal(page['@type'],'Article');assert.equal(page.author['@id'],origin+'/#person');assert(html.includes('By <a href="/en/about/">Elboubakry Abdessamad'));

@@ -6,9 +6,9 @@
     "test:indexing": "node scripts/test-indexing-routes.mjs",
     "audit:indexing:live": "node scripts/audit-search-console-urls.mjs",
     "test:public-tracking": "node scripts/test-public-tracking.mjs",
-    "build:english": "node scripts/build-english-home.mjs && node scripts/build-english-core.mjs && node scripts/build-english-diagnostic.mjs && node scripts/build-english-content.mjs",
+    "build:english": "node scripts/build-english-home.mjs && node scripts/build-english-core.mjs && node scripts/build-english-diagnostic.mjs && node scripts/build-english-content.mjs && npm run build:content",
     "test:english": "node scripts/test-english-home.mjs && node scripts/test-english-core.mjs && node scripts/test-english-diagnostic.mjs && node scripts/test-english-content.mjs && node scripts/test-language-ui.mjs",
-    "build:prompts": "node scripts/build-prompt-playbook.mjs",
+    "build:prompts": "node scripts/build-prompt-playbook.mjs && npm run build:content",
     "preview:prompts": "node scripts/preview-prompts.mjs",
     "test:prompts": "node scripts/test-prompts.mjs && node scripts/test-prompt-languages.mjs",
     "test:ai-budget": "node scripts/test-ai-budget.mjs",
@@ -17,6 +17,23 @@
     "test:crm-intelligence": "node scripts/test-crm-intelligence.mjs",
     "test:crm-project": "node scripts/test-crm-project.mjs",
     "test:crm-visuals": "node scripts/test-crm-visuals.mjs",
-    "test:crm-presence": "node scripts/test-crm-presence.mjs"
+    "test:crm-presence": "node scripts/test-crm-presence.mjs",
+    "build:content": "node scripts/build-professional.mjs && node scripts/build-knowledge.mjs",
+    "build:local-ai": "node scripts/build-local-ai.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "node scripts/lint-upgrade.mjs",
+    "test:upgrade": "node --test --test-isolation=none tests/*.test.mjs",
+    "test": "node scripts/run-tests.mjs",
+    "build": "npm run build:content && npm run build:local-ai && node scripts/package-public.mjs && node scripts/seo-audit.mjs dist",
+    "serve": "node scripts/serve-preview.mjs"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "0.2.88"
+  },
+  "devDependencies": {
+    "@webgpu/types": "0.1.71",
+    "esbuild": "0.28.2",
+    "linkedom": "0.18.15",
+    "typescript": "7.0.2"
   }
 }

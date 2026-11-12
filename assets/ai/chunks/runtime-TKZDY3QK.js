@@ -1,0 +1,1 @@
+import{b as r}from"./chunk-AU6HPKIX.js";async function c(n,t,o){return r(n,t?"Qwen2.5-1.5B-Instruct-q4f16_1-MLC":"Qwen2.5-1.5B-Instruct-q4f32_1-MLC",{initProgressCallback:e=>o(e.progress,e.text),logLevel:"ERROR"},{context_window_size:8192})}export{c as createEngine};

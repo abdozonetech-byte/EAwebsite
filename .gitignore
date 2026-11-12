@@ -19,3 +19,7 @@ test-results/
 Thumbs.db
 .vscode/
 .idea/
+
+node_modules/
+dist/
+.preview/

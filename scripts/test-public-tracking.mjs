@@ -25,7 +25,7 @@ test.handlers.click({target:{closest:()=>link}});assert(test.events.some(e=>e[1]
 test.rerun();assert.equal(test.events.filter(e=>e[0]==='config').length,1);
 for(const [slug,anchor]of [['consultant-marketing-digital-casablanca','livrables-casablanca'],['generation-leads-qualifies-maroc','grille-qualification']]){
  const html=fs.readFileSync(new URL('../insights/'+slug+'.html',import.meta.url),'utf8');
- assert(html.includes('id="'+anchor+'"'));assert(html.includes('"dateModified": "2026-10-30"'));
+ assert(html.includes('id="'+anchor+'"'));assert(/"dateModified"\s*:\s*"2026-10-30"/.test(html));
  assert(html.includes('datetime="2026-10-30"'));assert(html.includes('analytics.js?v=20261030-quality1'));
  assert.equal((html.match(/<h1\b/g)||[]).length,1);
 }

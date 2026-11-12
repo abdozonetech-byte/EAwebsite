@@ -1,0 +1,35 @@
+{
+  "outputs": {
+    "assets/ai/app.js": {
+      "bytes": 9515,
+      "imports": [
+        {
+          "path": "assets/ai/chunks/runtime-TKZDY3QK.js",
+          "kind": "dynamic-import"
+        }
+      ]
+    },
+    "assets/ai/worker.js": {
+      "bytes": 493,
+      "imports": [
+        {
+          "path": "assets/ai/chunks/chunk-AU6HPKIX.js",
+          "kind": "import-statement"
+        }
+      ]
+    },
+    "assets/ai/chunks/runtime-TKZDY3QK.js": {
+      "bytes": 268,
+      "imports": [
+        {
+          "path": "assets/ai/chunks/chunk-AU6HPKIX.js",
+          "kind": "import-statement"
+        }
+      ]
+    },
+    "assets/ai/chunks/chunk-AU6HPKIX.js": {
+      "bytes": 6142926,
+      "imports": []
+    }
+  }
+}

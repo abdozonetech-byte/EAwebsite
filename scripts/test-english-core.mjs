@@ -17,7 +17,7 @@ for(const [file,fr,en,type]of [['services/index.html','/services/','/en/services
  assert(english.includes(`rel="canonical" href="${origin}${en}"`));
  assert(english.includes(`property="og:url" content="${origin}${en}"`));
  assert(english.includes('class="ea-button ea-button-primary"'),'Visible primary CTA');
- assert(english.includes(type==='ProfilePage'?'name="description" content="Meet Elboubakry':'name="description" content="Digital strategy'));
+ assert(english.includes(type==='ProfilePage'?'name="description" content="Explore Elboubakry':'name="description" content="Digital strategy'));
  assert(english.includes(`href="${en}" aria-current="page"`));
  assert(english.includes('href="/en/services/"'));assert(english.includes('href="/en/about/"'));
  assert(!english.includes('href="/en/booking'));
@@ -35,7 +35,7 @@ for(const [file,fr,en,type]of [['services/index.html','/services/','/en/services
   for(const [q,a]of profileFaqs){assert(english.includes(esc(q)));assert(english.includes(esc(a)));assert(faq.mainEntity.some(x=>x.name===q&&x.acceptedAnswer.text===a));}
   for(const item of [...career,...credentials])for(const value of item)assert(english.includes(esc(value)));
  }
- const header=english.match(/<header[\s\S]*?<\/header>/)[0];assert.equal((header.match(/class="ea-nav-icon"/g)||[]).length,7);
+ const header=english.match(/<header[\s\S]*?<\/header>/)[0];assert.equal((header.match(/class="ea-nav-icon"/g)||[]).length,8);
  assert(english.includes('mailto:abdozonetech@gmail.com?subject=Project%20enquiry'));assert(english.includes('https://wa.me/212687321925?text='));
  for(const match of english.matchAll(/(?:href|src)="(\/[^"#?]*)/g)){
   const url=match[1];if(url==='/'||url.startsWith('//'))continue;

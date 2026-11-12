@@ -1,0 +1,936 @@
+{
+  "date": "2026-11-11",
+  "commit": "e64a68d4313604fae0eff9bb8b38a9eba7bb2016",
+  "scope": "All 30 French guides; source evidence, not Search Console traffic data",
+  "rows": [
+    {
+      "slug": "strategie-marketing-digital-maroc",
+      "url": "https://elboubakry.com/insights/strategie-marketing-digital-maroc",
+      "title": "Stratégie marketing digital au Maroc : construire un système de croissance clair",
+      "category": "Stratégie Marketing",
+      "bodyWords": 447,
+      "hasVisibleUpdateDate": false,
+      "primarySources": [],
+      "bodyLinks": [
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Pourquoi la stratégie passe avant les campagnes",
+        "Les éléments d’une stratégie digitale solide",
+        "Adapter la stratégie au marché marocain",
+        "Mon approche : diagnostic, plan d’action, exécution, mesure",
+        "Checklist stratégie marketing digital",
+        "FAQ",
+        "Vous voulez clarifier votre stratégie digitale ?"
+      ],
+      "flags": [
+        "Short treatment: assess missing examples and task detail (word count is not a ranking rule)",
+        "No external primary sources in article body",
+        "No explicit visible update date; do not refresh dates without substantive review",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "0573560056b29fe8521518ec5ea4c667e292693ae14309f031e5b4c5815223e1"
+    },
+    {
+      "slug": "publicite-digitale-maroc-meta-google-tiktok",
+      "url": "https://elboubakry.com/insights/publicite-digitale-maroc-meta-google-tiktok",
+      "title": "Publicité digitale au Maroc : Meta Ads, Google Ads ou TikTok Ads ?",
+      "category": "Publicité Digitale",
+      "bodyWords": 489,
+      "hasVisibleUpdateDate": false,
+      "primarySources": [],
+      "bodyLinks": [
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Quand utiliser Meta Ads",
+        "Quand utiliser Google Ads",
+        "Quand utiliser TikTok Ads",
+        "Pourquoi la landing page et le tracking sont essentiels",
+        "Mon approche pour structurer une campagne",
+        "Checklist avant de lancer une campagne",
+        "FAQ",
+        "Vous voulez structurer votre acquisition payante ?"
+      ],
+      "flags": [
+        "Short treatment: assess missing examples and task detail (word count is not a ranking rule)",
+        "No external primary sources in article body",
+        "No explicit visible update date; do not refresh dates without substantive review",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "5edb1f716d01d7e86e8349664b547a81d07f84447690f62f65118de6334368de"
+    },
+    {
+      "slug": "generation-leads-qualifies-maroc",
+      "url": "https://elboubakry.com/insights/generation-leads-qualifies-maroc",
+      "title": "Comment générer des leads qualifiés au Maroc ?",
+      "category": "Publicité Digitale",
+      "bodyWords": 1373,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "#grille-qualification",
+        "#exemple-suivi",
+        "/reserver-diagnostic/",
+        "/services/",
+        "/insights/consultant-marketing-digital-casablanca",
+        "/insights/publicite-digitale-maroc-meta-google-tiktok",
+        "/insights/landing-page-generation-leads-maroc",
+        "/insights/analytics-tracking-marketing-maroc",
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Qu’est-ce qu’un lead qualifié pour une entreprise au Maroc ?",
+        "Une grille simple pour qualifier les demandes",
+        "Exemple pédagogique : du formulaire au rendez-vous",
+        "Qu’est-ce qu’un lead réellement qualifié ?",
+        "1. Clarifier l’offre avant d’acheter du trafic",
+        "2. Choisir le canal selon l’intention",
+        "3. Faire correspondre le message et la landing page",
+        "4. Qualifier sans créer trop de friction",
+        "5. Répondre vite et avec un processus commercial",
+        "6. Mesurer la qualité, pas uniquement le coût par lead",
+        "7. Les erreurs qui dégradent la qualité des leads",
+        "Plan d’action sur 30 jours",
+        "Questions fréquentes",
+        "Vous voulez améliorer la qualité de vos demandes ?"
+      ],
+      "flags": [
+        "No external primary sources in article body"
+      ],
+      "bodySha256": "37fa0678c0a6e28f2ed92840612f106422f8a82ca050da9a480894a2dbd7b03b"
+    },
+    {
+      "slug": "landing-page-generation-leads-maroc",
+      "url": "https://elboubakry.com/insights/landing-page-generation-leads-maroc",
+      "title": "Landing page au Maroc : construire un parcours qui transforme le trafic en leads qualifiés",
+      "category": "Publicité Digitale",
+      "bodyWords": 1208,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/tracking-kpi-marketing",
+        "/insights/meta-ads-leads-qualifies-maroc",
+        "/reserver-diagnostic/"
+      ],
+      "headings": [
+        "1. Commencer par le “message match” entre l’annonce et la page",
+        "2. Construire la page autour de cinq décisions",
+        "3. Structurer le contenu dans l’ordre des questions du prospect",
+        "4. Formulaire, WhatsApp ou appel : choisir selon l’intention",
+        "5. Concevoir le formulaire comme un outil de qualification",
+        "6. Penser mobile avant d’ajouter des effets visuels",
+        "7. Mesurer le parcours complet, pas seulement le taux de conversion",
+        "8. Exemple de diagnostic sans inventer de benchmark",
+        "9. Tester une hypothèse à la fois",
+        "FAQ",
+        "Vous voulez auditer une landing page avant d’augmenter le trafic ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Dates are plain text, without a semantic time element"
+      ],
+      "bodySha256": "cf13bb6cb1e7a15df83b24da10974c4023e228c7c1c5037c15d0a74e27c4cd9c"
+    },
+    {
+      "slug": "seo-content-strategy-maroc",
+      "url": "https://elboubakry.com/insights/seo-content-strategy-maroc",
+      "title": "SEO au Maroc : construire une stratégie de contenu utile, distincte et reliée au business",
+      "category": "SEO & Contenu",
+      "bodyWords": 1238,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/seo-local-maroc",
+        "/insights/consultant-marketing-digital-maroc",
+        "/insights/consultant-marketing-digital-casablanca",
+        "/insights/tracking-kpi-marketing",
+        "/reserver-diagnostic/"
+      ],
+      "headings": [
+        "1. Partir des intentions, puis décider quelles pages méritent d’exister",
+        "2. Organiser le site en clusters utiles plutôt qu’en silos de mots-clés",
+        "3. Donner à chaque page une valeur que les autres n’ont pas",
+        "4. Écrire pour le lecteur tout en rendant la structure explicite",
+        "5. Utiliser le maillage interne comme une navigation de décision",
+        "6. Distinguer la stratégie nationale et la stratégie locale",
+        "7. Faire de Search Console un outil de diagnostic, pas un tableau de panique",
+        "8. Mesurer la valeur SEO au-delà du trafic",
+        "9. Une routine éditoriale simple pour éviter le contenu obsolète",
+        "FAQ",
+        "Vous voulez transformer votre site en architecture SEO plus claire ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Dates are plain text, without a semantic time element"
+      ],
+      "bodySha256": "2ed1fe8a27023ff5987c987977b7612a51f51eb1630b72167f781b46f966dca1"
+    },
+    {
+      "slug": "consultant-marketing-digital-maroc",
+      "url": "https://elboubakry.com/insights/consultant-marketing-digital-maroc",
+      "title": "Consultant marketing digital au Maroc : structurer acquisition, conversion et mesure",
+      "category": "Marketing Local Maroc",
+      "bodyWords": 1067,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/landing-page-generation-leads-maroc",
+        "/insights/seo-content-strategy-maroc",
+        "/insights/tracking-kpi-marketing",
+        "/reserver-diagnostic/"
+      ],
+      "headings": [
+        "Le rôle d’un consultant : relier les décisions, pas empiler les canaux",
+        "Les six chantiers à examiner avant d’augmenter le budget",
+        "Ads, SEO, contenu ou landing page : comment décider de la priorité ?",
+        "À quoi ressemble un diagnostic marketing vraiment exploitable ?",
+        "Le livrable le plus important : un système de décision",
+        "Pour quels types de projets cet accompagnement est pertinent ?",
+        "Comment choisir un consultant sans se baser sur une promesse de résultats",
+        "FAQ",
+        "Vous voulez clarifier les priorités de votre marketing digital ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Dates are plain text, without a semantic time element"
+      ],
+      "bodySha256": "e05a03e487eb44632012a7a0dee42ff413c11b3b31e3a328b7964d307278a46c"
+    },
+    {
+      "slug": "analytics-tracking-marketing-maroc",
+      "url": "https://elboubakry.com/insights/analytics-tracking-marketing-maroc",
+      "title": "Analytics et tracking : mesurer ce qui génère vraiment des clients",
+      "category": "Analytics & Tracking",
+      "bodyWords": 394,
+      "hasVisibleUpdateDate": false,
+      "primarySources": [],
+      "bodyLinks": [
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Pourquoi le tracking est indispensable",
+        "Ce qu’il faut mesurer sur un site",
+        "Google Analytics et Google Tag Manager",
+        "Suivi des clics WhatsApp, LinkedIn, email et formulaire",
+        "Mon approche pour rendre les données utiles",
+        "Checklist tracking marketing",
+        "FAQ",
+        "Vous voulez mesurer vos vrais résultats ?"
+      ],
+      "flags": [
+        "Short treatment: assess missing examples and task detail (word count is not a ranking rule)",
+        "No external primary sources in article body",
+        "No explicit visible update date; do not refresh dates without substantive review",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "7ed5c45103a4593aef1a0dd740f3915747bfdb9ae47f624620b3a1d63c484f46"
+    },
+    {
+      "slug": "automatisation-marketing-maroc",
+      "url": "https://elboubakry.com/insights/automatisation-marketing-maroc",
+      "title": "Automatisation marketing au Maroc : gagner du temps sans perdre la relation client",
+      "category": "Automatisation",
+      "bodyWords": 407,
+      "hasVisibleUpdateDate": false,
+      "primarySources": [],
+      "bodyLinks": [
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Pourquoi automatiser certaines actions marketing",
+        "Ce qui peut être automatisé",
+        "WhatsApp, formulaires, CRM et suivi des prospects",
+        "Les erreurs à éviter",
+        "Mon approche : simple, utile et adaptée à l’activité",
+        "Checklist automatisation marketing",
+        "FAQ",
+        "Vous voulez simplifier votre suivi marketing ?"
+      ],
+      "flags": [
+        "Short treatment: assess missing examples and task detail (word count is not a ranking rule)",
+        "No external primary sources in article body",
+        "No explicit visible update date; do not refresh dates without substantive review",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "bb005886e674de7faa9cf1a9451235afe42a7944bf337a377397a27505e87a24"
+    },
+    {
+      "slug": "consultant-marketing-digital-casablanca",
+      "url": "https://elboubakry.com/insights/consultant-marketing-digital-casablanca",
+      "title": "Consultant marketing digital à Casablanca : construire un parcours d’acquisition local mesurable",
+      "category": "Marketing Local Maroc",
+      "bodyWords": 1430,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/services/",
+        "/about-elboubakry-abdessamad",
+        "/#references",
+        "/projets/",
+        "#livrables-casablanca",
+        "#choisir-consultant",
+        "/reserver-diagnostic/",
+        "/insights/generation-leads-qualifies-maroc",
+        "/insights/seo-local-maroc",
+        "/insights/landing-page-generation-leads-maroc",
+        "/insights/consultant-marketing-digital-maroc",
+        "/insights/tracking-kpi-marketing",
+        "/reserver-diagnostic/"
+      ],
+      "headings": [
+        "Quel accompagnement marketing à Casablanca ?",
+        "Des problèmes observables à des livrables concrets",
+        "Comment choisir un consultant marketing à Casablanca ?",
+        "Casablanca : penser le marketing comme un parcours local, pas comme un mot-clé",
+        "Les quatre situations les plus fréquentes à diagnostiquer",
+        "SEO local et pages de service : créer une réponse utile pour la recherche",
+        "Meta Ads et Google Ads : deux rôles différents dans l’acquisition",
+        "WhatsApp, formulaire ou appel : choisir selon le niveau de qualification",
+        "Un plan de 30 jours pour remettre le système à plat",
+        "Casablanca et le reste du Maroc : éviter la cannibalisation",
+        "Les KPI à regarder pour une acquisition locale",
+        "FAQ",
+        "Vous voulez clarifier votre acquisition à Casablanca ?"
+      ],
+      "flags": [
+        "No external primary sources in article body"
+      ],
+      "bodySha256": "e662e7cc0d9a43be9e3819a612cf3c8d4fa6a30e76d80ee0c6f51cf5613af7c6"
+    },
+    {
+      "slug": "bons-kpi-performance",
+      "url": "https://elboubakry.com/insights/bons-kpi-performance",
+      "title": "Mesurer les bons KPI pour éviter les fausses bonnes performances",
+      "category": "Analytics & Tracking",
+      "bodyWords": 641,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "cf5e06058cc70840b633b12dfda3dd48e2fda5a58fc4a100379ae7a1032fa6e1"
+    },
+    {
+      "slug": "tracking-kpi-marketing",
+      "url": "https://elboubakry.com/insights/tracking-kpi-marketing",
+      "title": "Tracking marketing : relier campagnes, leads et KPI pour prendre de meilleures décisions",
+      "category": "Analytics & Tracking",
+      "bodyWords": 1162,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/bons-kpi-performance",
+        "/insights/landing-page-generation-leads-maroc",
+        "/insights/meta-ads-leads-qualifies-maroc",
+        "/reserver-diagnostic/"
+      ],
+      "headings": [
+        "1. Commencer par un plan de mesure, pas par l’installation d’un outil",
+        "2. Organiser les événements selon leur valeur",
+        "3. Normaliser les UTM avant qu’elles deviennent inutilisables",
+        "4. Conserver la source jusqu’au formulaire et au CRM",
+        "5. Séparer les KPI marketing des KPI commerciaux",
+        "6. Comprendre les limites de l’attribution",
+        "7. Relier la landing page et le tracking dès la conception",
+        "8. Utiliser le CRM comme couche de vérité commerciale",
+        "9. Créer un tableau de bord qui conduit à une action",
+        "10. Une routine hebdomadaire de 30 minutes",
+        "FAQ",
+        "Vous voulez définir un plan de mesure avant de connecter le CRM ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element"
+      ],
+      "bodySha256": "41296237e1a02932e0f2b4afb43c67581dd6044253e877e2edbf90476d445cb9"
+    },
+    {
+      "slug": "ia-business-petite-entreprise",
+      "url": "https://elboubakry.com/insights/ia-business-petite-entreprise",
+      "title": "Comment l’IA peut aider une petite entreprise à mieux décider",
+      "category": "IA & Productivité",
+      "bodyWords": 562,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/consultant-ia-business-maroc",
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi les PME marocaines s’intéressent à l’IA",
+        "Les erreurs fréquentes d’un premier projet IA",
+        "La méthode recommandée en cinq étapes",
+        "Exemple : qualification des demandes à Casablanca",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "d0f40260bcebeeafb569a84013420570d45ea63a042da0286c6c63bd04b4ade5"
+    },
+    {
+      "slug": "confiance-levier-marketing",
+      "url": "https://elboubakry.com/insights/confiance-levier-marketing",
+      "title": "Pourquoi la confiance est devenue un levier marketing essentiel",
+      "category": "IA & Productivité",
+      "bodyWords": 643,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "7ca58dc4b70860fd6f753245164bf18b64badadf7f470792024d2884989e5d8a"
+    },
+    {
+      "slug": "ia-strategie-marketing",
+      "url": "https://elboubakry.com/insights/ia-strategie-marketing",
+      "title": "Utiliser l’IA pour mieux organiser votre stratégie marketing",
+      "category": "IA & Productivité",
+      "bodyWords": 697,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/consultant-ia-business-maroc",
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "dc55e12a662c1b62c4fd5f3dcf052533e3de4270b87cc217cb9adb6259f5ed8f"
+    },
+    {
+      "slug": "landing-page-conversion-maroc",
+      "url": "https://elboubakry.com/insights/landing-page-conversion-maroc",
+      "title": "Créer une landing page qui convertit les visiteurs en prospects",
+      "category": "Landing Pages",
+      "bodyWords": 652,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "5e9b6050e7c55b0e5daaaa0f12ca63b925deb124383058aa47507a0e8381a81c"
+    },
+    {
+      "slug": "parcours-client-avant-pub",
+      "url": "https://elboubakry.com/insights/parcours-client-avant-pub",
+      "title": "Comprendre le parcours client avant d’investir dans la publicité",
+      "category": "Méthode & Confiance",
+      "bodyWords": 652,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "acb4ec1ff7b62298c8f7e7489956c63b9fe42103ba12037cc3e851970e0e8888"
+    },
+    {
+      "slug": "presence-digitale-credible",
+      "url": "https://elboubakry.com/insights/presence-digitale-credible",
+      "title": "Construire une présence digitale professionnelle et crédible",
+      "category": "Méthode & Confiance",
+      "bodyWords": 660,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "65c5c7130f16cad19d60bc42a0379a09a2b9b8a7fac29c6800c6efc582d88385"
+    },
+    {
+      "slug": "clarifier-offre-message-tunnel",
+      "url": "https://elboubakry.com/insights/clarifier-offre-message-tunnel",
+      "title": "Avant de lancer des ads : clarifier l’offre, le message et le tunnel",
+      "category": "Publicité Digitale",
+      "bodyWords": 646,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "e049032b23f2196ede97369c1bb15fd2192001bc0c690c4fa1e563e8a00031da"
+    },
+    {
+      "slug": "generation-leads-pme-maroc",
+      "url": "https://elboubakry.com/insights/generation-leads-pme-maroc",
+      "title": "Construire un système de génération de leads pour une PME au Maroc",
+      "category": "Publicité Digitale",
+      "bodyWords": 709,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "a8b091ad850b9e35f74f3d0c2351fd58de9f78441bbba7bd876ca807ea6e7835"
+    },
+    {
+      "slug": "erreurs-budget-meta-ads",
+      "url": "https://elboubakry.com/insights/erreurs-budget-meta-ads",
+      "title": "Les erreurs qui font perdre le budget publicitaire sur Meta Ads",
+      "category": "Publicité Digitale",
+      "bodyWords": 659,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "15dba95f717b79dd932417379614d844e95267c2f4a5d755f2e572961762560c"
+    },
+    {
+      "slug": "combien-coute-campagne-meta-ads-maroc",
+      "url": "https://elboubakry.com/insights/combien-coute-campagne-meta-ads-maroc",
+      "title": "Combien coûte une campagne Meta Ads au Maroc ?",
+      "category": "Publicité Digitale",
+      "bodyWords": 679,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Les postes de coût à prévoir",
+        "Combien prévoir pour démarrer ?",
+        "Pourquoi le coût par lead ne suffit pas",
+        "Ce qui fait monter ou baisser le coût",
+        "La méthode recommandée",
+        "À retenir",
+        "Vous voulez estimer le bon budget pour votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "c2963ce430467ca8a3666607721edd507bbeb441d2f8e98e5050a377739c1304"
+    },
+    {
+      "slug": "meta-ads-leads-qualifies-maroc",
+      "url": "https://elboubakry.com/insights/meta-ads-leads-qualifies-maroc",
+      "title": "Meta Ads au Maroc : construire une campagne orientée leads qualifiés, pas seulement formulaires",
+      "category": "Publicité Digitale",
+      "bodyWords": 1194,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/generation-leads-qualifies-maroc",
+        "/insights/landing-page-generation-leads-maroc",
+        "/insights/combien-coute-campagne-meta-ads-maroc",
+        "/insights/tracking-kpi-marketing",
+        "/reserver-diagnostic/"
+      ],
+      "headings": [
+        "1. Définir le lead qualifié avant de créer la campagne",
+        "2. Faire de l’offre le premier filtre de qualification",
+        "3. Tester des angles créatifs, pas seulement des visuels",
+        "4. Choisir la bonne destination : formulaire Meta, landing page ou WhatsApp",
+        "5. Utiliser le formulaire pour qualifier sans bloquer",
+        "6. Organiser le suivi dans les minutes et heures qui suivent",
+        "7. Lire les KPI en deux niveaux : acquisition puis qualité",
+        "8. Créer une boucle de feedback CRM → marketing",
+        "9. Exemple de scénario de diagnostic",
+        "10. Avant d’augmenter le budget, vérifier ces points",
+        "FAQ",
+        "Vous voulez auditer votre parcours Meta Ads avant d’augmenter le budget ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element"
+      ],
+      "bodySha256": "d0dd4ae0eca2f6204b52817615a5cfbb0a91ee787ef74d0b3844ebe218661b2a"
+    },
+    {
+      "slug": "whatsapp-leads-qualifies",
+      "url": "https://elboubakry.com/insights/whatsapp-leads-qualifies",
+      "title": "Transformer les conversations WhatsApp en demandes qualifiées",
+      "category": "Publicité Digitale",
+      "bodyWords": 658,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "150c8c1c377d54703cc656c2f9dd243dbb81f278edd36020015dbdae9847206c"
+    },
+    {
+      "slug": "seo-maroc-visibilite-entreprise",
+      "url": "https://elboubakry.com/insights/seo-maroc-visibilite-entreprise",
+      "title": "SEO au Maroc : comment améliorer la visibilité d’une entreprise ?",
+      "category": "SEO & Contenu",
+      "bodyWords": 1041,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/insights/seo-contenu-maroc",
+        "/insights/seo-local-maroc",
+        "/insights/analytics-tracking-marketing-maroc",
+        "../reserver-diagnostic/"
+      ],
+      "headings": [
+        "Commencer par l’objectif business et l’intention de recherche",
+        "1. Construire une base technique propre",
+        "2. Organiser le site en piliers et contenus complémentaires",
+        "3. Créer un contenu réellement utile",
+        "4. Travailler le SEO local au Maroc",
+        "5. Renforcer l’autorité et la confiance",
+        "6. Comprendre l’indexation dans Search Console",
+        "7. Mesurer les requêtes, le CTR et les conversions",
+        "Plan SEO sur 90 jours",
+        "Questions fréquentes",
+        "Vous voulez identifier les priorités SEO de votre site ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Dates are plain text, without a semantic time element"
+      ],
+      "bodySha256": "ee43b15bce67e3e1284847b37c52c78b5d503cb3b9806168411d311b0718c66e"
+    },
+    {
+      "slug": "seo-contenu-maroc",
+      "url": "https://elboubakry.com/insights/seo-contenu-maroc",
+      "title": "SEO au Maroc : créer du contenu utile qui attire les bons clients",
+      "category": "SEO & Contenu",
+      "bodyWords": 701,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "fbb3b8332c4ed10bc9b4541ce3d15d7e17134110c17a31fb03cd25804235ba89"
+    },
+    {
+      "slug": "seo-local-maroc",
+      "url": "https://elboubakry.com/insights/seo-local-maroc",
+      "title": "SEO local au Maroc : comment aider les clients à vous trouver",
+      "category": "SEO & Contenu",
+      "bodyWords": 664,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "51485dfcbc3812dcf462477673de109854743f71a3ae5cbf2e0ef12f6829e9e6"
+    },
+    {
+      "slug": "growth-strategy-visibilite-croissance",
+      "url": "https://elboubakry.com/insights/growth-strategy-visibilite-croissance",
+      "title": "Passer de la visibilité digitale à une croissance mesurable",
+      "category": "Stratégie Marketing",
+      "bodyWords": 680,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "9fa0d7afdbfcf2ee744bc8393314c4f037b28ed0d19feb4e9ddfa39eeb9f93ff"
+    },
+    {
+      "slug": "strategie-digitale-pme-maroc",
+      "url": "https://elboubakry.com/insights/strategie-digitale-pme-maroc",
+      "title": "Stratégie digitale pour PME au Maroc : construire un plan clair",
+      "category": "Stratégie Marketing",
+      "bodyWords": 695,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "9d275c491540c5a48a5877320bbd93e45d91ec1e4595405020c1ffdd96028be3"
+    },
+    {
+      "slug": "calendrier-contenu-vente",
+      "url": "https://elboubakry.com/insights/calendrier-contenu-vente",
+      "title": "Créer un calendrier de contenu qui soutient vraiment la vente",
+      "category": "Vidéo & Contenu",
+      "bodyWords": 658,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "9b01da9a5bca55713692a94e51387a64dcffd8c293bd753346a6d03734a09170"
+    },
+    {
+      "slug": "video-courte-message",
+      "url": "https://elboubakry.com/insights/video-courte-message",
+      "title": "Vidéo courte : attirer l’attention sans perdre le message",
+      "category": "Vidéo & Contenu",
+      "bodyWords": 643,
+      "hasVisibleUpdateDate": true,
+      "primarySources": [],
+      "bodyLinks": [
+        "/#contact"
+      ],
+      "headings": [
+        "Pourquoi ce sujet est important",
+        "Les erreurs fréquentes",
+        "La méthode recommandée",
+        "Exemple d’application",
+        "À retenir",
+        "Prochaine action",
+        "Vous voulez appliquer cette stratégie à votre projet ?"
+      ],
+      "flags": [
+        "No external primary sources in article body",
+        "Missing visible byline",
+        "Byline not linked to profile",
+        "Dates are plain text, without a semantic time element",
+        "Few contextual guide links (sidebar excluded)"
+      ],
+      "bodySha256": "03a391b9d1da31154e7c72e3903d06583ba60c339f613b49867a136a7a35f0a8"
+    }
+  ]
+}

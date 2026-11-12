@@ -1,0 +1,62 @@
+[
+  {
+    "name": "test:indexing",
+    "exitCode": 0,
+    "output": "PASS indexing regressions: historical content routes resolve, public canonicals remain indexable, intentional exclusions preserved, retired resources unreferenced."
+  },
+  {
+    "name": "test:public-tracking",
+    "exitCode": 0,
+    "output": "PASS public tracking: conservative AI attribution, private/local exclusion, duplicate loading guard, trailing slash pages and English diagnostic CTA. No network requests."
+  },
+  {
+    "name": "test:english",
+    "exitCode": 0,
+    "output": "PASS English homepage: French primary preserved, self-canonicals, reciprocal hreflang, one identity, truthful Morocco service data, visible/schema FAQ parity, original assets, labelled French links, safe contact drafts and translated menu.\nPASS English services/profile: reciprocal language pairs, metadata, stable identity, FAQ parity, career/credentials, icons, anchors, contact drafts and local links.\nPASS English/French diagnostic: schema, canonical/alternates, stable CRM sectors, validation, Moroccan phones, optional email, honeypot, duplicate-click guard, request payload, loading/error recovery and language-specific confirmation. All fetch calls mocked.\nPASS English content: five language pairs, English navigation, local links/anchors, author identity, visible FAQ/schema parity, original project visuals and honest demonstration labels.\nPASS language UI: 18 neutral controls, accessible full names, paired URLs, slide state, modified-click behaviour, history restore, reduced-motion CSS and no navigation interception."
+  },
+  {
+    "name": "test:prompts",
+    "exitCode": 0,
+    "output": "PASS: 210 unique prompts/examples, 14 × 15 categories, 16 unchanged bodies, 194 new entries; static routes, schema, complete metadata, index/detail parity, related links, guide, filters/sorting/URL state, spaced/repeated/empty variables, safe return URLs, escaped rich examples, favorites, full copy and clipboard failure fallbacks.\nPASS: 210 English adaptations and preserved French sources; 424 static pages, locale-specific indexes/payloads, reciprocal hreflang/x-default, correct canonical/document/schema languages, English default, shared favourites, safe return paths, English search and literal customisation."
+  },
+  {
+    "name": "test:ai-budget",
+    "exitCode": 0,
+    "output": "AI budget tests passed: profiles, bounds, batch scaling, input rejection, provider usage, exact cache invalidation/expiry and no automatic paid retries."
+  },
+  {
+    "name": "test:crm-discovery",
+    "exitCode": 0,
+    "output": "CRM discovery tests passed: dropdown-only bilingual form, dependent option catalogs, legacy-city safety, Maps URL encoding, nearby privacy, AI consent, geography validation, paginated filters, and approval-only country preservation. No live API calls."
+  },
+  {
+    "name": "test:crm-import",
+    "exitCode": 0,
+    "output": "CRM import tests passed: normalization, duplicates, Unicode, CSV, export and 5,000-row analysis. Casablanca workbook unavailable; workbook-specific check skipped."
+  },
+  {
+    "name": "test:crm-intelligence",
+    "exitCode": 0,
+    "output": "CRM intelligence and MCP contract tests passed."
+  },
+  {
+    "name": "test:crm-project",
+    "exitCode": 0,
+    "output": "CRM presence tests passed: strict channel schema, source/platform validation, unknown-score suppression, prompt privacy, retired UI, problem/source rendering, editable drafts, review-gated WhatsApp/email links and safe copying.\nCRM project tests passed: auth, validation, strict schemas, contact privacy, idempotency, active-job reuse, saved results, evidence restrictions, feedback ownership and no lead mutations."
+  },
+  {
+    "name": "test:crm-visuals",
+    "exitCode": 0,
+    "output": "CRM retired-visual tests passed: mockup generation/approval return 410, no API spend, archived assets preserved, cross-lead access blocked, and waiting recommendations safely retired."
+  },
+  {
+    "name": "test:crm-presence",
+    "exitCode": 0,
+    "output": "CRM presence tests passed: strict channel schema, source/platform validation, unknown-score suppression, prompt privacy, retired UI, problem/source rendering, editable drafts, review-gated WhatsApp/email links and safe copying."
+  },
+  {
+    "name": "test:upgrade",
+    "exitCode": 0,
+    "output": "✔ all existing sitemap URLs survive and no article draft is published (6.644304ms)\n✔ all 30 existing guides are crawlable from hub with JS disabled (143.198721ms)\n✔ bilingual courses include all learning fields and honest structured data (19.907176ms)\n✔ professional profile and homepage keep consulting and add training (15.29251ms)\n✔ original portraits and operational functions are unchanged (2.146307ms)\n✔ retrieval: Je veux apprendre le développement IA (5.762843ms)\n✔ retrieval: J’ai besoin d’un agent IA pour mon entreprise (7.193258ms)\n✔ retrieval: Je veux apprendre Meta Ads (3.733729ms)\n✔ retrieval: J’ai besoin de gestion de campagnes marketing (3.578318ms)\n✔ retrieval: Qui est Abdessamad ? (3.418046ms)\n✔ retrieval: I want to learn AI development (0.52414ms)\n✔ retrieval: I need an AI agent for my company (0.462577ms)\n✔ retrieval: I want to learn Meta Ads (0.467997ms)\n✔ retrieval: Please manage marketing campaigns for my company (0.415403ms)\n✔ retrieval: Who is Abdessamad? (0.462479ms)\n✔ retrieval: Show me your projects (0.399255ms)\n✔ retrieval: Je veux lire un guide SEO (3.2127ms)\n✔ follow-up uses training context; explicit hiring switches intent (10.265ms)\n✔ local system context covers every role and only bounded approved content (0.818734ms)\n✔ assistant does not send prompts to an external inference API or persist conversations (3.262811ms)\n✔ new page images, controls and language alternatives meet static accessibility basics (13.53741ms)\n✔ AI breadcrumbs match visible navigation and English contact links resolve to home (12.796607ms)\nBuilt 204 approved local knowledge records (246148 bytes). Drafts excluded.\nBuilt 204 approved local knowledge records (246107 bytes). Drafts excluded.\n✔ approved article edits change the next knowledge build; restored sources reproduce the original index (281.018055ms)\nℹ tests 23\nℹ suites 0\nℹ pass 23\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 777.903572"
+  }
+]
