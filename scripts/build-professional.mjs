@@ -102,7 +102,7 @@ for(const file of baselineFiles){
  html=html.replace(/(<img\b[^>]*src="[^"]*elboubakry-growth-portrait\.[^"]*"[^>]*alt=")[^"]*(")/g,`$1${profile.name} — ${esc(profile[lang].role)}$2`);
  if(!html.includes('professional.css')&&(/ea-nav-icon-link/.test(html)))html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/professional.css?v=20261112-ui1"></head>');
  html=html.replace(/(<(?:div|section)[^>]*class="[^"]*(?:ea-shell-footer-brand|ea-footer-brand)[^"]*"[^>]*>[\s\S]*?<p>)[\s\S]*?<\/p>/,`$1${esc(profile[lang].footer)}</p>`);
- html=html.replace(/<footer\b[\s\S]*?<\/footer>/,footer=>replaceBlock(footer,'footer',`<p class="tr-footer-links"><a href="${base(lang)}">${lang==='fr'?'Formations':'Training'}</a> · <a href="${lang==='fr'?'/ai/':'/en/ai/'}">ELBOUBAKRY AI</a></p>`,'</footer>'));
+
  if(['index.html','en/index.html'].includes(file)){
   const p=profile[lang];html=metadata(html,p.headline+' | Elboubakry',p.intro);
   html=html.replace(/(<h1 id="hero-title">)[\s\S]*?<\/h1>/,`$1${esc(p.headline).replace(lang==='fr'?'au Maroc':'in Morocco',`<span>${lang==='fr'?'au Maroc':'in Morocco'}</span>`)}</h1>`)
