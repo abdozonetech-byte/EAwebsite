@@ -212,8 +212,8 @@ for (const file of htmlFiles) {
       const navIconCount = tags(html, 'svg').filter((tag) =>
         (attribute(tag, 'class') || '').split(/\s+/).includes('ea-nav-icon'),
       ).length;
-      if (navIconCount !== 8) {
-        report(relativeFile, `primary navigation must contain 8 self-contained SVG icons, found ${navIconCount}`);
+      if (navIconCount !== 7) {
+        report(relativeFile, `primary navigation must contain 7 self-contained SVG icons, found ${navIconCount}`);
       }
     }
     if (isInsightArticle) {
